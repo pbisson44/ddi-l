@@ -1,0 +1,56 @@
+HouseholdID,PersonNumber,Province,Age,Gender,MaritalStatus,RelationshipToHead,CountryOfBirth,Citizenship,MotherTongue,HighestEducation,EmploymentType,Occupation,WeeklyHoursWorked,AnnualIncome,CommuteMode,HousingType,Tenure,Rooms,YearBuilt,HouseholdSize,InternetAccess
+HH0001,1,NB,36,Male,Never married,Head,India,Canadian,English,Graduate,Employee,Health,33,95000,Works from home,Apartment,Owner,5,2002,2,Yes
+HH0001,2,NB,16,Female,Never married,Child,Canada,Canadian,English,None,Not in labour force,Not applicable,0,0,Not applicable,Apartment,Owner,5,2002,2,Yes
+HH0002,1,SK,31,Female,Never married,Head,France,Other,French,Bachelor,Employee,Health,30,82000,Works from home,Semi-detached,Owner,6,2014,2,Yes
+HH0002,2,SK,6,Female,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Semi-detached,Owner,6,2014,2,Yes
+HH0003,1,PE,45,Female,Common-law,Head,Canada,Canadian,French,Bachelor,Employee,Trades,26,75000,Works from home,Single-detached,Owner,5,1950,4,Yes
+HH0003,2,PE,49,Male,Common-law,Spouse,Canada,Canadian,French,College,Employee,Health,32,107000,Walk,Single-detached,Owner,5,1950,4,Yes
+HH0003,3,PE,5,Female,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Single-detached,Owner,5,1950,4,Yes
+HH0003,4,PE,10,Female,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Single-detached,Owner,5,1950,4,Yes
+HH0004,1,NB,38,Female,Common-law,Head,Philippines,Other,English,College,Not in labour force,Not applicable,0,22000,Not applicable,Row house,Owner,6,2017,2,Yes
+HH0004,2,NB,39,Male,Common-law,Spouse,Philippines,Canadian,English,Graduate,Not in labour force,Not applicable,0,21000,Not applicable,Row house,Owner,6,2017,2,Yes
+HH0005,1,NB,74,Male,Married,Head,Canada,Canadian,English,Bachelor,Not in labour force,Not applicable,0,30000,Not applicable,Single-detached,Owner,3,2016,2,Yes
+HH0005,2,NB,80,Female,Married,Spouse,Canada,Canadian,English,High school,Self-employed,Office support,49,122000,Car,Single-detached,Owner,3,2016,2,Yes
+HH0006,1,AB,56,Female,Married,Head,Canada,Canadian,Other,College,Employee,Sales,24,107000,Works from home,Semi-detached,Owner,6,1976,5,Yes
+HH0006,2,AB,58,Male,Married,Spouse,Canada,Canadian,Other,High school,Unemployed,Not applicable,0,11000,Not applicable,Semi-detached,Owner,6,1976,5,Yes
+HH0006,3,AB,5,Male,Never married,Child,Canada,Canadian,Other,None,Not applicable,Not applicable,0,0,Not applicable,Semi-detached,Owner,6,1976,5,Yes
+HH0006,4,AB,0,Female,Never married,Child,Canada,Canadian,Other,None,Not applicable,Not applicable,0,0,Not applicable,Semi-detached,Owner,6,1976,5,Yes
+HH0006,5,AB,8,Female,Never married,Child,Canada,Canadian,Other,None,Not applicable,Not applicable,0,0,Not applicable,Semi-detached,Owner,6,1976,5,Yes
+HH0007,1,AB,54,Male,Common-law,Head,Canada,Canadian,French,Graduate,Not in labour force,Not applicable,0,14000,Not applicable,Row house,Owner,5,2014,4,No
+HH0007,2,AB,54,Female,Common-law,Spouse,Canada,Canadian,French,Graduate,Self-employed,Education,39,117000,Transit,Row house,Owner,5,2014,4,No
+HH0007,3,AB,9,Male,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Row house,Owner,5,2014,4,No
+HH0007,4,AB,79,Male,Widowed,Parent,Canada,Canadian,French,Graduate,Not in labour force,Not applicable,0,11000,Not applicable,Row house,Owner,5,2014,4,No
+HH0008,1,ON,59,Male,Married,Head,France,Other,English,Graduate,Employee,Management,20,93000,Walk,Row house,Renter,9,1970,3,Yes
+HH0008,2,ON,63,Female,Married,Spouse,France,Other,English,College,Employee,Sales,39,41000,Transit,Row house,Renter,9,1970,3,Yes
+HH0008,3,ON,0,Male,Never married,Child,Canada,Canadian,English,None,Not applicable,Not applicable,0,0,Not applicable,Row house,Renter,9,1970,3,Yes
+HH0009,1,NB,63,Male,Married,Head,France,Canadian,French,High school,Employee,Management,33,109000,Car,Mobile home,Owner,5,2022,2,Yes
+HH0009,2,NB,57,Female,Married,Spouse,France,Canadian,French,Graduate,Employee,Sales,45,62000,Walk,Mobile home,Owner,5,2022,2,Yes
+HH0010,1,NS,51,Female,Widowed,Head,India,Other,English,High school,Employee,Trades,32,96000,Works from home,Row house,Renter,5,1980,2,Yes
+HH0010,2,NS,20,Female,Never married,Child,Canada,Canadian,English,Bachelor,Employee,Trades,38,73000,Car,Row house,Renter,5,1980,2,Yes
+HH0011,1,AB,60,Male,Married,Head,France,Canadian,French,Graduate,Not in labour force,Not applicable,0,25000,Not applicable,Mobile home,Renter,6,1973,4,No
+HH0011,2,AB,58,Female,Married,Spouse,France,Other,French,Graduate,Not in labour force,Not applicable,0,14000,Not applicable,Mobile home,Renter,6,1973,4,No
+HH0011,3,AB,16,Female,Never married,Child,Canada,Canadian,French,None,Employee,Education,12,11000,Car,Mobile home,Renter,6,1973,4,No
+HH0011,4,AB,16,Female,Never married,Child,Canada,Canadian,French,None,Employee,Health,17,7000,Transit,Mobile home,Renter,6,1973,4,No
+HH0012,1,SK,68,Female,Never married,Head,China,Canadian,English,Graduate,Not in labour force,Not applicable,0,14000,Not applicable,Mobile home,Renter,2,1983,1,Yes
+HH0013,1,NS,69,Male,Divorced,Head,Canada,Canadian,English,High school,Not in labour force,Not applicable,0,26000,Not applicable,Row house,Owner,8,1962,1,Yes
+HH0014,1,PE,42,Female,Widowed,Head,Canada,Canadian,English,High school,Employee,Health,30,80000,Walk,Mobile home,Owner,8,2019,4,Yes
+HH0014,2,PE,7,Female,Never married,Child,Canada,Canadian,English,None,Not applicable,Not applicable,0,0,Not applicable,Mobile home,Owner,8,2019,4,Yes
+HH0014,3,PE,19,Male,Never married,Child,Canada,Canadian,English,Graduate,Employee,Education,38,62000,Works from home,Mobile home,Owner,8,2019,4,Yes
+HH0014,4,PE,8,Female,Never married,Child,Canada,Canadian,English,None,Not applicable,Not applicable,0,0,Not applicable,Mobile home,Owner,8,2019,4,Yes
+HH0015,1,BC,40,Female,Divorced,Head,Canada,Canadian,English,Graduate,Employee,Health,35,47000,Walk,Row house,Owner,8,2013,3,Yes
+HH0015,2,BC,11,Male,Never married,Child,Canada,Canadian,English,None,Not applicable,Not applicable,0,0,Not applicable,Row house,Owner,8,2013,3,Yes
+HH0015,3,BC,15,Male,Never married,Child,Canada,Canadian,English,None,Not in labour force,Not applicable,0,0,Not applicable,Row house,Owner,8,2013,3,Yes
+HH0016,1,NL,34,Female,Common-law,Head,Philippines,Other,French,College,Employee,Management,34,87000,Car,Row house,Renter,9,1987,4,Yes
+HH0016,2,NL,30,Male,Common-law,Spouse,Philippines,Canadian,French,High school,Self-employed,Office support,21,64000,Car,Row house,Renter,9,1987,4,Yes
+HH0016,3,NL,7,Female,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Row house,Renter,9,1987,4,Yes
+HH0016,4,NL,8,Female,Never married,Child,Canada,Canadian,French,None,Not applicable,Not applicable,0,0,Not applicable,Row house,Renter,9,1987,4,Yes
+HH0017,1,AB,69,Female,Common-law,Head,France,Canadian,Other,Bachelor,Not in labour force,Not applicable,0,9000,Not applicable,Single-detached,Renter,3,1990,2,Yes
+HH0017,2,AB,72,Male,Common-law,Spouse,France,Canadian,Other,Bachelor,Not in labour force,Not applicable,0,19000,Not applicable,Single-detached,Renter,3,1990,2,Yes
+HH0018,1,AB,75,Male,Married,Head,India,Other,English,High school,Self-employed,Sales,40,61000,Bicycle,Apartment,Renter,8,1981,2,Yes
+HH0018,2,AB,72,Female,Married,Spouse,India,Canadian,English,College,Not in labour force,Not applicable,0,19000,Not applicable,Apartment,Renter,8,1981,2,Yes
+HH0019,1,SK,44,Female,Widowed,Head,France,Canadian,Other,Graduate,Employee,Management,24,134000,Bicycle,Apartment,Owner,6,1964,3,Yes
+HH0019,2,SK,12,Male,Never married,Child,Canada,Canadian,Other,None,Not applicable,Not applicable,0,0,Not applicable,Apartment,Owner,6,1964,3,Yes
+HH0019,3,SK,14,Female,Never married,Child,Canada,Canadian,Other,None,Not applicable,Not applicable,0,0,Not applicable,Apartment,Owner,6,1964,3,Yes
+HH0020,1,NL,44,Male,Widowed,Head,Canada,Canadian,English,Bachelor,Not in labour force,Not applicable,0,21000,Not applicable,Apartment,Owner,4,1974,3,Yes
+HH0020,2,NL,16,Male,Never married,Child,Canada,Canadian,English,None,Not in labour force,Not applicable,0,0,Not applicable,Apartment,Owner,4,1974,3,Yes
+HH0020,3,NL,0,Female,Never married,Child,Canada,Canadian,English,None,Not applicable,Not applicable,0,0,Not applicable,Apartment,Owner,4,1974,3,Yes
