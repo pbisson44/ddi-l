@@ -1,3 +1,9 @@
+---
+description: >-
+  The ddi-l model layer: generated dataclasses for DDI 3.3 types, for when
+  the Document API is not fine-grained enough.
+---
+
 # Models reference (advanced layer)
 
 The `ddi_l.models` package provides generated dataclass wrappers for
@@ -85,5 +91,5 @@ the DDI 3.3 XSD files. Do not edit them by hand. To regenerate:
 python -m codegen.generate_model_bases
 ```
 
-See the [contributor guide](DEVELOPMENT.md) for details on the codegen
+See the [development guide](DEVELOPMENT.md) for details on the codegen
 pipeline.

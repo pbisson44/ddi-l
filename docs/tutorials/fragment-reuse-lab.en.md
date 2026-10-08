@@ -1,36 +1,43 @@
-# Fragment Reuse Lab
+---
+description: >-
+  Package reusable DDI fragments, share them with other teams and attach
+  them to new DDI instances with ddi-l.
+---
 
-This lab expands on the fragment rebuild script in ``examples`` to teach how to
+# Fragment reuse lab
+
+This lab expands on the fragment rebuild script in ``ddi_l.examples`` to teach how to
 package reusable fragments, distribute them to other teams, and reuse them in
 new DDI instances.
 
-!!! note
-    Install the project in editable mode (``pip install -e .``) so the
-    examples can locate ``ddi_l`` modules.
-
-!!! warning "Locate packaged examples"
-    The fragment scripts load XML assets bundled in the wheel under
-    ``ddi_l.examples`` instead of reading from a cloned repository. Resolve
-    the packaged files with ``importlib.resources`` and pass the resolved path
-    into your loaders (for example ``DDIDocument.from_xml``):
+!!! note "Before you start"
+    Install `ddi-l` with `pip install ddi-l`. The steps below use sample
+    files that ship with the package. Run this once in Python to copy them into
+    an `examples/` folder in your working directory:
 
     ```python
-    from importlib import resources
-    from ddi_l import examples
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
 
-    with resources.as_file(
-        resources.files(examples) / "example_fragment.xml"
-    ) as fragment_path:
-        print(fragment_path)
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
     ```
 
 ## 1. Rebuild the example fragment bundle
 
-1. Execute ``python -m ddi_l.examples.build_and_validate --refresh --refresh-fragment``
-   to regenerate the sample bundle.  The script rewrites
-   ``examples/example_instance.xml`` and the default fragment at
-   ``examples/example_fragment.xml`` while printing confirmation that both
-   payloads validate successfully.
+1. Regenerate the sample bundle into your ``examples/`` folder:
+
+    ```bash
+    python -m ddi_l.examples.build_and_validate --refresh --refresh-fragment \
+      --output examples/example_instance.xml \
+      --fragment-output examples/example_fragment.xml
+    ```
+
+    The script rewrites both files and prints a confirmation that both payloads
+    validate. Without ``--output`` and ``--fragment-output`` it writes into the
+    installed package instead.
 2. Inspect the refreshed instance and fragment XML outputs to see how the
    maintainables are packaged and how the validation messages describe the
    rebuild.

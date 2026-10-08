@@ -1,3 +1,10 @@
+---
+description: >-
+  Un tour d'horizon en une page de l'API Document de ddi-l : créer une
+  étude, ajouter questions, variables et listes de codes, chercher,
+  supprimer, enregistrer et valider.
+---
+
 # Guide d'utilisation
 
 Ce guide présente les principales fonctionnalités de l'API CRUD de `ddi-l`.
@@ -5,7 +12,7 @@ Chaque section est autonome, vous pouvez donc aller directement au workflow
 dont vous avez besoin.
 
 !!! info "Prérequis"
-    - Python 3.11 ou plus récent avec `ddi-l` installé (`pip install .`).
+    - Python 3.11 ou plus récent avec `ddi-l` installé (`pip install ddi-l`).
     - Aucune connaissance XML n'est requise pour l'API simple.
 
 ## Créer une étude

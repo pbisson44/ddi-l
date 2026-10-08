@@ -1,3 +1,9 @@
+---
+description: >-
+  Python packages that work well next to ddi-l for parsing, validating,
+  transforming and publishing DDI Lifecycle content.
+---
+
 # Related Python packages
 
 Packages that are useful next to `ddi-l` when you read, validate or transform

@@ -4,9 +4,11 @@ Thanks for helping improve `ddi-l`! This guide covers the development
 environment, coding standards, the XSD-driven codegen pipeline, and how to
 run the quality gates.
 
-The full contributor guide, including the architecture overview, lives at
-[docs/DEVELOPMENT.en.md](docs/DEVELOPMENT.en.md)
-([français](docs/DEVELOPMENT.fr.md)).
+This file is the short version. The
+[development guide](https://pbisson44.github.io/ddi-l/latest/DEVELOPMENT/)
+([source](docs/DEVELOPMENT.en.md), [français](docs/DEVELOPMENT.fr.md)) is the
+in-depth reference: architecture, the code generator, adding a DDI version, the
+documentation toolchain and the release process.
 
 ## Set up your environment
 

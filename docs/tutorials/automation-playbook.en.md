@@ -1,22 +1,33 @@
-# Command-line Automation Playbook
+---
+description: >-
+  Chain the ddi CLI into CI pipelines: capture JSON reports, use exit codes,
+  round-trip files and bundle the steps into a script.
+---
+
+# Command-line automation playbook
 
 This playbook chains the ``ddi`` CLI commands into repeatable automation tasks
 that you can add to CI/CD pipelines. The exercises cover exit codes, logging
 and keeping the output files, so that a failed run tells you what to fix.
 
-!!! note
-    The snippets assume the CLI is on your ``PATH`` (``pip install -e .``) and
-    that you are running from the repository root.
+!!! note "Before you start"
+    Install `ddi-l` with `pip install ddi-l`. The commands below use sample
+    files that ship with the package. Run this once in Python to copy them into
+    an `examples/` folder in your working directory:
 
-!!! note "Use the packaged examples"
-    The published wheel bundles the ``examples/`` directory. Resolve the
-    installed path with ``importlib.resources`` (see the
-    [installation guide](../installation.md)) instead
-    of cloning the repository just to access sample XML payloads.
+    ```python
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
+
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
+    ```
 
 ## 1. Validate and capture JSON reports
 
-The repository provides a ready-to-use sample at
+The examples use the bundled sample
 ``examples/Quality_of_Life.xml``; replace it with your own file before running
 the commands if needed.
 
@@ -50,10 +61,9 @@ the commands if needed.
 
 ## 4. Bundle the workflow into a script
 
-1. Create ``scripts/validate.sh`` with the following content (the ``Quality_of_Life.xml``
-   sample ships with the repository; to regenerate a synthetic instance, run
-   ``python -m ddi_l.examples.build_and_validate --refresh`` to create
-   ``examples/example_instance.xml``):
+1. Create ``scripts/validate.sh`` with the following content. It defaults to
+   the ``examples/Quality_of_Life.xml`` sample you copied above; pass another
+   file as the first argument:
 
     ```bash
     #!/usr/bin/env bash

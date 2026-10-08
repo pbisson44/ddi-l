@@ -1,33 +1,42 @@
+---
+description: >-
+  Empaqueter des fragments DDI réutilisables, les partager avec d'autres
+  équipes et les intégrer à de nouvelles instances avec ddi-l.
+---
+
 # Atelier de réutilisation de fragments
 
-Cet atelier prolonge le script de reconstruction de fragments dans ``examples`` pour apprendre à empaqueter des fragments réutilisables, les distribuer à d'autres équipes et les réutiliser dans de nouvelles instances DDI.
+Cet atelier prolonge le script de reconstruction de fragments dans ``ddi_l.examples`` pour apprendre à empaqueter des fragments réutilisables, les distribuer à d'autres équipes et les réutiliser dans de nouvelles instances DDI.
 
-!!! note
-    Installez le projet en mode éditable (``pip install -e .``) afin que les exemples puissent localiser les modules ``ddi_l``.
-
-!!! warning "Localiser les exemples empaquetés"
-    Les scripts de fragments chargent les fichiers XML inclus dans la wheel sous
-    ``ddi_l.examples`` plutôt que dans un dépôt cloné. Résolvez ces fichiers
-    empaquetés avec ``importlib.resources`` et passez le chemin obtenu aux
-    chargeurs (par exemple ``DDIDocument.from_xml``) :
+!!! note "Avant de commencer"
+    Installez `ddi-l` avec `pip install ddi-l`. Les étapes ci-dessous
+    utilisent des fichiers d'exemple fournis avec le paquet. Exécutez une fois
+    ce code Python pour les copier dans un dossier `examples/` de votre
+    répertoire de travail :
 
     ```python
-    from importlib import resources
-    from ddi_l import examples
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
 
-    with resources.as_file(
-        resources.files(examples) / "example_fragment.xml"
-    ) as fragment_path:
-        print(fragment_path)
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
     ```
 
 ## 1. Reconstruire le paquet de fragments d'exemple
 
-1. Exécutez ``python -m ddi_l.examples.build_and_validate --refresh --refresh-fragment``
-   pour régénérer l'exemple. Le script réécrit
-   ``examples/example_instance.xml`` et le fragment par défaut situé dans
-   ``examples/example_fragment.xml`` tout en affichant une confirmation de la
-   validation des deux charges utiles.
+1. Régénérez l'exemple dans votre dossier ``examples/`` :
+
+    ```bash
+    python -m ddi_l.examples.build_and_validate --refresh --refresh-fragment \
+      --output examples/example_instance.xml \
+      --fragment-output examples/example_fragment.xml
+    ```
+
+    Le script réécrit les deux fichiers et confirme que les deux charges utiles
+    sont valides. Sans ``--output`` ni ``--fragment-output``, il écrit dans le
+    paquet installé.
 2. Inspectez les sorties XML régénérées de l'instance et du fragment pour voir
    comment les maintainables sont empaquetés et comment les messages de
    validation décrivent la reconstruction.

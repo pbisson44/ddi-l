@@ -1,3 +1,9 @@
+---
+description: >-
+  Valider des documents DDI avec les schémas 3.1, 3.2 et 3.3 inclus,
+  exécuter les règles de lint et lire les résultats en Python ou en CLI.
+---
+
 # Valider et analyser le contenu DDI
 
 `ddi-l` vérifie les documents de deux façons : la validation par rapport aux

@@ -1,19 +1,32 @@
+---
+description: >-
+  Enchaîner la CLI ddi dans des pipelines CI : rapports JSON, codes de
+  sortie, aller-retour des fichiers et script réutilisable.
+---
+
 # Carnet d'automatisation en ligne de commande
 
 Ce carnet enchaîne les commandes ``ddi`` en tâches automatisées reproductibles à intégrer dans vos pipelines CI/CD. Les exercices portent sur les codes de sortie, la journalisation et la conservation des fichiers produits, pour qu'une exécution en échec indique ce qu'il faut corriger.
 
-!!! note
-    Les extraits supposent que la CLI est disponible sur votre ``PATH`` (`pip install -e .`) et que vous travaillez depuis la racine du dépôt.
+!!! note "Avant de commencer"
+    Installez `ddi-l` avec `pip install ddi-l`. Les commandes ci-dessous
+    utilisent des fichiers d'exemple fournis avec le paquet. Exécutez une fois
+    ce code Python pour les copier dans un dossier `examples/` de votre
+    répertoire de travail :
 
-!!! note "Utiliser les exemples du paquet"
-    La roue publiée inclut le répertoire ``examples/``. Retrouvez son chemin
-    installé via ``importlib.resources`` (voir le
-    [guide d'installation](../installation.md))
-    plutôt que de cloner le dépôt uniquement pour accéder aux charges XML.
+    ```python
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
+
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
+    ```
 
 ## 1. Valider et capturer les rapports JSON
 
-   Le dépôt fournit un échantillon prêt à l'emploi : ``examples/Quality_of_Life.xml``. Utilisez-le ou remplacez-le par votre propre fichier avant de lancer les commandes suivantes.
+Les exemples utilisent l'échantillon fourni ``examples/Quality_of_Life.xml``. Utilisez-le ou remplacez-le par votre propre fichier avant de lancer les commandes suivantes.
 
 1. Créez le répertoire des rapports avec ``mkdir -p reports`` afin que la redirection fonctionne même dans un espace de travail vierge.
 2. Exécutez ``ddi validate --format json examples/Quality_of_Life.xml > reports/validation.json``.

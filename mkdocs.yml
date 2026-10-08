@@ -5,61 +5,65 @@ repo_url: https://github.com/pbisson44/ddi-l
 repo_name: pbisson44/ddi-l
 edit_uri: edit/main/docs/
 site_dir: site
+# Pages deliberately left out of the nav: the branding notes (linked from the
+# development guide) and the retired tutorials, kept as pointers to the
+# curriculum so old links still work. Listing them here stops MkDocs reporting
+# them on every build.
+not_in_nav: |
+  /assets/README.*.md
+  /tutorials/authoring.*.md
+  /tutorials/persona-learning-paths.*.md
+  /tutorials/training-labs.*.md
 # This nav appears three times: here (fallback without the i18n plugin) and
 # under each `i18n` locale below. Keep all three in step when adding a page.
 nav:
-  - Overview: index.md
-  - Get started:
+  - Home:
+      - index.md
       - Install ddi-l: installation.md
-      - User guide: user-guide.md
-      - Browse CLI recipes: cli-recipes.md
-  - Guides:
+  - Learn:
+      - curriculum/index.md
+      - "Module 1: What is metadata?": curriculum/module-01-what-is-metadata.md
+      - "Module 2: Set up your environment": curriculum/module-02-setup.md
+      - "Module 3: Create your first study": curriculum/module-03-first-study.md
+      - "Module 4: Variables and questions": curriculum/module-04-variables.md
+      - "Module 5: Concepts and universes": curriculum/module-05-concepts-universes.md
+      - "Module 6: Open and modify files": curriculum/module-06-open-modify.md
+      - "Module 7: Validate from the command line": curriculum/module-07-cli-validation.md
+      - "Module 8: From CSV/Excel to DDI": curriculum/module-08-csv-to-ddi.md
+      - "Module 9: Code lists": curriculum/module-09-code-lists.md
+      - "Module 10: Questionnaire flows": curriculum/module-10-questionnaire-flows.md
+      - "Module 11: Data lineage": curriculum/module-11-data-lineage.md
+      - "Module 12: Data linkage": curriculum/module-12-data-linkage.md
+      - "Module 13: Properties, find, and validate": curriculum/module-13-properties-find-validate.md
+      - "Module 14: Custom fields": curriculum/module-14-custom-fields.md
+      - "Module 15: Update and version": curriculum/module-15-update-and-version.md
+      - "Module 16: Capstone projects": curriculum/module-16-capstone.md
+      - Instructor guide: curriculum/instructor-guide.md
+      - Cheat sheet: curriculum/cheat-sheet.md
+      - Answer keys: curriculum/answer-keys.md
+  - How-to guides:
       - Validate and lint DDI content: validation.md
-      - HTTP API: server.md
-      - Models reference: models.md
-  - Tutorial library:
-      - Authoring workflows: tutorials/authoring.md
-      - Interactive training exercises: tutorials/training-labs.md
-      - Persona-based learning tracks: tutorials/persona-learning-paths.md
-      - From XML to objects: tutorials/xml-to-objects.md
-      - Schema troubleshooting clinic: tutorials/schema-troubleshooting-clinic.md
-      - Command-line automation playbook: tutorials/automation-playbook.md
-      - Fragment reuse lab: tutorials/fragment-reuse-lab.md
+      - Use the command line: cli-recipes.md
+      - Automate validation in CI: tutorials/automation-playbook.md
+      - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
+      - Reuse fragments: tutorials/fragment-reuse-lab.md
+      - Move between XML and objects: tutorials/xml-to-objects.md
+      - Serve the HTTP API: server.md
+      - Use ddi-l from R: r-users.md
       - Build tools and applications: tutorials/building-tools.md
-      - Using ddi-l from R: r-users.md
-  - Training Curriculum:
-      - Overview: curriculum/index.md
-      - "Module 1: What Is Metadata?": curriculum/module-01-what-is-metadata.md
-      - "Module 2: Set Up Your Environment": curriculum/module-02-setup.md
-      - "Module 3: Create Your First Study": curriculum/module-03-first-study.md
-      - "Module 4: Variables and Questions": curriculum/module-04-variables.md
-      - "Module 5: Concepts and Universes": curriculum/module-05-concepts-universes.md
-      - "Module 6: From CSV/Excel to DDI": curriculum/module-06-csv-to-ddi.md
-      - "Module 7: Code Lists": curriculum/module-07-code-lists.md
-      - "Module 8: Questionnaire Flows": curriculum/module-08-questionnaire-flows.md
-      - "Module 9: Data Lineage": curriculum/module-09-data-lineage.md
-      - "Module 10: Data Linkage": curriculum/module-10-data-linkage.md
-      - "Module 11: Properties, Find, and Validate": curriculum/module-11-properties-find-validate.md
-      - "Module 12: Custom Fields": curriculum/module-12-custom-fields.md
-      - "Module 13: Update and Version": curriculum/module-13-update-and-version.md
-      - "Module 14: Open and Modify Files": curriculum/module-14-open-modify.md
-      - "Module 15: CLI Validation": curriculum/module-15-cli-validation.md
-      - "Module 16: Capstone Projects": curriculum/module-16-capstone.md
-      - Instructor Guide: curriculum/instructor-guide.md
-      - Cheat Sheet: curriculum/cheat-sheet.md
-      - Answer Keys: curriculum/answer-keys.md
   - Reference:
+      - User guide: user-guide.md
       - API reference: api.md
+      - Models reference: models.md
       - Namespace catalog: namespaces.md
       - Schema coverage: schema-coverage.md
-      - Related Python packages: ddi-l-friendly-packages.md
-      - Performance playbook:
-          - Overview: performance.md
-          - Schema conversion benchmark: performance/schema_conversion.md
-  - Project:
+  - About:
       - Release notes: release-notes.md
-      - Contributor guide: DEVELOPMENT.md
-      - Branding assets: assets/README.md
+      - Performance playbook:
+          - performance.md
+          - Schema conversion benchmark: performance/schema_conversion.md
+      - Related Python packages: ddi-l-friendly-packages.md
+      - Development guide: DEVELOPMENT.md
 theme:
   name: material
   custom_dir: docs/overrides
@@ -149,58 +153,53 @@ plugins:
           name: English
           default: true
           nav:
-            - Overview: index.md
-            - Get started:
+            - Home:
+                - index.md
                 - Install ddi-l: installation.md
-                - User guide: user-guide.md
-                - Browse CLI recipes: cli-recipes.md
-            - Guides:
+            - Learn:
+                - curriculum/index.md
+                - "Module 1: What is metadata?": curriculum/module-01-what-is-metadata.md
+                - "Module 2: Set up your environment": curriculum/module-02-setup.md
+                - "Module 3: Create your first study": curriculum/module-03-first-study.md
+                - "Module 4: Variables and questions": curriculum/module-04-variables.md
+                - "Module 5: Concepts and universes": curriculum/module-05-concepts-universes.md
+                - "Module 6: Open and modify files": curriculum/module-06-open-modify.md
+                - "Module 7: Validate from the command line": curriculum/module-07-cli-validation.md
+                - "Module 8: From CSV/Excel to DDI": curriculum/module-08-csv-to-ddi.md
+                - "Module 9: Code lists": curriculum/module-09-code-lists.md
+                - "Module 10: Questionnaire flows": curriculum/module-10-questionnaire-flows.md
+                - "Module 11: Data lineage": curriculum/module-11-data-lineage.md
+                - "Module 12: Data linkage": curriculum/module-12-data-linkage.md
+                - "Module 13: Properties, find, and validate": curriculum/module-13-properties-find-validate.md
+                - "Module 14: Custom fields": curriculum/module-14-custom-fields.md
+                - "Module 15: Update and version": curriculum/module-15-update-and-version.md
+                - "Module 16: Capstone projects": curriculum/module-16-capstone.md
+                - Instructor guide: curriculum/instructor-guide.md
+                - Cheat sheet: curriculum/cheat-sheet.md
+                - Answer keys: curriculum/answer-keys.md
+            - How-to guides:
                 - Validate and lint DDI content: validation.md
-                - HTTP API: server.md
-                - Models reference: models.md
-            - Tutorial library:
-                - Authoring workflows: tutorials/authoring.md
-                - Interactive training exercises: tutorials/training-labs.md
-                - Persona-based learning tracks: tutorials/persona-learning-paths.md
-                - From XML to objects: tutorials/xml-to-objects.md
-                - Schema troubleshooting clinic: tutorials/schema-troubleshooting-clinic.md
-                - Command-line automation playbook: tutorials/automation-playbook.md
-                - Fragment reuse lab: tutorials/fragment-reuse-lab.md
+                - Use the command line: cli-recipes.md
+                - Automate validation in CI: tutorials/automation-playbook.md
+                - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
+                - Reuse fragments: tutorials/fragment-reuse-lab.md
+                - Move between XML and objects: tutorials/xml-to-objects.md
+                - Serve the HTTP API: server.md
+                - Use ddi-l from R: r-users.md
                 - Build tools and applications: tutorials/building-tools.md
-                - Using ddi-l from R: r-users.md
-            - Training Curriculum:
-                - Overview: curriculum/index.md
-                - "Module 1: What Is Metadata?": curriculum/module-01-what-is-metadata.md
-                - "Module 2: Set Up Your Environment": curriculum/module-02-setup.md
-                - "Module 3: Create Your First Study": curriculum/module-03-first-study.md
-                - "Module 4: Variables and Questions": curriculum/module-04-variables.md
-                - "Module 5: Concepts and Universes": curriculum/module-05-concepts-universes.md
-                - "Module 6: From CSV/Excel to DDI": curriculum/module-06-csv-to-ddi.md
-                - "Module 7: Code Lists": curriculum/module-07-code-lists.md
-                - "Module 8: Questionnaire Flows": curriculum/module-08-questionnaire-flows.md
-                - "Module 9: Data Lineage": curriculum/module-09-data-lineage.md
-                - "Module 10: Data Linkage": curriculum/module-10-data-linkage.md
-                - "Module 11: Properties, Find, and Validate": curriculum/module-11-properties-find-validate.md
-                - "Module 12: Custom Fields": curriculum/module-12-custom-fields.md
-                - "Module 13: Update and Version": curriculum/module-13-update-and-version.md
-                - "Module 14: Open and Modify Files": curriculum/module-14-open-modify.md
-                - "Module 15: CLI Validation": curriculum/module-15-cli-validation.md
-                - "Module 16: Capstone Projects": curriculum/module-16-capstone.md
-                - Instructor Guide: curriculum/instructor-guide.md
-                - Cheat Sheet: curriculum/cheat-sheet.md
-                - Answer Keys: curriculum/answer-keys.md
             - Reference:
+                - User guide: user-guide.md
                 - API reference: api.md
+                - Models reference: models.md
                 - Namespace catalog: namespaces.md
                 - Schema coverage: schema-coverage.md
-                - Related Python packages: ddi-l-friendly-packages.md
-                - Performance playbook:
-                    - Overview: performance.md
-                    - Schema conversion benchmark: performance/schema_conversion.md
-            - Project:
+            - About:
                 - Release notes: release-notes.md
-                - Contributor guide: DEVELOPMENT.md
-                - Branding assets: assets/README.md
+                - Performance playbook:
+                    - performance.md
+                    - Schema conversion benchmark: performance/schema_conversion.md
+                - Related Python packages: ddi-l-friendly-packages.md
+                - Development guide: DEVELOPMENT.md
           extra:
             site_name: "ddi-l: DDI Lifecycle"
             site_description: Reference and tutorials for the ddi-l toolkit.
@@ -222,58 +221,53 @@ plugins:
         - locale: fr
           name: "Fran\xE7ais"
           nav:
-            - "Aper\xE7u": index.md
-            - "Bien d\xE9marrer":
+            - Accueil:
+                - index.md
                 - Installer ddi-l: installation.md
-                - Guide d'utilisation: user-guide.md
-                - Parcourir les recettes CLI: cli-recipes.md
-            - Guides:
-                - Valider et analyser le contenu DDI: validation.md
-                - "API HTTP": server.md
-                - "R\xE9f\xE9rence des mod\xE8les": models.md
-            - "Biblioth\xE8que de tutoriels":
-                - "Workflows d'auteur": tutorials/authoring.md
-                - "Exercices d'entra\xEEnement interactifs": tutorials/training-labs.md
-                - Parcours d'apprentissage par persona: tutorials/persona-learning-paths.md
-                - De XML aux objets: tutorials/xml-to-objects.md
-                - "Clinique de d\xE9pannage des sch\xE9mas": tutorials/schema-troubleshooting-clinic.md
-                - Guide d'automatisation en ligne de commande: tutorials/automation-playbook.md
-                - "Laboratoire de r\xE9utilisation de fragments": tutorials/fragment-reuse-lab.md
-                - Construire des outils et applications: tutorials/building-tools.md
-                - Utiliser ddi-l depuis R: r-users.md
-            - "Programme de formation":
-                - "Aper\xE7u": curriculum/index.md
+            - Apprendre:
+                - curriculum/index.md
                 - "Module 1 : Qu’est-ce que les m\xE9tadonn\xE9es\xA0?": curriculum/module-01-what-is-metadata.md
                 - "Module 2 : Pr\xE9parez votre environnement": curriculum/module-02-setup.md
                 - "Module 3 : Cr\xE9ez votre premi\xE8re \xE9tude": curriculum/module-03-first-study.md
                 - "Module 4 : Variables et questions": curriculum/module-04-variables.md
                 - "Module 5 : Concepts et univers": curriculum/module-05-concepts-universes.md
-                - "Module 6 : Du CSV/Excel au DDI": curriculum/module-06-csv-to-ddi.md
-                - "Module 7 : Listes de codes": curriculum/module-07-code-lists.md
-                - "Module 8 : Flux de questionnaire": curriculum/module-08-questionnaire-flows.md
-                - "Module 9 : Tra\xE7abilit\xE9 des donn\xE9es": curriculum/module-09-data-lineage.md
-                - "Module 10 : Couplage de donn\xE9es": curriculum/module-10-data-linkage.md
-                - "Module 11 : Propri\xE9t\xE9s, recherche et validation": curriculum/module-11-properties-find-validate.md
-                - "Module 12 : Champs personnalis\xE9s": curriculum/module-12-custom-fields.md
-                - "Module 13 : Mise \xE0 jour et versionnage": curriculum/module-13-update-and-version.md
-                - "Module 14 : Ouvrir et modifier des fichiers": curriculum/module-14-open-modify.md
-                - "Module 15 : Validation en ligne de commande": curriculum/module-15-cli-validation.md
+                - "Module 6 : Ouvrir et modifier des fichiers": curriculum/module-06-open-modify.md
+                - "Module 7 : Valider depuis la ligne de commande": curriculum/module-07-cli-validation.md
+                - "Module 8 : Du CSV/Excel au DDI": curriculum/module-08-csv-to-ddi.md
+                - "Module 9 : Listes de codes": curriculum/module-09-code-lists.md
+                - "Module 10 : Flux de questionnaire": curriculum/module-10-questionnaire-flows.md
+                - "Module 11 : Tra\xE7abilit\xE9 des donn\xE9es": curriculum/module-11-data-lineage.md
+                - "Module 12 : Couplage de donn\xE9es": curriculum/module-12-data-linkage.md
+                - "Module 13 : Propri\xE9t\xE9s, recherche et validation": curriculum/module-13-properties-find-validate.md
+                - "Module 14 : Champs personnalis\xE9s": curriculum/module-14-custom-fields.md
+                - "Module 15 : Mise \xE0 jour et versionnage": curriculum/module-15-update-and-version.md
                 - "Module 16 : Projets de synth\xE8se": curriculum/module-16-capstone.md
                 - "Guide de l’instructeur": curriculum/instructor-guide.md
                 - "Aide-m\xE9moire": curriculum/cheat-sheet.md
                 - "Corrig\xE9s": curriculum/answer-keys.md
+            - Guides pratiques:
+                - Valider et analyser le contenu DDI: validation.md
+                - Utiliser la ligne de commande: cli-recipes.md
+                - Automatiser la validation en CI: tutorials/automation-playbook.md
+                - "D\xE9panner les erreurs de sch\xE9ma": tutorials/schema-troubleshooting-clinic.md
+                - "R\xE9utiliser des fragments": tutorials/fragment-reuse-lab.md
+                - Passer du XML aux objets: tutorials/xml-to-objects.md
+                - Servir l'API HTTP: server.md
+                - Utiliser ddi-l depuis R: r-users.md
+                - Construire des outils et applications: tutorials/building-tools.md
             - "R\xE9f\xE9rence":
+                - Guide d'utilisation: user-guide.md
                 - "R\xE9f\xE9rence de l'API": api.md
+                - "R\xE9f\xE9rence des mod\xE8les": models.md
                 - Catalogue des espaces de noms: namespaces.md
                 - "Couverture du sch\xE9ma": schema-coverage.md
-                - "Paquets Python associ\xE9s": ddi-l-friendly-packages.md
-                - Playbook de performance:
-                    - "Aper\xE7u": performance.md
-                    - "Benchmark de conversion de sch\xE9mas": performance/schema_conversion.md
-            - Projet:
+            - "\xC0 propos":
                 - Notes de version: release-notes.md
-                - Guide du contributeur: DEVELOPMENT.md
-                - Ressources de marque: assets/README.md
+                - Playbook de performance:
+                    - performance.md
+                    - "Benchmark de conversion de sch\xE9mas": performance/schema_conversion.md
+                - "Paquets Python associ\xE9s": ddi-l-friendly-packages.md
+                - "Guide de d\xE9veloppement": DEVELOPMENT.md
           extra:
             site_name: "ddi-l : DDI Lifecycle"
             "site_description": "R\xE9f\xE9rence et tutoriels pour la bo\xEEte \xE0 outils ddi-l."
@@ -323,6 +317,7 @@ hooks:
   - hooks/copy_sitemap.py
   - hooks/version_selector.py
   - hooks/quiet_i18n_logs.py
+  - hooks/answer_keys.py
 extra_css:
   - assets/stylesheets/palette.css
   - assets/stylesheets/accessibility.css

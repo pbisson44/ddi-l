@@ -1,3 +1,9 @@
+---
+description: >-
+  Paquets Python utiles à côté de ddi-l pour analyser, valider, transformer
+  et publier du contenu DDI Lifecycle.
+---
+
 # Paquets Python associés
 
 Des paquets utiles à côté de `ddi-l` pour lire, valider ou transformer du

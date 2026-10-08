@@ -1,4 +1,10 @@
-# Module 16: Real-World Capstone Projects
+---
+description: >-
+  Module 16 of the ddi-l course: four capstone projects, for students,
+  researchers, archivists and statistical office staff.
+---
+
+# Module 16: Real-world capstone projects
 
 !!! info "What you will learn"
     - Combine everything from Modules 1-15 into a complete project.
@@ -123,6 +129,67 @@ It is the simplest starting point.
 - `thesis-v1.xml`: valid DDI document with 10+ variables.
 - `thesis-v1.1.xml`: updated version with the new variable and a rationale.
 
+??? success "Sample solution"
+    One complete script for all the steps above, using
+    [`thesis-data.csv`](thesis-data.csv){ download="thesis-data.csv" }.
+
+    ```python
+    import csv
+    import ddi_l as ddi
+    from ddi_l.models.base import VersionRationale, InternationalString
+
+    # Read CSV
+    with open("thesis-data.csv") as f:
+        columns = csv.DictReader(f).fieldnames
+
+    # Create v1.0
+    doc = ddi.new_study(title="Thesis Dataset", agency="university.edu")
+    # How each column was asked. StudentID is assigned and AnxietyScore is computed
+    # from a questionnaire, so neither gets a question of its own.
+    QUESTIONS = {
+        "Age": "How old are you?",
+        "Gender": "What is your gender?",
+        "YearOfStudy": "What year of your program are you in?",
+        "Program": "Which program are you enrolled in?",
+        "StudyHours": "On a typical day, how many hours do you study?",
+        "SleepHours": "On a typical night, how many hours do you sleep?",
+        "WorkHours": "How many hours a week do you work for pay?",
+        "ExerciseDays": "On how many days last week did you exercise?",
+        "StressLevel": "On a scale of 1 to 10, how stressed have you felt this term?",
+        "SoughtSupport": "Have you sought support from campus services this term?",
+    }
+    for col in columns:
+        wording = QUESTIONS.get(col)
+        q = doc.add_question(text=wording) if wording else None
+        v = doc.add_variable(name=col, question=q)
+        v.set_property("source", "Primary survey data")
+
+    doc.add_concept(name="Demographics")
+    doc.add_concept(name="Academic Performance")
+    doc.add_concept(name="Well-Being")
+    doc.add_universe(name="Undergraduate students at University X")
+
+    doc.save("thesis-v1.xml")
+    issues = doc.validate()
+    print(f"v1 valid: {not issues}")
+
+    # Update to v1.1
+    doc = ddi.open_ddi("thesis-v1.xml")
+    q_new = doc.add_question(text="What is the student's GPA?")
+    v_new = doc.add_variable(name="GPA", question=q_new)
+
+    study = doc.study_unit
+    study.increment_minor_version()
+    study.version_rationales.append(
+        VersionRationale(
+            descriptions=[InternationalString(text="Added GPA variable for analysis")]
+        )
+    )
+    study.version_responsibility = "Thesis Author"
+    doc.save("thesis-v1.1.xml")
+    print(f"v1.1 valid: {not doc.validate()}")
+    ```
+
 ---
 
 ## Track B: Researcher: Package a Health Survey for Publication
@@ -155,7 +222,7 @@ It is the simplest starting point.
     ```
 
     If your data is in an Excel workbook, read the column names with pandas
-    instead (see [Module 6](module-06-csv-to-ddi.md)):
+    instead (see [Module 8](module-08-csv-to-ddi.md)):
 
     <!-- docs-test: skip -- needs pandas and a workbook the reader supplies -->
     ```python
@@ -427,7 +494,7 @@ It is the simplest starting point.
 7. **Update to version 2.0**: major redesign (add 5 new questions, retire
    3 old ones). Retiring a question also retires the variables that recorded
    its answers; otherwise they would keep pointing at a question that is no
-   longer in the file (see [Module 13](module-13-update-and-version.md)):
+   longer in the file (see [Module 15](module-15-update-and-version.md)):
 
     ```python
     # Add new questions

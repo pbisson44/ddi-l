@@ -1,4 +1,40 @@
+---
+description: >-
+  Ce qui a changé dans chaque version de ddi-l, y compris les changements
+  incompatibles tant que la version est 0.x.
+---
+
 # Notes de version
+
+## Non publié
+
+### Documentation
+
+- **Les liens sans version ne renvoient plus d'erreur 404.** Le README et le
+  modèle de ticket passent par `/latest/`, et la racine du site sert désormais
+  un `404.html` qui redirige tout chemin sans version (`/ddi-l/server/`) vers
+  la même page sous `/latest/` et renvoie les pages renommées du programme
+  vers leur nouveau nom.
+- **Installation depuis PyPI partout.** Les pages qui indiquaient
+  `pip install .` ou `pip install -e .` indiquent maintenant
+  `pip install ddi-l`, et les onglets d'installation ajoutent `uv add ddi-l`.
+- **Un seul endroit pour apprendre.** Le site s'organise en Apprendre (le
+  programme), Guides pratiques, Référence et À propos. Le tutoriel de
+  rédaction, les laboratoires et les parcours par profil sont intégrés au
+  programme, qui a désormais un seul ensemble de profils d'apprenants et un
+  parcours automatisation.
+- **Ordre du programme.** L'ouverture de fichiers et la validation en ligne de
+  commande passent aux modules 6 et 7, et le module 3 vérifie désormais le
+  travail avec `doc.validate()` et `doc.lint()`, pour que les apprenants
+  valident dès le départ. Les modules 6 à 13 deviennent 8 à 15.
+- **Réponses sous chaque exercice.** Chaque exercice a une réponse
+  repliable. La page des corrigés pour les instructeurs est générée à partir
+  des modules et ne peut donc plus s'en écarter.
+- **Page d'accueil.** Un premier exemple sans avertissement de lint, ce
+  qu'est le DDI, la prise en charge de DDI 3.1, 3.2 et 3.3, un schéma d'une
+  étude, une tuile Apprendre, une tuile R / API HTTP et une section « Citer
+  ddi-l ». Chaque page a désormais sa propre description pour les moteurs de
+  recherche.
 
 ## 0.1.0
 

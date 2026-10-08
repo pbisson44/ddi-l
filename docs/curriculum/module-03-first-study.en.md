@@ -1,17 +1,24 @@
-# Module 3: Create Your First DDI Study
+---
+description: >-
+  Module 3 of the ddi-l course: create a DDI study, add questions in two
+  languages, save it as XML and check it with validate and lint.
+---
+
+# Module 3: Create your first DDI study
 
 !!! info "What you will learn"
     - Create a new DDI study using `ddi.new_study()`.
     - Add survey questions using `doc.add_question()`.
     - List questions with `doc.questions`.
     - Save the study to an XML file using `doc.save()`.
+    - Check your work with `doc.validate()` and `doc.lint()`.
 
-**Prerequisites:** [Module 2: Set Up Your Python Environment](module-02-setup.md)
+**Prerequisites:** [Module 2: Set up your Python environment](module-02-setup.md)
 
 **Time:** 30 min self-paced / 45 min instructor-led.
 
 **API taught:** `ddi.new_study()`, `doc.add_question()`, `doc.questions`,
-`doc.save()`
+`doc.save()`, `doc.validate()`, `doc.lint()`
 
 ---
 
@@ -90,11 +97,9 @@ survey might be in both English and French. DDI can store the same question in
 multiple languages inside a single document.
 
 Every `add_question()` call accepts a `lang=` argument. The default is
-`lang="en"` (English). To create a question in French, pass `lang="fr"`:
-
-```python
-q1 = doc.add_question(text="What is your age?", lang="en")
-```
+`lang="en"` (English), so the questions you added above are in English. To
+create a question in French, pass `lang="fr"`, as in
+`doc.add_question(text="Quel est votre âge ?", lang="fr")`.
 
 To add a French translation of the same question, append it to the
 question's `question_texts` list:
@@ -110,7 +115,7 @@ opens the DDI file, they can see both versions.
 
 The `lang=` argument works on all `add_*` methods: `add_variable()`,
 `add_concept()`, `add_universe()`, and `add_code_list()`. You can also append
-translations to their `names` list the same way. Module 6 shows a complete
+translations to their `names` list the same way. Module 8 shows a complete
 bilingual workflow.
 
 ---
@@ -178,6 +183,69 @@ Cross-reference: [User guide: Create a study](../user-guide.md#create-a-study)
 
 ---
 
+## 9. Check your work
+
+Get into the habit of checking a study before you share it. `ddi-l` runs two
+kinds of check:
+
+- **Validation** compares the document with the DDI **schema**: the official
+  rules for which elements are allowed, where they go, and which ones are
+  required. A document that fails validation is not valid DDI.
+- **Linting** looks for problems the schema allows but that are usually
+  mistakes, such as an item with no label.
+
+```python
+issues = doc.validate()
+print(f"Schema problems: {len(issues)}")
+
+findings = doc.lint()
+print(f"Lint findings: {len(findings)}")
+for finding in findings:
+    print(f"  [{finding.severity}] {finding.message}")
+```
+
+Expected output:
+
+```text
+Schema problems: 0
+Lint findings: 3
+  [warning] Maintainable element is missing a label.
+  [warning] Maintainable element is missing a label.
+  [warning] Maintainable element is missing a label.
+```
+
+The study is valid DDI. The three warnings say that your questions have no
+**label**: a short name that catalogues and other tools show instead of the
+full question text. Add a label to each question and check again:
+
+```python
+q1.labels.append(InternationalString(text="Age", lang="en"))
+q2.labels.append(InternationalString(text="Self-rated health", lang="en"))
+q3.labels.append(InternationalString(text="Hours of sleep", lang="en"))
+
+print(f"Lint findings: {len(doc.lint())}")
+doc.save("well-being.xml")
+```
+
+Expected output:
+
+```text
+Lint findings: 0
+```
+
+When you add a new item, you can give it a label straight away. Every `add_*`
+method accepts `label=`:
+
+```python
+q4 = doc.add_question(text="Do you exercise every week?", label="Weekly exercise")
+```
+
+Warnings do not make a document invalid; schema errors do. Check your work
+like this at the end of every module. [Module 7](module-07-cli-validation.md)
+runs the same checks from the command line.
+
+---
+
 ## Exercises
 
 !!! example "Scenario"
@@ -194,41 +262,51 @@ agency `"university.edu"`. Add three questions:
 
 Save the study as `well-being.xml`. Print the question count.
 
-```python
-import ddi_l as ddi
-
-doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
-
-q1 = doc.add_question(text="What is your age?")
-q2 = doc.add_question(text="How would you rate your health?")
-q3 = doc.add_question(text="How many hours do you sleep per night?")
-
-print(f"Questions: {len(doc.questions)}")
-doc.save("well-being.xml")
-```
-
 Expected output:
 
 ```text
 Questions: 3
 ```
 
+??? success "Answer"
+    ```python
+    import ddi_l as ddi
+
+    doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
+
+    q1 = doc.add_question(text="What is your age?")
+    q2 = doc.add_question(text="How would you rate your health?")
+    q3 = doc.add_question(text="How many hours do you sleep per night?")
+
+    print(f"Questions: {len(doc.questions)}")
+    doc.save("well-being.xml")
+    ```
+
 **Exercise 2.** Open `well-being.xml` in a text editor. Can you find the text
 of your first question inside the XML? Write down the XML tag that wraps the
 question text.
 
+??? success "Answer"
+    The question text sits in a `<d:Text>` element, inside `<d:LiteralText>`
+    inside `<d:QuestionText>`:
+
+    ```xml
+    <d:Text xml:lang="en" isPlainText="true">What is your age?</d:Text>
+    ```
+
 **Exercise 3.** Add a French translation to the first question. Then save
 the file again and check the XML for both languages.
 
-```python
-from ddi_l.models.base import InternationalString
+??? success "Answer"
+    ```python
+    from ddi_l.models.base import InternationalString
 
-q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))
-doc.save("well-being.xml")
-```
+    q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))
+    doc.save("well-being.xml")
+    ```
 
-Open the XML. You should see both `xml:lang="en"` and `xml:lang="fr"` entries
-for the first question.
+    Open the XML. You should see both `xml:lang="en"` and `xml:lang="fr"` entries
+    for the first question.
 
 ---
 
@@ -302,6 +380,21 @@ for the first question.
     ??? success "Answer"
         **B.** `doc.questions` gives you the list of questions, and `len()`
         counts how many items are in that list.
+
+???+ question "Question 6: doc.validate() returns an empty list, but doc.lint() reports warnings. Is the document valid DDI?"
+    **A.** No. Any finding makes a document invalid.
+
+    **B.** Yes. Validation checks the schema; lint warnings point to quality
+    problems, such as a missing label, that the schema allows.
+
+    **C.** Only after you save it.
+
+    **D.** It depends on the language of the questions.
+
+    ??? success "Answer"
+        **B.** An empty list from `doc.validate()` means the document follows
+        the DDI schema. Lint warnings are worth fixing, but they do not make
+        the document invalid.
 
 ---
 

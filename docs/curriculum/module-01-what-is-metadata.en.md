@@ -1,4 +1,10 @@
-# Module 1: What Is Metadata and Why Does It Matter?
+---
+description: >-
+  Module 1 of the ddi-l course: what metadata is, why documentation matters,
+  the FAIR principles and where DDI fits.
+---
+
+# Module 1: What is metadata and why does it matter?
 
 !!! info "What you will learn"
     - Define metadata in your own words.
@@ -208,8 +214,20 @@ data.
 Write down **3 things** a new person would need to know before they could use
 this data. For example: What does column A measure?
 
+??? success "Answer"
+    Any three of these, or similar:
+
+    1. What each column means (is A an age? In years or months?)
+    2. Who was surveyed (students? adults? everyone?)
+    3. When the data was collected
+
 **Exercise 2.** Visit <https://ddialliance.org> and find one sentence on the
 site that describes what DDI does. Write that sentence down.
+
+??? success "Answer"
+    For example: "The Data Documentation Initiative (DDI) is an international
+    standard for describing data from the social, behavioral, economic, and health
+    sciences."
 
 ---
 

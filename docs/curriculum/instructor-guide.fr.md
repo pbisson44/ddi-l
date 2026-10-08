@@ -1,3 +1,9 @@
+---
+description: >-
+  Calendriers, liste de préparation, conseils d'animation et erreurs
+  courantes pour enseigner le programme de formation ddi-l.
+---
+
 # Guide de l'instructeur
 
 Ce guide aide les animateurs à donner le programme de formation `ddi-l`
@@ -19,9 +25,9 @@ Le programme fonctionne dans les deux modes :
 
 | Format | Modules | Durée totale |
 | -------- | --------- | -------------- |
-| Atelier d'une demi-journée (3 h) | 1-6 | Bases + CSV vers DDI |
-| Atelier d'une journée (6 h) | 1-14 | Tout sauf CLI et projet de synthèse |
-| Formation intensive de deux jours (8 h) | 1-16 | Programme complet avec projet de synthèse |
+| Atelier d'une demi-journée (3,5 h) | 1-7 | Bases, y compris l'ouverture de fichiers et la validation |
+| Atelier d'une journée (6 h) | 1-10 | Bases + CSV vers DDI, listes de codes et flux de questionnaire |
+| Formation intensive de deux jours (11 h) | 1-16 | Programme complet avec projet de synthèse |
 | Auto-formation | 1 par séance | ~3 semaines à 30-45 min/séance |
 
 ## Liste de vérification pour la préparation
@@ -70,6 +76,9 @@ ou un conteneur préconfiguré avec tout installé.
   sortie XML.
 - Erreur courante : oublier les guillemets autour des chaînes de
   caractères.
+- La section 9 présente `doc.validate()` et `doc.lint()`. Demandez aux
+  apprenants de les exécuter à la fin de chaque module suivant, avant
+  d'enregistrer.
 - Durée : 45 min avec la démonstration en direct.
 
 ### Module 4 : Variables et questions
@@ -87,7 +96,19 @@ ou un conteneur préconfiguré avec tout installé.
   demande ».
 - Durée : 40 min.
 
-### Module 6 : Du CSV/Excel au DDI
+### Module 6 : Ouvrir et modifier des fichiers
+
+- C'est le flux de travail de l'archiviste : recevoir → inspecter →
+  enrichir → valider → enregistrer.
+- Durée : 40 min.
+
+### Module 7 : Validation en ligne de commande
+
+- Pour les publics d'INS, passez plus de temps sur la validation par lot
+  et les codes de sortie.
+- Durée : 40 min.
+
+### Module 8 : Du CSV/Excel au DDI
 
 - C'est le module le plus important pour les chercheurs et le personnel
   d'INS. Montrez le flux complet : ouvrir un CSV, exécuter le script,
@@ -97,14 +118,14 @@ ou un conteneur préconfiguré avec tout installé.
 - Passez la section SQL pour les publics non techniques.
 - Durée : 60 min avec les exercices.
 
-### Module 7 : Listes de codes
+### Module 9 : Listes de codes
 
 - Montrez une liste de codes réelle (codes pays ISO, classifications
   d'emploi).
 - Erreur courante : oublier d'importer Category.
 - Durée : 50 min.
 
-### Module 8 : Flux de questionnaire
+### Module 10 : Flux de questionnaire
 
 - Commencez avec un devis papier à l'écran. Demandez aux apprenants
   d'encercler les questions, souligner les sauts et encadrer les
@@ -115,7 +136,7 @@ ou un conteneur préconfiguré avec tout installé.
   Expliquez la séparation contenu / flux.
 - Durée : 60 min.
 
-### Module 9 : Traçabilité des données
+### Module 11 : Traçabilité des données
 
 - Utilisez l'analogie de la recette : ingrédients bruts (collecte),
   cuisson (production), plat servi (maître). La provenance est la recette.
@@ -128,7 +149,7 @@ ou un conteneur préconfiguré avec tout installé.
 - Pour le personnel des INS : c'est la documentation de la piste d'audit.
 - Durée : 75 min.
 
-### Module 10 : Couplage de données
+### Module 12 : Couplage de données
 
 - Ancrez avec l'argument du fardeau : réutiliser le fichier fiscal plutôt
   que de redemander le revenu. Le couplage crée de nouveaux renseignements
@@ -147,7 +168,7 @@ ou un conteneur préconfiguré avec tout installé.
   données synthétiques.
 - Durée : 75 min.
 
-### Module 11 : Propriétés, recherche et validation
+### Module 13 : Propriétés, recherche et validation
 
 - Montrez que les propriétés personnalisées survivent aux allers-retours
   XML.
@@ -157,7 +178,7 @@ ou un conteneur préconfiguré avec tout installé.
   identifiant.
 - Durée : 50 min.
 
-### Module 12 : Champs personnalisés
+### Module 14 : Champs personnalisés
 
 - Commencez par le problème du « chiffrier parallèle » : les métadonnées
   locales gardées hors du fichier se désynchronisent toujours. Les champs
@@ -165,7 +186,7 @@ ou un conteneur préconfiguré avec tout installé.
 - Rendez le point d'ouverture explicite : DDI fournit un point d'extension
   *normalisé*. Montrez le XML `UserAttributePair` pour que les apprenants
   voient que c'est toujours du DDI valide.
-- Opposez au Module 11 : ce module enseignait la mécanique de `set_property` ;
+- Opposez au Module 13 : ce module enseignait la mécanique de `set_property` ;
   celui-ci gouverne les extensions : espaces de noms, catalogues, valeurs
   contrôlées, audit.
 - Clarifiez `UserID` vs propriété personnalisée : identifier vs décrire.
@@ -176,25 +197,13 @@ ou un conteneur préconfiguré avec tout installé.
   sont pour de véritables lacunes.
 - Durée : 55 min.
 
-### Module 13 : Mise à jour et versionnage
+### Module 15 : Mise à jour et versionnage
 
 - Module clé pour les archivistes et le personnel d'INS qui gèrent des
   enquêtes de longue durée.
 - Montrez le XML avant et après le versionnage pour que les apprenants
   voient le numéro de version et la justification dans le fichier.
 - Durée : 50 min.
-
-### Module 14 : Ouvrir et modifier des fichiers
-
-- C'est le flux de travail de l'archiviste : recevoir → inspecter →
-  enrichir → valider → enregistrer.
-- Durée : 40 min.
-
-### Module 15 : Validation en ligne de commande
-
-- Pour les publics d'INS, passez plus de temps sur la validation par lot
-  et les codes de sortie.
-- Durée : 40 min.
 
 ### Module 16 : Projets de synthèse
 
@@ -209,20 +218,21 @@ ou un conteneur préconfiguré avec tout installé.
 | -------- | -------- | ------------ |
 | Oublier les guillemets autour des chaînes | 3 | Montrez le message d'erreur et expliquez |
 | Passer du texte au lieu d'un objet à `question=` | 4 | Montrez la différence entre `"age"` et `q1` |
-| Oublier d'importer Category/Instrument | 7 | Montrez la ligne d'import explicitement |
-| Confondre Question et QuestionConstruct | 8 | Question = contenu, QuestionConstruct = étape du flux |
-| Confondre question_references et source_variable_references | 9 | question_ref = ce qui a été demandé, source_var_ref = quelles données ont été utilisées |
-| Utiliser `find()` avec un nom au lieu d'un identifiant | 11 | Affichez `item.identifier` d'abord |
-| Ne pas valider avant d'enregistrer | 11-13 | Faites de la validation une habitude : toujours valider avant d'enregistrer |
+| Oublier d'importer Category/Instrument | 9 | Montrez la ligne d'import explicitement |
+| Confondre Question et QuestionConstruct | 10 | Question = contenu, QuestionConstruct = étape du flux |
+| Confondre question_references et source_variable_references | 11 | question_ref = ce qui a été demandé, source_var_ref = quelles données ont été utilisées |
+| Utiliser `find()` avec un nom au lieu d'un identifiant | 13 | Affichez `item.identifier` d'abord |
+| Ne pas valider avant d'enregistrer | À partir du 3 | Faites de la validation une habitude : toujours valider avant d'enregistrer |
 
 ## Adapter le cours à chaque public
 
 | Public | Insister sur | Passer ou survoler |
 | -------- | ------------- | ------------------- |
-| Étudiants universitaires | Modules 1 (motivation), 3-6 (bases) | Section SQL du Module 6 |
-| Chercheurs | Modules 6 (flux CSV), 7-11 (listes de codes, flux, traçabilité, couplage, propriétés) | Module 1 s'ils connaissent les métadonnées |
-| Archivistes | Modules 13-14 (versionnage, ouvrir/modifier), 12 (champs personnalisés) | Modules 3-5 s'ils ont de l'expérience DDI |
-| Personnel d'INS | Modules 6-13 (flux complet), 8 (flux), 9 (traçabilité), 10 (couplage), 12 (champs personnalisés), 15 (CLI) | Module 1 s'ils ont de l'expérience DDI |
+| Étudiants universitaires | Modules 1 (motivation), 3-7 (bases et vérification du travail) | Section SQL du Module 8 |
+| Chercheurs | Modules 1, 4 et 5 (vocabulaire du DDI), 8 (flux CSV), 9-13 (listes de codes, flux, traçabilité, couplage, propriétés) | Module 2 s'ils utilisent déjà Python |
+| Archivistes | Modules 2-7 (Python, ouvrir/modifier, validation), 14 (champs personnalisés), 15 (versionnage) | Module 1 s'ils ont de l'expérience DDI |
+| Personnel d'INS | Modules 8-15 (flux complet), en particulier 10 (flux), 11 (traçabilité), 12 (couplage), 14 (champs personnalisés) | Modules 1 et 3 |
+| Développeurs qui automatisent les contrôles DDI | Modules 3 et 7, puis le [parcours automatisation](index.md#parcours-automatisation) | Modules 1, 4 et 5 |
 
 ## Approche d'évaluation
 
@@ -271,7 +281,7 @@ Après la dernière séance :
 
 ## Ressources supplémentaires
 
-- [Parcours d'apprentissage par profil](../tutorials/persona-learning-paths.md) :
-  Formats d'atelier supplémentaires
-- [Tutoriels de création](../tutorials/authoring.md) : Exercices autonomes
-- [Laboratoires de formation](../tutorials/training-labs.md) : Laboratoires interactifs
+- [Parcours automatisation](index.md#parcours-automatisation) : Un plan
+  d'atelier pour les équipes qui automatisent la validation
+- [Corrigés](answer-keys.md) : Toutes les solutions et réponses aux quiz sur
+  une seule page

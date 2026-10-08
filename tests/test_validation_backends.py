@@ -7,6 +7,9 @@ from typing import Any
 
 import pytest
 
+import ddi_l as ddi
+from ddi_l import schema_loader
+
 STRUCTURAL_WARNINGS_XML = """
 <FragmentInstance xmlns="ddi:instance:3_3" xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3">
   <TopLevelReference>
@@ -212,8 +215,6 @@ def _backend(name: str):
 
 def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:
     _lxml_only()
-    import ddi_l as ddi
-    from ddi_l import schema_loader
 
     doc = ddi.new_study(title="Fast", agency="example.org")
     doc.add_variable(name="age", label="Age")
@@ -237,9 +238,7 @@ def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:
 
 def test_backends_report_identical_issues() -> None:
     _lxml_only()
-    from lxml import etree  # type: ignore[import-untyped]
-
-    import ddi_l as ddi
+    etree = pytest.importorskip("lxml.etree")
 
     doc = ddi.new_study(title="Broken", agency="example.org")
     doc.add_variable(name="age", label="Age")
@@ -256,7 +255,5 @@ def test_backends_report_identical_issues() -> None:
 
 
 def test_unknown_backend_is_rejected() -> None:
-    from ddi_l import schema_loader
-
     with pytest.raises(ValueError):
         schema_loader.set_validation_backend("rust")

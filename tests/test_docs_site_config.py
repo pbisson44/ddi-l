@@ -339,3 +339,58 @@ def test_the_em_dash_check_catches_each_spelling(tmp_path) -> None:
         "page.md:2",
         "page.md:3",
     ]
+
+
+# The curriculum's answer-key page is generated from the modules by
+# hooks/answer_keys.py, so the answers under each exercise are the only copy.
+
+
+def _curriculum_modules(lang: str) -> list[Path]:
+    return sorted((PROJECT_ROOT / "docs" / "curriculum").glob(f"module-*.{lang}.md"))
+
+
+@pytest.mark.parametrize("lang", ["en", "fr"])
+def test_the_answer_key_page_collects_every_module_answer(lang: str) -> None:
+    hook = _load("answer_keys")
+    rendered = hook.render(PROJECT_ROOT / "docs" / "curriculum", lang)
+
+    modules = _curriculum_modules(lang)
+    answers = sum(
+        page.read_text(encoding="utf-8").count("??? success") for page in modules
+    )
+    exercise_word = {"en": "Exercise", "fr": "Exercice"}[lang]
+    exercises = len(re.findall(rf"(?m)^\*\*{exercise_word} \d+\*\*$", rendered))
+    loose = len(re.findall(r"(?m)^\*\*[^*\n]+: [^*\n]+\*\*$", rendered)) - len(
+        re.findall(r"(?m)^\*\*(Question|Q)\s?\d+", rendered)
+    )
+    questions = sum(
+        page.read_text(encoding="utf-8").count("???+ question") for page in modules
+    )
+
+    assert rendered.count("](module-") == len(modules)
+    assert len(re.findall(r"(?m)^\*\*(Question|Q)\s?\d+", rendered)) == questions
+    # Every success block is either a quiz answer or an exercise/solution entry.
+    assert exercises + loose + questions == answers
+
+
+def test_the_answer_key_pages_carry_the_marker() -> None:
+    hook = _load("answer_keys")
+    for lang in ("en", "fr"):
+        page = PROJECT_ROOT / "docs" / "curriculum" / f"answer-keys.{lang}.md"
+        text = page.read_text(encoding="utf-8")
+        assert hook.MARKER in text, f"{page.name} lost the {hook.MARKER} marker"
+        assert "```" not in text, f"{page.name} should hold no answers of its own"
+
+
+def test_english_and_french_modules_have_the_same_answers() -> None:
+    """A translated module must offer an answer wherever the English one does."""
+    for english in _curriculum_modules("en"):
+        french = english.with_name(english.name.replace(".en.md", ".fr.md"))
+        en_text = english.read_text(encoding="utf-8")
+        fr_text = french.read_text(encoding="utf-8")
+        assert en_text.count("??? success") == fr_text.count("??? success"), (
+            english.name
+        )
+        assert en_text.count("???+ question") == fr_text.count("???+ question"), (
+            english.name
+        )

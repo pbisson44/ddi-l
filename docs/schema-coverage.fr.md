@@ -1,3 +1,9 @@
+---
+description: >-
+  Quelle part du schéma DDI Lifecycle 3.3 ddi-l prend en charge, et à quel
+  niveau : aller-retour, modèles typés ou API Document.
+---
+
 # Couverture du schéma
 
 Cette page est une carte honnête de la part du schéma DDI Lifecycle 3.3 que
@@ -69,7 +75,7 @@ objet.
 `add_item()` / `items()` reconnaissent actuellement 30 types d'éléments, y
 compris l'ensemble complet du flux de questionnaire (`QuestionConstruct`,
 `Sequence`, `IfThenElse`, `StatementItem`, `ComputationItem`, `Loop` ; voir le
-[Module 8](curriculum/module-08-questionnaire-flows.md)), `PhysicalInstance`,
+[Module 10](curriculum/module-10-questionnaire-flows.md)), `PhysicalInstance`,
 `RecordLayout`, `DataRelationship` et `NCube`. Une instance physique décrit un
 fichier de données ; une disposition d'enregistrements associe les variables
 à des positions dans ce fichier :

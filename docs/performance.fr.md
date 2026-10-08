@@ -1,3 +1,9 @@
+---
+description: >-
+  Temps et mémoire mesurés pour ddi-l, et les réglages qui les modifient :
+  moteur lxml, cache de validation et lecture en flux.
+---
+
 # Performance
 
 Ce qui coûte du temps et de la mémoire dans ddi-l, avec des mesures et les

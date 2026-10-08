@@ -1,8 +1,20 @@
-# Guide du contributeur
+---
+description: >-
+  Le guide de développement de ddi-l : environnement, contrôles qualité,
+  générateur de code XSD, architecture, documentation et publication.
+---
 
-Merci de contribuer à améliorer `ddi-l` ! Ce guide couvre l'environnement
-de développement, les normes de codage, le pipeline de génération de code à
-partir des XSD et les contrôles qualité.
+# Guide de développement
+
+Merci de contribuer à améliorer `ddi-l` ! Deux documents couvrent la
+contribution :
+
+- [`CONTRIBUTING.md`](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md),
+  sur GitHub, est la version courte : préparer l'environnement, lancer les
+  contrôles, ouvrir une pull request. Commencez par là.
+- Ce guide est la référence détaillée qui le complète : l'architecture, le
+  générateur de code à partir des XSD, l'ajout d'une version de DDI, les deux
+  moteurs XML, la chaîne de documentation et le processus de publication.
 
 ## Préparer votre environnement
 
@@ -449,6 +461,14 @@ lorsque vous modifiez du contenu destiné aux utilisateurs.
 make docs-serve    # Prévisualisation en direct
 make docs-build    # Construction et validation
 ```
+
+Le logo, le favicon et leurs règles d'usage sont décrits dans les
+[ressources de marque](assets/README.md).
+
+La page des [corrigés](curriculum/answer-keys.md) du programme est générée par
+`hooks/answer_keys.py` à partir des réponses `??? success` de chaque module.
+Ajoutez ou modifiez une réponse dans le module, jamais sur la page des
+corrigés.
 
 Préférez les cibles `make` à un appel direct de `mkdocs` : elles définissent
 `NO_MKDOCS_2_WARNING`, sans quoi chaque invocation affiche un avertissement de

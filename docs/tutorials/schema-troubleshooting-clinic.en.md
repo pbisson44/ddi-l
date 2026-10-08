@@ -1,12 +1,29 @@
-# Schema Troubleshooting Clinic
+---
+description: >-
+  Practise diagnosing DDI schema validation errors from the CLI and Python,
+  starting from deliberately broken files.
+---
+
+# Schema troubleshooting clinic
 
 Practice diagnosing schema errors with the command line and the Python API.
 Each exercise starts from a deliberately broken file: you read the error
 output, then fix the file.
 
-!!! note
-    Install ``ddi-l`` in editable mode (``pip install -e .``) so the
-    module imports resolve.
+!!! note "Before you start"
+    Install `ddi-l` with `pip install ddi-l`. The steps below use sample
+    files that ship with the package. Run this once in Python to copy them into
+    an `examples/` folder in your working directory:
+
+    ```python
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
+
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
+    ```
 
 ## 1. Trigger a failing validation
 

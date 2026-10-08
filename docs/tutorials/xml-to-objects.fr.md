@@ -1,3 +1,9 @@
+---
+description: >-
+  Passer du XML DDI brut aux objets Python de ddi-l : ouvrir des fichiers,
+  explorer leur contenu et utiliser la couche de modèles.
+---
+
 # De XML aux objets
 
 Ce tutoriel montre comment passer entre le XML DDI brut et les objets Python

@@ -1,4 +1,10 @@
-# Module 5: Organize With Concepts and Universes
+---
+description: >-
+  Module 5 of the ddi-l course: group variables under concepts and describe
+  who a study covers with universes.
+---
+
+# Module 5: Organize with concepts and universes
 
 !!! info "What you will learn"
     - Understand what a **concept** is and why it matters.
@@ -109,6 +115,8 @@ You can loop over them to print names or do other work.
 
 ## Exercises
 
+**Exercise 1.** Document a national health survey.
+
 1. Create a health survey document with the title "National Health Survey" and agency "health.gc.ca".
 
 2. Add four questions:
@@ -144,6 +152,37 @@ Variables: 4
 Concepts: 3
 Universes: 1
 ```
+
+Then check your work: `doc.validate()` should return an empty list.
+
+??? success "Answer"
+    ```python
+    import ddi_l as ddi
+
+    doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+
+    q1 = doc.add_question(text="How old are you?")
+    q2 = doc.add_question(text="What is your weight in kg?")
+    q3 = doc.add_question(text="How many days per week do you exercise?")
+    q4 = doc.add_question(text="How many servings of fruit do you eat per day?")
+
+    demo = doc.add_concept(name="Demographics")
+    activity = doc.add_concept(name="Physical Activity")
+    nutrition = doc.add_concept(name="Nutrition")
+
+    doc.add_universe(name="Adults aged 18+ in Canada")
+
+    doc.add_variable(name="Age", question=q1, concept=demo)
+    doc.add_variable(name="Weight", question=q2, concept=demo)
+    doc.add_variable(name="ExerciseFrequency", question=q3, concept=activity)
+    doc.add_variable(name="FruitServings", question=q4, concept=nutrition)
+
+    print(f"Questions: {len(doc.questions)}")
+    print(f"Variables: {len(doc.variables)}")
+    print(f"Concepts: {len(doc.concepts)}")
+    print(f"Universes: {len(doc.universes)}")
+    print(f"Schema problems: {len(doc.validate())}")
+    ```
 
 ---
 

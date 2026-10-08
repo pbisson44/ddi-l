@@ -10,6 +10,7 @@ on:
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/deploy-docs.yml"
+      - ".github/pages/**"
       - "src/**"
   release:
     types:
@@ -29,12 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -71,3 +72,20 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           uv run mike deploy --push --update-aliases "$VERSION" latest
           uv run mike set-default --push latest
+
+      # mike only writes inside version directories, so an unversioned link
+      # (/ddi-l/server/) is a 404. GitHub Pages serves the root 404.html for
+      # any missing path; this one redirects to the same page under /latest/.
+      - name: Publish the root 404 redirect
+        if: success()
+        run: |
+          git worktree add "$RUNNER_TEMP/gh-pages" gh-pages
+          cp .github/pages/404.html "$RUNNER_TEMP/gh-pages/404.html"
+          cd "$RUNNER_TEMP/gh-pages"
+          git add 404.html
+          if git diff --cached --quiet; then
+            echo "404.html is up to date"
+          else
+            git commit -m "Update the root 404 redirect"
+            git push origin gh-pages
+          fi

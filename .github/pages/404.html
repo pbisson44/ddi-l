@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  Root 404 page for the gh-pages branch, published by deploy-docs.yml.
+
+  mike serves every page under a version directory (/ddi-l/latest/,
+  /ddi-l/dev/, /ddi-l/0.1.0/, ...), so a link without one, such as
+  /ddi-l/server/, has nothing to serve. GitHub Pages answers any missing path
+  on the site with this file, which sends an unversioned path to the same page
+  under /ddi-l/latest/ and maps pages that were renamed to their new names.
+
+  A path that already starts with a version is a real 404 and gets a plain
+  "not found" message instead, so a redirect can never loop.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Page not found | ddi-l</title>
+<style>
+  :root { color-scheme: light dark; --fg: #1f2328; --bg: #ffffff; --link: #0b7285; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg: #e6edf3; --bg: #0d1117; --link: #66d9e8; }
+  }
+  body {
+    margin: 0; padding: 3rem 1rem; background: var(--bg); color: var(--fg);
+    font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 36rem; margin: 0 auto; }
+  a { color: var(--link); }
+</style>
+<script>
+(function () {
+  "use strict";
+
+  var BASE = "/ddi-l/";
+
+  // Pages renamed since they were first published, keyed by the path under a
+  // version directory (without the "fr/" language prefix).
+  var MOVED = {
+    "curriculum/module-06-csv-to-ddi/": "curriculum/module-08-csv-to-ddi/",
+    "curriculum/module-07-code-lists/": "curriculum/module-09-code-lists/",
+    "curriculum/module-08-questionnaire-flows/": "curriculum/module-10-questionnaire-flows/",
+    "curriculum/module-09-data-lineage/": "curriculum/module-11-data-lineage/",
+    "curriculum/module-10-data-linkage/": "curriculum/module-12-data-linkage/",
+    "curriculum/module-11-properties-find-validate/": "curriculum/module-13-properties-find-validate/",
+    "curriculum/module-12-custom-fields/": "curriculum/module-14-custom-fields/",
+    "curriculum/module-13-update-and-version/": "curriculum/module-15-update-and-version/",
+    "curriculum/module-14-open-modify/": "curriculum/module-06-open-modify/",
+    "curriculum/module-15-cli-validation/": "curriculum/module-07-cli-validation/"
+  };
+
+  // mike's version names and aliases, including pre-release and build suffixes
+  // (a v0.2.0-rc.1 tag deploys to 0.2.0-rc.1/). versions.json is not consulted
+  // so the redirect does not wait on a second request.
+  var VERSION = /^(latest|dev|next|v?\d+(\.\d+)*([-+][0-9A-Za-z.+-]+)?)$/;
+
+  function moved(rest) {
+    var lang = rest.indexOf("fr/") === 0 ? "fr/" : "";
+    var page = rest.slice(lang.length);
+    if (page && page.charAt(page.length - 1) !== "/" && page.indexOf(".") === -1) {
+      page += "/";
+    }
+    return Object.prototype.hasOwnProperty.call(MOVED, page) ? lang + MOVED[page] : null;
+  }
+
+  var path = window.location.pathname;
+  if (path.indexOf(BASE) !== 0) {
+    return;
+  }
+  var rest = path.slice(BASE.length);
+  var first = rest.split("/")[0];
+  var tail = window.location.search + window.location.hash;
+  var target;
+
+  if (VERSION.test(first)) {
+    var renamed = moved(rest.slice(first.length + 1));
+    if (renamed !== null) {
+      target = BASE + first + "/" + renamed;
+    }
+  } else {
+    target = BASE + "latest/" + (moved(rest) || rest);
+  }
+
+  if (target) {
+    window.location.replace(target + tail);
+  }
+})();
+</script>
+</head>
+<body>
+<main>
+  <h1>Page not found</h1>
+  <p>
+    This page does not exist in the ddi-l documentation. It may have moved, or
+    the link may be wrong.
+  </p>
+  <p><a href="/ddi-l/latest/">Go to the documentation home page</a></p>
+  <p lang="fr">
+    Cette page n'existe pas dans la documentation de ddi-l.
+    <a href="/ddi-l/latest/fr/">Aller à la page d'accueil de la documentation</a>
+  </p>
+</main>
+</body>
+</html>

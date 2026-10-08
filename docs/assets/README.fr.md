@@ -1,3 +1,9 @@
+---
+description: >-
+  Le logo, le favicon et les feuilles de style de la documentation ddi-l, et
+  leurs règles d'usage.
+---
+
 # Ressources de documentation
 
 Éléments de marque et de style utilisés par MkDocs.

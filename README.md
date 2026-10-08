@@ -17,8 +17,9 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pbisson44/ddi-l/blob/main/.pre-commit-config.yaml)
 
 A Python library for creating, reading, updating, and validating
-[DDI Lifecycle 3.3](https://ddialliance.org/Specification/DDI-Lifecycle/3.3/)
-XML documents.
+[DDI Lifecycle](https://ddialliance.org/Specification/DDI-Lifecycle/) XML
+documents. It reads, validates and lints DDI 3.1, 3.2 and 3.3, and authors new
+documents in DDI 3.3.
 
 **[Documentation](https://pbisson44.github.io/ddi-l/)**: guides, a models
 reference, CLI recipes and a 16-module training curriculum, in English and
@@ -27,7 +28,7 @@ French.
 ## Installation
 
 ```bash
-pip install ddi-l
+pip install ddi-l     # or: uv add ddi-l
 ```
 
 Optional extras:
@@ -41,7 +42,7 @@ The DDI 3.1, 3.2, and 3.3 XML Schemas are bundled with the package, so
 validation works offline with no additional download.
 
 **Using R?** Call `ddi-l` through [reticulate](https://rstudio.github.io/reticulate/);
-see [Using ddi-l from R](https://pbisson44.github.io/ddi-l/r-users/).
+see [Using ddi-l from R](https://pbisson44.github.io/ddi-l/latest/r-users/).
 
 ## Quick start
 
@@ -168,7 +169,7 @@ response schema, each carrying a real example. "Try it out" comes prefilled with
 a valid DDI document, so you can validate one without writing a request first.
 The raw OpenAPI document is at `/schema/openapi.json`.
 
-See the [HTTP API guide](https://pbisson44.github.io/ddi-l/server/) for the
+See the [HTTP API guide](https://pbisson44.github.io/ddi-l/latest/server/) for the
 endpoint reference and the limits to set before exposing it.
 
 ## What's public, and what's stable
@@ -197,7 +198,7 @@ CLI's commands and exit codes.
 - Anything prefixed with `_`.
 
 While `0.x`, breaking changes land in minor versions and are called out in the
-[release notes](https://pbisson44.github.io/ddi-l/release-notes/).
+[release notes](https://pbisson44.github.io/ddi-l/latest/release-notes/).
 
 ## Supported Python versions
 
@@ -207,6 +208,17 @@ Python 3.11, 3.12, 3.13, and 3.14.
 
 See [CONTRIBUTING.md](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md) for development setup, coding standards,
 and testing instructions.
+
+## Citing ddi-l
+
+If you use `ddi-l` in research or in an archive's workflow, please cite it.
+GitHub's "Cite this repository" button exports
+[CITATION.cff](https://github.com/pbisson44/ddi-l/blob/main/CITATION.cff) as
+APA or BibTeX:
+
+> Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
+> documents* (Version 0.1.0) [Computer software].
+> <https://github.com/pbisson44/ddi-l>
 
 ## License
 
