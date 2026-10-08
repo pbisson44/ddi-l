@@ -138,7 +138,7 @@ jobs:
           UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv sync --locked --group dev
           UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv run --no-sync pytest --no-cov -q
       - name: Upload distributions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: release-distributions
           path: dist/*
