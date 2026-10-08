@@ -1,0 +1,4015 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reference and tutorials for the ddi-l toolkit.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/DEVELOPMENT/">
+      
+      
+        <link rel="prev" href="../release-notes/">
+      
+      
+        <link rel="next" href="../assets/">
+      
+      
+        
+          <link rel="alternate" href="../../DEVELOPMENT/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Guide du contributeur - ddi-l: DDI Lifecycle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/accessibility.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/landing.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <script>
+    // Driven by Material's `document$` observable rather than DOMContentLoaded.
+    // `document$` emits on the initial load and again after every page swap, so
+    // this keeps working if `navigation.instant` is ever enabled -- it is off
+    // today only because mkdocs-static-i18n's language switcher is incompatible
+    // with it (see the comment in mkdocs.yml). Under DOMContentLoaded alone the
+    // decoration below would survive only the first page a visitor landed on.
+    //
+    // The script has two halves. `enhance()` re-applies to whatever document is
+    // current and runs on every emission. `setupOnce()` binds to things that
+    // outlive a page swap -- <body>, the header, window -- and is guarded,
+    // because re-running it would stack a duplicate observer and listener on
+    // every navigation for the length of the session.
+    //
+    // Both run from the DOM-ready signal rather than at parse time: this block
+    // lands in <head>, where document.body does not exist yet.
+    (function () {
+      var paletteLabels = {"default": "Mode clair activ\u00e9", "deuteranopia": "Adapt\u00e9e \u00e0 la deut\u00e9ranopie", "high-contrast": "Contraste \u00e9lev\u00e9", "protanopia": "Adapt\u00e9e \u00e0 la protanopie", "slate": "Mode sombre activ\u00e9", "tritanopia": "Adapt\u00e9e \u00e0 la tritanopie"};
+      var initialised = false;
+
+      function enhance() {
+        var header = document.querySelector(".md-header");
+        if (header) {
+          header.setAttribute("role", "banner");
+          header.setAttribute("aria-label", "En-t\u00eate du site");
+        }
+
+        var primaryNav = document.querySelector(".md-nav--primary nav, .md-nav--primary");
+        if (primaryNav) {
+          primaryNav.setAttribute("role", "navigation");
+          primaryNav.setAttribute("aria-label", "Navigation principale");
+        }
+
+        var secondaryNav = document.querySelector(".md-nav--secondary nav, .md-nav--secondary");
+        if (secondaryNav) {
+          secondaryNav.setAttribute("role", "navigation");
+          secondaryNav.setAttribute("aria-label", "Sur cette page");
+        }
+
+        var main = document.querySelector("main.md-main");
+        if (main) {
+          if (!main.id) {
+            main.id = "main-content";
+          }
+          main.setAttribute("role", "main");
+          main.setAttribute("aria-label", "Contenu de la documentation");
+        }
+
+        setupOnce();
+      }
+
+      function announcePaletteChange(scheme) {
+        var announcer = document.getElementById("ddi-palette-announcer");
+        if (!announcer) {
+          return;
+        }
+        var message = paletteLabels[scheme] || scheme;
+        announcer.textContent = "";
+        // Brief delay ensures the live region update is detected.
+        setTimeout(function () {
+          announcer.textContent = message;
+        }, 50);
+      }
+
+      function setupOnce() {
+        if (initialised) {
+          return;
+        }
+        initialised = true;
+
+        // -- Palette announcements ------------------------------------------
+        //
+        // Material applies the palette by setting `data-md-color-scheme` on
+        // <body>, so that is what we observe. A colour change on its own gives
+        // a screen reader nothing to announce.
+        var lastScheme = document.body.getAttribute("data-md-color-scheme");
+        new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.attributeName !== "data-md-color-scheme") {
+              return;
+            }
+            var scheme = document.body.getAttribute("data-md-color-scheme");
+            if (scheme && scheme !== lastScheme) {
+              lastScheme = scheme;
+              announcePaletteChange(scheme);
+            }
+          });
+        }).observe(document.body, { attributes: true });
+
+        // -- Accessibility palette menu -------------------------------------
+        //
+        // The four accessibility palettes are entries 2-5 of theme.palette and
+        // carry no `toggle:`, so they stay off the header cycle (see the
+        // override in partials/palette.html) while Material still renders a
+        // radio input for each. Clicking that input is the supported way in:
+        // Material's own subscription applies the colours and persists the
+        // choice under `<scope>.__palette`. Writing localStorage directly here
+        // is what the previous version did, against a key Material never reads.
+        //
+        // Delegated from the menu container, which lives in the header and so
+        // survives instant navigation.
+        var menu = document.querySelector("[data-ddi-palette-menu]");
+        if (menu) {
+          menu.addEventListener("click", function (event) {
+            var button = event.target.closest("[data-ddi-palette-index]");
+            if (!button) {
+              return;
+            }
+            var input = document.getElementById(
+              "__palette_" + button.getAttribute("data-ddi-palette-index")
+            );
+            if (input) {
+              input.click();
+              // Collapse the menu so focus returns to a predictable place.
+              var details = menu.querySelector("details");
+              if (details) {
+                details.open = false;
+              }
+            }
+          });
+        }
+
+        // -- Language switcher ----------------------------------------------
+        //
+        // mkdocs-static-i18n already renders each switcher link as the same
+        // page in the other language, with its trailing slash. Material's
+        // alternate-language handler (on <body>) intercepts the click anyway,
+        // misses its sitemap lookup, and navigates to the alternate URL with
+        // the trailing slash stripped -- `/ddi-l/fr/server` instead of
+        // `/ddi-l/fr/server/` -- which the server answers with a 302. Stopping
+        // the click in the capture phase keeps it from reaching that handler
+        // while leaving the browser's own navigation to the correct href.
+        window.addEventListener("click", function (event) {
+          if (event.target instanceof Element &&
+              event.target.closest("a.md-select__link[hreflang]")) {
+            event.stopPropagation();
+          }
+        }, true);
+
+        // -- Reduced motion --------------------------------------------------
+        //
+        // A media query cannot reach the transition declarations Material sets
+        // inline, so this class is what accessibility.css and landing.css hang
+        // their overrides on. Kept in sync rather than sampled once at load.
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        function applyReducedMotion(matches) {
+          document.documentElement.classList.toggle("ddi-reduced-motion", matches);
+        }
+        applyReducedMotion(reducedMotion.matches);
+        reducedMotion.addEventListener("change", function (event) {
+          applyReducedMotion(event.matches);
+        });
+      }
+
+      // Fall back to DOMContentLoaded if the bundle has not defined
+      // `document$`, so the ARIA work still happens if `navigation.instant` is
+      // ever turned off.
+      if (window.document$ && typeof window.document$.subscribe === "function") {
+        window.document$.subscribe(enhance);
+      } else {
+        document.addEventListener("DOMContentLoaded", enhance);
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#guide-du-contributeur" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  
+    Vous consultez la documentation d'une <strong>version antérieure</strong>.
+    <a href="../../../">
+      <strong>Voir la dernière version</strong>
+    </a>
+  
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+  
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../" title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l: DDI Lifecycle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Guide du contributeur
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+<form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="deuteranopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_3">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="protanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_4">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="tritanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_5">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../DEVELOPMENT/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Partager" aria-label="Partager" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Aperçu
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Bien démarrer
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../validation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/authoring/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Bibliothèque de tutoriels
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../curriculum/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Programme de formation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../release-notes/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projet
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+  <!--
+    Rendered after the header so the palette radio inputs Material writes in
+    `partials/palette.html` already exist in the document.
+  -->
+  <div class="ddi-palette-menu" data-ddi-palette-menu>
+    <details class="ddi-palette-menu__details">
+      <summary class="ddi-palette-menu__summary"
+               title="Palettes d'accessibilité">
+        <span class="sr-only">Palettes d'accessibilité</span>
+        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
+      </summary>
+      <ul class="ddi-palette-menu__list">
+        
+          
+        
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="2">
+                Contraste élevé
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="3">
+                Adaptée à la deutéranopie
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="4">
+                Adaptée à la protanopie
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="5">
+                Adaptée à la tritanopie
+              </button>
+            </li>
+          
+        
+      </ul>
+    </details>
+  </div>
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ddi-l: DDI Lifecycle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aperçu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bien démarrer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bien démarrer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installer ddi-l
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'utilisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parcourir les recettes CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API HTTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des modèles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliothèque de tutoriels
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bibliothèque de tutoriels
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows d'auteur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/training-labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercices d'entraînement interactifs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/persona-learning-paths/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parcours d'apprentissage par persona
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    De XML aux objets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clinique de dépannage des schémas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'automatisation en ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Laboratoire de réutilisation de fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Construire des outils et applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser ddi-l depuis R
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../curriculum/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programme de formation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Programme de formation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 1 : Qu’est-ce que les métadonnées ?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 2 : Préparez votre environnement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 3 : Créez votre première étude
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 4 : Variables et questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 5 : Concepts et univers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-06-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 6 : Du CSV/Excel au DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-07-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 7 : Listes de codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-08-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 8 : Flux de questionnaire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-09-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 9 : Traçabilité des données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-10-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 10 : Couplage de données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-11-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 11 : Propriétés, recherche et validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-12-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 12 : Champs personnalisés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-13-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 13 : Mise à jour et versionnage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-14-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 14 : Ouvrir et modifier des fichiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-15-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 15 : Validation en ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-16-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 16 : Projets de synthèse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide de l’instructeur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aide-mémoire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrigés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Référence
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence de l'API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalogue des espaces de noms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Couverture du schéma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paquets Python associés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbook de performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbook de performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aperçu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark de conversion de schémas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../assets/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projet
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes de version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide du contributeur
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide du contributeur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#preparer-votre-environnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Préparer votre environnement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controles-qualite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrôles qualité
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contrôles qualité">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-de-mutation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests de mutation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normes-de-codage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normes de codage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-de-generation-de-code-a-partir-des-xsd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline de génération de code à partir des XSD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline de génération de code à partir des XSD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fonctionnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fonctionnement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regenerer-les-modeles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Régénérer les modèles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-de-couverture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit de couverture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prendre-en-charge-une-nouvelle-version-de-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prendre en charge une nouvelle version de DDI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prendre en charge une nouvelle version de DDI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-est-reellement-couple-a-la-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui est réellement couplé à la version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voie-a-une-nouvelle-version-mineure-ddi-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voie A : une nouvelle version mineure DDI 3.x
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voie-b-ddi-40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voie B : DDI 4.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Voie B : DDI 4.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordre-de-travail-suggere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordre de travail suggéré
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invariants-a-defendre-quelle-que-soit-la-voie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invariants à défendre, quelle que soit la voie
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#espaces-de-noms-synthetiques-et-la-regle-qui-les-encadre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Espaces de noms synthétiques, et la règle qui les encadré
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vue-densemble-de-larchitecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue d'ensemble de l'architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-deux-backends-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Les deux backends XML
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les deux backends XML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-est-garanti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui est garanti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-nest-pas-garanti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui n'est pas garanti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas-integres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schémas intégrés
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versions-de-la-chaine-de-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions de la chaîne de documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-selecteur-de-version-napparait-que-sous-mike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Le sélecteur de version n'apparaît que sous mike
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-le-journal-de-construction-est-court" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi le journal de construction est court
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual_env-does-not-match-the-project-environment-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VIRTUAL_ENV does not match the project environment path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publier-une-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publier une version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Publier une version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-initiale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration initiale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-chaque-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        À chaque version
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#soumettre-des-modifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Soumettre des modifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#preparer-votre-environnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Préparer votre environnement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controles-qualite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrôles qualité
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Contrôles qualité">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tests-de-mutation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests de mutation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normes-de-codage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normes de codage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline-de-generation-de-code-a-partir-des-xsd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline de génération de code à partir des XSD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipeline de génération de code à partir des XSD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fonctionnement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fonctionnement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regenerer-les-modeles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Régénérer les modèles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audit-de-couverture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit de couverture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prendre-en-charge-une-nouvelle-version-de-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prendre en charge une nouvelle version de DDI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prendre en charge une nouvelle version de DDI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-est-reellement-couple-a-la-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui est réellement couplé à la version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voie-a-une-nouvelle-version-mineure-ddi-3x" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voie A : une nouvelle version mineure DDI 3.x
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voie-b-ddi-40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voie B : DDI 4.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Voie B : DDI 4.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ordre-de-travail-suggere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordre de travail suggéré
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invariants-a-defendre-quelle-que-soit-la-voie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invariants à défendre, quelle que soit la voie
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#espaces-de-noms-synthetiques-et-la-regle-qui-les-encadre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Espaces de noms synthétiques, et la règle qui les encadré
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vue-densemble-de-larchitecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue d'ensemble de l'architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-deux-backends-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Les deux backends XML
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les deux backends XML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-est-garanti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui est garanti
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ce-qui-nest-pas-garanti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ce qui n'est pas garanti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas-integres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schémas intégrés
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#versions-de-la-chaine-de-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versions de la chaîne de documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#le-selecteur-de-version-napparait-que-sous-mike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Le sélecteur de version n'apparaît que sous mike
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pourquoi-le-journal-de-construction-est-court" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pourquoi le journal de construction est court
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual_env-does-not-match-the-project-environment-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VIRTUAL_ENV does not match the project environment path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publier-une-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publier une version
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Publier une version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-initiale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration initiale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-chaque-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        À chaque version
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#soumettre-des-modifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Soumettre des modifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Aperçu
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../release-notes/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Projet
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/DEVELOPMENT.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="guide-du-contributeur">Guide du contributeur<a class="headerlink" href="#guide-du-contributeur" title="Permanent link">&para;</a></h1>
+<p>Merci de contribuer à améliorer <code>ddi-l</code> ! Ce guide couvre l'environnement
+de développement, les normes de codage, le pipeline de génération de code à
+partir des XSD et les contrôles qualité.</p>
+<h2 id="preparer-votre-environnement">Préparer votre environnement<a class="headerlink" href="#preparer-votre-environnement" title="Permanent link">&para;</a></h2>
+<p><strong>Python 3.11 ou plus récent</strong> est requis. Le projet est géré avec
+<a href="https://docs.astral.sh/uv/">uv</a>, et <code>uv.lock</code> est la source unique de vérité
+pour les versions des dépendances ; la CI installe à partir de ce fichier
+avec <code>--locked</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w">              </span><span class="c1"># Dépendances d'exécution et de développement</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>--extra<span class="w"> </span>full<span class="w"> </span><span class="c1"># ...plus le backend optionnel lxml</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs<span class="w">             </span><span class="c1"># Chaîne de production de la documentation</span>
+</span></code></pre></div>
+<p>Préfixez les commandes avec <code>uv run</code> (<code>uv run pytest</code>), ou activez
+l'environnement avec <code>source .venv/bin/activate</code>.</p>
+<div class="admonition note">
+<p class="admonition-title"><code>full</code> est un extra, pas un groupe de dépendances</p>
+<p>Le backend optionnel <code>lxml</code> est déclaré sous
+<code>[project.optional-dependencies]</code> : il s'installe donc avec
+<code>--extra full</code>. Le demander comme groupe (<code>--group full</code>) échoue.</p>
+</div>
+<p>Si vous préférez pip :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">'.[full]'</span><span class="w"> </span>--group<span class="w"> </span>dev<span class="w">   </span><span class="c1"># pip 25.1+ reads dependency groups</span>
+</span></code></pre></div>
+<h2 id="controles-qualite">Contrôles qualité<a class="headerlink" href="#controles-qualite" title="Permanent link">&para;</a></h2>
+<p>Exécutez-les avant d'ouvrir une pull request :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>format<span class="w"> </span>--check<span class="w"> </span>.<span class="w">   </span><span class="c1"># Formatage</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>.<span class="w">            </span><span class="c1"># Linting (inclut les docstrings Google)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>uv<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>src<span class="w"> </span>tests<span class="w">          </span><span class="c1"># Vérification de types (bloquante en CI)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w">                  </span><span class="c1"># Tests (cible : 90 % de couverture)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uvx<span class="w"> </span>pip-audit<span class="w"> </span>--strict<span class="w">         </span><span class="c1"># Scan de vulnérabilités</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>git<span class="w"> </span>diff<span class="w"> </span>--exit-code<span class="w">           </span><span class="c1"># Un run de tests ne doit modifier aucun fichier suivi</span>
+</span></code></pre></div>
+<p><code>ruff</code> et <code>mypy</code> sont épinglés à des versions exactes dans le groupe <code>dev</code>.
+Une nouvelle version de l'un ou l'autre peut changer ce qui constitue une
+violation : l'épinglage est ce qui rend la CI reproductible. Mettez-le à jour
+délibérément, dans un commit dédié.</p>
+<p>Le Makefile fournit également :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>make<span class="w"> </span>release-check<span class="w">             </span><span class="c1"># Construit les distributions et vérifie l'empaquetage</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>make<span class="w"> </span>docs-build<span class="w">                </span><span class="c1"># Construit la documentation en mode strict</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>make<span class="w"> </span>docs-serve<span class="w">                </span><span class="c1"># Serveur de prévisualisation</span>
+</span></code></pre></div>
+<p><code>make release-check</code> est le contrôle déterminant avant une publication. Il
+construit les deux distributions, vérifie la présence des XSD intégrés et des
+fichiers d'exemple, vérifie que <code>ddi_l</code> est le <em>seul</em> paquet de premier niveau
+dans la roue, puis installe la roue dans un environnement virtuel vierge et y
+valide un document.</p>
+<h3 id="tests-de-mutation">Tests de mutation<a class="headerlink" href="#tests-de-mutation" title="Permanent link">&para;</a></h3>
+<p>La couverture indique qu'une ligne a été exécutée. Elle ne dit pas si un test
+s'apercevrait que cette ligne est fausse, et l'écart compte surtout dans les
+petits prédicats qui décident si une étiquette de langue correspond ou si un
+espace de noms est utilisé. <code>mutmut</code> répond à la seconde question : il modifie
+le code et vérifie si la suite proteste.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>run<span class="w">                       </span><span class="c1"># tout ce qui est dans le périmètre</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>results<span class="w">                   </span><span class="c1"># ce qui a survécu</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>show<span class="w"> </span>&lt;nom-du-mutant&gt;<span class="w">      </span><span class="c1"># le diff d'un survivant</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>run<span class="w"> </span>&lt;nom-du-mutant&gt;<span class="w">       </span><span class="c1"># recontrôler après avoir ajoute un test</span>
+</span></code></pre></div>
+<p>Le périmètre est défini dans <code>[tool.mutmut]</code> du <code>pyproject.toml</code> et reste
+volontairement étroit : quatre modules de logique de décision écrite à la main,
+ni les dataclasses générées ni la plomberie XML, dont les mutants sont pour
+l'essentiel équivalents. Élargissez-le quand vous ajoutez un module comportant
+de vraies ramifications.</p>
+<p><strong>Ce n'est pas un contrôle bloquant sur les pull requests</strong>, et
+<code>.github/workflows/mutation.yml</code> explique longuement pourquoi : un passage
+cible représente environ 2 200 mutants et des dizaines de minutes, les
+survivants demandent un jugement qu'un seuil ne peut pas fournir, et les
+résultats différent entre les deux moteurs XML. Le travail s'exécute chaque
+semaine et à la demande ; le rapport se lit, il ne se satisfait pas.</p>
+<p>Lire les survivants est le savoir-faire. Certains sont réels :
+<code>test_tree_uses_namespace_looks_at_tags_and_attributes</code> existe parce que forcer
+cet utilitaire à toujours répondre « non » laissait toute la suite au vert,
+donc rien ne vérifiait qu'un document <em>utilisant</em> <code>xsi:schemaLocation</code> conserve
+sa déclaration. D'autres ne peuvent pas être tus et ne doivent pas l'être :
+<code>getattr(node, "nsmap", )</code> se comporte exactement comme <code>getattr(node, "nsmap",
+None)</code> quand tous les noeuds possèdent l'attribut. Corrigez les premiers en
+écrivant le test manquant ; laissez les seconds tranquilles.</p>
+<h2 id="normes-de-codage">Normes de codage<a class="headerlink" href="#normes-de-codage" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Longueur de ligne</strong> : 88 caractères.</li>
+<li><strong>Linting</strong> : <code>ruff</code> avec les jeux de règles <code>E</code>, <code>F</code>, <code>W</code>, <code>I</code>, <code>N</code>,
+  <code>UP</code>, <code>B</code>, <code>SIM</code>, <code>RUF</code> et <code>D</code> (docstrings Google).</li>
+<li><strong>Types</strong> : <code>mypy</code> sur <code>src/</code> et <code>tests/</code>, bloquant en CI.</li>
+<li><strong>Docstrings</strong> : Style Google avec sections <code>Args:</code>, <code>Returns:</code>, <code>Raises:</code>.</li>
+<li><strong>Tests</strong> : <code>pytest</code> avec <code>pytest-cov</code>. Cible de couverture : 90 %.</li>
+<li><strong>Imports</strong> : L'intégration isort de Ruff gère l'ordre.</li>
+</ul>
+<h2 id="pipeline-de-generation-de-code-a-partir-des-xsd">Pipeline de génération de code à partir des XSD<a class="headerlink" href="#pipeline-de-generation-de-code-a-partir-des-xsd" title="Permanent link">&para;</a></h2>
+<p>Toutes les classes de modèles sont générées à partir des fichiers XSD DDI 3.3.
+Le XSD est la source unique de vérité pour les champs, l'ordre des éléments,
+les espaces de noms et la documentation.</p>
+<h3 id="fonctionnement">Fonctionnement<a class="headerlink" href="#fonctionnement" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>codegen/xsd_introspect.py</code> extrait le modèle de contenu complet du XSD :
+   l'arbre ordonné des particules, la cardinalité, les espaces de noms, les
+   attributs, l'indicateur mixte et le texte <code>xs:documentation</code>.</li>
+<li><code>codegen/generate_model_bases.py</code> émet des dataclasses de base (champs
+   uniquement) sous <code>src/ddi_l/models/_generated/</code>. Chacune porte ses champs
+   dérivés du XSD ainsi que trois tables de classe : <code>_FIELD_XML_MAP</code> (nom de
+   champ vers balise et type), <code>_ATTR_XML_MAP</code> (nom de champ vers attribut XML)
+   et <code>_ELEMENT_ORDER</code> (l'ordre des enfants déclaré par le XSD). Il émet aussi
+   <code>_generated/label_slots.py</code>, une table couvrant tout le schéma indiquant
+   quels éléments peuvent porter un <code>r:Label</code> ; la règle de lint
+   <code>ddi.maintainable.labels</code> s'en sert pour ne jamais exiger un libellé que le
+   schéma n'autorise pas, et <code>ALLOW_LABELS</code> en est dérivé à la création de la
+   classe plutôt que tenu à la main. Une seconde table couvrant tout le schéma,
+   <code>_generated/fixed_attributes.py</code>, recense les attributs que le XSD fixe à
+   une valeur donnée ; la conversion JSON vers XML les supprime, puisqu'un
+   attribut fixé par le schéma ne porte aucune information et que le réécrire
+   ferait rendre au aller-retour plus que ce qu'on lui a fourni.</li>
+<li>Le moteur XML générique de <code>MaintainableBase.from_xml()</code> / <code>.to_xml()</code>
+   (<code>src/ddi_l/models/base.py</code>) pilote la sérialisation à partir de ces tables
+   et émet les enfants dans l'ordre déclaré par le XSD. Tout ce que les tables
+   ne nomment pas est préservé tel quel via le passthrough <code>other_elements</code> /
+   <code>other_attributes</code> : un aller-retour ne perd jamais de contenu.</li>
+<li>Les classes écrites à la main dans <code>src/ddi_l/models/*.py</code> héritent des
+   bases générées et n'ajoutent que des helpers, de la validation et des
+   constructeurs de commodité.</li>
+</ol>
+<h3 id="regenerer-les-modeles">Régénérer les modèles<a class="headerlink" href="#regenerer-les-modeles" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>codegen.generate_model_bases
+</span></code></pre></div>
+<p>La CI inclut un contrôle de dérive qui échoue si le code généré diffère de ce
+que le XSD produirait :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>codegen.generate_model_bases
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>diff<span class="w"> </span>--exit-code<span class="w"> </span>src/ddi_l/models/_generated/
+</span></code></pre></div>
+<p>Ne modifiez jamais les fichiers sous <code>_generated/</code> manuellement.</p>
+<h3 id="audit-de-couverture">Audit de couverture<a class="headerlink" href="#audit-de-couverture" title="Permanent link">&para;</a></h3>
+<p><code>uv run python -m codegen.coverage_audit</code> régénère
+<code>codegen/COVERAGE_AUDIT.md</code>, qui mesure la part du XSD exposée par la couche
+générée sous forme de champs nommés par rapport à celle préservée via le
+passthrough.</p>
+<h2 id="prendre-en-charge-une-nouvelle-version-de-ddi">Prendre en charge une nouvelle version de DDI<a class="headerlink" href="#prendre-en-charge-une-nouvelle-version-de-ddi" title="Permanent link">&para;</a></h2>
+<p>Cette section existe pour que la prochaine personne n'ait pas à rétro-concevoir
+ce qui est lié à une version de DDI. C'est délibérément un cadre de décision et
+non un script de migration : DDI 4.0 n'est pas entièrement publié, et un plan
+détaillé écrit contre une spécification qui n'a pas atterri serait de la
+fiction.</p>
+<h3 id="ce-qui-est-reellement-couple-a-la-version">Ce qui est réellement couplé à la version<a class="headerlink" href="#ce-qui-est-reellement-couple-a-la-version" title="Permanent link">&para;</a></h3>
+<p>Le point le plus souvent mal compris à propos de ce paquet :</p>
+<div class="admonition warning">
+<p class="admonition-title">La validation est multi-version. La couche de modèles ne couvre que 3.3.</p>
+<p><code>doc.validate(version="3.1")</code> fonctionne vraiment. <code>ddi_l.models.*</code> est un
+<strong>modèle DDI 3.3</strong> qui se trouve aussi valider des documents 3.1 et 3.2.
+Ajouter <code>"3.4"</code> à <code>SUPPORTED_SCHEMA_VERSIONS</code> vous apporterait la
+validation, et rien d'autre.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Point de couplage</th>
+<th>Où</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XSD intégrés</td>
+<td><code>src/ddi_l/schemas/ddi/v3_1/</code>, <code>v3_2/</code>, <code>v3_3/</code></td>
+<td>Livres dans la roue ; résolus via <code>importlib.resources</code></td>
+</tr>
+<tr>
+<td>Versions prises en charge</td>
+<td><code>_schema_versions.SUPPORTED_SCHEMA_VERSIONS</code></td>
+<td>Pilote <code>normalize_version()</code> et le <code>--version</code> de la CLI</td>
+</tr>
+<tr>
+<td>Modèles d'espaces de noms</td>
+<td><code>_schema_versions._SCHEMA_NAMESPACE_TEMPLATES</code></td>
+<td>Suppose que chaque espace de noms est <code>ddi:{module}:{suffix}</code></td>
+</tr>
+<tr>
+<td>Sommes de contrôle</td>
+<td><code>_schema_versions.SCHEMA_ARCHIVE_CHECKSUMS</code></td>
+<td>SHA-256 par version ; vérifiée au téléchargement</td>
+</tr>
+<tr>
+<td>Rafraîchissement</td>
+<td><code>schema_sync.update_schema_package()</code></td>
+<td>Télécharge et réécrit une arborescence <code>v3_x/</code></td>
+</tr>
+<tr>
+<td>Détection de version</td>
+<td><code>schema_loader/_versions.py</code></td>
+<td>Déduit la version depuis l'espace de noms ou <code>schemaLocation</code></td>
+</tr>
+<tr>
+<td><strong>Point d'entrée de la génération</strong></td>
+<td><code>codegen/xsd_introspect.py</code></td>
+<td><strong>Figé sur 3.3</strong> : <code>SCHEMA_DIR = .../v3_3</code>, <code>ENTRY_SCHEMA = instance_3_3.xsd</code>, et une table d'espaces de noms littérale</td>
+</tr>
+</tbody>
+</table>
+<h3 id="voie-a-une-nouvelle-version-mineure-ddi-3x">Voie A : une nouvelle version mineure DDI 3.x<a class="headerlink" href="#voie-a-une-nouvelle-version-mineure-ddi-3x" title="Permanent link">&para;</a></h3>
+<p>Cette voie est balisée ; 3.1 et 3.2 ont toutes deux été ajoutées ainsi.</p>
+<ol>
+<li>Enregistrez le SHA-256 de l'archive dans <code>SCHEMA_ARCHIVE_CHECKSUMS</code>.</li>
+<li>Lancez <code>update_schema_package("3.x")</code> pour peupler
+   <code>src/ddi_l/schemas/ddi/v3_x/</code>.</li>
+<li>Ajoutez la version à <code>SUPPORTED_SCHEMA_VERSIONS</code>.</li>
+<li>Vérifiez que la convention <code>ddi:{module}:{suffix}</code> tient toujours. Si la
+   version ajoute un espace de noms, <code>tests/test_schema_versions.py</code> échouera :
+   il dérive l'ensemble attendu des XSD livres plutôt que de faire confiance à
+   la liste écrite à la main.</li>
+<li>Décidez <strong>explicitement</strong> si la couche de modèles générée passe à la nouvelle
+   version. Ce n'est ni automatique ni gratuit : régénérer contre un nouveau XSD
+   modifie <code>_FIELD_XML_MAP</code>, <code>_ATTR_XML_MAP</code> et <code>_ELEMENT_ORDER</code>, donc la sortie
+   sérialisée, donc l'ensemble des fixtures de référence sous
+   <code>src/ddi_l/examples/tests/fixtures/</code>. Traitez cela comme un changement
+   cassant.</li>
+</ol>
+<h3 id="voie-b-ddi-40">Voie B : DDI 4.0<a class="headerlink" href="#voie-b-ddi-40" title="Permanent link">&para;</a></h3>
+<p>Ne supposez pas qu'il s'agit de la voie A avec un numéro plus grand. Cette
+section consigne ce que dit le modèle <strong>DDI Lifecycle 4.0 bêta 4</strong>, lu dans
+l'étiquette <code>v4.0-beta.4</code> (janvier 2026) de
+<a href="https://github.com/ddialliance/ddimodel">ddialliance/ddimodel</a>, la version que
+la DDI Alliance a présentée comme la
+<a href="https://ddialliance.org/news/ddi-lifecycle-v4.0-beta-4-review">dernière bêta avant l'examen public</a>.
+Ce sont des faits sur une bêta : revérifiez chacun contre la version finale
+avant de construire dessus.</p>
+<p><strong>Générer à partir du modèle, pas du XSD.</strong> 4.0 part du modèle. Sa source est
+un ensemble de fichiers CSV gérés avec COGS (le Convention-based Ontology
+Génération System de la DDI Alliance), et le XML Schéma n'est qu'un des quelque
+douze formats que COGS en génère, avec JSON Schéma, OWL, SHACL, ShEx, UML XMI,
+LinkML et une bibliothèque C#. <code>codegen/xsd_introspect.py</code> pourrait introspecter
+le XSD publié, mais les CSV en disent davantage :</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Contenu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ItemTypes/&lt;Nom&gt;/&lt;Nom&gt;.csv</code></td>
+<td>172 types d'items (les objets identifiables), une ligne par propriété avec son type et sa cardinalité</td>
+</tr>
+<tr>
+<td><code>CompositeTypes/&lt;Nom&gt;/&lt;Nom&gt;.csv</code></td>
+<td>320 types de valeurs structurées</td>
+</tr>
+<tr>
+<td><code>ItemTypes/&lt;Nom&gt;/Extends.&lt;Base&gt;</code></td>
+<td>Héritage : 72 types d'items étendent <code>Versionable</code>, 42 <code>Maintainable</code>, les autres l'une de neuf autres bases abstraites</td>
+</tr>
+<tr>
+<td>Colonnes <code>DeprecatedNamespace</code>, <code>DeprecatedElementOrAttribute</code></td>
+<td>Pour 2 325 des 2 631 propriétés, l'espace de noms 3.3 d'origine et s'il s'agissait d'un élément ou d'un attribut ; les 306 autres sont nouvelles en 4.0</td>
+</tr>
+<tr>
+<td><code>Topics/</code></td>
+<td>Huit regroupements : Agent, Classification, Data Capture, Data Description, Foundational et Study, plus les fourre-tout « All Content Items » et « Non-Packaging Items »</td>
+</tr>
+</tbody>
+</table>
+<p>Les colonnes <code>Deprecated*</code> sont les plus utiles pour ce paquet : la
+correspondance 3.3 vers 4.0 fait partie du modèle, elle n'est pas à
+rétro-concevoir.</p>
+<p><strong>La convention d'espaces de noms ne survit pas.</strong> La construction officielle
+publie le XSD dans un seul espace de noms, <code>ddi:instance:4_0</code>
+(<code>cogs publish-xsd ... --namespace "ddi:instance:4_0"</code> dans
+<code>build/build-windows.bat</code>), là où 3.3 en compte dix-sept. <code>_build_release()</code>
+formate chaque espace de noms depuis un modèle unique <code>ddi:{module}:{suffix}</code>,
+et le générateur écrit un module Python par espace de noms : ni l'un ni l'autre
+ne se transpose. 4.0 a besoin de sa propre description de version, et les
+modules générés d'une autre clé de regroupement : les thèmes du modèle, ou
+l'espace de noms 3.3 majoritaire de chaque type d'après les colonnes
+<code>Deprecated*</code>, ce qui garderait les noms de modules actuels.</p>
+<p><strong>L'inclusion devient référence.</strong> Une propriété dont le type est un type
+d'item est une référence, et 635 propriétés le sont. Un <code>VariableScheme</code> 4.0
+liste des <code>VariableReference</code> au lieu de contenir des éléments <code>Variable</code> : les
+items sont autonomes et les schémas pointent vers eux. Les modèles écrits à la
+main supposent l'imbrication 3.3 (un <code>Document</code> parcourt <code>StudyUnit</code> →
+<code>LogicalProduct</code> → <code>VariableScheme</code> → <code>Variable</code>) ; c'est donc le changement de
+plus grande portée, bien au-delà d'un renommage.</p>
+<p><strong>Identification.</strong> Chaque item 4.0 a une <code>URN</code> obligatoire en plus de
+<code>Agency</code>, <code>ID</code> et <code>Version</code> (<code>Settings/Identification.csv</code> et
+<code>Identification.Mixin.csv</code>). La mécanique de référence 3.3 s'y transpose, mais
+l'URN n'est plus facultative.</p>
+<p><strong>Un successeur, avec un long chevauchement.</strong> La DDI Alliance présente 4.0
+comme le contenu de 3.3 dans une structure qui prend en charge plusieurs
+syntaxes : il succède à 3.3 au lieu de coexister avec lui comme DDI-CDI. Les
+fichiers 3.3 resteront en usage des années, donc la conclusion ne change pas :
+ajouter un second paquet de modèles à côté de l'existant plutôt que migrer
+<code>ddi_l.models</code>, ce qui casserait tous les consommateurs sans rien apporter à
+ceux qui ont encore des données 3.3.</p>
+<p><strong>La fidélité de l'aller-retour reste ouverte.</strong> Le passthrough
+<code>other_elements</code> / <code>other_attributes</code> et les fixtures de référence sont les
+garanties sur lesquelles ce paquet est bâti. Le modèle ne dit rien de leur
+transposition ; tranchez avant de prototyper.</p>
+<h4 id="ordre-de-travail-suggere">Ordre de travail suggéré<a class="headerlink" href="#ordre-de-travail-suggere" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Attendre la version finale.</strong> Les propriétés et types de la bêta peuvent
+   encore changer.</li>
+<li><strong>Validation seule.</strong> Intégrer le XSD 4.0, ajouter une description de
+   version qui contourne le modèle d'espaces de noms 3.x, apprendre à
+   <code>schema_loader/_versions.py</code> l'espace de noms <code>ddi:instance:4_0</code>, et ajouter
+   <code>"4.0"</code> à <code>SUPPORTED_SCHEMA_VERSIONS</code>. C'est la voie A plus cette seule
+   exception, et cela donne <code>validate(version="4.0")</code> sans toucher aux modèles.
+   Prenez les noms de fichiers et le schéma d'entrée dans le paquet publié ;
+   ils ne figurent pas dans le dépôt du modèle.</li>
+<li><strong>Modèles.</strong> Ajouter à <code>codegen/</code> une seconde entrée qui lit les CSV COGS à
+   une étiquette <code>ddimodel</code> figée et écrit les bases générées dans un paquet
+   distinct (par exemple <code>ddi_l.models_v4</code>), en réutilisant la table de types
+   de <code>generate_model_bases.py</code>. Laisser le pipeline 3.3 intact.</li>
+<li><strong>Conversion.</strong> Construire une table de correspondance 3.3 ↔ 4.0 à partir
+   des colonnes <code>Deprecated*</code> et fonder la conversion dessus. Les 306 nouvelles
+   propriétés demandent des décisions à la main.</li>
+</ol>
+<h3 id="invariants-a-defendre-quelle-que-soit-la-voie">Invariants à défendre, quelle que soit la voie<a class="headerlink" href="#invariants-a-defendre-quelle-que-soit-la-voie" title="Permanent link">&para;</a></h3>
+<p>Ce sont eux qui font qu'une migration future reste circonscrite au lieu de
+devenir une réécriture :</p>
+<ul>
+<li><strong>Tout ce qui est généré reste derrière <code>src/ddi_l/models/_generated/</code></strong> et
+  n'est consommé que comme classes de base. Le code écrit à la main ne doit
+  jamais importer les rouages du générateur. Cette couture est ce qui rend le
+  remplacement du générateur circonscrit.</li>
+<li><strong>Le contrôle de dérive reste vert.</strong> Régénérer sur un arbre propre doit être
+  sans effet, afin qu'un rafraîchissement de schéma et une modification du
+  générateur restent distinguables en revue.</li>
+<li><strong><code>SCHEMA_ARCHIVE_CHECKSUMS</code> reste renseigné</strong>, pour la même raison.</li>
+<li><strong>Une seule liste d'espaces de noms.</strong> <code>codegen/xsd_introspect.py</code> et
+  <code>_schema_versions.py</code> énumèrent tous deux les espaces de noms DDI ;
+  <code>tests/test_schema_versions.py</code> les compare aux schémas livres. Lancez-le si
+  vous touchez l'un des deux.</li>
+</ul>
+<h3 id="espaces-de-noms-synthetiques-et-la-regle-qui-les-encadre">Espaces de noms synthétiques, et la règle qui les encadré<a class="headerlink" href="#espaces-de-noms-synthetiques-et-la-regle-qui-les-encadre" title="Permanent link">&para;</a></h3>
+<p><code>_schema_versions._SYNTHETIC_NAMESPACE_TEMPLATES</code> déclare
+<code>urn:ddi-l:extension:process:1</code> et <code>urn:ddi-l:extension:methodology:1</code>.
+<strong>Aucune version de DDI Lifecycle ne déclare l'un ou l'autre.</strong> Ils accueillent
+des types de modèles que DDI 3.3 ne définit pas : <code>Process</code>, <code>ProcessStep</code>,
+<code>ProcessControl</code>, <code>ProcessMethod</code>, leurs schemes, ainsi que <code>MethodologyItem</code>,
+<code>MethodologyScheme</code> et <code>ReviewEvent</code>. Le vocabulaire de processus propre à DDI
+(<code>ProcessingEvent</code>, <code>ProcessingInstruction</code>, <code>ControlConstruct</code>) se trouve dans
+<code>ddi:datacollection:3_3</code> et est modélisé séparément.</p>
+<p><strong>La règle : un type qui a une place dans le schéma doit l'utiliser.</strong> Les
+espaces de noms synthétiques ne servent qu'au contenu que DDI ne définit pas.
+<code>Methodology</code>, par exemple, est un élément DDI 3.3 et s'écrit dans
+<code>ddi:datacollection:3_3</code>.</p>
+<p><code>tests/test_namespace_provenance.py</code> vérifie les deux volets : aucun modèle ne
+peut émettre un espace de noms en forme de <code>ddi:</code> qui ne soit ni déclaré par le
+schéma ni enregistré comme synthétique, et aucun type dans un espace de noms
+synthétique ne peut porter le nom d'un élément réel des XSD. Ajouter un nouveau
+type synthétique impose de l'inscrire explicitement : c'est donc une décision,
+pas un accident.</p>
+<p>Les espaces de noms synthétiques ne sont délibérément <strong>pas</strong> de la forme
+<code>ddi:</code>, afin que personne ne les prenne pour des espaces de noms de la DDI
+Alliance, et ils ne portent aucune version DDI : toutes les versions pointent
+vers le même URI. La détection de version n'utilise que l'espace de noms
+<code>instance</code> et le nom du fichier de schéma.</p>
+<h2 id="vue-densemble-de-larchitecture">Vue d'ensemble de l'architecture<a class="headerlink" href="#vue-densemble-de-larchitecture" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>src/ddi_l/
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  __init__.py                # API publique : new_study, open_ddi, Document
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  document.py                # Document, DDIDocument, DDIFragment, StudyCursor
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  _document_mixins.py        # Comportement de Document decoupe par sujet
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  _document_maintainables.py # Helpers de recherche / rattachement
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  _document_namespaces.py    # Gestion des espaces de noms pour Document
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  models/
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    base.py                  # InternationalString, Reference, MaintainableBase
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>                             # et le moteur generique from_xml / to_xml
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    _generated/              # Bases generees (champs uniquement, ne pas editer)
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    datacollection/          # Types DataCollection (seul sous-paquet de modeles)
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    logicalproduct.py        # Variables, listes de codes, categories, NCubes
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    conceptualcomponent.py   # Concepts, univers, variables conceptuelles
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    reusable.py, study.py, archive.py, group.py, physical.py, process.py,
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    quality.py, comparison.py, methodology.py, classification.py, ...
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  schema_loader/             # Resolution des schemas, validation, conversion JSON
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  schemas/                   # XSD DDI 3.1 / 3.2 / 3.3 integres (CC-BY-4.0)
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  examples/                  # Instances et fixtures d'exemple empaquetees
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  validation.py              # Validation de haut niveau
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  lint.py                    # Moteur lint et regles
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  cli.py                     # Point d'entree CLI (`ddi`)
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  io.py                      # Lecture/ecriture bas niveau et streaming
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  index.py                   # Index d'identifiants pour find() / references
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  registry/                  # Registre des types maintainable
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  schema_sync.py             # Rafraichit le lot de schemas integre
+</span></code></pre></div>
+<p>Répertoires de support hors du paquet : <code>codegen/</code> (générateurs à la
+construction), <code>tests/</code>, <code>benchmarks/</code>, <code>demo/</code> et <code>docs/</code>. Aucun n'est
+empaqueté : rien de ce qu'ils contiennent ne peut servir de point d'entrée
+console ni être importe à l'exécution.</p>
+<h2 id="les-deux-backends-xml">Les deux backends XML<a class="headerlink" href="#les-deux-backends-xml" title="Permanent link">&para;</a></h2>
+<p><code>lxml</code> est un accélérateur optionnel installé avec <code>ddi-l[full]</code>. Sa présence
+ne doit pas changer ce que <code>ddi-l</code> entend par un document, et la différence de
+résolution des préfixes entre les deux mérite d'être comprise avant de toucher
+à la sérialisation :</p>
+<ul>
+<li><strong><code>ElementTree</code> (bibliothèque standard)</strong> résout les préfixes au moment de la
+  <em>sérialisation</em>, depuis un registre global au processus. Un préfixe
+  enregistré en écrivant un document affecte tous les suivants dans le même
+  processus.</li>
+<li><strong><code>lxml</code></strong> résout depuis le <code>nsmap</code> de chaque élément, <strong>figé à la création
+  de l'élément</strong>. Il ne peut pas être redéfini sur place, d'où le fait que
+  <code>apply_namespace_map()</code> renvoie une racine au lieu d'en muter une.</li>
+</ul>
+<p>Cette asymétrie est la source la plus fréquente de comportements propres à un
+backend : lancez la suite sur les deux backends quand vous touchez à la
+sérialisation.</p>
+<h3 id="ce-qui-est-garanti">Ce qui est garanti<a class="headerlink" href="#ce-qui-est-garanti" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Les documents produits par <code>ddi-l</code> sont sérialisés en octets identiques sur
+  les deux backends.</strong> Chaque espace de noms DDI reçoit son préfixe canonique,
+  et les déclarations sont hissées sur la racine. <code>tests/test_backend_parity.py</code>
+  le vérifie.</li>
+<li><strong>Un aller-retour ne modifie jamais le contenu</strong>, sur l'un ou l'autre
+  backend : mêmes éléments, mêmes noms qualifiés, mêmes attributs, même texte.</li>
+</ul>
+<h3 id="ce-qui-nest-pas-garanti">Ce qui n'est pas garanti<a class="headerlink" href="#ce-qui-nest-pas-garanti" title="Permanent link">&para;</a></h3>
+<p>L'aller-retour d'un fichier tiers dont les espaces de noms sont disposés
+autrement que les nôtres (racine préfixée et redéclarations <code>xmlns=</code> par
+élément, comme dans le <code>Quality_of_Life.xml</code> livré) peut différer par
+l'<em>écriture des préfixes</em> entre les backends. lxml reproduit la disposition
+source ; la bibliothèque standard la canonise sur la racine. Les documents sont
+sémantiquement identiques.</p>
+<p>Obtenir l'égalité octet par octet imposerait de reconstruire, dans <code>write()</code>,
+chaque sous-arbre qui porte son propre <code>nsmap</code> : un coût réel sur le chemin le
+plus chaud pour une question de préfixes. Toute modification doit garder la
+bibliothèque standard sur les préfixes canoniques <code>c:</code>/<code>d:</code>/<code>l:</code> ; mesurez les
+deux backends sur <code>Quality_of_Life.xml</code> et <code>example_instance.xml</code>.</p>
+<h2 id="schemas-integres">Schémas intégrés<a class="headerlink" href="#schemas-integres" title="Permanent link">&para;</a></h2>
+<p>Les XSD DDI sont livres dans le paquet, sous <code>src/ddi_l/schemas/</code>, afin que la
+validation fonctionne hors ligne depuis un simple <code>pip install ddi-l</code>.
+Résolvez-les toujours via <code>importlib.resources</code>
+(<code>resources.files("ddi_l.schemas")</code>), jamais via un chemin relatif à la racine
+du dépôt : un tel chemin fonctionne dans un clone et casse dans une roue
+installée.</p>
+<p>Les schémas sont sous licence CC-BY-4.0 de la DDI Alliance. <code>license.txt</code> et
+<code>readme.txt</code> sont redistribués avec eux pour satisfaire l'attribution et
+doivent rester dans la distribution.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<p>Le site utilise MkDocs avec le thème Material et un support bilingue (EN/FR).
+Les pages vont par paires <code>.en.md</code> / <code>.fr.md</code> : <strong>mettez à jour les deux</strong>
+lorsque vous modifiez du contenu destiné aux utilisateurs.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>docs-serve<span class="w">    </span><span class="c1"># Prévisualisation en direct</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>docs-build<span class="w">    </span><span class="c1"># Construction et validation</span>
+</span></code></pre></div>
+<p>Préférez les cibles <code>make</code> à un appel direct de <code>mkdocs</code> : elles définissent
+<code>NO_MKDOCS_2_WARNING</code>, sans quoi chaque invocation affiche un avertissement de
+plusieurs lignes des auteurs de Material for MkDocs au sujet de MkDocs 2.0.</p>
+<h3 id="versions-de-la-chaine-de-documentation">Versions de la chaîne de documentation<a class="headerlink" href="#versions-de-la-chaine-de-documentation" title="Permanent link">&para;</a></h3>
+<p><code>uv.lock</code> fige les versions exactes ; l'intégration continue et le déploiement
+installent avec <code>uv sync --locked --group docs</code>. <code>mkdocs</code> et <code>mkdocs-material</code>
+sont plafonnés sous leur prochaine version majeure dans <code>pyproject.toml</code>, afin
+qu'une nouvelle majeure soit adoptée délibérément ; Dependabot propose cette
+mise à jour sous forme de pull request testée. <code>tests/test_docs_site_config.py</code>
+vérifie que chaque plugin activé dans <code>mkdocs.yml</code> est fourni par le groupe
+<code>docs</code>.</p>
+<h3 id="le-selecteur-de-version-napparait-que-sous-mike">Le sélecteur de version n'apparaît que sous <code>mike</code><a class="headerlink" href="#le-selecteur-de-version-napparait-que-sous-mike" title="Permanent link">&para;</a></h3>
+<p><code>extra.version.provider: mike</code> fait récupérer <code>versions.json</code> par le thème, en
+le résolvant comme <code>../versions.json</code> relativement à la base du site, car
+<code>mike</code> publie chaque version sous <code>&lt;site_url&gt;/&lt;version&gt;/</code> et place le manifeste
+à côté.</p>
+<p>C'est correct en production et faux en local. Un simple <code>mkdocs serve</code> ne
+construit aucune version : la base reste <code>/ddi-l/</code> et <code>../versions.json</code> dépasse
+vers <code>/versions.json</code>, que rien ne sert : une 404 à chaque chargement de page,
+pour un sélecteur qui ne pourrait de toute façon pas fonctionner en local.</p>
+<p><code>hooks/version_selector.py</code> retire <code>extra.version</code> sauf si <code>MIKE_DOCS_VERSION</code>
+est définie (la variable que <code>mike</code> exporte quand il pilote la construction.
+Pour prévisualiser le sélecteur lui-même, lancez <code>uv run mike serve</code>, ou
+définissez la variable à la main.</p>
+<h3 id="pourquoi-le-journal-de-construction-est-court">Pourquoi le journal de construction est court<a class="headerlink" href="#pourquoi-le-journal-de-construction-est-court" title="Permanent link">&para;</a></h3>
+<p><code>mkdocs-static-i18n</code> journalise, en INFO, la valeur entière par laquelle il
+remplace chaque clé de configuration, une fois par langue, à chaque
+reconstruction. Pour <code>nav</code>, c'est tout l'arbre de navigation : une construction
+affichait donc plusieurs milliers de caractères de configuration recopiée autour
+des cinq lignes utiles.</p>
+<p><code>hooks/quiet_i18n_logs.py</code> filtre exactement ces enregistrements
+<code>Overriding</code>/<code>Updating … config …</code>. La ligne <code>Building '&lt;lang&gt;' documentation to
+directory: …</code> est conservée, et rien au niveau WARNING ou au-dessus n'est
+touché ; un véritable <code>Unknown '&lt;lang&gt;' config override</code> remonte toujours.
+Lancez <code>mkdocs serve --verbose</code> pour tout revoir.</p>
+<p>Le filtre est attaché au <em>handler</em> du logger <code>mkdocs</code>, et non au logger du
+plugin. Python consulte les handlers d'un logger ancêtre lorsqu'un
+enregistrement se propage, mais pas ses filtres, et le plugin journalise depuis
+ses sous-modules : un filtre sur <code>mkdocs.plugins.mkdocs_static_i18n</code> ne ferait
+donc silencieusement rien.</p>
+<h3 id="virtual_env-does-not-match-the-project-environment-path"><code>VIRTUAL_ENV does not match the project environment path</code><a class="headerlink" href="#virtual_env-does-not-match-the-project-environment-path" title="Permanent link">&para;</a></h3>
+<p>Un avertissement de uv, pas un réglage du projet : rien dans ce dépôt ne choisit
+un chemin d'environnement. Il signifie que votre shell a un virtualenv actif
+tandis que uv résout celui du projet ailleurs, généralement parce que
+<code>UV_PROJECT_ENVIRONMENT</code> est définie dans votre profil. Annulez-la, pointez-la
+vers le <code>.venv</code> de ce dépôt, ou passez <code>--active</code> pour que uv utilise
+l'environnement actuellement activé.</p>
+<h2 id="publier-une-version">Publier une version<a class="headerlink" href="#publier-une-version" title="Permanent link">&para;</a></h2>
+<p>Les versions sont publiées sur PyPI par <code>.github/workflows/publish.yml</code> au moyen
+de la <a href="https://docs.pypi.org/trusted-publishers/">publication de confiance</a>
+(OIDC, sans jeton d'API), avec des attestations PEP 740.</p>
+<h3 id="configuration-initiale">Configuration initiale<a class="headerlink" href="#configuration-initiale" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Sur <a href="https://pypi.org/manage/account/publishing/">PyPI</a> et
+   <a href="https://test.pypi.org/manage/account/publishing/">TestPyPI</a>, ajoutez un
+   éditeur de confiance en attente pour le projet <code>ddi-l</code> : propriétaire
+   <code>pbisson44</code>, dépôt <code>ddi</code>, workflow <code>publish.yml</code>, environnement <code>pypi</code>
+   (TestPyPI : <code>testpypi</code>).</li>
+<li>Dans les paramètres du dépôt GitHub, créez les environnements <code>pypi</code> et
+   <code>testpypi</code>. Protégez <code>pypi</code> par des relecteurs obligatoires.</li>
+</ol>
+<h3 id="a-chaque-version">À chaque version<a class="headerlink" href="#a-chaque-version" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Fixez la version dans <code>pyproject.toml</code> et <code>CITATION.cff</code>, et réglez
+   <code>date-released</code> dans <code>CITATION.cff</code> sur la date de publication.
+   <code>tests/test_release_metadata.py</code> vérifie leur concordance.</li>
+<li>Datez le titre dans <code>docs/release-notes.en.md</code> et <code>docs/release-notes.fr.md</code>.</li>
+<li>Lancez les contrôles locaux : <code>uv run make release-check</code> et la suite de
+   tests complète.</li>
+<li>
+<p>Essai à blanc : déclenchez <strong>Publish to PyPI</strong> depuis l'onglet Actions avec
+   la cible <code>testpypi</code>, puis installez depuis TestPyPI dans un environnement
+   propre :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>--extra-index-url<span class="w"> </span>https://pypi.org/simple/<span class="w"> </span>ddi-l
+</span></code></pre></div>
+</li>
+<li>
+<p>Publiez une GitHub Release avec l'étiquette <code>vX.Y.Z</code>. Le workflow construit
+   les distributions, vérifie que l'étiquette correspond à la version du
+   paquet et publie sur PyPI ; le workflow de documentation publie la
+   documentation versionnée.</p>
+</li>
+</ol>
+<h2 id="soumettre-des-modifications">Soumettre des modifications<a class="headerlink" href="#soumettre-des-modifications" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Forkez le dépôt et créez une branche.</li>
+<li>Écrivez ou mettez à jour les tests.</li>
+<li>Mettez à jour les pages anglaise et française pour tout changement visible.</li>
+<li>Exécutez les contrôles qualité ci-dessus.</li>
+<li>Commitez avec des messages clairs.</li>
+<li>Ouvrez une pull request avec un résumé et les références d'issues.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../release-notes/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Notes de version">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Notes de version
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../assets/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Ressources de marque">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Ressources de marque
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.edit", "content.code.annotate", "content.code.copy", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "palette.switcher", "palette.toggle", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,253 @@
+.ddi-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  align-items: center;
+}
+
+.md-button.md-button--secondary,
+.md-button.md-button--secondary.md-button--outlined {
+  background-color: var(--md-default-bg-color);
+  border: 1px solid var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color--dark);
+  box-shadow: none;
+}
+
+@supports (color: color-mix(in srgb, white 50%, black 50%)) {
+  .md-button.md-button--secondary,
+  .md-button.md-button--secondary.md-button--outlined {
+    background-color: color-mix(
+      in srgb,
+      var(--md-primary-fg-color) 6%,
+      var(--md-default-bg-color) 94%
+    );
+    border: 1px solid color-mix(
+      in srgb,
+      var(--md-primary-fg-color) 45%,
+      var(--md-default-bg-color) 55%
+    );
+  }
+}
+
+.md-button.md-button--secondary:hover,
+.md-button.md-button--secondary:focus,
+.md-button.md-button--secondary.md-button--outlined:hover,
+.md-button.md-button--secondary.md-button--outlined:focus {
+  background-color: var(--md-default-bg-color);
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color);
+}
+
+@supports (color: color-mix(in srgb, white 50%, black 50%)) {
+  .md-button.md-button--secondary:hover,
+  .md-button.md-button--secondary:focus,
+  .md-button.md-button--secondary.md-button--outlined:hover,
+  .md-button.md-button--secondary.md-button--outlined:focus {
+    background-color: color-mix(
+      in srgb,
+      var(--md-primary-fg-color) 14%,
+      var(--md-default-bg-color) 86%
+    );
+  }
+}
+
+.ddi-feature-badges {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.ddi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.ddi-badge--validate {
+  background-color: var(--md-default-bg-color);
+  color: var(--md-success-fg-color);
+}
+
+.ddi-badge--author {
+  background-color: var(--md-default-bg-color);
+  color: var(--md-accent-fg-color);
+}
+
+.ddi-badge--automate {
+  background-color: var(--md-default-bg-color);
+  color: var(--md-warning-fg-color);
+}
+
+@supports (color: color-mix(in srgb, white 50%, black 50%)) {
+  .ddi-badge--validate {
+    background-color: color-mix(
+      in srgb,
+      var(--md-success-fg-color) 15%,
+      transparent
+    );
+  }
+
+  .ddi-badge--author {
+    background-color: color-mix(
+      in srgb,
+      var(--md-accent-fg-color) 15%,
+      transparent
+    );
+  }
+
+  .ddi-badge--automate {
+    background-color: color-mix(
+      in srgb,
+      var(--md-warning-fg-color) 15%,
+      transparent
+    );
+  }
+}
+
+.grid.cards.landing-tiles {
+  --md-grid-gap: 1.2rem;
+}
+
+.grid.cards.landing-tiles > ul > li {
+  box-shadow: var(--md-shadow-z2);
+  border-radius: 0.8rem;
+  padding: 1.4rem;
+  background-color: var(--md-default-bg-color);
+}
+
+@supports (color: color-mix(in srgb, white 50%, black 50%)) {
+  .grid.cards.landing-tiles > ul > li {
+    background-color: color-mix(
+      in srgb,
+      var(--md-default-bg-color) 92%,
+      var(--md-primary-fg-color) 8%
+    );
+  }
+}
+
+.grid.cards.landing-tiles > ul > li p {
+  color: var(--md-default-fg-color--light);
+}
+
+.ddi-feature-badges .ddi-badge {
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   Mobile and Tablet Responsive Breakpoints
+   ======================================== */
+ 
+/* Tablet landscape and below (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .grid.cards.landing-tiles {
+    --md-grid-gap: 1rem;
+  }
+ 
+  .ddi-cta-group {
+    gap: 0.6rem;
+  }
+}
+ 
+/* Tablet portrait and below (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .grid.cards.landing-tiles {
+    --md-grid-gap: 0.9rem;
+  }
+ 
+  .grid.cards.landing-tiles > ul {
+    grid-template-columns: 1fr;
+  }
+ 
+  .grid.cards.landing-tiles > ul > li {
+    padding: 1.25rem;
+    border-radius: 0.6rem;
+  }
+ 
+  .ddi-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+ 
+  .ddi-feature-badges {
+    gap: 0.6rem;
+  }
+ 
+  .ddi-feature-badges .ddi-badge {
+    font-size: 0.9rem;
+  }
+}
+ 
+/* Mobile (max-width: 640px) */
+@media screen and (max-width: 640px) {
+  .grid.cards.landing-tiles > ul > li {
+    padding: 1.1rem;
+  }
+   
+  .ddi-badge {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+  }
+}
+ 
+/* ========================================
+   Touch-Friendly Target Sizes (WCAG 2.5.5)
+   Minimum 44x44px touch targets
+   ======================================== */
+ 
+/* CTA buttons - ensure minimum touch target */
+.ddi-cta-group .md-button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.65rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+/* Mobile-specific: full-width buttons for easier touch */
+@media screen and (max-width: 768px) {
+  .ddi-cta-group .md-button {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+ 
+/* Badge touch targets */
+.ddi-badge {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+ 
+/* Card touch targets - ensure entire card is tappable */
+.grid.cards.landing-tiles > ul > li a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+ 
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+ 
+@media (prefers-reduced-motion: reduce) {
+  .ddi-cta-group .md-button,
+  .ddi-badge,
+  .grid.cards.landing-tiles > ul > li {
+    transition: none;
+  }
+}
+ 
+.ddi-reduced-motion .ddi-cta-group .md-button,
+.ddi-reduced-motion .ddi-badge,
+.ddi-reduced-motion .grid.cards.landing-tiles > ul > li {
+  transition: none;
+}

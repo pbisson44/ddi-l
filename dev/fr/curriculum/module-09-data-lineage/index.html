@@ -1,0 +1,3835 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reference and tutorials for the ddi-l toolkit.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/curriculum/module-09-data-lineage/">
+      
+      
+        <link rel="prev" href="../module-08-questionnaire-flows/">
+      
+      
+        <link rel="next" href="../module-10-data-linkage/">
+      
+      
+        
+          <link rel="alternate" href="../../../curriculum/module-09-data-lineage/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Module 9 : Traçabilité des données - ddi-l: DDI Lifecycle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/accessibility.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/landing.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <script>
+    // Driven by Material's `document$` observable rather than DOMContentLoaded.
+    // `document$` emits on the initial load and again after every page swap, so
+    // this keeps working if `navigation.instant` is ever enabled -- it is off
+    // today only because mkdocs-static-i18n's language switcher is incompatible
+    // with it (see the comment in mkdocs.yml). Under DOMContentLoaded alone the
+    // decoration below would survive only the first page a visitor landed on.
+    //
+    // The script has two halves. `enhance()` re-applies to whatever document is
+    // current and runs on every emission. `setupOnce()` binds to things that
+    // outlive a page swap -- <body>, the header, window -- and is guarded,
+    // because re-running it would stack a duplicate observer and listener on
+    // every navigation for the length of the session.
+    //
+    // Both run from the DOM-ready signal rather than at parse time: this block
+    // lands in <head>, where document.body does not exist yet.
+    (function () {
+      var paletteLabels = {"default": "Mode clair activ\u00e9", "deuteranopia": "Adapt\u00e9e \u00e0 la deut\u00e9ranopie", "high-contrast": "Contraste \u00e9lev\u00e9", "protanopia": "Adapt\u00e9e \u00e0 la protanopie", "slate": "Mode sombre activ\u00e9", "tritanopia": "Adapt\u00e9e \u00e0 la tritanopie"};
+      var initialised = false;
+
+      function enhance() {
+        var header = document.querySelector(".md-header");
+        if (header) {
+          header.setAttribute("role", "banner");
+          header.setAttribute("aria-label", "En-t\u00eate du site");
+        }
+
+        var primaryNav = document.querySelector(".md-nav--primary nav, .md-nav--primary");
+        if (primaryNav) {
+          primaryNav.setAttribute("role", "navigation");
+          primaryNav.setAttribute("aria-label", "Navigation principale");
+        }
+
+        var secondaryNav = document.querySelector(".md-nav--secondary nav, .md-nav--secondary");
+        if (secondaryNav) {
+          secondaryNav.setAttribute("role", "navigation");
+          secondaryNav.setAttribute("aria-label", "Sur cette page");
+        }
+
+        var main = document.querySelector("main.md-main");
+        if (main) {
+          if (!main.id) {
+            main.id = "main-content";
+          }
+          main.setAttribute("role", "main");
+          main.setAttribute("aria-label", "Contenu de la documentation");
+        }
+
+        setupOnce();
+      }
+
+      function announcePaletteChange(scheme) {
+        var announcer = document.getElementById("ddi-palette-announcer");
+        if (!announcer) {
+          return;
+        }
+        var message = paletteLabels[scheme] || scheme;
+        announcer.textContent = "";
+        // Brief delay ensures the live region update is detected.
+        setTimeout(function () {
+          announcer.textContent = message;
+        }, 50);
+      }
+
+      function setupOnce() {
+        if (initialised) {
+          return;
+        }
+        initialised = true;
+
+        // -- Palette announcements ------------------------------------------
+        //
+        // Material applies the palette by setting `data-md-color-scheme` on
+        // <body>, so that is what we observe. A colour change on its own gives
+        // a screen reader nothing to announce.
+        var lastScheme = document.body.getAttribute("data-md-color-scheme");
+        new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.attributeName !== "data-md-color-scheme") {
+              return;
+            }
+            var scheme = document.body.getAttribute("data-md-color-scheme");
+            if (scheme && scheme !== lastScheme) {
+              lastScheme = scheme;
+              announcePaletteChange(scheme);
+            }
+          });
+        }).observe(document.body, { attributes: true });
+
+        // -- Accessibility palette menu -------------------------------------
+        //
+        // The four accessibility palettes are entries 2-5 of theme.palette and
+        // carry no `toggle:`, so they stay off the header cycle (see the
+        // override in partials/palette.html) while Material still renders a
+        // radio input for each. Clicking that input is the supported way in:
+        // Material's own subscription applies the colours and persists the
+        // choice under `<scope>.__palette`. Writing localStorage directly here
+        // is what the previous version did, against a key Material never reads.
+        //
+        // Delegated from the menu container, which lives in the header and so
+        // survives instant navigation.
+        var menu = document.querySelector("[data-ddi-palette-menu]");
+        if (menu) {
+          menu.addEventListener("click", function (event) {
+            var button = event.target.closest("[data-ddi-palette-index]");
+            if (!button) {
+              return;
+            }
+            var input = document.getElementById(
+              "__palette_" + button.getAttribute("data-ddi-palette-index")
+            );
+            if (input) {
+              input.click();
+              // Collapse the menu so focus returns to a predictable place.
+              var details = menu.querySelector("details");
+              if (details) {
+                details.open = false;
+              }
+            }
+          });
+        }
+
+        // -- Language switcher ----------------------------------------------
+        //
+        // mkdocs-static-i18n already renders each switcher link as the same
+        // page in the other language, with its trailing slash. Material's
+        // alternate-language handler (on <body>) intercepts the click anyway,
+        // misses its sitemap lookup, and navigates to the alternate URL with
+        // the trailing slash stripped -- `/ddi-l/fr/server` instead of
+        // `/ddi-l/fr/server/` -- which the server answers with a 302. Stopping
+        // the click in the capture phase keeps it from reaching that handler
+        // while leaving the browser's own navigation to the correct href.
+        window.addEventListener("click", function (event) {
+          if (event.target instanceof Element &&
+              event.target.closest("a.md-select__link[hreflang]")) {
+            event.stopPropagation();
+          }
+        }, true);
+
+        // -- Reduced motion --------------------------------------------------
+        //
+        // A media query cannot reach the transition declarations Material sets
+        // inline, so this class is what accessibility.css and landing.css hang
+        // their overrides on. Kept in sync rather than sampled once at load.
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        function applyReducedMotion(matches) {
+          document.documentElement.classList.toggle("ddi-reduced-motion", matches);
+        }
+        applyReducedMotion(reducedMotion.matches);
+        reducedMotion.addEventListener("change", function (event) {
+          applyReducedMotion(event.matches);
+        });
+      }
+
+      // Fall back to DOMContentLoaded if the bundle has not defined
+      // `document$`, so the ARIA work still happens if `navigation.instant` is
+      // ever turned off.
+      if (window.document$ && typeof window.document$.subscribe === "function") {
+        window.document$.subscribe(enhance);
+      } else {
+        document.addEventListener("DOMContentLoaded", enhance);
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-9-documenter-les-fichiers-de-donnees-et-la-tracabilite-des-variables" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  
+    Vous consultez la documentation d'une <strong>version antérieure</strong>.
+    <a href="../../../../">
+      <strong>Voir la dernière version</strong>
+    </a>
+  
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+  
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../../" title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l: DDI Lifecycle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module 9 : Traçabilité des données
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+<form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="deuteranopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_3">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="protanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_4">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="tritanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_5">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../curriculum/module-09-data-lineage/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Partager" aria-label="Partager" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Aperçu
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Bien démarrer
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/authoring/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Bibliothèque de tutoriels
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Programme de formation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../release-notes/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projet
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+  <!--
+    Rendered after the header so the palette radio inputs Material writes in
+    `partials/palette.html` already exist in the document.
+  -->
+  <div class="ddi-palette-menu" data-ddi-palette-menu>
+    <details class="ddi-palette-menu__details">
+      <summary class="ddi-palette-menu__summary"
+               title="Palettes d'accessibilité">
+        <span class="sr-only">Palettes d'accessibilité</span>
+        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
+      </summary>
+      <ul class="ddi-palette-menu__list">
+        
+          
+        
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="2">
+                Contraste élevé
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="3">
+                Adaptée à la deutéranopie
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="4">
+                Adaptée à la protanopie
+              </button>
+            </li>
+          
+        
+          
+            <li>
+              
+              <button type="button"
+                      class="ddi-palette-menu__option"
+                      data-ddi-palette-index="5">
+                Adaptée à la tritanopie
+              </button>
+            </li>
+          
+        
+      </ul>
+    </details>
+  </div>
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    ddi-l: DDI Lifecycle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aperçu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bien démarrer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bien démarrer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installer ddi-l
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'utilisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parcourir les recettes CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API HTTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des modèles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliothèque de tutoriels
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Bibliothèque de tutoriels
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/authoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows d'auteur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/training-labs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Exercices d'entraînement interactifs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/persona-learning-paths/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parcours d'apprentissage par persona
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    De XML aux objets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clinique de dépannage des schémas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'automatisation en ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Laboratoire de réutilisation de fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Construire des outils et applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser ddi-l depuis R
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programme de formation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Programme de formation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 1 : Qu’est-ce que les métadonnées ?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 2 : Préparez votre environnement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 3 : Créez votre première étude
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 4 : Variables et questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 5 : Concepts et univers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-06-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 6 : Du CSV/Excel au DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-07-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 7 : Listes de codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-08-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 8 : Flux de questionnaire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 9 : Traçabilité des données
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 9 : Traçabilité des données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-que-se-passe-t-il-apres-la-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Que se passe-t-il après la collecte ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-les-trois-fichiers-de-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Les trois fichiers de données
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-preparer-letude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Préparer l'étude
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-construire-les-variables-de-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Construire les variables de collecte
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Construire les variables de collecte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-numerique-age" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable numérique : age
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-codee-gender" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable codée : gender
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-texte-occupation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable texte : occupation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#construire-toutes-les-variables-de-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construire toutes les variables de collecte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-quest-ce-quune-variable-derivee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Qu'est-ce qu'une variable dérivée ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-creer-des-variables-derivees-avec-des-references-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Créer des variables dérivées avec des références source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Créer des variables dérivées avec des références source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-creer-la-liste-de-codes-des-groupes-dage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1 : Créer la liste de codes des groupes d'âge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-creer-la-variable-derivee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2 : Créer la variable dérivée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-lier-a-sa-variable-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3 : Lier à sa variable source
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-construire-toutes-les-variables-de-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Construire toutes les variables de production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-la-chaine-de-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. La chaîne de provenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-construire-les-variables-du-fichier-maitre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Construire les variables du fichier maître
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-une-variable-avec-plusieurs-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Une variable avec plusieurs sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-du-numerique-au-code-le-patron-de-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Du numérique au codé : le patron de dérivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-resume-le-modele-complet-de-tracabilite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Résumé : le modèle complet de traçabilité
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-10-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 10 : Couplage de données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-11-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 11 : Propriétés, recherche et validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-12-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 12 : Champs personnalisés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-13-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 13 : Mise à jour et versionnage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-14-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 14 : Ouvrir et modifier des fichiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-15-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 15 : Validation en ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-16-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 16 : Projets de synthèse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide de l’instructeur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aide-mémoire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrigés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Référence
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence de l'API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalogue des espaces de noms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Couverture du schéma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paquets Python associés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbook de performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbook de performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aperçu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark de conversion de schémas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assets/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projet
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Projet
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes de version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide du contributeur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-que-se-passe-t-il-apres-la-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Que se passe-t-il après la collecte ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-les-trois-fichiers-de-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Les trois fichiers de données
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-preparer-letude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Préparer l'étude
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-construire-les-variables-de-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Construire les variables de collecte
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Construire les variables de collecte">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-numerique-age" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable numérique : age
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-codee-gender" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable codée : gender
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-texte-occupation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variable texte : occupation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#construire-toutes-les-variables-de-collecte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Construire toutes les variables de collecte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-quest-ce-quune-variable-derivee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Qu'est-ce qu'une variable dérivée ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-creer-des-variables-derivees-avec-des-references-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Créer des variables dérivées avec des références source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Créer des variables dérivées avec des références source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#etape-1-creer-la-liste-de-codes-des-groupes-dage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 1 : Créer la liste de codes des groupes d'âge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-2-creer-la-variable-derivee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 2 : Créer la variable dérivée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etape-3-lier-a-sa-variable-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Étape 3 : Lier à sa variable source
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-construire-toutes-les-variables-de-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Construire toutes les variables de production
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-la-chaine-de-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. La chaîne de provenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-construire-les-variables-du-fichier-maitre" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Construire les variables du fichier maître
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-une-variable-avec-plusieurs-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Une variable avec plusieurs sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-du-numerique-au-code-le-patron-de-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Du numérique au codé : le patron de dérivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-resume-le-modele-complet-de-tracabilite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Résumé : le modèle complet de traçabilité
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Aperçu
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Programme de formation
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/curriculum/module-09-data-lineage.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="module-9-documenter-les-fichiers-de-donnees-et-la-tracabilite-des-variables">Module 9 : Documenter les fichiers de données et la traçabilité des variables<a class="headerlink" href="#module-9-documenter-les-fichiers-de-donnees-et-la-tracabilite-des-variables" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Ce que vous apprendrez</p>
+<ul>
+<li>Comprendre les trois étapes des données d'enquête : <strong>collecte</strong>, <strong>production</strong> et <strong>diffusion</strong>.</li>
+<li>Créer des variables avec différentes représentations (<code>NumericRepresentation</code>, <code>CodeRepresentation</code>, <code>TextRepresentation</code>).</li>
+<li>Lier chaque variable à sa <strong>question source</strong> avec <code>question_references</code>.</li>
+<li>Modéliser des <strong>variables dérivées</strong> avec <code>source_variable_references</code> pour la traçabilité.</li>
+<li>Suivre la <strong>relation basée-sur</strong> entre les variables de collecte et de production.</li>
+<li>Construire une chaîne de provenance complète du fichier de diffusion jusqu'au questionnaire original.</li>
+</ul>
+</div>
+<p><strong>Prérequis :</strong> <a href="../module-08-questionnaire-flows/">Module 8 : Flux de questionnaire</a>.</p>
+<p><strong>Durée :</strong> 60 min en autonomie / 75 min avec instructeur.</p>
+<hr />
+<h2 id="1-que-se-passe-t-il-apres-la-collecte">1. Que se passe-t-il après la collecte ?<a class="headerlink" href="#1-que-se-passe-t-il-apres-la-collecte" title="Permanent link">&para;</a></h2>
+<p>Dans le module 8, vous avez construit un questionnaire.
+Quand les répondants répondent à ce questionnaire, les réponses deviennent des <strong>fichiers de données</strong>.</p>
+<p>Mais les données brutes vont rarement directement aux utilisateurs.
+Elles passent par des étapes :</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Fichier de collecte\n(réponses brutes)"] --&gt; B["Fichier de production\n(nettoyé + dérivé)"]
+    B --&gt; C["Fichier maître\n(prêt pour la diffusion)"]</code></pre>
+<p>Chaque étape a son propre ensemble de variables.
+DDI permet de documenter chaque étape et de suivre comment chaque variable se connecte aux autres.
+C'est ce qu'on appelle la <strong>traçabilité des données</strong> ou la <strong>provenance</strong>.</p>
+<h2 id="2-les-trois-fichiers-de-donnees">2. Les trois fichiers de données<a class="headerlink" href="#2-les-trois-fichiers-de-donnees" title="Permanent link">&para;</a></h2>
+<p>Nous utiliserons l'enquête sur la santé du module 8 comme exemple.</p>
+<div class="admonition example">
+<p class="admonition-title">Trois fichiers de données</p>
+<p><strong>Fichier de collecte</strong> : réponses brutes exactement comme collectées.</p>
+<table>
+<thead>
+<tr>
+<th>respondent_id</th>
+<th>age</th>
+<th>gender</th>
+<th>employed</th>
+<th>occupation</th>
+<th>health_rating</th>
+<th>smoker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R001</td>
+<td>34</td>
+<td>Female</td>
+<td>Yes</td>
+<td>Teacher</td>
+<td>Good</td>
+<td>No</td>
+</tr>
+<tr>
+<td>R002</td>
+<td>17</td>
+<td>Male</td>
+<td>No</td>
+<td></td>
+<td>Fair</td>
+<td>No</td>
+</tr>
+<tr>
+<td>R003</td>
+<td>68</td>
+<td>Female</td>
+<td>No</td>
+<td></td>
+<td>Excellent</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fichier de production</strong> : données nettoyées avec les variables originales et <strong>dérivées</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>respondent_id</th>
+<th>age</th>
+<th>gender</th>
+<th>employed</th>
+<th>age_group</th>
+<th>employment_status_code</th>
+<th>health_score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R001</td>
+<td>34</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>R002</td>
+<td>17</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>R003</td>
+<td>68</td>
+<td>2</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fichier maître</strong> : seulement les variables dérivées finales, prêtes pour la diffusion.</p>
+<table>
+<thead>
+<tr>
+<th>respondent_id</th>
+<th>age_group</th>
+<th>employment_status_code</th>
+<th>health_score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R001</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>R002</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>R003</td>
+<td>5</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="3-preparer-letude">3. Préparer l'étude<a class="headerlink" href="#3-preparer-letude" title="Permanent link">&para;</a></h2>
+<p>Commencez par créer l'étude et les questions de notre enquête sur la santé.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">Variable</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">CodeList</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">Category</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">CodeItem</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">VariableRepresentation</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">NumericRepresentation</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">CodeRepresentation</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">TextRepresentation</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">NumberRange</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuestionConstruct</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reference</span><span class="p">,</span> <span class="n">InternationalString</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"National Health Survey: Data Documentation"</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Créer les questions sources</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">q_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">q_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your gender?"</span><span class="p">)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">q_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Are you currently employed?"</span><span class="p">)</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">q_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your occupation?"</span><span class="p">)</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">q_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your general health?"</span><span class="p">)</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">q_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Do you smoke?"</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="4-construire-les-variables-de-collecte">4. Construire les variables de collecte<a class="headerlink" href="#4-construire-les-variables-de-collecte" title="Permanent link">&para;</a></h2>
+<p>Les <strong>variables de collecte</strong> capturent exactement ce qui a été demandé.
+Chacune a une <strong>représentation</strong> (numérique, texte ou codée) et un lien vers sa <strong>question source</strong>.</p>
+<h3 id="variable-numerique-age">Variable numérique : age<a class="headerlink" href="#variable-numerique-age" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">v_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_age</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le paramètre <code>question=</code> crée automatiquement une entrée <code>question_references</code> qui lie cette variable à la question dont elle provient.</p>
+<h3 id="variable-codee-gender">Variable codée : gender<a class="headerlink" href="#variable-codee-gender" title="Permanent link">&para;</a></h3>
+<p>Pour les variables codées, vous créez d'abord une <code>CodeList</code>, puis vous définissez la représentation de la variable pour l'utiliser.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Créer la liste de codes Genre</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">cl_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Gender Codes"</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Male"</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Female"</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Other"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="variable-texte-occupation">Variable texte : occupation<a class="headerlink" href="#variable-texte-occupation" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">v_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"occupation"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_occupation</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="construire-toutes-les-variables-de-collecte">Construire toutes les variables de collecte<a class="headerlink" href="#construire-toutes-les-variables-de-collecte" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">v_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"gender"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_gender</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">v_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"employed"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_employed</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">v_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_rating"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_health</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">v_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"smoker"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_smoke</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Collection variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -&gt; Collection variables: 6</span>
+</span></code></pre></div>
+<p>Chaque variable de collecte référence sa question source.
+C'est le premier maillon de la chaîne de provenance.</p>
+<h2 id="5-quest-ce-quune-variable-derivee">5. Qu'est-ce qu'une variable dérivée ?<a class="headerlink" href="#5-quest-ce-quune-variable-derivee" title="Permanent link">&para;</a></h2>
+<p>Une <strong>variable dérivée</strong> est calculée à partir d'une ou plusieurs variables existantes.</p>
+<p>Exemples :</p>
+<table>
+<thead>
+<tr>
+<th>Variable dérivée</th>
+<th>Variable(s) source</th>
+<th>Dérivation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>age_group</code></td>
+<td><code>age</code></td>
+<td>Recodage : 0-15→1, 16-24→2, 25-44→3, 45-64→4, 65+→5</td>
+</tr>
+<tr>
+<td><code>employment_status_code</code></td>
+<td><code>employed</code></td>
+<td>Recodage : Yes→1, No→0</td>
+</tr>
+<tr>
+<td><code>health_score</code></td>
+<td><code>health_rating</code></td>
+<td>Recodage : Excellent→4, Good→3, Fair→2, Poor→1</td>
+</tr>
+</tbody>
+</table>
+<p>En DDI, vous suivez cette dérivation avec <code>source_variable_references</code>, une liste de références pointant vers les variables utilisées pour calculer la valeur dérivée.</p>
+<h2 id="6-creer-des-variables-derivees-avec-des-references-source">6. Créer des variables dérivées avec des références source<a class="headerlink" href="#6-creer-des-variables-derivees-avec-des-references-source" title="Permanent link">&para;</a></h2>
+<h3 id="etape-1-creer-la-liste-de-codes-des-groupes-dage">Étape 1 : Créer la liste de codes des groupes d'âge<a class="headerlink" href="#etape-1-creer-la-liste-de-codes-des-groupes-dage" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">cl_age_group</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age Group Codes"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"0-15"</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"16-24"</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"25-44"</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"45-64"</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"65+"</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="etape-2-creer-la-variable-derivee">Étape 2 : Créer la variable dérivée<a class="headerlink" href="#etape-2-creer-la-variable-derivee" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">v_age_group</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"age_group"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_age</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="etape-3-lier-a-sa-variable-source">Étape 3 : Lier à sa variable source<a class="headerlink" href="#etape-3-lier-a-sa-variable-source" title="Permanent link">&para;</a></h3>
+<p>Le champ clé est <code>source_variable_references</code>.
+Il dit à quiconque lit les métadonnées : « Cette variable a été dérivée de ces autres variables. »</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">v_age_group</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_age</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">),</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">]</span>
+</span></code></pre></div>
+<p>Maintenant <code>age_group</code> a deux liens de provenance :</p>
+<ul>
+<li><strong>Question source</strong> : pointe vers « What is your age? » (défini par <code>question=q_age</code>)</li>
+<li><strong>Variable source</strong> : pointe vers la variable de collecte <code>age</code> (défini par <code>source_variable_references</code>)</li>
+</ul>
+<h2 id="7-construire-toutes-les-variables-de-production">7. Construire toutes les variables de production<a class="headerlink" href="#7-construire-toutes-les-variables-de-production" title="Permanent link">&para;</a></h2>
+<p>Le fichier de production a à la fois les variables de collecte originales <strong>et</strong> les variables dérivées.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Dérivée : employment_status_code depuis employed</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">v_emp_code</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"employment_status_code"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_employed</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">v_emp_code</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_employed</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">),</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">]</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Dérivée : health_score depuis health_rating</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">v_health_score</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_score"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_health</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">v_health_score</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_health</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="p">),</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="p">]</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total variables (collection + derived): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1"># -&gt; Total variables (collection + derived): 9</span>
+</span></code></pre></div>
+<h2 id="8-la-chaine-de-provenance">8. La chaîne de provenance<a class="headerlink" href="#8-la-chaine-de-provenance" title="Permanent link">&para;</a></h2>
+<p>Chaque variable du fichier de production peut être retracée jusqu'à :</p>
+<ol>
+<li><strong>Sa question source</strong> → « Qu'est-ce qui a été demandé ? »</li>
+<li><strong>Sa ou ses variable(s) source</strong> → « À partir de quelles données a-t-elle été calculée ? »</li>
+</ol>
+<p>Et chaque variable de collecte peut être retracée jusqu'à :</p>
+<ol>
+<li><strong>Sa question source</strong> → « Qu'est-ce qui a été demandé ? »</li>
+</ol>
+<p>Cela crée une <strong>chaîne de traçabilité</strong> complète :</p>
+<pre class="mermaid"><code>flowchart BT
+    Q1["Question : What is your age?"]
+    V1["Variable de collecte : age\n(numérique)"]
+    V2["Variable dérivée : age_group\n(codée : 0-15, 16-24, ...)"]
+    V3["Variable maître : age_group\n(diffusion)"]
+
+    V1 --&gt;|"question_references"| Q1
+    V2 --&gt;|"question_references"| Q1
+    V2 --&gt;|"source_variable_references"| V1
+    V3 --&gt;|"source_variable_references"| V2</code></pre>
+<p>En lisant de bas en haut, vous pouvez répondre :</p>
+<ul>
+<li>« D'où vient <code>age_group</code> dans le fichier maître ? » → De la variable de production <code>age_group</code>.</li>
+<li>« D'où vient le <code>age_group</code> de production ? » → Dérivée de <code>age</code> dans le fichier de collecte.</li>
+<li>« D'où vient <code>age</code> ? » → De la question « What is your age? »</li>
+</ul>
+<h2 id="9-construire-les-variables-du-fichier-maitre">9. Construire les variables du fichier maître<a class="headerlink" href="#9-construire-les-variables-du-fichier-maitre" title="Permanent link">&para;</a></h2>
+<p>Le fichier maître contient seulement les variables dérivées prêtes pour la diffusion.
+Celles-ci référencent les variables dérivées de l'étape de production comme leur source.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Variables du fichier maître référencent les variables de production</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">v_master_age_group</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"age_group_master"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_age</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">v_master_age_group</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_age_group</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="p">),</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">]</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">v_master_emp</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"employment_status_master"</span><span class="p">,</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">question</span><span class="o">=</span><span class="n">q_employed</span><span class="p">,</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">)</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="n">v_master_emp</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_emp_code</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    <span class="p">),</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="p">]</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="n">v_master_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"health_score_master"</span><span class="p">,</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>    <span class="n">question</span><span class="o">=</span><span class="n">q_health</span><span class="p">,</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="p">)</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="n">v_master_health</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_health_score</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>    <span class="p">),</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="p">]</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Master variables: 3"</span><span class="p">)</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total variables in document: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="c1"># -&gt; Total variables in document: 12</span>
+</span></code></pre></div>
+<h2 id="10-une-variable-avec-plusieurs-sources">10. Une variable avec plusieurs sources<a class="headerlink" href="#10-une-variable-avec-plusieurs-sources" title="Permanent link">&para;</a></h2>
+<p>Certaines variables dérivées combinent <strong>plus d'une</strong> variable source.
+Par exemple, un indice de masse corporelle (IMC) est dérivé à la fois de la <code>taille</code> et du <code>poids</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">q_height</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your height in cm?"</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">q_weight</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your weight in kg?"</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">v_height</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"height_cm"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_height</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">v_weight</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"weight_kg"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_weight</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">v_bmi</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"bmi"</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">v_bmi</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_height</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="p">),</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">Reference</span><span class="p">(</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">,</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>        <span class="n">identifier</span><span class="o">=</span><span class="n">v_weight</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>        <span class="n">version</span><span class="o">=</span><span class="s2">"1"</span><span class="p">,</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>    <span class="p">),</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="p">]</span>
+</span></code></pre></div>
+<p>La liste <code>source_variable_references</code> contient <strong>deux</strong> références.
+Quiconque lit ces métadonnées sait que l'IMC dépend à la fois de la taille et du poids.</p>
+<h2 id="11-du-numerique-au-code-le-patron-de-derivation">11. Du numérique au codé : le patron de dérivation<a class="headerlink" href="#11-du-numerique-au-code-le-patron-de-derivation" title="Permanent link">&para;</a></h2>
+<p>Un patron courant en traitement de données : une variable de collecte <strong>numérique</strong> devient une variable de production <strong>codée</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Étape</th>
+<th>Variable</th>
+<th>Représentation</th>
+<th>Valeurs exemples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Collecte</td>
+<td><code>age</code></td>
+<td>Numérique (0-120)</td>
+<td>34, 17, 68</td>
+</tr>
+<tr>
+<td>Production</td>
+<td><code>age_group</code></td>
+<td>Codée (5 catégories)</td>
+<td>« 25-44 », « 16-24 », « 65+ »</td>
+</tr>
+</tbody>
+</table>
+<p>Cela se documente en DDI par :</p>
+<ol>
+<li>Définir <code>age</code> avec une représentation numérique</li>
+<li>Définir <code>age_group</code> avec une représentation codée qui pointe vers une liste de codes</li>
+<li>Lier <code>age_group.source_variable_references</code> → <code>age</code></li>
+</ol>
+<p>La représentation indique aux utilisateurs <strong>quel type de valeurs</strong> la variable contient.
+La référence source leur dit <strong>d'où viennent ces valeurs</strong>.</p>
+<h2 id="12-resume-le-modele-complet-de-tracabilite">12. Résumé : le modèle complet de traçabilité<a class="headerlink" href="#12-resume-le-modele-complet-de-tracabilite" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Questions
+        QA["Q : Quel est votre âge ?"]
+        QG["Q : Quel est votre genre ?"]
+        QE["Q : Êtes-vous employé ?"]
+        QH["Q : Évaluez votre santé ?"]
+    end
+
+    subgraph Collection["Fichier de collecte"]
+        CA["age (numérique)"]
+        CG["gender (codée)"]
+        CE["employed (oui/non)"]
+        CH["health_rating (codée)"]
+    end
+
+    subgraph Production["Fichier de production"]
+        PA["age (numérique)"]
+        PG["gender (codée)"]
+        PE["employed (oui/non)"]
+        DA["age_group (codée)"]
+        DE["employment_code (codée)"]
+        DH["health_score (numérique)"]
+    end
+
+    subgraph Master["Fichier maître"]
+        MA["age_group"]
+        ME["employment_code"]
+        MH["health_score"]
+    end
+
+    CA --&gt;|"question_ref"| QA
+    CG --&gt;|"question_ref"| QG
+    CE --&gt;|"question_ref"| QE
+    CH --&gt;|"question_ref"| QH
+
+    PA --&gt;|"source_var_ref"| CA
+    DA --&gt;|"source_var_ref"| CA
+    DA --&gt;|"question_ref"| QA
+    DE --&gt;|"source_var_ref"| CE
+    DH --&gt;|"source_var_ref"| CH
+
+    MA --&gt;|"source_var_ref"| DA
+    ME --&gt;|"source_var_ref"| DE
+    MH --&gt;|"source_var_ref"| DH</code></pre>
+<p>Chaque flèche est un objet <code>Reference</code> en DDI.
+Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.</p>
+<hr />
+<div class="admonition example">
+<p class="admonition-title">Scénario</p>
+<p>Vous documentez le pipeline de données de l'enquête nationale sur la santé.
+Le fichier de collecte a 6 variables brutes du questionnaire.
+Le fichier de production ajoute 3 variables dérivées (age_group,
+employment_status_code, health_score).
+Le fichier maître a seulement les 3 variables dérivées pour la diffusion publique.
+Chaque variable doit être traçable jusqu'à sa source.</p>
+</div>
+<hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Créez une étude pour l'enquête sur la santé. Ajoutez 6 questions et 6 variables de collecte, chacune liée à sa question source. Affichez le compteur.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Questions: 6
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Variables: 6
+</span></code></pre></div>
+</li>
+<li>
+<p>Créez une liste de codes pour les groupes d'âge (0-15, 16-24, 25-44, 45-64, 65+). Créez la variable dérivée <code>age_group</code> et liez-la à la variable de collecte <code>age</code> avec <code>source_variable_references</code>. Affichez le compteur.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Code lists: 1
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Variables: 7
+</span></code></pre></div>
+</li>
+<li>
+<p>Créez deux autres variables dérivées : <code>employment_status_code</code> (depuis <code>employed</code>) et <code>health_score</code> (depuis <code>health_rating</code>). Chacune doit avoir <code>source_variable_references</code> pointant vers sa source. Affichez le total.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Variables: 9
+</span></code></pre></div>
+</li>
+<li>
+<p>Créez 3 variables du fichier maître (<code>age_group_master</code>, <code>employment_status_master</code>, <code>health_score_master</code>). Chacune doit référencer sa variable dérivée de production comme source. Affichez le compteur final et vérifiez la traçabilité en affichant les références sources.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">sources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">source_variable_references</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="k">if</span> <span class="n">sources</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sources</span><span class="si">}</span><span class="s2"> source(s)"</span><span class="p">)</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>(Bonus) Créez une variable IMC dérivée de deux sources (taille et poids). Vérifiez qu'elle a 2 références de variables sources.</p>
+</li>
+</ol>
+<hr />
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<details class="question" open="open">
+<summary>Question 1 : Que suit source_variable_references ?</summary>
+<p><strong>A.</strong> De quelles questions provient une variable.</p>
+<p><strong>B.</strong> De quelles autres variables une variable dérivée a été calculée.</p>
+<p><strong>C.</strong> Quelle liste de codes une variable utilise.</p>
+<p><strong>D.</strong> À quel fichier de données une variable appartient.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> <code>source_variable_references</code> est une liste d'objets
+<code>Reference</code> pointant vers les variables utilisées pour
+calculer une variable dérivée.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 2 : Comment lier une variable à sa question source ?</summary>
+<p><strong>A.</strong> <code>v.question = q</code></p>
+<p><strong>B.</strong> <code>v.source_variable_references.append(q)</code></p>
+<p><strong>C.</strong> Utiliser <code>doc.add_variable(name=..., question=q)</code></p>
+<p><strong>D.</strong> <code>v.code_list = q</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> Le paramètre <code>question=</code> dans <code>doc.add_variable()</code> crée
+le lien automatiquement via <code>question_references</code>.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 : Dans le modèle à trois fichiers, que contient le fichier de production ?</summary>
+<p><strong>A.</strong> Seulement les variables dérivées.</p>
+<p><strong>B.</strong> Seulement les variables de collecte.</p>
+<p><strong>C.</strong> Les variables de collecte et les variables dérivées.</p>
+<p><strong>D.</strong> Seulement le questionnaire.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> Le fichier de production a à la fois les variables de
+collecte originales (avec références basées-sur) et les nouvelles
+variables dérivées (avec références de variables sources).</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 : Une variable IMC est calculée à partir de la taille et du poids. Combien de source_variable_references a-t-elle ?</summary>
+<p><strong>A.</strong> 0</p>
+<p><strong>B.</strong> 1</p>
+<p><strong>C.</strong> 2</p>
+<p><strong>D.</strong> 3</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> L'IMC a 2 références de variables sources, une pour
+la taille et une pour le poids, car il est dérivé des deux.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 : Quel est l'objectif de la traçabilité des données ?</summary>
+<p><strong>A.</strong> Réduire la taille des fichiers.</p>
+<p><strong>B.</strong> Retracer n'importe quelle variable jusqu'à la question et les données originales.</p>
+<p><strong>C.</strong> Supprimer les anciennes variables.</p>
+<p><strong>D.</strong> Valider le schéma XML.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> La traçabilité des données permet de suivre n'importe
+quelle variable, même dans le fichier maître final, jusqu'à
+la variable de collecte originale et la question qui l'a générée.</p>
+</details>
+</details>
+<hr />
+<div class="admonition tip">
+<p class="admonition-title">Notes pour l'instructeur</p>
+<ul>
+<li>Commencez avec l'analogie : « Pensez à une recette. Le fichier de collecte, ce sont les ingrédients bruts. Le fichier de production, c'est la cuisson. Le fichier maître, c'est le plat servi. La provenance, c'est la recette qui vous dit d'où vient chaque ingrédient. »</li>
+<li>Dessinez le pipeline à trois fichiers au tableau. Pour chaque variable, dessinez une flèche vers sa source. Demandez : « Pouvez-vous retracer cette variable maître jusqu'à la question originale ? »</li>
+<li>Le concept de <code>source_variable_references</code> vs <code>question_references</code> peut être déroutant. Clarifiez : <code>question_references</code> dit « qu'est-ce qui a été demandé ». <code>source_variable_references</code> dit « quelles données ont été utilisées pour calculer ceci ».</li>
+<li>Le patron numérique-vers-codé (age → age_group) est la dérivation la plus courante dans les enquêtes nationales. Montrez une table de recodage réelle : « âge 0-15 = groupe 1, 16-24 = groupe 2, ... »</li>
+<li>Pour le personnel des INS : soulignez que cette traçabilité est ce que les auditeurs et chercheurs recherchent. « Si quelqu'un questionne un chiffre dans votre publication, pouvez-vous le retracer jusqu'aux données originales ? »</li>
+<li>L'exercice 5 (IMC depuis deux sources) enseigne la dérivation multi-sources. C'est courant : IMC = poids / taille², revenu du ménage = somme des revenus des membres, etc.</li>
+</ul>
+</div>
+<hr />
+<p><strong>Voir aussi :</strong> <a href="../module-08-questionnaire-flows/">Module 8 : Flux de questionnaire</a> | <a href="../../user-guide/#ajouter-des-variables">Guide utilisateur : Ajouter des variables</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../module-08-questionnaire-flows/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Module 8 : Flux de questionnaire">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Module 8 : Flux de questionnaire
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../module-10-data-linkage/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Module 10 : Couplage de données">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Module 10 : Couplage de données
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.edit", "content.code.annotate", "content.code.copy", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "palette.switcher", "palette.toggle", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

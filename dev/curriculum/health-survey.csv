@@ -1,0 +1,41 @@
+RespondentID,Country,Age,Sex,HeightCm,WeightKg,SmokingStatus,ExerciseFrequency,AlcoholDrinksPerWeek,SelfRatedHealth,ChronicCondition,DoctorVisitsLastYear,HasHealthInsurance,SleepHours,Wellbeing
+H001,Kenya,18,Male,195,88,Daily,Monthly,2,Excellent,No,7,No,7.0,3
+H002,Canada,75,Female,167,105,Never,Weekly,10,Poor,No,1,No,8.6,7
+H003,Japan,78,Male,191,74,Daily,Weekly,14,Excellent,Yes,3,No,5.7,2
+H004,France,19,Female,167,51,Never,Weekly,2,Very good,Yes,8,No,8.1,2
+H005,Canada,50,Male,155,81,Occasional,Monthly,1,Good,No,12,Yes,8.2,9
+H006,Japan,73,Male,189,96,Former,Never,10,Very good,No,4,Yes,6.8,3
+H007,Kenya,74,Female,159,61,Occasional,Never,9,Excellent,No,1,Yes,5.9,1
+H008,France,77,Female,194,60,Former,Daily,13,Fair,Yes,12,No,8.0,6
+H009,Japan,52,Female,165,71,Former,Monthly,7,Excellent,Yes,4,No,7.7,3
+H010,Brazil,69,Female,174,72,Daily,Never,11,Good,No,9,Yes,6.3,10
+H011,Kenya,28,Male,181,55,Former,Monthly,8,Very good,No,1,No,6.9,9
+H012,Japan,70,Male,181,68,Occasional,Monthly,13,Very good,Yes,9,No,5.1,7
+H013,Japan,64,Female,169,95,Former,Weekly,3,Very good,No,10,No,6.4,1
+H014,Brazil,84,Male,171,108,Never,Monthly,11,Fair,Yes,10,No,6.8,8
+H015,Canada,36,Male,191,83,Daily,Weekly,4,Poor,No,12,Yes,5.6,1
+H016,Japan,22,Male,193,61,Former,Monthly,1,Good,No,2,No,6.2,5
+H017,Kenya,80,Female,178,63,Daily,Daily,1,Poor,Yes,0,No,6.1,10
+H018,France,23,Female,187,56,Former,Never,13,Very good,Yes,1,No,5.1,1
+H019,Japan,47,Male,162,78,Former,Never,4,Good,No,12,No,5.1,8
+H020,Brazil,65,Male,176,109,Former,Daily,2,Excellent,No,11,Yes,8.5,10
+H021,France,64,Female,175,58,Occasional,Monthly,2,Fair,Yes,2,Yes,8.4,0
+H022,Kenya,32,Female,181,69,Daily,Monthly,0,Excellent,No,3,No,6.8,3
+H023,Canada,47,Female,184,63,Daily,Weekly,12,Fair,Yes,10,No,5.2,0
+H024,Brazil,70,Male,177,73,Never,Never,2,Good,No,12,Yes,8.3,9
+H025,Canada,65,Male,164,49,Daily,Monthly,10,Fair,No,2,Yes,6.5,2
+H026,Kenya,28,Female,165,90,Occasional,Monthly,4,Excellent,No,5,No,6.7,9
+H027,Canada,19,Male,152,79,Never,Monthly,8,Very good,Yes,8,No,5.7,8
+H028,Canada,27,Female,151,55,Daily,Never,12,Poor,No,12,No,8.2,9
+H029,Japan,25,Female,184,55,Former,Daily,1,Excellent,Yes,5,Yes,5.4,6
+H030,Kenya,28,Female,186,100,Daily,Never,14,Fair,No,7,Yes,6.5,8
+H031,France,42,Male,161,79,Former,Monthly,14,Very good,Yes,4,No,6.6,0
+H032,Brazil,64,Female,186,86,Daily,Never,13,Excellent,No,5,Yes,6.5,7
+H033,Canada,34,Male,194,109,Former,Daily,4,Very good,No,3,Yes,6.9,10
+H034,Canada,18,Female,175,86,Never,Never,13,Fair,Yes,2,No,6.7,7
+H035,Brazil,50,Female,194,76,Never,Monthly,9,Poor,No,5,Yes,7.0,6
+H036,France,41,Female,175,68,Never,Weekly,11,Poor,No,6,No,6.6,10
+H037,Japan,31,Male,180,52,Occasional,Daily,7,Excellent,No,12,No,6.4,0
+H038,Canada,22,Male,189,71,Daily,Monthly,0,Excellent,Yes,1,Yes,6.4,10
+H039,Kenya,84,Female,156,50,Never,Never,11,Excellent,Yes,12,No,5.1,0
+H040,France,53,Male,150,95,Daily,Daily,14,Excellent,No,7,No,7.9,5
