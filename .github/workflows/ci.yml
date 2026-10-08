@@ -27,7 +27,7 @@ jobs:
           - backend: lxml
             extras: "--extra full"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -74,7 +74,7 @@ jobs:
     # One job: mypy pins python_version, and it needs every extra installed to
     # type-check ddi_l.server.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -92,7 +92,7 @@ jobs:
     name: Codegen drift check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     # Not gated on `tests`, so the built wheel is always checked.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -147,7 +147,7 @@ jobs:
     name: Documentation build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -170,7 +170,7 @@ jobs:
     # The server is a thin adapter over ddi_l.operations, which the matrix
     # already covers on every interpreter, so one Python version suffices.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -206,7 +206,7 @@ jobs:
     runs-on: ubuntu-latest
     # One interpreter is enough: the samples exercise the public API.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -225,7 +225,7 @@ jobs:
     name: R examples (reticulate)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
