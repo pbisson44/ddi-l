@@ -1,0 +1,18 @@
+<c:UnitType xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>0e8e3338-34e4-5ed9-a320-a8307ebf531b</r:ID>
+  <r:Version>1</r:Version>
+  <r:Label>
+    <r:Content xml:lang="en">Household</r:Content>
+  </r:Label>
+  <r:Description>
+    <r:Content xml:lang="en">Private dwellings treated as analysis units.</r:Content>
+  </r:Description>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:9e00fd28-ca90-5806-a874-a974f390a0a6:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9e00fd28-ca90-5806-a874-a974f390a0a6</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+</c:UnitType>

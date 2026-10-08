@@ -1,0 +1,30 @@
+<proc:ProcessControlScheme xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>8e189c71-7038-5e98-8b68-d780a0ca0bb6</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessControlSchemeName>
+    <r:String xml:lang="en">Control scheme</r:String>
+  </proc:ProcessControlSchemeName>
+  <proc:ProcessControl>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e1363e85-3c01-530d-87a3-973e3799a55f</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessControlName>
+      <r:String xml:lang="en">Manual QC</r:String>
+    </proc:ProcessControlName>
+  </proc:ProcessControl>
+  <proc:ProcessControlReference>
+    <r:URN>urn:ddi:ca.statcan:ae448765-166b-5b03-8a3c-15377f542ffa:3</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ae448765-166b-5b03-8a3c-15377f542ffa</r:ID>
+    <r:Version>3</r:Version>
+    <r:TypeOfObject>ProcessControl</r:TypeOfObject>
+  </proc:ProcessControlReference>
+  <proc:ProcessControlSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:67e63db0-ef06-5d02-8504-e07f0810924a:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>67e63db0-ef06-5d02-8504-e07f0810924a</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessControlScheme</r:TypeOfObject>
+  </proc:ProcessControlSchemeReference>
+</proc:ProcessControlScheme>

@@ -1,0 +1,33 @@
+<d:DataCollection xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>90072ecf-b791-525d-baf6-c64d016e4b36</r:ID>
+  <r:Version>1</r:Version>
+  <d:QuestionScheme>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a598225b-0be8-50e2-bd31-3deae353a704</r:ID>
+    <r:Version>1</r:Version>
+    <d:QuestionItem>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>31804c77-1399-5b45-ad2a-519c8bfefbb7</r:ID>
+      <r:Version>1</r:Version>
+      <d:QuestionText>
+        <d:LiteralText>
+          <d:Text xml:lang="en" isPlainText="true">How satisfied are you?</d:Text>
+        </d:LiteralText>
+      </d:QuestionText>
+    </d:QuestionItem>
+  </d:QuestionScheme>
+  <d:InstrumentScheme>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ec85709d-74fd-5027-9367-ce358c9f9212</r:ID>
+    <r:Version>1</r:Version>
+    <d:Instrument>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>3cfa74c2-d263-5741-a6db-788a9b885d26</r:ID>
+      <r:Version>1</r:Version>
+      <d:InstrumentName>
+        <r:String xml:lang="en">Main instrument</r:String>
+      </d:InstrumentName>
+    </d:Instrument>
+  </d:InstrumentScheme>
+</d:DataCollection>

@@ -1,0 +1,65 @@
+<d:InterviewerInstructionScheme xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>c232bad4-6a2b-5950-b4cc-96f2c38ffa0c</r:ID>
+  <r:Version>1</r:Version>
+  <d:Instruction>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+    <r:Version>1</r:Version>
+    <d:InstructionName>
+      <r:String xml:lang="en">Intro prompt</r:String>
+    </d:InstructionName>
+    <d:InstructionText audienceLanguage="en-CA">
+      <d:LiteralText>
+        <d:Text xml:lang="en">Introduce yourself before beginning.</d:Text>
+      </d:LiteralText>
+    </d:InstructionText>
+    <d:InstructionText audienceLanguage="fr-CA">
+      <d:LiteralText>
+        <d:Text xml:lang="fr">Présentez-vous avant de commencer.</d:Text>
+      </d:LiteralText>
+    </d:InstructionText>
+  </d:Instruction>
+  <d:Instruction>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>
+    <r:Version>1</r:Version>
+    <d:InstructionName>
+      <r:String xml:lang="en">Roster probe</r:String>
+    </d:InstructionName>
+    <d:InstructionText audienceLanguage="en" isStructureRequired="false">
+      <d:LiteralText>
+        <d:Text xml:lang="en">Ask if anyone else stayed overnight.</d:Text>
+      </d:LiteralText>
+    </d:InstructionText>
+  </d:Instruction>
+  <d:InstructionReference>
+    <r:URN>urn:ddi:example.partner:3a50db95-c980-5697-8063-ed8c61625dc8:3</r:URN>
+    <r:Agency>example.partner</r:Agency>
+    <r:ID>3a50db95-c980-5697-8063-ed8c61625dc8</r:ID>
+    <r:Version>3</r:Version>
+    <r:TypeOfObject>Instruction</r:TypeOfObject>
+  </d:InstructionReference>
+  <d:InstructionGroup isOrdered="true">
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>9c7402f4-a692-56ee-a17f-efc4e8b1a454</r:ID>
+    <r:Version>1</r:Version>
+    <d:InstructionGroupName>
+      <r:String xml:lang="en">Training set</r:String>
+    </d:InstructionGroupName>
+    <d:InstructionReference>
+      <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Instruction</r:TypeOfObject>
+    </d:InstructionReference>
+  </d:InstructionGroup>
+  <d:InstructionGroupReference>
+    <r:URN>urn:ddi:example.partner:62d21c6b-aa2b-5319-9614-c5671313854c:2</r:URN>
+    <r:Agency>example.partner</r:Agency>
+    <r:ID>62d21c6b-aa2b-5319-9614-c5671313854c</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>InstructionGroup</r:TypeOfObject>
+  </d:InstructionGroupReference>
+</d:InterviewerInstructionScheme>

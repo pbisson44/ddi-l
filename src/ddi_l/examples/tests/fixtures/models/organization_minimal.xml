@@ -1,0 +1,22 @@
+<a:Organization xmlns:a="ddi:archive:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:8c135314-3071-5cf4-929c-30335736e124:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>8c135314-3071-5cf4-929c-30335736e124</r:ID>
+  <r:Version>1</r:Version>
+  <r:UserID typeOfUserID="Internal">O-1</r:UserID>
+  <r:UserAttributePair>
+    <r:AttributeKey>nickname</r:AttributeKey>
+    <r:AttributeValue>Org</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:VersionResponsibility>tester</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">initial load</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <a:OrganizationIdentification>
+    <a:OrganizationName>
+      <r:String xml:lang="en">Demo Org</r:String>
+    </a:OrganizationName>
+  </a:OrganizationIdentification>
+</a:Organization>

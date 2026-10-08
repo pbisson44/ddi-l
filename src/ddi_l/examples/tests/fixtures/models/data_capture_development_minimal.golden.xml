@@ -1,0 +1,32 @@
+<d:DataCaptureDevelopment xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>9d6ef833-2d21-53d7-abc4-87d2ff25b8b1</r:ID>
+  <r:Version>1</r:Version>
+  <d:DataCaptureDevelopmentName>
+    <r:String xml:lang="en">Sensor capture development</r:String>
+  </d:DataCaptureDevelopmentName>
+  <d:DevelopmentPlan>
+    <r:Description>
+      <r:Content xml:lang="en" isPlainText="true">Outline pilot testing</r:Content>
+    </r:Description>
+  </d:DevelopmentPlan>
+  <d:DevelopmentPlanReference>
+    <r:URN>urn:ddi:ca.statcan:04aa4361-9bcb-56af-9e00-1ecc2050fcf6:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>04aa4361-9bcb-56af-9e00-1ecc2050fcf6</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DevelopmentPlan</r:TypeOfObject>
+  </d:DevelopmentPlanReference>
+  <d:DevelopmentResults>
+    <r:Description>
+      <r:Content xml:lang="en">Pilot indicated minor tweaks</r:Content>
+    </r:Description>
+  </d:DevelopmentResults>
+  <d:DevelopmentResultsReference>
+    <r:URN>urn:ddi:ca.statcan:3b68f0c4-7e82-50de-a8f6-12d7aa9fe6ff:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3b68f0c4-7e82-50de-a8f6-12d7aa9fe6ff</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DevelopmentResults</r:TypeOfObject>
+  </d:DevelopmentResultsReference>
+</d:DataCaptureDevelopment>

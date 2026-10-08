@@ -1,0 +1,57 @@
+<r:QualityStatementGroup xmlns:r="ddi:reusable:3_3" isOrdered="false">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>f37414c3-2a1c-5dfb-84ef-df6bfe9eca31</r:ID>
+  <r:Version>2</r:Version>
+  <r:TypeOfQualityStatementGroup controlledVocabularyID="QualityGroupType">Detailed</r:TypeOfQualityStatementGroup>
+  <r:QualityStatementGroupName>
+    <r:String xml:lang="en">Detailed disclosure statements</r:String>
+  </r:QualityStatementGroupName>
+  <r:QualityStatementGroupName>
+    <r:String xml:lang="fr">Déclarations détaillées</r:String>
+  </r:QualityStatementGroupName>
+  <r:QualityStatementGroupName>
+    <r:String xml:lang="es">Declaraciones detalladas</r:String>
+  </r:QualityStatementGroupName>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:23481873-172e-58eb-ac42-871fbb975889:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>23481873-172e-58eb-ac42-871fbb975889</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:c3c746f4-d814-56c4-a9c6-558fb9264f40:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c3c746f4-d814-56c4-a9c6-558fb9264f40</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:78915a59-fdf9-5a0d-ba38-b0a00c56eebf:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>78915a59-fdf9-5a0d-ba38-b0a00c56eebf</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <r:QualityStatementReference>
+    <r:URN>urn:ddi:ca.statcan:c30b02a2-3bd1-54a8-8994-23537c31b315:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c30b02a2-3bd1-54a8-8994-23537c31b315</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+  <r:QualityStatementReference>
+    <r:URN>urn:ddi:ca.statcan:aa6a5fa5-2394-5dd4-993d-02d6a3165fa3:1.1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>aa6a5fa5-2394-5dd4-993d-02d6a3165fa3</r:ID>
+    <r:Version>1.1</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+  <r:QualityStatementGroupReference>
+    <r:URN>urn:ddi:ca.statcan:f62822b5-47e1-59b1-a5d3-83f71a624c0c:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f62822b5-47e1-59b1-a5d3-83f71a624c0c</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatementGroup</r:TypeOfObject>
+  </r:QualityStatementGroupReference>
+</r:QualityStatementGroup>

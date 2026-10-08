@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img"
+     aria-labelledby="ddi-logo-title ddi-logo-desc" fill="none">
+  <title id="ddi-logo-title">ddi-l</title>
+  <desc id="ddi-logo-desc">A dataset of stacked records enclosed by a lifecycle arrow.</desc>
+  <!--
+    Drawn in `currentColor` so the mark inherits the header's foreground and
+    stays legible in all six palettes, including high contrast, without a second
+    asset. Material colours the header logo via `color`, so no palette-specific
+    fills belong here.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>

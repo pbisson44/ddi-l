@@ -1,0 +1,15 @@
+<r:QualityStandardGroup xmlns:r="ddi:reusable:3_3" isOrdered="false">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>92984e14-0ae7-5c70-a5b8-6d221ced56fa</r:ID>
+  <r:Version>1</r:Version>
+  <r:TypeOfQualityStandardGroup>Certification</r:TypeOfQualityStandardGroup>
+  <r:QualityStandardGroupName>
+    <r:String xml:lang="en">Publication standards</r:String>
+  </r:QualityStandardGroupName>
+  <r:QualityStandardReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a7b7e383-45a9-57ae-8b2b-4e1f1795385c</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStandard</r:TypeOfObject>
+  </r:QualityStandardReference>
+</r:QualityStandardGroup>

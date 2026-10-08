@@ -1,0 +1,30 @@
+<proc:ProcessStepScheme xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>0a4cc147-8583-51a4-aa02-e66c195a5720</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessStepSchemeName>
+    <r:String xml:lang="en">Step scheme</r:String>
+  </proc:ProcessStepSchemeName>
+  <proc:ProcessStep>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e7128673-ec05-5aae-85fc-353251b4ada6</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessStepName>
+      <r:String xml:lang="en">Load staging records</r:String>
+    </proc:ProcessStepName>
+  </proc:ProcessStep>
+  <proc:ProcessStepReference>
+    <r:URN>urn:ddi:ca.statcan:689bb9a8-15d5-5cf8-a11e-43a32702c7bb:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>689bb9a8-15d5-5cf8-a11e-43a32702c7bb</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessStep</r:TypeOfObject>
+  </proc:ProcessStepReference>
+  <proc:ProcessStepSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:2aa41bf8-b458-5ccf-8f6e-fafc49ed5e8f:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>2aa41bf8-b458-5ccf-8f6e-fafc49ed5e8f</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessStepScheme</r:TypeOfObject>
+  </proc:ProcessStepSchemeReference>
+</proc:ProcessStepScheme>

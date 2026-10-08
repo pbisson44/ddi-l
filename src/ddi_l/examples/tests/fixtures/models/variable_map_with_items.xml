@@ -1,0 +1,71 @@
+<cmp:VariableMap xmlns:cmp="ddi:comparative:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>d9fb6b2a-369a-5a35-8ccf-efef856c517a</r:ID>
+  <r:Version>1</r:Version>
+  <cmp:TypeOfMappedItem>Variable</cmp:TypeOfMappedItem>
+  <cmp:MapName>
+    <r:String xml:lang="en">Income variable alignment</r:String>
+  </cmp:MapName>
+  <cmp:SourceSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:1af48762-a260-58bf-8e3a-63b7f2b360e5:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>1af48762-a260-58bf-8e3a-63b7f2b360e5</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>VariableScheme</r:TypeOfObject>
+  </cmp:SourceSchemeReference>
+  <cmp:TargetSchemeReference>
+    <r:URN>urn:ddi:harmonised.agency:8553eb75-b1b7-583f-b010-f394e99a80c4:1</r:URN>
+    <r:Agency>harmonised.agency</r:Agency>
+    <r:ID>8553eb75-b1b7-583f-b010-f394e99a80c4</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>VariableScheme</r:TypeOfObject>
+  </cmp:TargetSchemeReference>
+  <cmp:Correspondence>
+    <cmp:Commonality>
+      <r:Content xml:lang="en">Both derive from household totals</r:Content>
+    </cmp:Commonality>
+    <cmp:CommonalityWeight>0.65</cmp:CommonalityWeight>
+  </cmp:Correspondence>
+  <cmp:ItemMap alias="v01">
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>93f4ada3-2a1a-578b-9f72-61255e840116</r:ID>
+    <r:Version>1</r:Version>
+    <cmp:SourceItemReference>
+      <r:URN>urn:ddi:ca.statcan:d98e35b7-a647-57b5-aa98-6d7abfee9668:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d98e35b7-a647-57b5-aa98-6d7abfee9668</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Variable</r:TypeOfObject>
+    </cmp:SourceItemReference>
+    <cmp:TargetItemReference>
+      <r:URN>urn:ddi:harmonised.agency:d0401e06-c770-5875-b6df-dc28fd0b86cb:1</r:URN>
+      <r:Agency>harmonised.agency</r:Agency>
+      <r:ID>d0401e06-c770-5875-b6df-dc28fd0b86cb</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Variable</r:TypeOfObject>
+    </cmp:TargetItemReference>
+    <cmp:Correspondence>
+      <cmp:Commonality>
+        <r:Content xml:lang="en">Same measurement units</r:Content>
+      </cmp:Commonality>
+      <r:Difference>
+        <r:Content xml:lang="en">Harmonised variable trims outliers</r:Content>
+      </r:Difference>
+      <cmp:CommonalityWeight>0.6</cmp:CommonalityWeight>
+    </cmp:Correspondence>
+    <cmp:RelatedMapReference>
+      <r:URN>urn:ddi:ca.statcan:e58edfbe-13b3-598a-ba31-0408311038f2:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>e58edfbe-13b3-598a-ba31-0408311038f2</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>ConceptMap</r:TypeOfObject>
+    </cmp:RelatedMapReference>
+    <cmp:RelatedMapReference>
+      <r:URN>urn:ddi:ca.statcan:03f54ce8-4a2a-5097-87f0-55fc7ee14728:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>03f54ce8-4a2a-5097-87f0-55fc7ee14728</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionMap</r:TypeOfObject>
+    </cmp:RelatedMapReference>
+  </cmp:ItemMap>
+</cmp:VariableMap>

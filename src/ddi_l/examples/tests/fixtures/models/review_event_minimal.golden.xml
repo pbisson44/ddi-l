@@ -1,0 +1,9 @@
+<m:ReviewEvent xmlns:m="urn:ddi-l:extension:methodology:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>cad4fa90-e85e-576b-bb82-1cd4eae26fd0</r:ID>
+  <r:Version>1</r:Version>
+  <m:ReviewEventName>
+    <r:String xml:lang="en">Methodology board</r:String>
+  </m:ReviewEventName>
+  <m:TypeOfReviewEvent>board</m:TypeOfReviewEvent>
+</m:ReviewEvent>

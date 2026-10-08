@@ -1,0 +1,21 @@
+<a:Archive xmlns:a="ddi:archive:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>1a52d9e8-3e0a-5b35-bd31-b792876971cf</r:ID>
+  <r:Version>1</r:Version>
+  <a:ArchiveModuleName>
+    <r:String xml:lang="en">Main archive</r:String>
+  </a:ArchiveModuleName>
+  <a:ArchiveSpecific>
+    <a:DefaultAccess>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>3362ab20-6a55-5d9c-a8cf-ba96590687e2</r:ID>
+      <r:Version>1</r:Version>
+      <a:AccessTypeName>
+        <r:String xml:lang="en">Standard access</r:String>
+      </a:AccessTypeName>
+      <a:Restrictions>
+        <r:Content>None</r:Content>
+      </a:Restrictions>
+    </a:DefaultAccess>
+  </a:ArchiveSpecific>
+</a:Archive>

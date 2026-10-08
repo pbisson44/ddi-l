@@ -1,0 +1,21 @@
+<r:QualityStatementGroup xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>97baeea4-82e8-5ddb-a33b-f1ee2128cf14</r:ID>
+  <r:Version>1</r:Version>
+  <r:TypeOfQualityStatementGroup>Summary</r:TypeOfQualityStatementGroup>
+  <r:QualityStatementGroupName>
+    <r:String xml:lang="en">Primary statements</r:String>
+  </r:QualityStatementGroupName>
+  <r:UniverseReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3ed50c19-cae8-51c9-ab3e-a60e2a30e1a5</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:QualityStatementReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d1030bb2-3d85-5892-9e8b-b7c50bd068dc</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+</r:QualityStatementGroup>

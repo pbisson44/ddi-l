@@ -1,0 +1,108 @@
+<l:StatisticalClassification xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3" versionDate="2024-03-15" isPublished="true">
+  <r:URN>urn:ddi:ca.statcan:94738d4e-0297-559b-ae55-eb03ff8a6ebe:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
+  <r:Version>1</r:Version>
+  <r:Name>
+    <r:String xml:lang="en">ISCO Revision 5</r:String>
+  </r:Name>
+  <l:ReleaseDate>2024-03-31</l:ReleaseDate>
+  <l:TerminationDate>2026-12-31</l:TerminationDate>
+  <l:IsCurrent>true</l:IsCurrent>
+  <l:MaintenanceUnitReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>00f3a850-e6ac-5063-99de-394e43e1cc35</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Organization</r:TypeOfObject>
+  </l:MaintenanceUnitReference>
+  <l:ContactPersonReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>930cdbf4-a599-549a-adb4-3a6d898c2a58</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Individual</r:TypeOfObject>
+  </l:ContactPersonReference>
+  <l:LegalBase>
+    <r:Content xml:lang="en">Published under regulation 2024/7.</r:Content>
+  </l:LegalBase>
+  <l:IsDisseminationAllowed>true</l:IsDisseminationAllowed>
+  <l:IsVersion>true</l:IsVersion>
+  <l:IsUpdate>false</l:IsUpdate>
+  <l:IsFloating>false</l:IsFloating>
+  <l:PredecessorReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>5557eb8f-aa86-5a18-9990-f9785ad6e026</r:ID>
+    <r:Version>0.9</r:Version>
+    <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
+  </l:PredecessorReference>
+  <l:DerivedFromReference>
+    <r:Agency>demo.partner</r:Agency>
+    <r:ID>4f3edbaf-b4ae-5388-ac42-5a8c6fac2e4c</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
+  </l:DerivedFromReference>
+  <l:ChangesFromPreceding>
+    <r:Content xml:lang="en">Adds renewable energy subclasses.</r:Content>
+  </l:ChangesFromPreceding>
+  <l:UpdatesAllowed>true</l:UpdatesAllowed>
+  <l:PermissibleUpdates>
+    <r:Content xml:lang="en">Allow quarterly additions of detail codes.</r:Content>
+  </l:PermissibleUpdates>
+  <l:Updates>
+    <r:Content xml:lang="en">Minor clarifications released in 2025-Q1.</r:Content>
+  </l:Updates>
+  <l:VariantOfReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
+  </l:VariantOfReference>
+  <l:VariantChangesFromBase>
+    <r:Content xml:lang="en">Aggregates specialized repair services.</r:Content>
+  </l:VariantChangesFromBase>
+  <l:VariantPurpose>
+    <r:Content xml:lang="en">Simplified release for short-term surveys.</r:Content>
+  </l:VariantPurpose>
+  <l:LevelContext>
+    <l:LevelNumber>1</l:LevelNumber>
+    <l:ClassificationItem versionDate="2024-02-01" isPublished="true">
+      <r:URN>urn:ddi:ca.statcan:e72524a1-a05f-541f-b54a-8883e99e2eef:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>e72524a1-a05f-541f-b54a-8883e99e2eef</r:ID>
+      <r:Version>1</r:Version>
+      <r:Name>
+        <r:String xml:lang="en">Manufacturing</r:String>
+      </r:Name>
+      <l:ItemCode>A</l:ItemCode>
+      <r:DefiningConceptReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>329ea7fa-2bfd-5df4-a8dd-91484397e772</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Concept</r:TypeOfObject>
+      </r:DefiningConceptReference>
+      <l:Includes>
+        <r:Content xml:lang="en">Includes heavy industry operations.</r:Content>
+      </l:Includes>
+      <l:IsGenerated>true</l:IsGenerated>
+      <l:IsValid>true</l:IsValid>
+      <l:ValidFrom>2024-02-01</l:ValidFrom>
+      <l:ParentClassificationItemReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>d6389049-4534-5395-aefc-f8fbb5f63166</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>ClassificationItem</r:TypeOfObject>
+      </l:ParentClassificationItemReference>
+    </l:ClassificationItem>
+    <l:ClassificationItemReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>e00ce4e3-8031-5821-bd66-f1262b35fa7a</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>ClassificationItem</r:TypeOfObject>
+    </l:ClassificationItemReference>
+  </l:LevelContext>
+  <r:CodeListReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>346b1022-efb5-55db-9b02-137ac0040e2c</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CodeList</r:TypeOfObject>
+  </r:CodeListReference>
+</l:StatisticalClassification>

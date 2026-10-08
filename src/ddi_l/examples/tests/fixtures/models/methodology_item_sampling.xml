@@ -1,0 +1,15 @@
+<d:SamplingProcedure xmlns:d="ddi:datacollection:3_3" xmlns:p0="urn:ddi-l:extension:methodology:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>3f548546-fe1c-5334-8529-bc9ce2024466</r:ID>
+  <r:Version>1</r:Version>
+  <p0:MethodologyStatement>
+    <r:Content xml:lang="en">Two-stage cluster sampling with PPS selection.</r:Content>
+  </p0:MethodologyStatement>
+  <d:TypeOfSamplingProcedure>cluster</d:TypeOfSamplingProcedure>
+  <d:SampleReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>60d649b0-33b8-5486-b8c2-268e25c422fc</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Sample</r:TypeOfObject>
+  </d:SampleReference>
+</d:SamplingProcedure>

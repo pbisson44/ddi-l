@@ -1,0 +1,18 @@
+<d:Instruction xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+  <r:Version>1</r:Version>
+  <d:InstructionName>
+    <r:String xml:lang="en">Intro prompt</r:String>
+  </d:InstructionName>
+  <d:InstructionText audienceLanguage="en-CA">
+    <d:LiteralText>
+      <d:Text xml:lang="en">Introduce yourself before beginning.</d:Text>
+    </d:LiteralText>
+  </d:InstructionText>
+  <d:InstructionText audienceLanguage="fr-CA">
+    <d:LiteralText>
+      <d:Text xml:lang="fr">Présentez-vous avant de commencer.</d:Text>
+    </d:LiteralText>
+  </d:InstructionText>
+</d:Instruction>

@@ -1,0 +1,32 @@
+<l:RepresentedVariable xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:79afe111-37e9-41a2-9538-dc27fbbe2448:2</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>79afe111-37e9-41a2-9538-dc27fbbe2448</r:ID>
+  <r:Version>2</r:Version>
+  <r:VersionResponsibility>STC\bissphi</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en-CA">fixed Rep Vars</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <r:Label>
+    <r:Content xml:lang="en-CA">Age of person number age</r:Content>
+  </r:Label>
+  <r:Label>
+    <r:Content xml:lang="fr-CA">Âge de la personne nombre âge</r:Content>
+  </r:Label>
+  <r:ConceptualVariableReference>
+    <r:URN>urn:ddi:ca.statcan:c804a92a-30f3-4b52-92df-0352966f6b44:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c804a92a-30f3-4b52-92df-0352966f6b44</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ConceptualVariable</r:TypeOfObject>
+  </r:ConceptualVariableReference>
+  <r:NumericRepresentation blankIsMissingValue="false">
+    <r:NumberRange>
+      <r:Low isInclusive="false">0</r:Low>
+      <r:High isInclusive="false">999</r:High>
+    </r:NumberRange>
+    <r:NumericTypeCode>Integer</r:NumericTypeCode>
+  </r:NumericRepresentation>
+</l:RepresentedVariable>

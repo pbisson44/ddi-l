@@ -1,0 +1,30 @@
+<d:CollectionActivity xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>361e099a-ad3d-5239-bca2-e753ccf5706b</r:ID>
+  <r:Version>1</r:Version>
+  <d:CollectionActivityName>
+    <r:String xml:lang="en">Sensor sweep</r:String>
+  </d:CollectionActivityName>
+  <d:TypeOfCollectionActivity controlledVocabularyID="collection-mode">AutomatedPolling</d:TypeOfCollectionActivity>
+  <d:DataSourceReference>
+    <r:URN>urn:ddi:ca.statcan:9327ebc2-681d-5717-98f4-bc4a558909a8:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9327ebc2-681d-5717-98f4-bc4a558909a8</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DataSource</r:TypeOfObject>
+  </d:DataSourceReference>
+  <d:CollectionEventReference>
+    <r:URN>urn:ddi:ca.statcan:c6e8ee64-4097-5cfa-a863-c253aaf8e5ae:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c6e8ee64-4097-5cfa-a863-c253aaf8e5ae</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionEvent</r:TypeOfObject>
+  </d:CollectionEventReference>
+  <d:ObservationPlanReference>
+    <r:URN>urn:ddi:ca.statcan:daef0bf9-ae63-5a8f-a664-4dead02e5794:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>daef0bf9-ae63-5a8f-a664-4dead02e5794</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ObservationPlan</r:TypeOfObject>
+  </d:ObservationPlanReference>
+</d:CollectionActivity>

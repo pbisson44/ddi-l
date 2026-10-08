@@ -1,0 +1,77 @@
+<d:SamplingInformationScheme xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>75a7bf39-d485-564c-90d1-a3efb6f14a75</r:ID>
+  <r:Version>1</r:Version>
+  <d:SamplingInformationSchemeName>
+    <r:String xml:lang="en">Sampling information</r:String>
+  </d:SamplingInformationSchemeName>
+    <d:SampleFrame>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d6aacb2e-8d27-54d0-a483-a6ea15d1c5b3</r:ID>
+      <r:Version>1</r:Version>
+      <d:SampleFrameName>
+        <r:String xml:lang="en">National household register</r:String>
+      </d:SampleFrameName>
+      <r:Description>
+        <r:Content xml:lang="en">Comprehensive registry of households maintained by Statistics Canada.</r:Content>
+      </r:Description>
+    </d:SampleFrame>
+    <d:SamplingPlan>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d7edab8c-f13c-5eb1-9d37-8f90013f5eae</r:ID>
+      <r:Version>1</r:Version>
+    <d:TypeOfSamplingPlan controlledVocabularyID="sampling-plan-type">Stratified</d:TypeOfSamplingPlan>
+    <d:SamplingPlanName>
+      <r:String xml:lang="en">Household sampling plan</r:String>
+    </d:SamplingPlanName>
+    <d:IntendedTargetPopulation />
+    <d:SplitRationale>
+      <r:Content xml:lang="en">Split by household size</r:Content>
+    </d:SplitRationale>
+      <d:ControlConstructReference>
+        <r:URN>urn:ddi:ca.statcan:a9f88e4c-058c-5f1e-b92e-59f387763b70:1</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>a9f88e4c-058c-5f1e-b92e-59f387763b70</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>ControlConstructScheme</r:TypeOfObject>
+      </d:ControlConstructReference>
+  </d:SamplingPlan>
+    <d:Sample>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>f3f7f5c0-4b3d-5d24-b5dd-5cefd7c7a0a0</r:ID>
+      <r:Version>1</r:Version>
+      <d:SampleName>
+        <r:String xml:lang="en">Urban households sample</r:String>
+      </d:SampleName>
+    </d:Sample>
+  <d:SamplingInformationGroup isOrdered="true">
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>2d080064-2a30-562e-9715-aa165306d8b2</r:ID>
+    <r:Version>1</r:Version>
+    <d:TypeOfSamplingInformationGroup>PrimarySample</d:TypeOfSamplingInformationGroup>
+    <d:SamplingInformationGroupName>
+      <r:String xml:lang="en">Primary selection</r:String>
+    </d:SamplingInformationGroupName>
+    <r:UniverseReference>
+      <r:URN>urn:ddi:ca.statcan:23481873-172e-58eb-ac42-871fbb975889:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>23481873-172e-58eb-ac42-871fbb975889</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Universe</r:TypeOfObject>
+    </r:UniverseReference>
+    <d:SampleFrameReference>
+      <r:URN>urn:ddi:ca.statcan:d6aacb2e-8d27-54d0-a483-a6ea15d1c5b3:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d6aacb2e-8d27-54d0-a483-a6ea15d1c5b3</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>SampleFrame</r:TypeOfObject>
+    </d:SampleFrameReference>
+    <d:SamplingPlanReference>
+      <r:URN>urn:ddi:ca.statcan:d7edab8c-f13c-5eb1-9d37-8f90013f5eae:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d7edab8c-f13c-5eb1-9d37-8f90013f5eae</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>SamplingPlan</r:TypeOfObject>
+    </d:SamplingPlanReference>
+  </d:SamplingInformationGroup>
+</d:SamplingInformationScheme>

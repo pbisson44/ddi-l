@@ -1,0 +1,60 @@
+<proc:Process xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>4618a131-0e41-5a8b-a0ad-ecd29175c1ed</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessName>
+    <r:String xml:lang="en">Household cleaning workflow</r:String>
+  </proc:ProcessName>
+  <proc:ProcessStep>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e7128673-ec05-5aae-85fc-353251b4ada6</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessStepName>
+      <r:String xml:lang="en">Load staging records</r:String>
+    </proc:ProcessStepName>
+  </proc:ProcessStep>
+  <proc:ProcessStepReference>
+    <r:URN>urn:ddi:ca.statcan:689bb9a8-15d5-5cf8-a11e-43a32702c7bb:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>689bb9a8-15d5-5cf8-a11e-43a32702c7bb</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessStep</r:TypeOfObject>
+  </proc:ProcessStepReference>
+  <proc:ProcessMethod>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8c925ee3-4f14-563a-82e4-064c615f318e</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessMethodName>
+      <r:String xml:lang="en">Transform columns</r:String>
+    </proc:ProcessMethodName>
+  </proc:ProcessMethod>
+  <proc:ProcessMethodReference>
+    <r:URN>urn:ddi:ca.statcan:d40d6c34-6196-5de5-8923-44487aab1fb2:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d40d6c34-6196-5de5-8923-44487aab1fb2</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>ProcessMethod</r:TypeOfObject>
+  </proc:ProcessMethodReference>
+  <proc:ProcessControl>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e1363e85-3c01-530d-87a3-973e3799a55f</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessControlName>
+      <r:String xml:lang="en">Aggregate review</r:String>
+    </proc:ProcessControlName>
+  </proc:ProcessControl>
+  <proc:ProcessControlReference>
+    <r:URN>urn:ddi:ca.statcan:ae448765-166b-5b03-8a3c-15377f542ffa:3</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ae448765-166b-5b03-8a3c-15377f542ffa</r:ID>
+    <r:Version>3</r:Version>
+    <r:TypeOfObject>ProcessControl</r:TypeOfObject>
+  </proc:ProcessControlReference>
+  <proc:ProcessReference>
+    <r:URN>urn:ddi:ca.statcan:0829ef16-9a7b-54c4-afb1-c44f808331b3:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0829ef16-9a7b-54c4-afb1-c44f808331b3</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Process</r:TypeOfObject>
+  </proc:ProcessReference>
+</proc:Process>

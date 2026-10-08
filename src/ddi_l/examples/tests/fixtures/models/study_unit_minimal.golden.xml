@@ -1,0 +1,12 @@
+<s:StudyUnit xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>240b9425-0e2e-5294-a90a-dd3ea2ea95b3</r:ID>
+  <r:Version>1</r:Version>
+  <r:DataCollectionReference>
+    <r:URN>urn:ddi:ca.statcan:f4b7ae3f-253f-517c-ada1-ad17bff1b29e:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f4b7ae3f-253f-517c-ada1-ad17bff1b29e</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DataCollection</r:TypeOfObject>
+  </r:DataCollectionReference>
+</s:StudyUnit>

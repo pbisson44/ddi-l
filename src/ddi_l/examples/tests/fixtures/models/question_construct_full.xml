@@ -1,0 +1,36 @@
+<d:QuestionConstruct xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" estimatedSecondsResponseTime="45">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>0e5104a8-711e-57dc-b05c-0f7db8072c60</r:ID>
+  <r:Version>1</r:Version>
+  <d:ConstructName>
+    <r:String xml:lang="en">Income question</r:String>
+  </d:ConstructName>
+  <r:QuestionReference>
+    <r:URN>urn:ddi:ca.statcan:2b032763-a30b-5db6-a251-2004c275876d:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>2b032763-a30b-5db6-a251-2004c275876d</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+  </r:QuestionReference>
+  <d:ResponseSequence>
+    <d:ItemSequenceType>InOrderOfAppearance</d:ItemSequenceType>
+  </d:ResponseSequence>
+  <d:DimensionSequence>
+    <d:ItemSequenceType>Other</d:ItemSequenceType>
+    <d:AlternateSequenceType>
+      <r:Description>
+        <r:Content xml:lang="en">Rotate daily</r:Content>
+      </r:Description>
+    </d:AlternateSequenceType>
+  </d:DimensionSequence>
+  <d:ResponseUnit controlledVocabularyID="ResponseUnit">Household</d:ResponseUnit>
+  <r:AnalysisUnit controlledVocabularyID="AnalysisUnit">Person</r:AnalysisUnit>
+  <r:AnalysisUnit controlledVocabularyID="AnalysisUnit">Household</r:AnalysisUnit>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:8078e9b3-1ee4-5fd2-8bd2-fdbff284ffe5:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8078e9b3-1ee4-5fd2-8bd2-fdbff284ffe5</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+</d:QuestionConstruct>

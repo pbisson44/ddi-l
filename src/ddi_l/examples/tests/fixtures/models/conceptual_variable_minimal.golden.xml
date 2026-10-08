@@ -1,0 +1,5 @@
+<c:ConceptualVariable xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>3a4893d6-93f6-5780-ac89-62dac8916f60</r:ID>
+  <r:Version>1</r:Version>
+</c:ConceptualVariable>

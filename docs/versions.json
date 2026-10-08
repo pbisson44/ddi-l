@@ -1,0 +1,6 @@
+{
+  "default": "latest",
+  "aliases": {},
+  "redirects": {},
+  "versions": [["latest", "Latest", "/"]]
+}

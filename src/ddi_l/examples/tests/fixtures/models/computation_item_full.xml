@@ -1,0 +1,25 @@
+<d:ComputationItem xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>1ff02b87-d4fb-5e25-a302-66ef546d1344</r:ID>
+  <r:Version>1</r:Version>
+  <d:ConstructName>
+    <r:String xml:lang="en">Weight computation</r:String>
+  </d:ConstructName>
+  <d:TypeOfComputationItem>WeightAdjustment</d:TypeOfComputationItem>
+  <r:CommandCode>
+    <r:Description>
+      <r:Content xml:lang="en">Generate weight</r:Content>
+    </r:Description>
+    <r:Command>
+      <r:ProgramLanguage>python</r:ProgramLanguage>
+      <r:CommandContent>weight = base_weight * factor</r:CommandContent>
+    </r:Command>
+  </r:CommandCode>
+  <d:AssignedVariableReference>
+    <r:URN>urn:ddi:ca.statcan:9468a1fb-483d-5425-a7da-0e970e562f09:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9468a1fb-483d-5425-a7da-0e970e562f09</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </d:AssignedVariableReference>
+</d:ComputationItem>

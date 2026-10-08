@@ -1,0 +1,13 @@
+<d:StatementItem xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>7c0f5e9e-f761-5a54-8625-65e21236f764</r:ID>
+  <r:Version>1</r:Version>
+  <d:ConstructName>
+    <r:String xml:lang="en">Review statement</r:String>
+  </d:ConstructName>
+  <d:DisplayText>
+    <d:LiteralText>
+      <d:Text xml:lang="en">Please review your answers carefully.</d:Text>
+    </d:LiteralText>
+  </d:DisplayText>
+</d:StatementItem>

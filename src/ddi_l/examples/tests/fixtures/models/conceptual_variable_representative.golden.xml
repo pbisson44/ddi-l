@@ -1,0 +1,42 @@
+<c:ConceptualVariable xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>a612a4eb-ec67-5ef1-a4b9-e5c92b9865cd</r:ID>
+  <r:Version>1</r:Version>
+  <c:ConceptualVariableName>
+    <r:String xml:lang="en">Household size</r:String>
+  </c:ConceptualVariableName>
+  <r:Label>
+    <r:Content xml:lang="en">Household size</r:Content>
+  </r:Label>
+  <r:Description>
+    <r:Content xml:lang="en">Number of usual residents forming one household.</r:Content>
+  </r:Description>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:9e00fd28-ca90-5806-a874-a974f390a0a6:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9e00fd28-ca90-5806-a874-a974f390a0a6</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:f8c96039-07df-56eb-9604-bbb37922a558:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f8c96039-07df-56eb-9604-bbb37922a558</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:UnitTypeReference>
+    <r:URN>urn:ddi:ca.statcan:0e8e3338-34e4-5ed9-a320-a8307ebf531b:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0e8e3338-34e4-5ed9-a320-a8307ebf531b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>UnitType</r:TypeOfObject>
+  </r:UnitTypeReference>
+  <r:CategorySchemeReference>
+    <r:URN>urn:ddi:ca.statcan:3f1a27a8-4960-5674-9bcc-898e43263b48:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3f1a27a8-4960-5674-9bcc-898e43263b48</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CategoryScheme</r:TypeOfObject>
+  </r:CategorySchemeReference>
+</c:ConceptualVariable>

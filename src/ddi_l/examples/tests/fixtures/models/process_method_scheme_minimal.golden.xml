@@ -1,0 +1,30 @@
+<prc:ProcessMethodScheme xmlns:prc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>612da00d-dcd6-5ac9-94bc-9511cd09105e</r:ID>
+  <r:Version>1</r:Version>
+  <prc:ProcessMethodSchemeName>
+    <r:String xml:lang="en">Method scheme</r:String>
+  </prc:ProcessMethodSchemeName>
+  <prc:ProcessMethod>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8c925ee3-4f14-563a-82e4-064c615f318e</r:ID>
+    <r:Version>1</r:Version>
+    <prc:ProcessMethodName>
+      <r:String xml:lang="en">Normalize rows</r:String>
+    </prc:ProcessMethodName>
+  </prc:ProcessMethod>
+  <prc:ProcessMethodReference>
+    <r:URN>urn:ddi:ca.statcan:d40d6c34-6196-5de5-8923-44487aab1fb2:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d40d6c34-6196-5de5-8923-44487aab1fb2</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>ProcessMethod</r:TypeOfObject>
+  </prc:ProcessMethodReference>
+  <prc:ProcessMethodSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:7877eca8-57bd-5344-b13f-16cb9da18987:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7877eca8-57bd-5344-b13f-16cb9da18987</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessMethodScheme</r:TypeOfObject>
+  </prc:ProcessMethodSchemeReference>
+</prc:ProcessMethodScheme>

@@ -1,0 +1,19 @@
+<l:VariableGroup xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:bca8f909-687a-5ab1-8916-d361bb52c4ec:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>bca8f909-687a-5ab1-8916-d361bb52c4ec</r:ID>
+  <r:Version>1</r:Version>
+  <r:VersionResponsibility>maintainer</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">baseline grouping</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <r:VariableReference>
+    <r:URN>urn:ddi:ca.statcan:24e01a76-33a4-52ee-a89b-58cad9f1f6ad:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>24e01a76-33a4-52ee-a89b-58cad9f1f6ad</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </r:VariableReference>
+</l:VariableGroup>

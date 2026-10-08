@@ -1,0 +1,56 @@
+<r:ManagedMissingValuesRepresentation xmlns:r="ddi:reusable:3_3" isBlankMissingValue="false">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>03beb3e3-ee84-50eb-9834-216ae5e9a602</r:ID>
+  <r:Version>1</r:Version>
+  <r:ManagedMissingValuesRepresentationName>
+    <r:String xml:lang="en">Standard missing set</r:String>
+  </r:ManagedMissingValuesRepresentationName>
+  <r:ManagedMissingValuesRepresentationName>
+    <r:String xml:lang="en">Legacy format</r:String>
+  </r:ManagedMissingValuesRepresentationName>
+  <r:Label>
+    <r:Content xml:lang="en">Managed missing values</r:Content>
+  </r:Label>
+  <r:MissingCodeRepresentation blankIsMissingValue="true" missingValue="-7">
+    <r:CodeListReference>
+      <r:URN>urn:ddi:ca.statcan:0edfe623-e962-5d00-ba02-763eb7f3d352:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>0edfe623-e962-5d00-ba02-763eb7f3d352</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>CodeList</r:TypeOfObject>
+    </r:CodeListReference>
+  </r:MissingCodeRepresentation>
+  <r:MissingNumericRepresentation blankIsMissingValue="false" missingValue="-9 -8">
+    <r:NumberRange>
+      <r:Low isInclusive="true">-9</r:Low>
+      <r:High isInclusive="false">-1</r:High>
+    </r:NumberRange>
+    <r:NumericTypeCode>Integer</r:NumericTypeCode>
+  </r:MissingNumericRepresentation>
+  <r:MissingTextRepresentation blankIsMissingValue="false" maxLength="16">
+    <r:GenericOutputFormat>Placeholder</r:GenericOutputFormat>
+  </r:MissingTextRepresentation>
+  <r:ProcessingInstructionReference>
+    <r:URN>urn:ddi:ca.statcan:9cc2628b-df39-5ca6-9a87-014b7b4e01d2:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9cc2628b-df39-5ca6-9a87-014b7b4e01d2</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GenerationInstruction</r:TypeOfObject>
+    <r:Binding>
+      <r:SourceParameterReference>
+        <r:URN>urn:ddi:ca.statcan:acc0c087-8830-5bbd-a35f-2f63c24ca8eb:1</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>acc0c087-8830-5bbd-a35f-2f63c24ca8eb</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference>
+        <r:URN>urn:ddi:ca.statcan:2a2d42dc-bc29-5224-81d2-4d7ced0cbe96:1</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>2a2d42dc-bc29-5224-81d2-4d7ced0cbe96</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>InParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+  </r:ProcessingInstructionReference>
+</r:ManagedMissingValuesRepresentation>

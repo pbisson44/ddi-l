@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents"
+message: "If you use this software, please cite it using these metadata."
+type: software
+authors:
+  - family-names: Bisson
+    given-names: Philippe
+repository-code: "https://github.com/pbisson44/ddi-l"
+url: "https://github.com/pbisson44/ddi-l"
+abstract: >-
+  ddi-l is a Python library and command-line tool for creating, reading,
+  updating, and validating DDI Lifecycle 3.3 XML documents. Its model layer is
+  generated from the official DDI XML Schemas, and the DDI 3.1, 3.2, and 3.3
+  schemas are bundled so validation works offline.
+keywords:
+  - DDI
+  - DDI Lifecycle
+  - metadata
+  - survey
+  - XML
+  - official statistics
+  - data documentation
+license: MIT
+version: 0.1.0
+date-released: "2026-08-08"

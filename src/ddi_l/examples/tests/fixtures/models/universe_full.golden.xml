@@ -1,0 +1,8 @@
+<c:Universe xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>fc9ee73f-84c6-5168-8215-5a6b6d4425fb</r:ID>
+  <r:Version>1</r:Version>
+  <c:UniverseName>
+    <r:String xml:lang="en">Adults 18+</r:String>
+  </c:UniverseName>
+</c:Universe>

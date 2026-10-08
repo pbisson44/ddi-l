@@ -1,0 +1,31 @@
+<d:ObservationPlan xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>daef0bf9-ae63-5a8f-a664-4dead02e5794</r:ID>
+  <r:Version>1</r:Version>
+  <d:ObservationPlanName>
+    <r:String xml:lang="en">Hourly sensor pass</r:String>
+  </d:ObservationPlanName>
+  <d:TypeOfObservationPlan controlledVocabularyID="plan">Sensor</d:TypeOfObservationPlan>
+  <d:ObservationUnit controlledVocabularyID="observation-unit">Station</d:ObservationUnit>
+  <d:CollectionActivityReference>
+    <r:URN>urn:ddi:ca.statcan:361e099a-ad3d-5239-bca2-e753ccf5706b:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>361e099a-ad3d-5239-bca2-e753ccf5706b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionActivity</r:TypeOfObject>
+  </d:CollectionActivityReference>
+  <d:CollectionEventReference>
+    <r:URN>urn:ddi:ca.statcan:c6e8ee64-4097-5cfa-a863-c253aaf8e5ae:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c6e8ee64-4097-5cfa-a863-c253aaf8e5ae</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionEvent</r:TypeOfObject>
+  </d:CollectionEventReference>
+  <d:ObservationSequenceReference>
+    <r:URN>urn:ddi:ca.statcan:8d13502e-dbca-5ea0-b005-386f9ecbf740:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8d13502e-dbca-5ea0-b005-386f9ecbf740</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ObservationSequence</r:TypeOfObject>
+  </d:ObservationSequenceReference>
+</d:ObservationPlan>

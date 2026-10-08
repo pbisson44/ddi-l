@@ -1,0 +1,8 @@
+<d:Instrument xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>3cfa74c2-d263-5741-a6db-788a9b885d26</r:ID>
+  <r:Version>1</r:Version>
+  <d:InstrumentName>
+    <r:String xml:lang="en">Main instrument</r:String>
+  </d:InstrumentName>
+</d:Instrument>

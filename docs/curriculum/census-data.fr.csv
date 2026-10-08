@@ -1,0 +1,56 @@
+HouseholdID,PersonNumber,Province,Age,Gender,MaritalStatus,RelationshipToHead,CountryOfBirth,Citizenship,MotherTongue,HighestEducation,EmploymentType,Occupation,WeeklyHoursWorked,AnnualIncome,CommuteMode,HousingType,Tenure,Rooms,YearBuilt,HouseholdSize,InternetAccess
+HH0001,1,NB,36,Homme,Jamais marié(e),Chef de ménage,Inde,Canadienne,Anglais,Études supérieures,Employé(e),Santé,33,95000,Travail à domicile,Appartement,Propriétaire,5,2002,2,Oui
+HH0001,2,NB,16,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Inactif,Sans objet,0,0,Sans objet,Appartement,Propriétaire,5,2002,2,Oui
+HH0002,1,SK,31,Femme,Jamais marié(e),Chef de ménage,France,Autre,Français,Baccalauréat,Employé(e),Santé,30,82000,Travail à domicile,Maison jumelée,Propriétaire,6,2014,2,Oui
+HH0002,2,SK,6,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison jumelée,Propriétaire,6,2014,2,Oui
+HH0003,1,PE,45,Femme,Union libre,Chef de ménage,Canada,Canadienne,Français,Baccalauréat,Employé(e),Métiers,26,75000,Travail à domicile,Maison individuelle,Propriétaire,5,1950,4,Oui
+HH0003,2,PE,49,Homme,Union libre,Conjoint(e),Canada,Canadienne,Français,Collégial,Employé(e),Santé,32,107000,À pied,Maison individuelle,Propriétaire,5,1950,4,Oui
+HH0003,3,PE,5,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison individuelle,Propriétaire,5,1950,4,Oui
+HH0003,4,PE,10,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison individuelle,Propriétaire,5,1950,4,Oui
+HH0004,1,NB,38,Femme,Union libre,Chef de ménage,Philippines,Autre,Anglais,Collégial,Inactif,Sans objet,0,22000,Sans objet,Maison en rangée,Propriétaire,6,2017,2,Oui
+HH0004,2,NB,39,Homme,Union libre,Conjoint(e),Philippines,Canadienne,Anglais,Études supérieures,Inactif,Sans objet,0,21000,Sans objet,Maison en rangée,Propriétaire,6,2017,2,Oui
+HH0005,1,NB,74,Homme,Marié(e),Chef de ménage,Canada,Canadienne,Anglais,Baccalauréat,Inactif,Sans objet,0,30000,Sans objet,Maison individuelle,Propriétaire,3,2016,2,Oui
+HH0005,2,NB,80,Femme,Marié(e),Conjoint(e),Canada,Canadienne,Anglais,Secondaire,Travailleur autonome,Soutien administratif,49,122000,Automobile,Maison individuelle,Propriétaire,3,2016,2,Oui
+HH0006,1,AB,56,Femme,Marié(e),Chef de ménage,Canada,Canadienne,Autre,Collégial,Employé(e),Ventes,24,107000,Travail à domicile,Maison jumelée,Propriétaire,6,1976,5,Oui
+HH0006,2,AB,58,Homme,Marié(e),Conjoint(e),Canada,Canadienne,Autre,Secondaire,Sans emploi,Sans objet,0,11000,Sans objet,Maison jumelée,Propriétaire,6,1976,5,Oui
+HH0006,3,AB,5,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Autre,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison jumelée,Propriétaire,6,1976,5,Oui
+HH0006,4,AB,0,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Autre,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison jumelée,Propriétaire,6,1976,5,Oui
+HH0006,5,AB,8,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Autre,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison jumelée,Propriétaire,6,1976,5,Oui
+HH0007,1,AB,54,Homme,Union libre,Chef de ménage,Canada,Canadienne,Français,Études supérieures,Inactif,Sans objet,0,14000,Sans objet,Maison en rangée,Propriétaire,5,2014,4,Non
+HH0007,2,AB,54,Femme,Union libre,Conjoint(e),Canada,Canadienne,Français,Études supérieures,Travailleur autonome,Enseignement,39,117000,Transport en commun,Maison en rangée,Propriétaire,5,2014,4,Non
+HH0007,3,AB,9,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison en rangée,Propriétaire,5,2014,4,Non
+HH0007,4,AB,79,Homme,Veuf(ve),Parent,Canada,Canadienne,Français,Études supérieures,Inactif,Sans objet,0,11000,Sans objet,Maison en rangée,Propriétaire,5,2014,4,Non
+HH0008,1,ON,59,Homme,Marié(e),Chef de ménage,France,Autre,Anglais,Études supérieures,Employé(e),Gestion,20,93000,À pied,Maison en rangée,Locataire,9,1970,3,Oui
+HH0008,2,ON,63,Femme,Marié(e),Conjoint(e),France,Autre,Anglais,Collégial,Employé(e),Ventes,39,41000,Transport en commun,Maison en rangée,Locataire,9,1970,3,Oui
+HH0008,3,ON,0,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison en rangée,Locataire,9,1970,3,Oui
+HH0009,1,NB,63,Homme,Marié(e),Chef de ménage,France,Canadienne,Français,Secondaire,Employé(e),Gestion,33,109000,Automobile,Maison mobile,Propriétaire,5,2022,2,Oui
+HH0009,2,NB,57,Femme,Marié(e),Conjoint(e),France,Canadienne,Français,Études supérieures,Employé(e),Ventes,45,62000,À pied,Maison mobile,Propriétaire,5,2022,2,Oui
+HH0010,1,NS,51,Femme,Veuf(ve),Chef de ménage,Inde,Autre,Anglais,Secondaire,Employé(e),Métiers,32,96000,Travail à domicile,Maison en rangée,Locataire,5,1980,2,Oui
+HH0010,2,NS,20,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Baccalauréat,Employé(e),Métiers,38,73000,Automobile,Maison en rangée,Locataire,5,1980,2,Oui
+HH0011,1,AB,60,Homme,Marié(e),Chef de ménage,France,Canadienne,Français,Études supérieures,Inactif,Sans objet,0,25000,Sans objet,Maison mobile,Locataire,6,1973,4,Non
+HH0011,2,AB,58,Femme,Marié(e),Conjoint(e),France,Autre,Français,Études supérieures,Inactif,Sans objet,0,14000,Sans objet,Maison mobile,Locataire,6,1973,4,Non
+HH0011,3,AB,16,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Employé(e),Enseignement,12,11000,Automobile,Maison mobile,Locataire,6,1973,4,Non
+HH0011,4,AB,16,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Employé(e),Santé,17,7000,Transport en commun,Maison mobile,Locataire,6,1973,4,Non
+HH0012,1,SK,68,Femme,Jamais marié(e),Chef de ménage,Chine,Canadienne,Anglais,Études supérieures,Inactif,Sans objet,0,14000,Sans objet,Maison mobile,Locataire,2,1983,1,Oui
+HH0013,1,NS,69,Homme,Divorcé(e),Chef de ménage,Canada,Canadienne,Anglais,Secondaire,Inactif,Sans objet,0,26000,Sans objet,Maison en rangée,Propriétaire,8,1962,1,Oui
+HH0014,1,PE,42,Femme,Veuf(ve),Chef de ménage,Canada,Canadienne,Anglais,Secondaire,Employé(e),Santé,30,80000,À pied,Maison mobile,Propriétaire,8,2019,4,Oui
+HH0014,2,PE,7,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison mobile,Propriétaire,8,2019,4,Oui
+HH0014,3,PE,19,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Études supérieures,Employé(e),Enseignement,38,62000,Travail à domicile,Maison mobile,Propriétaire,8,2019,4,Oui
+HH0014,4,PE,8,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison mobile,Propriétaire,8,2019,4,Oui
+HH0015,1,BC,40,Femme,Divorcé(e),Chef de ménage,Canada,Canadienne,Anglais,Études supérieures,Employé(e),Santé,35,47000,À pied,Maison en rangée,Propriétaire,8,2013,3,Oui
+HH0015,2,BC,11,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison en rangée,Propriétaire,8,2013,3,Oui
+HH0015,3,BC,15,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Inactif,Sans objet,0,0,Sans objet,Maison en rangée,Propriétaire,8,2013,3,Oui
+HH0016,1,NL,34,Femme,Union libre,Chef de ménage,Philippines,Autre,Français,Collégial,Employé(e),Gestion,34,87000,Automobile,Maison en rangée,Locataire,9,1987,4,Oui
+HH0016,2,NL,30,Homme,Union libre,Conjoint(e),Philippines,Canadienne,Français,Secondaire,Travailleur autonome,Soutien administratif,21,64000,Automobile,Maison en rangée,Locataire,9,1987,4,Oui
+HH0016,3,NL,7,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison en rangée,Locataire,9,1987,4,Oui
+HH0016,4,NL,8,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Français,Aucun,Sans objet,Sans objet,0,0,Sans objet,Maison en rangée,Locataire,9,1987,4,Oui
+HH0017,1,AB,69,Femme,Union libre,Chef de ménage,France,Canadienne,Autre,Baccalauréat,Inactif,Sans objet,0,9000,Sans objet,Maison individuelle,Locataire,3,1990,2,Oui
+HH0017,2,AB,72,Homme,Union libre,Conjoint(e),France,Canadienne,Autre,Baccalauréat,Inactif,Sans objet,0,19000,Sans objet,Maison individuelle,Locataire,3,1990,2,Oui
+HH0018,1,AB,75,Homme,Marié(e),Chef de ménage,Inde,Autre,Anglais,Secondaire,Travailleur autonome,Ventes,40,61000,Vélo,Appartement,Locataire,8,1981,2,Oui
+HH0018,2,AB,72,Femme,Marié(e),Conjoint(e),Inde,Canadienne,Anglais,Collégial,Inactif,Sans objet,0,19000,Sans objet,Appartement,Locataire,8,1981,2,Oui
+HH0019,1,SK,44,Femme,Veuf(ve),Chef de ménage,France,Canadienne,Autre,Études supérieures,Employé(e),Gestion,24,134000,Vélo,Appartement,Propriétaire,6,1964,3,Oui
+HH0019,2,SK,12,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Autre,Aucun,Sans objet,Sans objet,0,0,Sans objet,Appartement,Propriétaire,6,1964,3,Oui
+HH0019,3,SK,14,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Autre,Aucun,Sans objet,Sans objet,0,0,Sans objet,Appartement,Propriétaire,6,1964,3,Oui
+HH0020,1,NL,44,Homme,Veuf(ve),Chef de ménage,Canada,Canadienne,Anglais,Baccalauréat,Inactif,Sans objet,0,21000,Sans objet,Appartement,Propriétaire,4,1974,3,Oui
+HH0020,2,NL,16,Homme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Inactif,Sans objet,0,0,Sans objet,Appartement,Propriétaire,4,1974,3,Oui
+HH0020,3,NL,0,Femme,Jamais marié(e),Enfant,Canada,Canadienne,Anglais,Aucun,Sans objet,Sans objet,0,0,Sans objet,Appartement,Propriétaire,4,1974,3,Oui

@@ -1,0 +1,73 @@
+name: Deploy documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/deploy-docs.yml"
+      - "src/**"
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Silences Material's advisory banner.
+  NO_MKDOCS_2_WARNING: "1"
+  UV_VERSION: "0.9.7"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      # The same locked toolchain as the `docs` job in ci.yml.
+      - name: Install the locked documentation toolchain
+        run: uv sync --locked --group docs
+
+      - name: Build documentation (strict)
+        run: uv run mkdocs build --strict
+
+      - name: Pull existing documentation history
+        run: |
+          git fetch origin gh-pages:gh-pages || echo "gh-pages branch will be created"
+
+      - name: Deploy development snapshot
+        if: success() && github.event_name != 'release'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          uv run mike deploy --push --update-aliases dev next
+
+      - name: Deploy release documentation
+        if: success() && github.event_name == 'release'
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG_NAME#v}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          uv run mike deploy --push --update-aliases "$VERSION" latest
+          uv run mike set-default --push latest

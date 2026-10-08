@@ -1,0 +1,41 @@
+<r:InformationClassification xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>f847e74c-dc1b-5113-b24d-54c5a0855687</r:ID>
+  <r:Version>1</r:Version>
+  <r:TypeOfInformationClassification controlledVocabularyID="InfoClassType">DataHandling</r:TypeOfInformationClassification>
+  <r:LevelOfInformationClassification controlledVocabularyID="InfoClassLevel">Restricted</r:LevelOfInformationClassification>
+  <r:AgencyOrganizationReference>
+    <r:URN>urn:ddi:ca.statcan:7e4dd980-9b36-54fd-b172-6b9080387f69:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7e4dd980-9b36-54fd-b172-6b9080387f69</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Organization</r:TypeOfObject>
+  </r:AgencyOrganizationReference>
+  <r:DataHandlingPersonnelRules>
+    <r:Content xml:lang="en">Analysts must complete confidentiality training.</r:Content>
+  </r:DataHandlingPersonnelRules>
+  <r:DataHandlingPersonnelRules>
+    <r:Content xml:lang="en">Access reviews occur quarterly.</r:Content>
+  </r:DataHandlingPersonnelRules>
+  <r:DataEncryptionRules>
+    <r:Content xml:lang="en">Apply AES-256 encryption at rest.</r:Content>
+  </r:DataEncryptionRules>
+  <r:DataStorageRules>
+    <r:Content xml:lang="en">Store only on segmented secure servers.</r:Content>
+  </r:DataStorageRules>
+  <r:DisposalRules>
+    <r:Content xml:lang="en">Shred printed extracts after use.</r:Content>
+  </r:DisposalRules>
+  <r:DataTransferRules>
+    <r:Content xml:lang="en">Transfer via managed SFTP endpoints only.</r:Content>
+  </r:DataTransferRules>
+  <r:AuthorizedPolicySource>
+    <r:OtherMaterialReference>
+      <r:URN>urn:ddi:ca.statcan:748850f9-78de-511d-8d4e-6cc6a7f97318:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>748850f9-78de-511d-8d4e-6cc6a7f97318</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+    </r:OtherMaterialReference>
+  </r:AuthorizedPolicySource>
+</r:InformationClassification>

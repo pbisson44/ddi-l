@@ -1,0 +1,5 @@
+<pi:PhysicalInstanceGroup xmlns:pi="ddi:physicalinstance:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>115f8b49-f675-5762-9d4c-3c1e588f5042</r:ID>
+  <r:Version>1</r:Version>
+</pi:PhysicalInstanceGroup>

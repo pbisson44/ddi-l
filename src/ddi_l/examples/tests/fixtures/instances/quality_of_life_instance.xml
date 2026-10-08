@@ -1,0 +1,351 @@
+<DDIInstance xmlns="ddi:instance:3_3" xmlns:p0="ddi:group:3_3" xmlns:p1="ddi:studyunit:3_3" xmlns:r="ddi:reusable:3_3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>9eaa676e-04c9-56de-bfb7-f3ffec411520</r:ID>
+  <r:Version>5</r:Version>
+  <r:Citation>
+    <r:Title>
+      <r:String xml:lang="en">Quality of Life - Canadian Social Survey</r:String>
+    </r:Title>
+  </r:Citation>
+  <p0:Group>
+    <r:URN>urn:ddi:ca.statcan:c0878ee1-5f60-4eed-adbb-c65481e6dcdc:69</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c0878ee1-5f60-4eed-adbb-c65481e6dcdc</r:ID>
+    <r:Version>69</r:Version>
+    <r:UserID typeOfUserID="Record Number/ Numéro d'enregistrement">5354</r:UserID>
+    <r:UserID typeOfUserID="Survey Code">0000000741</r:UserID>
+    <r:UserID typeOfUserID="Survey ID">741</r:UserID>
+    <r:VersionResponsibility>STC\bissphi</r:VersionResponsibility>
+    <r:VersionRationale>
+      <r:RationaleDescription>
+        <r:String xml:lang="en-CA">CDPE2</r:String>
+      </r:RationaleDescription>
+    </r:VersionRationale>
+    <r:Citation>
+      <r:Title>
+        <r:String xml:lang="en-CA">Canadian Social Survey</r:String>
+        <r:String xml:lang="fr-CA">Enquête sociale canadienne</r:String>
+      </r:Title>
+      <r:AlternateTitle>
+        <r:String xml:lang="en-CA">CSS</r:String>
+        <r:String xml:lang="fr-CA">ESC</r:String>
+      </r:AlternateTitle>
+      <r:InternationalIdentifier>
+        <r:IdentifierContent />
+        <r:ManagingAgency>unknown</r:ManagingAgency>
+      </r:InternationalIdentifier>
+    </r:Citation>
+    <r:Abstract>
+      <r:Content xml:lang="en-CA">The Canadian Social Survey (CSS) will collect information on a variety of social topics such as health, well-being, impacts of COVID-19, activities, time-use, emergency preparedness, quality of life, energy use, virtual health care and trust. The CSS will provide data at the national level (excluding the territories). This information may be used by all levels of government and various organizations, to inform the delivery of services and supports for Canadians during and after the pandemic, and to guide policy development on a range of social and economic issues. </r:Content>
+      <r:Content xml:lang="fr-CA">L'Enquête sociale canadienne (ESC) recueillera des informations sur divers sujets sociaux, tels que la santé, le bien-être, l'impact de la COVID-19, les activités, l'emploi du temps, la préparation aux situations d'urgence, qualité de vie, utilisation d'énergie, soins de santé virtuels et confiance etc. L'ESC fournira des données au niveau national (excluant les territoires). Cette information pourrait être utilisée par tous les niveaux du gouvernement et diverses organisations en vue d'éclairer la prestation de services et de soutien aux Canadiens et Canadiennes pendant et après la pandémie, ainsi que pour guider l'élaboration des politiques sur une gamme de questions sociales et économiques. </r:Content>
+    </r:Abstract>
+    <r:FundingInformation>
+      <r:AgencyOrganizationReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>fd9072cd-a7c4-4ecb-a6ef-1f0cd26fce73</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Organization</r:TypeOfObject>
+      </r:AgencyOrganizationReference>
+    </r:FundingInformation>
+    <r:Purpose>
+      <r:Content xml:lang="en-CA">The Canadian Social Survey (CSS) is Statistics Canada's recent data collection project. The goal is to understand social issues more rapidly by conducting surveys on different topics every three months. </r:Content>
+      <r:Content xml:lang="fr-CA">L'Enquête sociale canadienne (ESC) est le projet récent de collecte de données de Statistique Canada. Son objectif est de comprendre plus rapidement des enjeux sociaux en menant des enquêtes sur divers sujets tous les trois mois. </r:Content>
+    </r:Purpose>
+    <r:Coverage>
+      <r:TopicalCoverage isUniversallyUnique="true">
+        <r:URN>urn:ddi:ca.statcan:5055e4e9-8443-4fd6-953e-a74a78bac610:69</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>5055e4e9-8443-4fd6-953e-a74a78bac610</r:ID>
+        <r:Version>69</r:Version>
+        <r:Subject>Health</r:Subject>
+      </r:TopicalCoverage>
+    </r:Coverage>
+    <r:DataCollectionReference>
+      <r:URN>urn:ddi:ca.statcan:e448615d-9c82-43e5-a281-84eb9613f173:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>e448615d-9c82-43e5-a281-84eb9613f173</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>DataCollection</r:TypeOfObject>
+    </r:DataCollectionReference>
+    <r:StudyUnitReference>
+      <r:URN>urn:ddi:ca.statcan:be8c1c43-0ea5-4cde-a002-4e96c18640fa:165</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>be8c1c43-0ea5-4cde-a002-4e96c18640fa</r:ID>
+      <r:Version>165</r:Version>
+      <r:TypeOfObject>StudyUnit</r:TypeOfObject>
+    </r:StudyUnitReference>
+  </p0:Group>
+  <p0:Group>
+    <r:URN>urn:ddi:ca.statcan:a354538a-7741-423c-b6b8-4629d17730de:54</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a354538a-7741-423c-b6b8-4629d17730de</r:ID>
+    <r:Version>54</r:Version>
+    <r:UserID typeOfUserID="x" />
+    <r:VersionResponsibility>STC\bissphi</r:VersionResponsibility>
+    <r:VersionRationale>
+      <r:RationaleDescription>
+        <r:String xml:lang="en-CA">CDPE2</r:String>
+      </r:RationaleDescription>
+    </r:VersionRationale>
+    <r:Citation>
+      <r:Title>
+        <r:String xml:lang="en-CA">Quality of Life</r:String>
+        <r:String xml:lang="fr-CA">Qualité de vie</r:String>
+      </r:Title>
+    </r:Citation>
+    <r:GroupReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>c0878ee1-5f60-4eed-adbb-c65481e6dcdc</r:ID>
+      <r:Version>69</r:Version>
+      <r:TypeOfObject>Group</r:TypeOfObject>
+    </r:GroupReference>
+  </p0:Group>
+  <p0:ResourcePackage>
+    <r:URN>urn:ddi:ca.statcan:a60285a0-a12d-43cd-be73-fc3c6ea2c597:5</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a60285a0-a12d-43cd-be73-fc3c6ea2c597</r:ID>
+    <r:Version>5</r:Version>
+    <r:UserAttributePair>
+      <r:AttributeKey>extension:CodeListReferences</r:AttributeKey>
+      <r:AttributeValue>["urn:ddi:ca.statcan:d400c8e1-dd74-4033-aee1-2b31a7865b18:1","urn:ddi:ca.statcan:6e6451d2-8816-457d-8f34-a42d19f8989a:2"]</r:AttributeValue>
+    </r:UserAttributePair>
+    <r:VersionResponsibility>STC\sanjfar</r:VersionResponsibility>
+    <r:Citation>
+      <r:Title>
+        <r:String xml:lang="en-CA">Excel Metadata Imports</r:String>
+      </r:Title>
+    </r:Citation>
+  </p0:ResourcePackage>
+  <p1:StudyUnit>
+    <r:URN>urn:ddi:ca.statcan:be8c1c43-0ea5-4cde-a002-4e96c18640fa:165</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>be8c1c43-0ea5-4cde-a002-4e96c18640fa</r:ID>
+    <r:Version>165</r:Version>
+    <r:UserID typeOfUserID="Survey Cyle ID">15126</r:UserID>
+    <r:UserAttributePair>
+      <r:AttributeKey>extension:PhysicalInstanceTypes</r:AttributeKey>
+      <r:AttributeValue>{"ca.statcan:7b5bc952-d7b3-43b4-bf4d-495bfacebe9b:3":"Processing","ca.statcan:29c23fef-fad8-4468-8530-2503124cf47f:68":"Input","ca.statcan:32539464-333e-4b78-bebc-cc0700f7a992:15":"Input","ca.statcan:7b5bc952-d7b3-43b4-bf4d-495bfacebe9b:10":"Processing"}</r:AttributeValue>
+    </r:UserAttributePair>
+    <r:UserAttributePair>
+      <r:AttributeKey>extension:CustomField</r:AttributeKey>
+      <r:AttributeValue>{"Title":{"en-CA":"Data Release","fr-CA":"Date de la parution"},"Description":{},"ValueType":6,"DefinedTypeId":"d5cda113-20c7-4701-878e-4dc11b259255","HasValue":true,"RelationshipTargetType":"00000000-0000-0000-0000-000000000000","DateValue":"2024-05-16T00:00:00Z","MultilingualStringValue":{},"BooleanValue":false,"HasDefinedType":true,"DisplayLabel":"Data Release"}</r:AttributeValue>
+    </r:UserAttributePair>
+    <r:VersionResponsibility>STC\bissphi</r:VersionResponsibility>
+    <r:VersionRationale>
+      <r:RationaleDescription>
+        <r:String xml:lang="en-CA">CDPE2</r:String>
+      </r:RationaleDescription>
+    </r:VersionRationale>
+    <r:Citation>
+      <r:Title>
+        <r:String xml:lang="en-CA">Quality of Life MVP Survey - Canadian Social Survey</r:String>
+        <r:String xml:lang="fr-CA">Enquête sur la qualité de vie PMV - Enquête sociale canadienne</r:String>
+      </r:Title>
+      <r:AlternateTitle>
+        <r:String xml:lang="en-CA">CSS</r:String>
+        <r:String xml:lang="fr-CA">ESC</r:String>
+      </r:AlternateTitle>
+    </r:Citation>
+    <r:Abstract>
+      <r:Content xml:lang="en-CA">The Canadian Social Survey (CSS) will collect information on a variety of social topics such as health, well-being, impacts of COVID-19, activities, time-use, emergency preparedness, quality of life, energy use, virtual health care and trust. The CSS will provide data at the national level (excluding the territories). This information may be used by all levels of government and various organizations, to inform the delivery of services and supports for Canadians during and after the pandemic, and to guide policy development on a range of social and economic issues.  </r:Content>
+      <r:Content xml:lang="fr-CA">L'Enquête sociale canadienne (ESC) recueillera des informations sur divers sujets sociaux, tels que la santé, le bien-être, l'impact de la COVID-19, les activités, l'emploi du temps, la préparation aux situations d'urgence, qualité de vie, utilisation d'énergie, soins de santé virtuels et confiance etc. L'ESC fournira des données au niveau national (excluant les territoires). Cette information pourrait être utilisée par tous les niveaux du gouvernement et diverses organisations en vue d'éclairer la prestation de services et de soutien aux Canadiens et Canadiennes pendant et après la pandémie, ainsi que pour guider l'élaboration des politiques sur une gamme de questions sociales et économiques.  </r:Content>
+    </r:Abstract>
+    <r:UniverseReference>
+      <r:URN>urn:ddi:ca.statcan:95fd32d8-a3b1-4394-9c13-054ad893b434:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>95fd32d8-a3b1-4394-9c13-054ad893b434</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Universe</r:TypeOfObject>
+    </r:UniverseReference>
+    <r:FundingInformation>
+      <r:AgencyOrganizationReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>a3a71d76-5156-45cb-9f33-1f04070eaaa3</r:ID>
+        <r:Version>2</r:Version>
+        <r:TypeOfObject>Organization</r:TypeOfObject>
+      </r:AgencyOrganizationReference>
+      <r:GrantNumber>74250</r:GrantNumber>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>PE10082024</r:GrantNumber>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:AgencyOrganizationReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>a3a71d76-5156-45cb-9f33-1f04070eaaa3</r:ID>
+        <r:Version>2</r:Version>
+        <r:TypeOfObject>Organization</r:TypeOfObject>
+      </r:AgencyOrganizationReference>
+      <r:GrantNumber>2220</r:GrantNumber>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>2215</r:GrantNumber>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>1543</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Monthly Survey of Manufacturers</r:Content>
+        <r:Content xml:lang="fn-CA">Enquête mensuelle sur les manu</r:Content>
+      </r:Description>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>2214</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Survey of Household Spending - SHS</r:Content>
+        <r:Content xml:lang="fr-CA">Enquête sur les dépenses des ménages - EDM</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-22T19:48:22.3873812Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>2220</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">LFS - Labour Force Survey</r:Content>
+        <r:Content xml:lang="fr-CA">EPA - Enquête sur la population active</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T12:54:59.1266631Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6001</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Census Client Services- Custom Table 6001</r:Content>
+        <r:Content xml:lang="fr-CA">Services à la clientèle du recensement- Table personnalisée 6001</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T13:38:27.6536626Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6369</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">CRW-Retail and Service Industries</r:Content>
+        <r:Content xml:lang="fr-CA">DPA-Commerce de détail et industries de service</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T13:47:47.0953566Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6911</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Small Business Profiles</r:Content>
+        <r:Content xml:lang="fr-CA">Profils - Petites entreprises</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T14:40:54.6894269Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6262</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">CRW-Income Statistics(Survey of Household Spending)</r:Content>
+        <r:Content xml:lang="fr-CA">DPA-Statistique du revenu(Enquête sur les dépenses des ménages)</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T14:46:49.4095923Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6121</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">CRW-Social Analysis and Modelling(Social Analysis)</r:Content>
+        <r:Content xml:lang="fr-CA">DPA-Analyse sociale et de la modélisation(Analyse Sociale)</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T14:58:24.689238Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>6262</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">CRW-Income Statistics(Survey of Household Spending)</r:Content>
+        <r:Content xml:lang="fr-CA">DPA-Statistique du revenu(Enquête sur les dépenses des ménages)</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2024-10-23T20:08:17.5403346Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>1753</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Capital Expenditures</r:Content>
+        <r:Content xml:lang="fr-CA">Dépenses immobillières</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2025-01-07T14:16:29.8449679Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>2215</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">Canadian Income Survey - CIS</r:Content>
+        <r:Content xml:lang="fr-CA">Enquête canadienne sur le revenu - ECR</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2025-01-07T14:20:56.990628Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:FundingInformation>
+      <r:GrantNumber>2220</r:GrantNumber>
+      <r:Description>
+        <r:Content xml:lang="en-CA">LFS - Labour Force Survey</r:Content>
+        <r:Content xml:lang="fr-CA">EPA - Enquête sur la population active</r:Content>
+      </r:Description>
+      <r:FundingPeriod>
+        <r:SimpleDate>2025-01-07T14:23:28.1200414Z</r:SimpleDate>
+      </r:FundingPeriod>
+    </r:FundingInformation>
+    <r:Purpose>
+      <r:Content xml:lang="en-CA">The Canadian Social Survey (CSS) is Statistics Canada's recent data collection project. The goal is to understand social issues more rapidly by conducting surveys on different topics every three months. </r:Content>
+      <r:Content xml:lang="fr-CA">L'Enquête sociale canadienne (ESC) est le projet récent de collecte de données de Statistique Canada. Son objectif est de comprendre plus rapidement des enjeux sociaux en menant des enquêtes sur divers sujets tous les trois mois.  </r:Content>
+    </r:Purpose>
+    <r:Coverage>
+      <r:TopicalCoverage isUniversallyUnique="true">
+        <r:URN>urn:ddi:ca.statcan:6b777fbc-030e-4445-8cd5-38708c956341:165</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>6b777fbc-030e-4445-8cd5-38708c956341</r:ID>
+        <r:Version>165</r:Version>
+        <r:Subject>Health</r:Subject>
+      </r:TopicalCoverage>
+    </r:Coverage>
+    <r:RequiredResourcePackages>
+      <r:ResourcePackageReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>a60285a0-a12d-43cd-be73-fc3c6ea2c597</r:ID>
+        <r:Version>5</r:Version>
+        <r:TypeOfObject>ResourcePackage</r:TypeOfObject>
+      </r:ResourcePackageReference>
+    </r:RequiredResourcePackages>
+    <r:DataCollectionReference>
+      <r:URN>urn:ddi:ca.statcan:b5a21e39-87c3-4ef5-97c9-73a255ef3216:19</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>b5a21e39-87c3-4ef5-97c9-73a255ef3216</r:ID>
+      <r:Version>19</r:Version>
+      <r:TypeOfObject>DataCollection</r:TypeOfObject>
+    </r:DataCollectionReference>
+    <r:PhysicalInstanceReference>
+      <r:URN>urn:ddi:ca.statcan:32539464-333e-4b78-bebc-cc0700f7a992:66</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>32539464-333e-4b78-bebc-cc0700f7a992</r:ID>
+      <r:Version>66</r:Version>
+      <r:TypeOfObject>PhysicalInstance</r:TypeOfObject>
+    </r:PhysicalInstanceReference>
+    <r:PhysicalInstanceReference>
+      <r:URN>urn:ddi:ca.statcan:7b5bc952-d7b3-43b4-bf4d-495bfacebe9b:61</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>7b5bc952-d7b3-43b4-bf4d-495bfacebe9b</r:ID>
+      <r:Version>61</r:Version>
+      <r:TypeOfObject>PhysicalInstance</r:TypeOfObject>
+    </r:PhysicalInstanceReference>
+    <r:PhysicalInstanceReference>
+      <r:URN>urn:ddi:ca.statcan:29c23fef-fad8-4468-8530-2503124cf47f:68</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>29c23fef-fad8-4468-8530-2503124cf47f</r:ID>
+      <r:Version>68</r:Version>
+      <r:TypeOfObject>PhysicalInstance</r:TypeOfObject>
+    </r:PhysicalInstanceReference>
+  </p1:StudyUnit>
+</DDIInstance>

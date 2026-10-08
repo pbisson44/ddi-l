@@ -1,0 +1,19 @@
+<l:Category xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3" versionDate="2024-06-14T14:51:15.1112995Z" isMissing="false">
+  <r:URN>urn:ddi:ca.statcan:07339047-b749-43a9-b3d4-6e0889365b1d:3</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>07339047-b749-43a9-b3d4-6e0889365b1d</r:ID>
+  <r:Version>3</r:Version>
+  <r:VersionResponsibility>STC\sanjfar</r:VersionResponsibility>
+  <l:CategoryName>
+    <r:String xml:lang="en-CA">2</r:String>
+  </l:CategoryName>
+  <l:CategoryName>
+    <r:String xml:lang="fr-CA">2</r:String>
+  </l:CategoryName>
+  <r:Label>
+    <r:Content xml:lang="en-CA">2</r:Content>
+  </r:Label>
+  <r:Label>
+    <r:Content xml:lang="fr-CA">2</r:Content>
+  </r:Label>
+</l:Category>

@@ -1,0 +1,35 @@
+<l:CodeList xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>cd7821c1-f0dd-5d1e-8e9f-39fa3dff69c5</r:ID>
+  <r:Version>1</r:Version>
+  <l:CodeListName>
+    <r:String xml:lang="en">Satisfaction codes</r:String>
+  </l:CodeListName>
+  <r:RecommendedDataType>integer</r:RecommendedDataType>
+  <l:Code>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f176aafc-f1d3-519e-8bb2-497b857c30f0</r:ID>
+    <r:Version>1</r:Version>
+    <r:CategoryReference>
+      <r:URN>urn:ddi:ca.statcan:162f337a-34f4-51d1-a09c-d64e8cac90e5:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>162f337a-34f4-51d1-a09c-d64e8cac90e5</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>CategoryScheme</r:TypeOfObject>
+    </r:CategoryReference>
+    <r:Value>1</r:Value>
+    <l:Code>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>7238ae52-2af1-5b6a-a862-ec7417753479</r:ID>
+      <r:Version>1</r:Version>
+      <r:CategoryReference>
+        <r:URN>urn:ddi:ca.statcan:d621b477-9053-5b7e-922a-723aaefdf499:1</r:URN>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>d621b477-9053-5b7e-922a-723aaefdf499</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>CategoryScheme</r:TypeOfObject>
+      </r:CategoryReference>
+      <r:Value>1.1</r:Value>
+    </l:Code>
+  </l:Code>
+</l:CodeList>

@@ -1,0 +1,22 @@
+<d:QuestionGroup xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>e8c5533f-928a-53c3-921c-b7f407822793</r:ID>
+  <r:Version>1</r:Version>
+  <d:QuestionGroupName>
+    <r:String xml:lang="en">Roster</r:String>
+  </d:QuestionGroupName>
+  <d:QuestionItemReference>
+    <r:URN>urn:ddi:example.agency:item-1:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+  </d:QuestionItemReference>
+  <d:QuestionBlockReference>
+    <r:URN>urn:ddi:example.agency:block-1:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>07bceaa1-296a-5d15-97e0-b39ca5e330a7</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionBlock</r:TypeOfObject>
+  </d:QuestionBlockReference>
+</d:QuestionGroup>

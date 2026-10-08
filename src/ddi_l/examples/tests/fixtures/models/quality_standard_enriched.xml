@@ -1,0 +1,44 @@
+<r:QualityStandard xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>673839e8-e3d0-5a64-ad36-6255c03337fe</r:ID>
+  <r:Version>2</r:Version>
+  <r:QualityStandardName>
+    <r:String xml:lang="en">Comprehensive disclosure review</r:String>
+  </r:QualityStandardName>
+  <r:QualityStandardName>
+    <r:String xml:lang="sv">Omfattande utlämnandekontroll</r:String>
+  </r:QualityStandardName>
+  <r:QualityStandardName>
+    <r:String xml:lang="fr">Vérification avancée</r:String>
+  </r:QualityStandardName>
+  <r:Label>
+    <r:Content xml:lang="en">Disclosure workflow</r:Content>
+  </r:Label>
+  <r:Description>
+    <r:Content xml:lang="en">Applies before microdata release.</r:Content>
+  </r:Description>
+  <r:StandardUsed>
+    <r:OtherMaterialReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>5432b877-d0b3-5335-81c4-e66624498c04</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+    </r:OtherMaterialReference>
+  </r:StandardUsed>
+  <r:ComplianceDefinition>
+    <r:ComplianceConceptReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>78915a59-fdf9-5a0d-ba38-b0a00c56eebf</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </r:ComplianceConceptReference>
+  </r:ComplianceDefinition>
+  <r:ComplianceDefinition>
+    <r:ComplianceConceptReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>e1a15c85-17e3-5571-9228-8f90fdf4a1ea</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </r:ComplianceConceptReference>
+  </r:ComplianceDefinition>
+</r:QualityStandard>

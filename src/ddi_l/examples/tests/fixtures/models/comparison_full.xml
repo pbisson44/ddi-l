@@ -1,0 +1,8 @@
+<cmp:Comparison xmlns:cmp="ddi:comparative:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>a25506bc-3ffe-594f-ac6b-7f2c0257a542</r:ID>
+  <r:Version>1</r:Version>
+  <cmp:ComparisonName>
+    <r:String xml:lang="en">Yearly comparison</r:String>
+  </cmp:ComparisonName>
+</cmp:Comparison>

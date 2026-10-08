@@ -1,0 +1,99 @@
+<cmp:ConceptMap xmlns:cmp="ddi:comparative:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>e58edfbe-13b3-598a-ba31-0408311038f2</r:ID>
+  <r:Version>1</r:Version>
+  <cmp:TypeOfMappedItem>Concept</cmp:TypeOfMappedItem>
+  <cmp:MapName>
+    <r:String xml:lang="en">Household concept alignment</r:String>
+  </cmp:MapName>
+  <cmp:SourceSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:9993ee52-2f68-51b1-8b2d-dc0e4b28fa04:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9993ee52-2f68-51b1-8b2d-dc0e4b28fa04</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ConceptScheme</r:TypeOfObject>
+  </cmp:SourceSchemeReference>
+  <cmp:TargetSchemeReference>
+    <r:URN>urn:ddi:harmonised.agency:460a2bda-3710-5d0a-a387-dabdb6cee7dc:1</r:URN>
+    <r:Agency>harmonised.agency</r:Agency>
+    <r:ID>460a2bda-3710-5d0a-a387-dabdb6cee7dc</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ConceptScheme</r:TypeOfObject>
+  </cmp:TargetSchemeReference>
+  <cmp:Correspondence>
+    <cmp:Commonality>
+      <r:Content xml:lang="en">Shared measurement intent</r:Content>
+    </cmp:Commonality>
+    <r:Difference>
+      <r:Content xml:lang="en">Target scheme narrows the scope</r:Content>
+    </r:Difference>
+    <cmp:CommonalityWeight>0.85</cmp:CommonalityWeight>
+  </cmp:Correspondence>
+  <cmp:ItemMap alias="c01">
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>4530fb06-c509-5d35-abdb-a20ef6429413</r:ID>
+    <r:Version>1</r:Version>
+    <cmp:SourceItemReference>
+      <r:URN>urn:ddi:ca.statcan:1f76b842-bd74-514a-8d14-b796625e11e7:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>1f76b842-bd74-514a-8d14-b796625e11e7</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </cmp:SourceItemReference>
+    <cmp:TargetItemReference>
+      <r:URN>urn:ddi:harmonised.agency:0c55cc8a-7dff-5bd9-b813-357d7b88c5ce:1</r:URN>
+      <r:Agency>harmonised.agency</r:Agency>
+      <r:ID>0c55cc8a-7dff-5bd9-b813-357d7b88c5ce</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </cmp:TargetItemReference>
+    <cmp:TargetItemReference>
+      <r:URN>urn:ddi:harmonised.agency:173a3d62-3e17-5b5c-9fa5-dc7b3f340410:1</r:URN>
+      <r:Agency>harmonised.agency</r:Agency>
+      <r:ID>173a3d62-3e17-5b5c-9fa5-dc7b3f340410</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </cmp:TargetItemReference>
+    <cmp:Correspondence>
+      <cmp:Commonality>
+        <r:Content xml:lang="en">Both capture household-level totals</r:Content>
+      </cmp:Commonality>
+      <r:Difference>
+        <r:Content xml:lang="en">Harmonised definition excludes negative values</r:Content>
+      </r:Difference>
+      <cmp:CommonalityWeight>0.72</cmp:CommonalityWeight>
+    </cmp:Correspondence>
+    <cmp:RelatedMapReference>
+      <r:URN>urn:ddi:ca.statcan:d9fb6b2a-369a-5a35-8ccf-efef856c517a:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d9fb6b2a-369a-5a35-8ccf-efef856c517a</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>VariableMap</r:TypeOfObject>
+    </cmp:RelatedMapReference>
+  </cmp:ItemMap>
+  <cmp:ItemMap alias="c02">
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ca2a0607-1872-5311-b39f-3014bc16eacc</r:ID>
+    <r:Version>1</r:Version>
+    <cmp:SourceItemReference>
+      <r:URN>urn:ddi:ca.statcan:3457403d-e657-5af7-b6e1-9b35eec1b036:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>3457403d-e657-5af7-b6e1-9b35eec1b036</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </cmp:SourceItemReference>
+    <cmp:TargetItemReference>
+      <r:URN>urn:ddi:harmonised.agency:a64ff495-0d39-5ec1-9e10-b7235061b55b:1</r:URN>
+      <r:Agency>harmonised.agency</r:Agency>
+      <r:ID>a64ff495-0d39-5ec1-9e10-b7235061b55b</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </cmp:TargetItemReference>
+    <cmp:Correspondence>
+      <cmp:Commonality>
+        <r:Content xml:lang="en">Both relate to poverty thresholds</r:Content>
+      </cmp:Commonality>
+      <cmp:CommonalityWeight>0.9</cmp:CommonalityWeight>
+    </cmp:Correspondence>
+  </cmp:ItemMap>
+</cmp:ConceptMap>

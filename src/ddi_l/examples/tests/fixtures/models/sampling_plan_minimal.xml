@@ -1,0 +1,20 @@
+<d:SamplingPlan xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>d7edab8c-f13c-5eb1-9d37-8f90013f5eae</r:ID>
+  <r:Version>1</r:Version>
+  <d:TypeOfSamplingPlan controlledVocabularyID="sampling-plan-type">Stratified</d:TypeOfSamplingPlan>
+  <d:SamplingPlanName>
+    <r:String xml:lang="en">Household sampling plan</r:String>
+  </d:SamplingPlanName>
+  <d:IntendedTargetPopulation />
+  <d:SplitRationale>
+    <r:Content xml:lang="en">Split by household size</r:Content>
+  </d:SplitRationale>
+  <d:ControlConstructReference>
+    <r:URN>urn:ddi:ca.statcan:a9f88e4c-058c-5f1e-b92e-59f387763b70:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a9f88e4c-058c-5f1e-b92e-59f387763b70</r:ID>
+    <r:Version>1</r:Version>
+      <r:TypeOfObject>ControlConstructScheme</r:TypeOfObject>
+  </d:ControlConstructReference>
+</d:SamplingPlan>

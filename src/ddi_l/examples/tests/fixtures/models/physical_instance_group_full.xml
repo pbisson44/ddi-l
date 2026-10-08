@@ -1,0 +1,46 @@
+<p0:PhysicalInstanceGroup xmlns:p0="ddi:physicalinstance:3_3" xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>a415cd0f-5c4f-5568-9ea7-2c55fc220fd2</r:ID>
+  <r:Version>1</r:Version>
+  <p0:TypeOfPhysicalInstanceGroup>HarmonisedRelease</p0:TypeOfPhysicalInstanceGroup>
+  <p0:PhysicalInstanceGroupName>
+    <r:String xml:lang="en">Harmonised data bundle</r:String>
+  </p0:PhysicalInstanceGroupName>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:fc9ee73f-84c6-5168-8215-5a6b6d4425fb:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>fc9ee73f-84c6-5168-8215-5a6b6d4425fb</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:harmonised.agency:0c55cc8a-7dff-5bd9-b813-357d7b88c5ce:1</r:URN>
+    <r:Agency>harmonised.agency</r:Agency>
+    <r:ID>0c55cc8a-7dff-5bd9-b813-357d7b88c5ce</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <r:Subject>Economics</r:Subject>
+  <r:Keyword>Household income</r:Keyword>
+  <r:PhysicalInstanceReference>
+    <r:URN>urn:ddi:ca.statcan:4ed2d31a-d1b2-5cdc-ae92-503d1eb33850:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>4ed2d31a-d1b2-5cdc-ae92-503d1eb33850</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>PhysicalInstance</r:TypeOfObject>
+  </r:PhysicalInstanceReference>
+  <r:PhysicalInstanceReference>
+    <r:URN>urn:ddi:ca.statcan:c51f747e-374a-5439-bcba-65bc245a8d95:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c51f747e-374a-5439-bcba-65bc245a8d95</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>PhysicalInstance</r:TypeOfObject>
+  </r:PhysicalInstanceReference>
+  <r:PhysicalInstanceGroupReference>
+    <r:URN>urn:ddi:ca.statcan:115f8b49-f675-5762-9d4c-3c1e588f5042:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>115f8b49-f675-5762-9d4c-3c1e588f5042</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>PhysicalInstanceGroup</r:TypeOfObject>
+  </r:PhysicalInstanceGroupReference>
+</p0:PhysicalInstanceGroup>

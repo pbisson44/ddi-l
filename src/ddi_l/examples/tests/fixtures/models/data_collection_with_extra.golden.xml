@@ -1,0 +1,13 @@
+<d:DataCollection xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>813b9d12-e0b3-58ca-8ec0-4fac5ff26818</r:ID>
+  <r:Version>1</r:Version>
+  <d:CollectionEvent>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0dc2edde-3e79-5004-9a1b-932824759135</r:ID>
+    <r:Version>1</r:Version>
+    <d:CollectionEventName>
+      <r:String xml:lang="en">Wave 1</r:String>
+    </d:CollectionEventName>
+  </d:CollectionEvent>
+</d:DataCollection>

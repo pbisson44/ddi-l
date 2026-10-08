@@ -1,0 +1,45 @@
+<prc:ProcessStep xmlns:prc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>689bb9a8-15d5-5cf8-a11e-43a32702c7bb</r:ID>
+  <r:Version>1</r:Version>
+  <prc:ProcessStepName>
+    <r:String xml:lang="en">Clean staging data</r:String>
+  </prc:ProcessStepName>
+  <prc:ProcessMethod>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8c925ee3-4f14-563a-82e4-064c615f318e</r:ID>
+    <r:Version>1</r:Version>
+    <prc:ProcessMethodName>
+      <r:String xml:lang="en">Normalize rows</r:String>
+    </prc:ProcessMethodName>
+  </prc:ProcessMethod>
+  <prc:ProcessMethodReference>
+    <r:URN>urn:ddi:ca.statcan:d40d6c34-6196-5de5-8923-44487aab1fb2:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d40d6c34-6196-5de5-8923-44487aab1fb2</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>ProcessMethod</r:TypeOfObject>
+  </prc:ProcessMethodReference>
+  <prc:ProcessControl>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e1363e85-3c01-530d-87a3-973e3799a55f</r:ID>
+    <r:Version>1</r:Version>
+    <prc:ProcessControlName>
+      <r:String xml:lang="en">Threshold review</r:String>
+    </prc:ProcessControlName>
+  </prc:ProcessControl>
+  <prc:ProcessControlReference>
+    <r:URN>urn:ddi:ca.statcan:ae448765-166b-5b03-8a3c-15377f542ffa:3</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ae448765-166b-5b03-8a3c-15377f542ffa</r:ID>
+    <r:Version>3</r:Version>
+    <r:TypeOfObject>ProcessControl</r:TypeOfObject>
+  </prc:ProcessControlReference>
+  <prc:ProcessStepReference>
+    <r:URN>urn:ddi:ca.statcan:f3806743-9d95-5856-96a6-a182d82fcfc0:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f3806743-9d95-5856-96a6-a182d82fcfc0</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessStep</r:TypeOfObject>
+  </prc:ProcessStepReference>
+</prc:ProcessStep>

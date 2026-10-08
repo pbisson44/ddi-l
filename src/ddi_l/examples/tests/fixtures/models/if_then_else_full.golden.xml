@@ -1,0 +1,50 @@
+<d:IfThenElse xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>b09b1870-3711-56a3-93e5-76fbd78b4bb7</r:ID>
+  <r:Version>1</r:Version>
+  <d:ConstructName>
+    <r:String xml:lang="en">Income logic</r:String>
+  </d:ConstructName>
+  <d:TypeOfIfThenElse>ConditionalFlow</d:TypeOfIfThenElse>
+  <d:IfCondition>
+    <r:Description>
+      <r:Content xml:lang="en">Income missing</r:Content>
+    </r:Description>
+    <r:Command>
+      <r:ProgramLanguage>python</r:ProgramLanguage>
+      <r:CommandContent>income is None</r:CommandContent>
+    </r:Command>
+  </d:IfCondition>
+  <d:ThenConstructReference>
+    <r:URN>urn:ddi:ca.statcan:0e5104a8-711e-57dc-b05c-0f7db8072c60:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0e5104a8-711e-57dc-b05c-0f7db8072c60</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+  </d:ThenConstructReference>
+  <d:ElseIf>
+    <d:IfCondition>
+      <r:Description>
+        <r:Content xml:lang="en">Income greater than threshold</r:Content>
+      </r:Description>
+      <r:Command>
+        <r:ProgramLanguage>python</r:ProgramLanguage>
+        <r:CommandContent>income &gt; 50000</r:CommandContent>
+      </r:Command>
+    </d:IfCondition>
+    <d:ThenConstructReference>
+      <r:URN>urn:ddi:ca.statcan:1ff02b87-d4fb-5e25-a302-66ef546d1344:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>1ff02b87-d4fb-5e25-a302-66ef546d1344</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>ComputationItem</r:TypeOfObject>
+    </d:ThenConstructReference>
+  </d:ElseIf>
+  <d:ElseConstructReference>
+    <r:URN>urn:ddi:ca.statcan:7c0f5e9e-f761-5a54-8625-65e21236f764:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7c0f5e9e-f761-5a54-8625-65e21236f764</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StatementItem</r:TypeOfObject>
+  </d:ElseConstructReference>
+</d:IfThenElse>

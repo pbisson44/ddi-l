@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DDIInstance xmlns="ddi:instance:3_2"
+             xmlns:r="ddi:reusable:3_2">
+    <r:Agency>example.agency</r:Agency>
+    <r:Version>1.0</r:Version>
+</DDIInstance>

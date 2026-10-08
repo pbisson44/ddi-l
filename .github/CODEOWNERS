@@ -1,0 +1,15 @@
+# Default owner for everything in the repository.
+*                               @pbisson44
+
+# Generated code: changes here should come from the generator, not by hand.
+/src/ddi_l/models/_generated/   @pbisson44
+/codegen/                       @pbisson44
+
+# Bundled third-party schemas (CC-BY-4.0, DDI Alliance). Refresh via
+# ddi_l.schema_sync and update SCHEMA_ARCHIVE_CHECKSUMS with it.
+/src/ddi_l/schemas/             @pbisson44
+
+# Packaging and release plumbing.
+/pyproject.toml                 @pbisson44
+/Makefile                       @pbisson44
+/.github/workflows/             @pbisson44

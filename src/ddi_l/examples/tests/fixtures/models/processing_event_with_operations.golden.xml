@@ -1,0 +1,68 @@
+<d:ProcessingEvent xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>5dcce278-37a9-527a-ad37-33555cea6a8f</r:ID>
+  <r:Version>1</r:Version>
+  <d:ProcessingEventName>
+    <r:String xml:lang="en">Cleaning run</r:String>
+  </d:ProcessingEventName>
+  <d:ControlOperation>
+    <r:Description>
+      <r:Content xml:lang="en">Validate incoming records</r:Content>
+    </r:Description>
+    <r:AgencyOrganizationReference>
+      <r:URN>urn:ddi:ca.statcan:74e59ef5-0f7d-5953-946a-4f7c8bc365a1:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>74e59ef5-0f7d-5953-946a-4f7c8bc365a1</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Organization</r:TypeOfObject>
+    </r:AgencyOrganizationReference>
+  </d:ControlOperation>
+  <d:CleaningOperation>
+    <r:Description>
+      <r:Content xml:lang="en">Remove duplicate records</r:Content>
+    </r:Description>
+  </d:CleaningOperation>
+  <d:Weighting>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>2289dfad-0965-5d70-a0e8-0098da819f9b</r:ID>
+    <r:Version>1</r:Version>
+    <d:TypeOfWeighting>PostStratification</d:TypeOfWeighting>
+    <r:Description>
+      <r:Content xml:lang="en">Post stratification weighting</r:Content>
+    </r:Description>
+  </d:Weighting>
+  <d:WeightingReference>
+    <r:URN>urn:ddi:ca.statcan:2289dfad-0965-5d70-a0e8-0098da819f9b:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>2289dfad-0965-5d70-a0e8-0098da819f9b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Weighting</r:TypeOfObject>
+  </d:WeightingReference>
+  <d:DataAppraisalInformation>
+    <d:ResponseRate>
+      <d:SampleSize>1000</d:SampleSize>
+      <d:NumberOfResponses>910</d:NumberOfResponses>
+      <d:SpecificResponseRate>91.0</d:SpecificResponseRate>
+      <r:Description>
+        <r:Content xml:lang="en">Initial wave response</r:Content>
+      </r:Description>
+    </d:ResponseRate>
+    <d:SamplingError>
+      <r:Content xml:lang="en">Sampling error below threshold</r:Content>
+    </d:SamplingError>
+  </d:DataAppraisalInformation>
+  <r:ProcessingInstructionReference>
+    <r:URN>urn:ddi:ca.statcan:3cb8b231-211b-5122-8476-e6e5e8419dfa:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3cb8b231-211b-5122-8476-e6e5e8419dfa</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GenerationInstruction</r:TypeOfObject>
+  </r:ProcessingInstructionReference>
+  <r:QualityStatementReference>
+    <r:URN>urn:ddi:ca.statcan:7e31400b-a41c-5120-985b-dd1aafdcf534:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7e31400b-a41c-5120-985b-dd1aafdcf534</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+</d:ProcessingEvent>

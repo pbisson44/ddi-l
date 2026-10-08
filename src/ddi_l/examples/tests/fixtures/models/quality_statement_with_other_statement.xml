@@ -1,0 +1,14 @@
+<r:QualityStatement xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>a9429ced-86ba-56be-b8e5-112e456e14f2</r:ID>
+  <r:Version>1</r:Version>
+  <r:QualityStatementName>
+    <r:String xml:lang="en">Supplemental quality notes</r:String>
+  </r:QualityStatementName>
+  <r:OtherStatementOfQuality>
+    <r:Content xml:lang="en">Reviewed by external panel.</r:Content>
+  </r:OtherStatementOfQuality>
+  <r:ComplianceStatement>
+    <r:Content xml:lang="en">Monitored through quarterly audits.</r:Content>
+  </r:ComplianceStatement>
+</r:QualityStatement>

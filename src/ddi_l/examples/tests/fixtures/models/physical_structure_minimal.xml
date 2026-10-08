@@ -1,0 +1,5 @@
+<p:PhysicalStructure xmlns:p="ddi:physicaldataproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>5f4a0ae1-2cca-5ed4-bec3-ae9acafeca1d</r:ID>
+  <r:Version>1</r:Version>
+</p:PhysicalStructure>

@@ -1,0 +1,29 @@
+// markdownlint configuration for the MkDocs sources under docs/.
+// Read by markdownlint-cli2 and the VS Code markdownlint extension.
+// Rules not listed keep their defaults; the ones below are adjusted only
+// where the default fights MkDocs Material syntax.
+{
+  "default": true,
+
+  // Prose is not hard-wrapped, and tables, links and French text routinely
+  // run past 80 columns.
+  "MD013": false,
+
+  // Admonition (`!!!`), details (`???`) and content-tab (`===`) bodies are
+  // indented four spaces, so markdownlint reads the fenced blocks inside them
+  // as indented code and reports a mixed style. Every real code block in the
+  // docs is fenced.
+  "MD046": false,
+
+  // The landing pages use Material's grid cards and inline icons, which need
+  // these elements together with the `md_in_html` extension.
+  "MD033": {
+    "allowed_elements": ["a", "div", "span"]
+  },
+
+  // Curriculum pages repeat section names ("Exercise solutions",
+  // "Quiz answers") under different parent headings.
+  "MD024": {
+    "siblings_only": true
+  }
+}

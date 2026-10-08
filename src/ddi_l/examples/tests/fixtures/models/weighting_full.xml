@@ -1,0 +1,56 @@
+<d:Weighting xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>2f1d262c-e4c3-58e9-83ae-4acea5a1d045</r:ID>
+  <r:Version>1</r:Version>
+  <d:TypeOfWeighting>Calibration</d:TypeOfWeighting>
+  <r:Description>
+    <r:Content xml:lang="en">Weights calibrated to household counts by region and household size.</r:Content>
+  </r:Description>
+  <d:WeightingMethodologyReference>
+    <r:URN>urn:ddi:ca.statcan:0094bff3-4091-5fa4-8fa4-033c1890905b:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0094bff3-4091-5fa4-8fa4-033c1890905b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>WeightingMethodology</r:TypeOfObject>
+  </d:WeightingMethodologyReference>
+  <r:AnalysisUnit>Household</r:AnalysisUnit>
+  <d:UsageGuide>
+    <d:UsageExample>
+      <r:Content xml:lang="en">Apply the household weight for population totals</r:Content>
+    </d:UsageExample>
+    <d:UsageRestrictions>
+      <r:Content xml:lang="en">Not valid for sub-regional breakdowns</r:Content>
+    </d:UsageRestrictions>
+    <d:UsageRecommendations>
+      <r:Content xml:lang="en">Pair with replicate weights for variance estimation</r:Content>
+    </d:UsageRecommendations>
+    <r:CommandCode>
+      <r:Description>
+        <r:Content xml:lang="en">Create normalised weights</r:Content>
+      </r:Description>
+      <r:Command>
+        <r:ProgramLanguage>R</r:ProgramLanguage>
+        <r:CommandContent>weights$household &lt;- hh_weight / mean(hh_weight)</r:CommandContent>
+      </r:Command>
+    </r:CommandCode>
+  </d:UsageGuide>
+  <d:StandardWeight>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>033d7ed6-4555-56d4-a08f-3b52054b2692</r:ID>
+    <r:Version>1</r:Version>
+    <d:StandardWeightValue>1.0</d:StandardWeightValue>
+  </d:StandardWeight>
+  <d:StandardWeight>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e66c32cf-ded5-50a3-b96e-d6ff17164130</r:ID>
+    <r:Version>1</r:Version>
+    <d:StandardWeightValue>0.85</d:StandardWeightValue>
+  </d:StandardWeight>
+  <d:BasedOnSampleReference>
+    <r:URN>urn:ddi:ca.statcan:f760fa3c-bfa8-53e1-bb80-e3082c8e3c67:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>f760fa3c-bfa8-53e1-bb80-e3082c8e3c67</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Sample</r:TypeOfObject>
+  </d:BasedOnSampleReference>
+</d:Weighting>

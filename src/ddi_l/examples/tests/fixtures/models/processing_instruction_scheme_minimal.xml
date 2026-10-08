@@ -1,0 +1,54 @@
+<d:ProcessingInstructionScheme xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>027c488f-17b8-5ea0-b039-9f586e4da9c5</r:ID>
+  <r:Version>1</r:Version>
+  <d:ProcessingInstructionSchemeName>
+    <r:String xml:lang="en">Core processing rules</r:String>
+  </d:ProcessingInstructionSchemeName>
+  <d:GeneralInstruction>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d474cedf-30f6-5cf8-b4d3-f1fea9469da1</r:ID>
+    <r:Version>1</r:Version>
+    <r:Description>
+      <r:Content xml:lang="en">Validate income ranges.</r:Content>
+    </r:Description>
+  </d:GeneralInstruction>
+  <d:GeneralInstructionReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>71bc1d90-a2bc-552d-a958-66c039b738c7</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GeneralInstruction</r:TypeOfObject>
+  </d:GeneralInstructionReference>
+  <d:GenerationInstruction>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>266c19b7-2a16-57e3-99bf-e48f86c80e0f</r:ID>
+    <r:Version>1</r:Version>
+    <d:InputVariableReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>4264b961-216c-518c-8dc3-c8c87b7e195c</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Variable</r:TypeOfObject>
+      <r:Alias>INC</r:Alias>
+    </d:InputVariableReference>
+  </d:GenerationInstruction>
+  <d:GenerationInstructionReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>974d4f8d-9256-5eaa-9caa-ca58af642db9</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GenerationInstruction</r:TypeOfObject>
+  </d:GenerationInstructionReference>
+  <d:ProcessingInstructionGroup>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>52e9bde5-da1d-5f4c-91c9-651889901ba0</r:ID>
+    <r:Version>1</r:Version>
+    <d:ProcessingInstructionGroupName>
+      <r:String xml:lang="en">Inline rules</r:String>
+    </d:ProcessingInstructionGroupName>
+  </d:ProcessingInstructionGroup>
+  <d:ProcessingInstructionGroupReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>700a5365-7517-5b1a-99f0-63b48ad3d50b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessingInstructionGroup</r:TypeOfObject>
+  </d:ProcessingInstructionGroupReference>
+</d:ProcessingInstructionScheme>

@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DDIInstance xmlns="ddi:instance:3_3" xmlns:c="ddi:conceptualcomponent:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:l="ddi:logicalproduct:3_3" xmlns:p="ddi:physicaldataproduct:3_3" xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>urban-survey-series</r:ID>
+  <r:Version>1.0</r:Version>
+  <r:Citation>
+    <r:Title>
+      <r:String xml:lang="en">Urban Survey Series (validated example)</r:String>
+    </r:Title>
+  </r:Citation>
+  <s:StudyUnit>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>study-urban-household-2021</r:ID>
+    <r:Version>1.0</r:Version>
+    <c:ConceptualComponent>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>component-urban-employment</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Urban employment concepts</r:Content>
+      </r:Label>
+      <c:ConceptScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>590975f4-e36d-5e78-9ca4-b862a7d7b1ec</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household concepts</r:Content>
+        </r:Label>
+        <c:Concept>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>concept-employment-status</r:ID>
+          <r:Version>1.0</r:Version>
+          <c:ConceptName>
+            <r:String xml:lang="en">Employment status</r:String>
+          </c:ConceptName>
+          <r:Label>
+            <r:Content xml:lang="en">Employment status</r:Content>
+          </r:Label>
+        </c:Concept>
+      </c:ConceptScheme>
+      <c:UniverseScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>0decb05d-dd27-5c30-8d8e-016b1078f1b4</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household universes</r:Content>
+        </r:Label>
+        <c:Universe>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>universe-urban-adults</r:ID>
+          <r:Version>1.0</r:Version>
+          <c:UniverseName>
+            <r:String xml:lang="en">Adults living in metropolitan households</r:String>
+          </c:UniverseName>
+          <r:Label>
+            <r:Content xml:lang="en">Adults living in metropolitan households</r:Content>
+          </r:Label>
+        </c:Universe>
+      </c:UniverseScheme>
+    </c:ConceptualComponent>
+    <d:DataCollection>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>63e842d8-d8e0-5da2-98fe-3c3fb3b93d85</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Urban household data collection</r:Content>
+      </r:Label>
+      <d:QuestionScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>673137ee-5ca8-5c30-8b0c-b9ed75b8fb82</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household questions</r:Content>
+        </r:Label>
+        <d:QuestionItem>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>question-age</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Label>
+            <r:Content xml:lang="en">Age</r:Content>
+          </r:Label>
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text xml:lang="en">What is your age in years?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+        <d:QuestionItem>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>question-employment</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Label>
+            <r:Content xml:lang="en">Employment status</r:Content>
+          </r:Label>
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text xml:lang="en">Which of the following best describes your employment status?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+        <d:QuestionItem>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>question-income</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Label>
+            <r:Content xml:lang="en">Household income</r:Content>
+          </r:Label>
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text xml:lang="en">What was your total household income last month (before taxes)?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+      </d:QuestionScheme>
+      <d:InstrumentScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>15787e3c-66e1-56d1-ac3f-3cf371a2f2cb</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household instruments</r:Content>
+        </r:Label>
+        <d:Instrument>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>cc8f34c3-dc5d-5fab-a3c7-31cb85ad11c0</r:ID>
+          <r:Version>1.0</r:Version>
+          <d:InstrumentName>
+            <r:String xml:lang="en">Urban Household Questionnaire</r:String>
+          </d:InstrumentName>
+          <r:Label>
+            <r:Content xml:lang="en">Urban Household Questionnaire</r:Content>
+          </r:Label>
+        </d:Instrument>
+      </d:InstrumentScheme>
+    </d:DataCollection>
+    <l:LogicalProduct>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>logical-product-household</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Urban household logical product</r:Content>
+      </r:Label>
+      <l:CategoryScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>db3edd92-6fb1-5d0f-ba59-f9957d79b430</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household categories</r:Content>
+        </r:Label>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-employment-full-time</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Employed full-time</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Employed full-time</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-employment-status:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-employment-status</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-employment-part-time</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Employed part-time</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Employed part-time</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-employment-status:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-employment-status</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-employment-unemployed</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Unemployed</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Unemployed</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-employment-status:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-employment-status</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-employment-not-in-labor-force</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Not in labor force</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Not in labor force</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-employment-status:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-employment-status</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+        </l:Category>
+      </l:CategoryScheme>
+      <l:CodeListScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>0f513438-f481-55fc-b756-a00aba2e1621</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household code lists</r:Content>
+        </r:Label>
+        <l:CodeList>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>code-list-employment</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CodeListName>
+            <r:String xml:lang="en">Employed full-time</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Employed part-time</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Unemployed</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Not in labor force</r:String>
+          </l:CodeListName>
+          <r:Label>
+            <r:Content xml:lang="en">Employed full-time</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Employed part-time</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Unemployed</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Not in labor force</r:Content>
+          </r:Label>
+          <r:RecommendedDataType>string</r:RecommendedDataType>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-employment-code-1</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-employment-full-time:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-employment-full-time</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>1</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-employment-code-2</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-employment-part-time:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-employment-part-time</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>2</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-employment-code-3</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-employment-unemployed:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-employment-unemployed</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>3</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-employment-code-4</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-employment-not-in-labor-force:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-employment-not-in-labor-force</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>4</r:Value>
+          </l:Code>
+        </l:CodeList>
+      </l:CodeListScheme>
+      <l:VariableScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>e62fcc9a-7b22-55c3-96b6-26541cc6c8ca</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household variables</r:Content>
+        </r:Label>
+        <l:Variable>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>var-age</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:VariableName>
+            <r:String xml:lang="en">Respondent age (years)</r:String>
+          </l:VariableName>
+          <r:Label>
+            <r:Content xml:lang="en">Respondent age (years)</r:Content>
+          </r:Label>
+          <r:QuestionReference>
+            <r:URN>urn:ddi:example.agency:question-age:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>question-age</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+          </r:QuestionReference>
+        </l:Variable>
+        <l:Variable>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>var-employment-status</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:VariableName>
+            <r:String xml:lang="en">Employment status</r:String>
+          </l:VariableName>
+          <r:Label>
+            <r:Content xml:lang="en">Employment status</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-employment-status:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-employment-status</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+          <r:QuestionReference>
+            <r:URN>urn:ddi:example.agency:question-employment:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>question-employment</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+          </r:QuestionReference>
+        </l:Variable>
+        <l:Variable>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>var-income</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:VariableName>
+            <r:String xml:lang="en">Monthly household income (pre-tax)</r:String>
+          </l:VariableName>
+          <r:Label>
+            <r:Content xml:lang="en">Monthly household income (pre-tax)</r:Content>
+          </r:Label>
+          <r:QuestionReference>
+            <r:URN>urn:ddi:example.agency:question-income:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>question-income</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+          </r:QuestionReference>
+        </l:Variable>
+      </l:VariableScheme>
+    </l:LogicalProduct>
+    <p:PhysicalDataProduct>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>33400de3-35b2-5aa4-9ee1-cd4485809bf5</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Urban household physical data product</r:Content>
+      </r:Label>
+      <p:PhysicalStructureScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>ac65611f-30c5-5a82-bb92-a7960dcbcf63</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Urban household physical structures</r:Content>
+        </r:Label>
+        <p:PhysicalStructure>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>physical-household</r:ID>
+          <r:Version>1.0</r:Version>
+          <p:PhysicalStructureName>
+            <r:String xml:lang="en">CSV extract layout</r:String>
+          </p:PhysicalStructureName>
+          <r:Label>
+            <r:Content xml:lang="en">CSV extract layout</r:Content>
+          </r:Label>
+          <p:FileFormat>text/csv</p:FileFormat>
+          <r:DefaultDataType>string</r:DefaultDataType>
+          <r:DefaultDelimiter>comma</r:DefaultDelimiter>
+          <r:DefaultDecimalSeparator>.</r:DefaultDecimalSeparator>
+        </p:PhysicalStructure>
+      </p:PhysicalStructureScheme>
+    </p:PhysicalDataProduct>
+  </s:StudyUnit>
+  <s:StudyUnit>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>study-community-services-2023</r:ID>
+    <r:Version>1.0</r:Version>
+    <c:ConceptualComponent>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>component-community-quality</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Community quality concepts</r:Content>
+      </r:Label>
+      <c:ConceptScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>d2005f70-579d-5613-b8f0-f346ab4dfa50</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services concepts</r:Content>
+        </r:Label>
+        <c:Concept>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>concept-community-quality</r:ID>
+          <r:Version>1.0</r:Version>
+          <c:ConceptName>
+            <r:String xml:lang="en">Perceived community quality</r:String>
+          </c:ConceptName>
+          <r:Label>
+            <r:Content xml:lang="en">Perceived community quality</r:Content>
+          </r:Label>
+        </c:Concept>
+      </c:ConceptScheme>
+      <c:UniverseScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>b34d3579-2a72-560f-bcff-25400fcdc2b6</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services universes</r:Content>
+        </r:Label>
+        <c:Universe>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>universe-urban-households</r:ID>
+          <r:Version>1.0</r:Version>
+          <c:UniverseName>
+            <r:String xml:lang="en">Households located within the metropolitan study area</r:String>
+          </c:UniverseName>
+          <r:Label>
+            <r:Content xml:lang="en">Households located within the metropolitan study area</r:Content>
+          </r:Label>
+        </c:Universe>
+      </c:UniverseScheme>
+    </c:ConceptualComponent>
+    <d:DataCollection>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>8282fd3b-1125-50fe-9f0a-9d9a6ffa89bb</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Community services data collection</r:Content>
+      </r:Label>
+      <d:QuestionScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>201bc06a-5b2d-5b0a-9275-7f9d82422d00</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services questions</r:Content>
+        </r:Label>
+        <d:QuestionItem>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>question-satisfaction</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Label>
+            <r:Content xml:lang="en">Service satisfaction</r:Content>
+          </r:Label>
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text xml:lang="en">Overall, how satisfied are you with the services in your neighborhood?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+        <d:QuestionItem>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>question-safety</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Label>
+            <r:Content xml:lang="en">Perceived safety</r:Content>
+          </r:Label>
+          <d:QuestionText>
+            <d:LiteralText>
+              <d:Text xml:lang="en">How safe do you feel walking alone at night in your area?</d:Text>
+            </d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+      </d:QuestionScheme>
+      <d:InstrumentScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>704b6f04-6a13-5b31-84d9-d30b477f332d</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services instruments</r:Content>
+        </r:Label>
+        <d:Instrument>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>d42e29e0-c5cf-55a8-8e3c-17d9e9d52e63</r:ID>
+          <r:Version>1.0</r:Version>
+          <d:InstrumentName>
+            <r:String xml:lang="en">Community Services Questionnaire</r:String>
+          </d:InstrumentName>
+          <r:Label>
+            <r:Content xml:lang="en">Community Services Questionnaire</r:Content>
+          </r:Label>
+        </d:Instrument>
+      </d:InstrumentScheme>
+    </d:DataCollection>
+    <l:LogicalProduct>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>logical-product-community</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Community services logical product</r:Content>
+      </r:Label>
+      <l:CategoryScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>37a1d69e-de0d-5d31-bc32-451f03df65b0</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services categories</r:Content>
+        </r:Label>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-satisfaction-very-satisfied</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Very satisfied</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Very satisfied</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-satisfaction-satisfied</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Satisfied</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Satisfied</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-satisfaction-neutral</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Neutral</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Neutral</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-satisfaction-dissatisfied</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Dissatisfied</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Dissatisfied</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-satisfaction-very-dissatisfied</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Very dissatisfied</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Very dissatisfied</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-safety-very-safe</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Very safe</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Very safe</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-safety-somewhat-safe</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Somewhat safe</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Somewhat safe</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-safety-neutral</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Neither safe nor unsafe</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Neither safe nor unsafe</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-safety-somewhat-unsafe</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Somewhat unsafe</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Somewhat unsafe</r:Content>
+          </r:Label>
+        </l:Category>
+        <l:Category>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>category-safety-very-unsafe</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CategoryName>
+            <r:String xml:lang="en">Very unsafe</r:String>
+          </l:CategoryName>
+          <r:Label>
+            <r:Content xml:lang="en">Very unsafe</r:Content>
+          </r:Label>
+        </l:Category>
+      </l:CategoryScheme>
+      <l:CodeListScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>bb09e5e7-8683-517a-b13f-5072b2dd2970</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services code lists</r:Content>
+        </r:Label>
+        <l:CodeList>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>code-list-satisfaction</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CodeListName>
+            <r:String xml:lang="en">Very satisfied</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Satisfied</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Neutral</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Dissatisfied</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Very dissatisfied</r:String>
+          </l:CodeListName>
+          <r:Label>
+            <r:Content xml:lang="en">Very satisfied</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Satisfied</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Neutral</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Dissatisfied</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Very dissatisfied</r:Content>
+          </r:Label>
+          <r:RecommendedDataType>string</r:RecommendedDataType>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-satisfaction-code-1</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-satisfaction-very-satisfied:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-satisfaction-very-satisfied</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>1</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-satisfaction-code-2</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-satisfaction-satisfied:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-satisfaction-satisfied</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>2</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-satisfaction-code-3</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-satisfaction-neutral:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-satisfaction-neutral</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>3</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-satisfaction-code-4</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-satisfaction-dissatisfied:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-satisfaction-dissatisfied</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>4</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-satisfaction-code-5</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-satisfaction-very-dissatisfied:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-satisfaction-very-dissatisfied</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>5</r:Value>
+          </l:Code>
+        </l:CodeList>
+        <l:CodeList>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>code-list-safety</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:CodeListName>
+            <r:String xml:lang="en">Very safe</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Somewhat safe</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Neither safe nor unsafe</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Somewhat unsafe</r:String>
+          </l:CodeListName>
+          <l:CodeListName>
+            <r:String xml:lang="en">Very unsafe</r:String>
+          </l:CodeListName>
+          <r:Label>
+            <r:Content xml:lang="en">Very safe</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Somewhat safe</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Neither safe nor unsafe</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Somewhat unsafe</r:Content>
+          </r:Label>
+          <r:Label>
+            <r:Content xml:lang="en">Very unsafe</r:Content>
+          </r:Label>
+          <r:RecommendedDataType>string</r:RecommendedDataType>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-safety-code-1</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-safety-very-safe:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-safety-very-safe</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>1</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-safety-code-2</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-safety-somewhat-safe:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-safety-somewhat-safe</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>2</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-safety-code-3</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-safety-neutral:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-safety-neutral</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>3</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-safety-code-4</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-safety-somewhat-unsafe:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-safety-somewhat-unsafe</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>4</r:Value>
+          </l:Code>
+          <l:Code>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>code-list-safety-code-5</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:CategoryReference>
+              <r:URN>urn:ddi:example.agency:category-safety-very-unsafe:1.0</r:URN>
+              <r:Agency>example.agency</r:Agency>
+              <r:ID>category-safety-very-unsafe</r:ID>
+              <r:Version>1.0</r:Version>
+              <r:TypeOfObject>Category</r:TypeOfObject>
+            </r:CategoryReference>
+            <r:Value>5</r:Value>
+          </l:Code>
+        </l:CodeList>
+      </l:CodeListScheme>
+      <l:VariableScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>a9f6d040-8f48-5c93-a87b-89e2c3923f4b</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services variables</r:Content>
+        </r:Label>
+        <l:Variable>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>var-satisfaction</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:VariableName>
+            <r:String xml:lang="en">Neighborhood service satisfaction</r:String>
+          </l:VariableName>
+          <r:Label>
+            <r:Content xml:lang="en">Neighborhood service satisfaction</r:Content>
+          </r:Label>
+          <r:ConceptReference>
+            <r:URN>urn:ddi:example.agency:concept-community-quality:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>concept-community-quality</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>Concept</r:TypeOfObject>
+          </r:ConceptReference>
+          <r:QuestionReference>
+            <r:URN>urn:ddi:example.agency:question-satisfaction:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>question-satisfaction</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+          </r:QuestionReference>
+        </l:Variable>
+        <l:Variable>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>var-safety</r:ID>
+          <r:Version>1.0</r:Version>
+          <l:VariableName>
+            <r:String xml:lang="en">Perceived neighborhood safety</r:String>
+          </l:VariableName>
+          <r:Label>
+            <r:Content xml:lang="en">Perceived neighborhood safety</r:Content>
+          </r:Label>
+          <r:QuestionReference>
+            <r:URN>urn:ddi:example.agency:question-safety:1.0</r:URN>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>question-safety</r:ID>
+            <r:Version>1.0</r:Version>
+            <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+          </r:QuestionReference>
+        </l:Variable>
+      </l:VariableScheme>
+    </l:LogicalProduct>
+    <p:PhysicalDataProduct>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>af2e5e36-9e6e-509e-86c3-be113b2d59a2</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Label>
+        <r:Content xml:lang="en">Community services physical data product</r:Content>
+      </r:Label>
+      <p:PhysicalStructureScheme>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>02115155-8d75-534d-9689-4eaac610a5a6</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:Label>
+          <r:Content xml:lang="en">Community services physical structures</r:Content>
+        </r:Label>
+        <p:PhysicalStructure>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>physical-community</r:ID>
+          <r:Version>1.0</r:Version>
+          <p:PhysicalStructureName>
+            <r:String xml:lang="en">Column metadata for fixed-width extract</r:String>
+          </p:PhysicalStructureName>
+          <r:Label>
+            <r:Content xml:lang="en">Column metadata for fixed-width extract</r:Content>
+          </r:Label>
+          <p:FileFormat>text/plain</p:FileFormat>
+          <r:DefaultDataType>integer</r:DefaultDataType>
+          <r:DefaultDelimiter>space</r:DefaultDelimiter>
+          <r:DefaultDecimalSeparator>.</r:DefaultDecimalSeparator>
+        </p:PhysicalStructure>
+      </p:PhysicalStructureScheme>
+    </p:PhysicalDataProduct>
+  </s:StudyUnit>
+</DDIInstance>
