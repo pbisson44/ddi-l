@@ -362,6 +362,7 @@ forking the schema and without leaving valid DDI.
         income.set_property("myorg:source_system", "CRM-2024")
         q_income.set_property("myorg:steward", "Survey Methods")
 
+
         def items_with_custom_fields(doc, prefix="myorg:"):
             count = 0
             for collection in (doc.questions, doc.variables):
