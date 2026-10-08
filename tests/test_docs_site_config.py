@@ -306,7 +306,7 @@ def _em_dash_problems(path: Path) -> list[str]:
             continue
         if fence is not None or re.fullmatch(r"[-|:\s]*", stripped):
             continue
-        prose = re.sub(r"`[^`]*`|<!--.*?-->", "", line)
+        prose = re.sub(r"`[^`]*`|<!--[\s\S]*?-->", "", line)
         if _DASH_PUNCTUATION.search(prose):
             problems.append(f"{where}: dash used as punctuation")
     return problems
