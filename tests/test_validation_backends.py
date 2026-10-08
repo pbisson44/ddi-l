@@ -237,8 +237,10 @@ def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:
 
 def test_backends_report_identical_issues() -> None:
     _lxml_only()
-    import ddi_l as ddi
+    
     from lxml import etree  # type: ignore[import-untyped]
+
+    import ddi_l as ddi
 
     doc = ddi.new_study(title="Broken", agency="example.org")
     doc.add_variable(name="age", label="Age")
