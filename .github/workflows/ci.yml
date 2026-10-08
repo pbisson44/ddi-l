@@ -6,6 +6,11 @@ on:
       - main
   pull_request:
 
+# Read-only token for every job: none of them pushes, comments or releases.
+# Artifact uploads and the uv cache use the runner's own token, not this one.
+permissions:
+  contents: read
+
 env:
   UV_VERSION: "0.9.7"
 
@@ -27,9 +32,9 @@ jobs:
           - backend: lxml
             extras: "--extra full"
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -74,9 +79,9 @@ jobs:
     # One job: mypy pins python_version, and it needs every extra installed to
     # type-check ddi_l.server.
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -92,9 +97,9 @@ jobs:
     name: Codegen drift check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -113,9 +118,9 @@ jobs:
     runs-on: ubuntu-latest
     # Not gated on `tests`, so the built wheel is always checked.
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -138,7 +143,7 @@ jobs:
           UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv sync --locked --group dev
           UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv run --no-sync pytest --no-cov -q
       - name: Upload distributions
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: release-distributions
           path: dist/*
@@ -147,9 +152,9 @@ jobs:
     name: Documentation build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -170,9 +175,9 @@ jobs:
     # The server is a thin adapter over ddi_l.operations, which the matrix
     # already covers on every interpreter, so one Python version suffices.
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -206,9 +211,9 @@ jobs:
     runs-on: ubuntu-latest
     # One interpreter is enough: the samples exercise the public API.
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true
@@ -225,9 +230,9 @@ jobs:
     name: R examples (reticulate)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v5
         with:
           version: ${{ env.UV_VERSION }}
           enable-cache: true

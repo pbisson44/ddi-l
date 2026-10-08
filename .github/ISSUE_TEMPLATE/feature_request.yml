@@ -11,7 +11,7 @@ body:
         generated class. Most requests are therefore about *ergonomics* (a
         one-line helper for something that currently takes ten) rather than
         missing coverage. The
-        [schema coverage page](https://pbisson44.github.io/ddi-l/schema-coverage/)
+        [schema coverage page](https://pbisson44.github.io/ddi-l/latest/schema-coverage/)
         shows which modules already have high-level helpers.
   - type: textarea
     id: problem
