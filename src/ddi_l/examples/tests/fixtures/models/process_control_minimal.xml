@@ -1,0 +1,15 @@
+<proc:ProcessControl xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>1e984c11-6c31-587a-b81e-20112ea7d144</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessControlName>
+    <r:String xml:lang="en">Manual review checkpoint</r:String>
+  </proc:ProcessControlName>
+  <proc:TypeOfProcessControl>Approval</proc:TypeOfProcessControl>
+  <r:CommandCode>
+    <r:Command>
+      <r:ProgramLanguage>Shell</r:ProgramLanguage>
+      <r:CommandContent>echo "ready"</r:CommandContent>
+    </r:Command>
+  </r:CommandCode>
+</proc:ProcessControl>

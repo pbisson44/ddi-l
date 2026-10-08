@@ -1,0 +1,30 @@
+<proc:ProcessScheme xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>25874e52-443f-5da3-b06e-e099db60581c</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessSchemeName>
+    <r:String xml:lang="en">Processing workflow</r:String>
+  </proc:ProcessSchemeName>
+  <proc:Process>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>35ee46cc-aa26-50b2-adb3-9b07ab19c731</r:ID>
+    <r:Version>1</r:Version>
+    <proc:ProcessName>
+      <r:String xml:lang="en">Primary process</r:String>
+    </proc:ProcessName>
+  </proc:Process>
+  <proc:ProcessReference>
+    <r:URN>urn:ddi:ca.statcan:4618a131-0e41-5a8b-a0ad-ecd29175c1ed:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>4618a131-0e41-5a8b-a0ad-ecd29175c1ed</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Process</r:TypeOfObject>
+  </proc:ProcessReference>
+  <proc:ProcessSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:9f368bcc-b15c-5ec7-9ee7-337f24a08ab7:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9f368bcc-b15c-5ec7-9ee7-337f24a08ab7</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ProcessScheme</r:TypeOfObject>
+  </proc:ProcessSchemeReference>
+</proc:ProcessScheme>

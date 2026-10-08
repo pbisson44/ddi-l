@@ -1,0 +1,27 @@
+<r:QualityStandard xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>a7b7e383-45a9-57ae-8b2b-4e1f1795385c</r:ID>
+  <r:Version>1</r:Version>
+  <r:QualityStandardName>
+    <r:String xml:lang="en">Peer review checklist</r:String>
+  </r:QualityStandardName>
+  <r:Description>
+    <r:Content xml:lang="en">External peer review coverage.</r:Content>
+  </r:Description>
+  <r:StandardUsed>
+    <r:OtherMaterialReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>7ab7aa35-b4d4-5011-9f22-ab3feedb9ac4</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+    </r:OtherMaterialReference>
+  </r:StandardUsed>
+  <r:ComplianceDefinition>
+    <r:ComplianceConceptReference>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>196d33a4-7699-5eef-b71a-c7f42db2f25d</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Concept</r:TypeOfObject>
+    </r:ComplianceConceptReference>
+  </r:ComplianceDefinition>
+</r:QualityStandard>

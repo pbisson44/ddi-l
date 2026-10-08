@@ -1,0 +1,52 @@
+<l:ClassificationItem xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3" versionDate="2024-02-01" isPublished="true">
+  <r:URN>urn:ddi:ca.statcan:e72524a1-a05f-541f-b54a-8883e99e2eef:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>e72524a1-a05f-541f-b54a-8883e99e2eef</r:ID>
+  <r:Version>1</r:Version>
+  <r:Name>
+    <r:String xml:lang="en">Manufacturing</r:String>
+  </r:Name>
+  <l:ItemCode>A</l:ItemCode>
+  <r:DefiningConceptReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>329ea7fa-2bfd-5df4-a8dd-91484397e772</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:DefiningConceptReference>
+  <l:Includes>
+    <r:Content xml:lang="en">Includes heavy industry operations.</r:Content>
+  </l:Includes>
+  <l:Excludes>
+    <r:Content xml:lang="en">Excludes agricultural activities.</r:Content>
+  </l:Excludes>
+  <l:ExcludedClassificationItemReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>703ba5a8-565b-5f1e-a1cc-be8b11a0b36f</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ClassificationItem</r:TypeOfObject>
+  </l:ExcludedClassificationItemReference>
+  <l:IsGenerated>true</l:IsGenerated>
+  <l:IsValid>true</l:IsValid>
+  <l:ValidFrom>2024-02-01</l:ValidFrom>
+  <l:FutureEvents>
+    <r:Content xml:lang="en">Will transition to updated classification in 2026.</r:Content>
+  </l:FutureEvents>
+  <l:SuccessorClassificationItemReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>daf71e49-d24d-59d1-a927-a8a0e60152e8</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>ClassificationItem</r:TypeOfObject>
+  </l:SuccessorClassificationItemReference>
+  <l:ChangesFromPriorVersion>
+    <r:Content xml:lang="en">Renamed from section B to align with NAICS.</r:Content>
+  </l:ChangesFromPriorVersion>
+  <l:Updates>
+    <r:Content xml:lang="en">Annual review of included industries.</r:Content>
+  </l:Updates>
+  <l:ParentClassificationItemReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d6389049-4534-5395-aefc-f8fbb5f63166</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ClassificationItem</r:TypeOfObject>
+  </l:ParentClassificationItemReference>
+</l:ClassificationItem>

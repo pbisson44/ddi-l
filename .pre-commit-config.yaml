@@ -1,0 +1,30 @@
+# Optional fast local checks; CI runs the full suite.
+#
+#   uv run --with pre-commit pre-commit install
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Keep in step with the ruff pin in pyproject.toml.
+    rev: v0.16.1
+    hooks:
+      - id: ruff-format
+      - id: ruff
+        args: [--fix]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        # mkdocs.yml uses `!!python/name:` tags for the emoji and superfences
+        # extensions, which are valid YAML but not *safe* YAML.
+        exclude: ^mkdocs\.yml$
+      - id: check-toml
+      - id: end-of-file-fixer
+        # The bundled DDI schemas are redistributed verbatim (CC-BY-4.0).
+        exclude: ^src/ddi_l/schemas/
+      - id: trailing-whitespace
+        exclude: ^src/ddi_l/schemas/
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        # Allows the 8.5 MB survey fixture in tests/fixtures/, nothing larger.
+        args: [--maxkb=1024]
+        exclude: ^(tests/fixtures/|src/ddi_l/schemas/|src/ddi_l/examples/)

@@ -1,0 +1,37 @@
+<d:DataCaptureMethod xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>74bde28b-cf63-570f-97a2-194d87fbec49</r:ID>
+  <r:Version>1</r:Version>
+  <d:DataCaptureMethodName>
+    <r:String xml:lang="en">Administrative pipeline</r:String>
+  </d:DataCaptureMethodName>
+  <d:TypeOfDataCaptureMethod controlledVocabularyID="capture-method">AdministrativeRecords</d:TypeOfDataCaptureMethod>
+  <d:DataSourceReference>
+    <r:URN>urn:ddi:ca.statcan:e771defd-d313-57f4-8e6a-194d91ad6e91:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>e771defd-d313-57f4-8e6a-194d91ad6e91</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DataSource</r:TypeOfObject>
+  </d:DataSourceReference>
+  <d:CollectionActivityReference>
+    <r:URN>urn:ddi:ca.statcan:cb22b07a-9565-5e1d-a69c-d2df9331834f:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>cb22b07a-9565-5e1d-a69c-d2df9331834f</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionActivity</r:TypeOfObject>
+  </d:CollectionActivityReference>
+  <d:CollectionEventReference>
+    <r:URN>urn:ddi:ca.statcan:0dc2edde-3e79-5004-9a1b-932824759135:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0dc2edde-3e79-5004-9a1b-932824759135</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionEvent</r:TypeOfObject>
+  </d:CollectionEventReference>
+  <d:ObservationPlanReference>
+    <r:URN>urn:ddi:ca.statcan:c0ef1603-997e-5961-94b1-b557f892e2b2:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c0ef1603-997e-5961-94b1-b557f892e2b2</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ObservationPlan</r:TypeOfObject>
+  </d:ObservationPlanReference>
+</d:DataCaptureMethod>

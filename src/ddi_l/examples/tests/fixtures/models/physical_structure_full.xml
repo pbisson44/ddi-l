@@ -1,0 +1,14 @@
+<p:PhysicalStructure xmlns:p="ddi:physicaldataproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>f9044e22-a531-56ae-bb83-b169410ec423</r:ID>
+  <r:Version>1</r:Version>
+  <p:PhysicalStructureName>
+    <r:String xml:lang="en">ASCII layout</r:String>
+  </p:PhysicalStructureName>
+  <p:FileFormat>text/plain</p:FileFormat>
+  <r:DefaultDataType>string</r:DefaultDataType>
+  <r:DefaultDelimiter>comma</r:DefaultDelimiter>
+  <r:DefaultDecimalPositions>2</r:DefaultDecimalPositions>
+  <r:DefaultDecimalSeparator>.</r:DefaultDecimalSeparator>
+  <r:DefaultDigitGroupSeparator> </r:DefaultDigitGroupSeparator>
+</p:PhysicalStructure>

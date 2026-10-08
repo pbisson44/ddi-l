@@ -1,0 +1,52 @@
+<r:QualityScheme xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>48a93bee-c354-5897-a133-e0a5f4cd6084</r:ID>
+  <r:Version>1</r:Version>
+  <r:QualitySchemeName>
+    <r:String xml:lang="en">Lifecycle quality assets</r:String>
+  </r:QualitySchemeName>
+  <r:QualityStatement>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>aa6a5fa5-2394-5dd4-993d-02d6a3165fa3</r:ID>
+    <r:Version>1</r:Version>
+    <r:QualityStatementName>
+      <r:String xml:lang="en">Inline statement</r:String>
+    </r:QualityStatementName>
+  </r:QualityStatement>
+  <r:QualityStatementReference>
+    <r:URN>urn:ddi:ca.statcan:d1030bb2-3d85-5892-9e8b-b7c50bd068dc:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d1030bb2-3d85-5892-9e8b-b7c50bd068dc</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+  <r:QualityStandard>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9f6c2ba2-3b34-562a-84d0-6baac0803b44</r:ID>
+    <r:Version>1</r:Version>
+    <r:QualityStandardName>
+      <r:String xml:lang="en">Inline standard</r:String>
+    </r:QualityStandardName>
+  </r:QualityStandard>
+  <r:QualityStandardReference>
+    <r:URN>urn:ddi:ca.statcan:a7b7e383-45a9-57ae-8b2b-4e1f1795385c:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a7b7e383-45a9-57ae-8b2b-4e1f1795385c</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStandard</r:TypeOfObject>
+  </r:QualityStandardReference>
+  <r:QualityStatementGroupReference>
+    <r:URN>urn:ddi:ca.statcan:97baeea4-82e8-5ddb-a33b-f1ee2128cf14:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>97baeea4-82e8-5ddb-a33b-f1ee2128cf14</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatementGroup</r:TypeOfObject>
+  </r:QualityStatementGroupReference>
+  <r:QualityStandardGroupReference>
+    <r:URN>urn:ddi:ca.statcan:92984e14-0ae7-5c70-a5b8-6d221ced56fa:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>92984e14-0ae7-5c70-a5b8-6d221ced56fa</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStandardGroup</r:TypeOfObject>
+  </r:QualityStandardGroupReference>
+</r:QualityScheme>

@@ -1,0 +1,42 @@
+<c:ConceptualVariable xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>100f4d61-d588-5f9b-99fa-5a3160d7d024</r:ID>
+  <r:Version>1</r:Version>
+  <c:ConceptualVariableName>
+    <r:String xml:lang="en">Adult satisfaction</r:String>
+  </c:ConceptualVariableName>
+  <r:Label>
+    <r:Content xml:lang="en">Satisfaction for adults</r:Content>
+  </r:Label>
+  <r:Description>
+    <r:Content xml:lang="en">Tracks satisfaction among adults.</r:Content>
+  </r:Description>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:196d33a4-7699-5eef-b71a-c7f42db2f25d:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>196d33a4-7699-5eef-b71a-c7f42db2f25d</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:fc9ee73f-84c6-5168-8215-5a6b6d4425fb:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>fc9ee73f-84c6-5168-8215-5a6b6d4425fb</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:UnitTypeReference>
+    <r:URN>urn:ddi:ca.statcan:17822bdd-0723-5340-8bb3-f0daaa7bee89:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>17822bdd-0723-5340-8bb3-f0daaa7bee89</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>UnitType</r:TypeOfObject>
+  </r:UnitTypeReference>
+  <r:CategorySchemeReference>
+    <r:URN>urn:ddi:ca.statcan:a4b4bf9a-39f0-5459-9d4f-2479d39144f4:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a4b4bf9a-39f0-5459-9d4f-2479d39144f4</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CategoryScheme</r:TypeOfObject>
+  </r:CategorySchemeReference>
+</c:ConceptualVariable>

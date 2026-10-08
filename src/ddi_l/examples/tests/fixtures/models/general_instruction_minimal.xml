@@ -1,0 +1,19 @@
+<d:GeneralInstruction xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isOverride="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>71bc1d90-a2bc-552d-a958-66c039b738c7</r:ID>
+  <r:Version>1</r:Version>
+  <r:Description>
+    <r:Content xml:lang="en">Apply fallback editing rule.</r:Content>
+  </r:Description>
+  <r:CommandCode>
+    <r:Description>
+      <r:Content xml:lang="en">Review blank items for manual follow-up.</r:Content>
+    </r:Description>
+  </r:CommandCode>
+  <d:OverriddenCodeReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7be9e380-2247-56f3-8c32-efd19788a85a</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GeneralInstruction</r:TypeOfObject>
+  </d:OverriddenCodeReference>
+</d:GeneralInstruction>

@@ -1,0 +1,259 @@
+<d:DataCollection xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>9ab8c3f8-aa48-5e51-9698-429ff74ca50f</r:ID>
+  <r:Version>1</r:Version>
+  <d:QuestionScheme>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>03088309-1009-5f8d-9b9e-e6f483deaacf</r:ID>
+    <r:Version>1</r:Version>
+    <d:QuestionItem>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
+      <r:Version>1</r:Version>
+      <d:QuestionText>
+        <d:LiteralText>
+          <d:Text xml:lang="en" isPlainText="true">What is your name?</d:Text>
+        </d:LiteralText>
+        <d:LiteralText>
+          <d:Text xml:lang="fr">Comment vous appelez-vous ?</d:Text>
+        </d:LiteralText>
+      </d:QuestionText>
+    </d:QuestionItem>
+    <d:QuestionItemReference>
+      <r:URN>urn:ddi:example.partner:31d44ddb-1d00-531a-8fad-bf9416a72e2d:2</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>31d44ddb-1d00-531a-8fad-bf9416a72e2d</r:ID>
+      <r:Version>2</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </d:QuestionItemReference>
+    <d:QuestionGrid>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>cd435e19-0e9a-57cc-b609-50126a9ae5e0</r:ID>
+      <r:Version>1</r:Version>
+      <d:QuestionGridName>
+        <r:String xml:lang="en">Time diary grid</r:String>
+      </d:QuestionGridName>
+      <d:QuestionText audienceLanguage="en" isStructureRequired="true">
+        <d:LiteralText>
+          <d:Text xml:lang="en">Record activities for each hour.</d:Text>
+        </d:LiteralText>
+      </d:QuestionText>
+      <d:QuestionIntent>
+        <r:Content xml:lang="en">Capture daily routines</r:Content>
+      </d:QuestionIntent>
+      <d:GridDimension rank="1" displayCode="true">
+        <d:CodeDomain>
+          <r:CodeListReference>
+            <r:Agency>example.agency</r:Agency>
+            <r:ID>854e5f15-89e7-5d7b-8aa0-b50dd426190b</r:ID>
+            <r:Version>1</r:Version>
+            <r:TypeOfObject>CodeList</r:TypeOfObject>
+          </r:CodeListReference>
+        </d:CodeDomain>
+        <d:CreateSummary>
+          <r:Description>
+            <r:Content xml:lang="en">Calculate the total number of reported hours.</r:Content>
+          </r:Description>
+          <r:Command>
+            <r:ProgramLanguage>pseudo</r:ProgramLanguage>
+            <r:CommandContent>total_hours = SUM(responses)</r:CommandContent>
+          </r:Command>
+        </d:CreateSummary>
+      </d:GridDimension>
+      <d:GridDimension rank="2" displayLabel="false">
+        <d:Roster baseCodeValue="1" codeIterationValue="1"/>
+      </d:GridDimension>
+      <d:TextDomainReference>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>ca2ec266-a4ab-59f5-aa57-86b53736bfa9</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>ManagedTextRepresentation</r:TypeOfObject>
+      </d:TextDomainReference>
+      <d:CellLabel>
+        <r:Content xml:lang="en">Activity</r:Content>
+      </d:CellLabel>
+      <d:FixedCellValue>
+        <r:Value>Sleep</r:Value>
+      </d:FixedCellValue>
+      <d:ExternalAid>
+        <r:OtherMaterialReference>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>273999de-e20d-5db6-86e6-462da3d16b58</r:ID>
+          <r:Version>1</r:Version>
+          <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+        </r:OtherMaterialReference>
+      </d:ExternalAid>
+      <d:InterviewerInstructionReference>
+        <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Instruction</r:TypeOfObject>
+      </d:InterviewerInstructionReference>
+      <d:ExternalInterviewerInstruction>
+        <r:OtherMaterial>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>aadbbc6f-4ca2-5bdd-aad0-0e6f53036e4b</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Description>
+            <r:Content xml:lang="en">See laminated quick reference.</r:Content>
+          </r:Description>
+        </r:OtherMaterial>
+      </d:ExternalInterviewerInstruction>
+    </d:QuestionGrid>
+    <d:QuestionGridReference>
+      <r:URN>urn:ddi:example.partner:7f8cb5da-034d-5b14-b460-2650711ade6b:2</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>7f8cb5da-034d-5b14-b460-2650711ade6b</r:ID>
+      <r:Version>2</r:Version>
+      <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
+    </d:QuestionGridReference>
+    <d:QuestionBlock>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>07bceaa1-296a-5d15-97e0-b39ca5e330a7</r:ID>
+      <r:Version>1</r:Version>
+      <d:QuestionBlockName>
+        <r:String xml:lang="en">Household roster block</r:String>
+      </d:QuestionBlockName>
+      <d:QuestionItemReference>
+        <r:URN>urn:ddi:example.agency:4b3ca828-1aa5-53d2-a019-bc43fe4e6c62:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+      </d:QuestionItemReference>
+      <d:QuestionGridReference>
+        <r:URN>urn:ddi:example.agency:cd435e19-0e9a-57cc-b609-50126a9ae5e0:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>cd435e19-0e9a-57cc-b609-50126a9ae5e0</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
+      </d:QuestionGridReference>
+      <d:InterviewerInstructionReference>
+        <r:URN>urn:ddi:example.agency:0027ae0d-2abd-5582-915a-ef2370170221:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Instruction</r:TypeOfObject>
+      </d:InterviewerInstructionReference>
+      <d:ExternalInterviewerInstruction>
+        <r:OtherMaterial>
+          <r:Agency>example.agency</r:Agency>
+          <r:ID>a0d7ec9b-092a-57ec-84b2-0188f75a10d7</r:ID>
+          <r:Version>1.0</r:Version>
+          <r:Description>
+            <r:Content xml:lang="fr">Consultez l'aide-mémoire.</r:Content>
+          </r:Description>
+        </r:OtherMaterial>
+      </d:ExternalInterviewerInstruction>
+    </d:QuestionBlock>
+    <d:QuestionBlockReference>
+      <r:URN>urn:ddi:example.partner:f54e51b5-f498-5d8a-9d44-54e437777330:2</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>f54e51b5-f498-5d8a-9d44-54e437777330</r:ID>
+      <r:Version>2</r:Version>
+      <r:TypeOfObject>QuestionBlock</r:TypeOfObject>
+    </d:QuestionBlockReference>
+    <d:QuestionGroup isOrdered="true">
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>e8c5533f-928a-53c3-921c-b7f407822793</r:ID>
+      <r:Version>1</r:Version>
+      <d:QuestionGroupName>
+        <r:String xml:lang="en">Roster</r:String>
+      </d:QuestionGroupName>
+      <d:QuestionItemReference>
+        <r:URN>urn:ddi:example.agency:4b3ca828-1aa5-53d2-a019-bc43fe4e6c62:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+      </d:QuestionItemReference>
+      <d:QuestionBlockReference>
+        <r:URN>urn:ddi:example.agency:07bceaa1-296a-5d15-97e0-b39ca5e330a7:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>07bceaa1-296a-5d15-97e0-b39ca5e330a7</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>QuestionBlock</r:TypeOfObject>
+      </d:QuestionBlockReference>
+    </d:QuestionGroup>
+    <d:QuestionGroupReference>
+      <r:URN>urn:ddi:example.partner:425cf059-fd2e-59e0-9b53-715a554bdfc4:2</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>425cf059-fd2e-59e0-9b53-715a554bdfc4</r:ID>
+      <r:Version>2</r:Version>
+      <r:TypeOfObject>QuestionGroup</r:TypeOfObject>
+    </d:QuestionGroupReference>
+  </d:QuestionScheme>
+  <r:InterviewerInstructionSchemeReference>
+    <r:URN>urn:ddi:example.partner:b111ecd4-1c07-5c63-ace1-18ab845f0e02:1</r:URN>
+    <r:Agency>example.partner</r:Agency>
+    <r:ID>b111ecd4-1c07-5c63-ace1-18ab845f0e02</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>InterviewerInstructionScheme</r:TypeOfObject>
+  </r:InterviewerInstructionSchemeReference>
+  <d:InterviewerInstructionScheme>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>f581c978-37d0-5aa6-a218-294b23bb86bd</r:ID>
+    <r:Version>1</r:Version>
+    <d:Instruction>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+      <r:Version>1</r:Version>
+      <d:InstructionName>
+        <r:String xml:lang="en">Intro prompt</r:String>
+      </d:InstructionName>
+      <d:InstructionText audienceLanguage="en-CA">
+        <d:LiteralText>
+          <d:Text xml:lang="en">Introduce yourself before beginning.</d:Text>
+        </d:LiteralText>
+      </d:InstructionText>
+      <d:InstructionText audienceLanguage="fr-CA">
+        <d:LiteralText>
+          <d:Text xml:lang="fr">Présentez-vous avant de commencer.</d:Text>
+        </d:LiteralText>
+      </d:InstructionText>
+    </d:Instruction>
+    <d:Instruction>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>
+      <r:Version>1</r:Version>
+      <d:InstructionName>
+        <r:String xml:lang="en">Roster probe</r:String>
+      </d:InstructionName>
+      <d:InstructionText audienceLanguage="en" isStructureRequired="false">
+        <d:LiteralText>
+          <d:Text xml:lang="en">Ask if anyone else stayed overnight.</d:Text>
+        </d:LiteralText>
+      </d:InstructionText>
+    </d:Instruction>
+    <d:InstructionReference>
+      <r:URN>urn:ddi:example.partner:3a50db95-c980-5697-8063-ed8c61625dc8:3</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>3a50db95-c980-5697-8063-ed8c61625dc8</r:ID>
+      <r:Version>3</r:Version>
+      <r:TypeOfObject>Instruction</r:TypeOfObject>
+    </d:InstructionReference>
+    <d:InstructionGroup isOrdered="true">
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>9c7402f4-a692-56ee-a17f-efc4e8b1a454</r:ID>
+      <r:Version>1</r:Version>
+      <d:InstructionGroupName>
+        <r:String xml:lang="en">Training set</r:String>
+      </d:InstructionGroupName>
+      <d:InstructionReference>
+        <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Instruction</r:TypeOfObject>
+      </d:InstructionReference>
+    </d:InstructionGroup>
+    <d:InstructionGroupReference>
+      <r:URN>urn:ddi:example.partner:62d21c6b-aa2b-5319-9614-c5671313854c:2</r:URN>
+      <r:Agency>example.partner</r:Agency>
+      <r:ID>62d21c6b-aa2b-5319-9614-c5671313854c</r:ID>
+      <r:Version>2</r:Version>
+      <r:TypeOfObject>InstructionGroup</r:TypeOfObject>
+    </d:InstructionGroupReference>
+  </d:InterviewerInstructionScheme>
+</d:DataCollection>

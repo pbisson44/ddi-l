@@ -1,0 +1,284 @@
+/* Accessibility enhancements for ddi-l documentation */
+:root {
+  --ddi-focus-color: var(--md-primary-fg-color);
+  --ddi-focus-ring: 0 0 0 3px var(--md-primary-fg-color--light, var(--md-primary-fg-color));
+  --ddi-text-color: var(--md-default-fg-color, #1b1b1b);
+  --ddi-background-color: var(--md-default-bg-color, #ffffff);
+}
+
+html[data-md-color-scheme] body {
+  color: var(--ddi-text-color);
+  background-color: var(--ddi-background-color);
+}
+
+html[data-md-color-scheme] .skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--md-default-bg-color, #ffffff);
+  color: var(--ddi-focus-color);
+  font-weight: 600;
+  border: 2px solid var(--ddi-focus-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: top 0.2s ease-in-out;
+  z-index: 1000;
+}
+
+html[data-md-color-scheme] .skip-link:focus,
+html[data-md-color-scheme] .skip-link:focus-visible {
+  top: 1rem;
+  outline: none;
+}
+
+:focus,
+:focus-visible {
+  outline: 3px solid var(--ddi-focus-color);
+  outline-offset: 3px;
+  box-shadow: var(--ddi-focus-ring);
+}
+
+.ddi-palette-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+html[data-md-color-scheme] .ddi-palette-group__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ddi-text-color);
+}
+
+html[data-md-color-scheme] .ddi-palette-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color, #ffffff);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+html[data-md-color-scheme] .ddi-palette-button:hover,
+html[data-md-color-scheme] .ddi-palette-button:focus {
+  background-color: var(--md-primary-fg-color--light, var(--md-primary-fg-color));
+  color: var(--md-primary-bg-color, #ffffff);
+}
+
+html[data-md-color-scheme] .ddi-palette-button[aria-pressed="true"] {
+  border-color: var(--ddi-focus-color);
+  box-shadow: var(--ddi-focus-ring);
+}
+
+@media screen and (max-width: 960px) {
+  .ddi-palette-group {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .ddi-palette-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+code,
+pre {
+  color: var(--md-code-fg-color);
+}
+
+/* Ensure inline code and keyboard shortcuts meet contrast requirements */
+code,
+kbd {
+  background-color: var(--md-code-bg-color);
+  border: 1px solid var(--md-code-border-color, var(--md-default-fg-color--lighter));
+}
+
+/* Table headers for accessible contrast */
+html[data-md-color-scheme] th {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color, #ffffff);
+}
+
+/* ========================================
+   Screen Reader Only Utility
+   ======================================== */
+ 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+ 
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+ 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+ 
+.ddi-reduced-motion *,
+.ddi-reduced-motion *::before,
+.ddi-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+ 
+/* ========================================
+   Version Warning Banner Styles
+   ======================================== */
+ 
+.md-banner--warning {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-bottom: 1px solid #fcd34d;
+}
+ 
+[data-md-color-scheme="slate"] .md-banner--warning,
+[data-md-color-scheme="high-contrast"] .md-banner--warning {
+  background-color: #78350f;
+  color: #fef3c7;
+  border-bottom-color: #b45309;
+}
+ 
+.md-banner--warning a {
+  color: inherit;
+  text-decoration: underline;
+}
+ 
+.md-banner--warning a:hover,
+.md-banner--warning a:focus {
+  text-decoration: none;
+}
+
+/* Remind authors to avoid PHI/HIPAA violations in sample content */
+/* When creating examples, always de-identify datasets, use synthetic records, and remove any Protected Health Information (PHI).
+   Confirm examples align with HIPAA Safe Harbor guidelines before publishing tutorials or walkthroughs. */
+
+/* ---------------------------------------------------------------------------
+   Accessibility palette menu
+
+   Material cycles its header toggle through every palette entry that declares
+   a `toggle:`. All six palettes used to sit on that one control, so returning
+   to light mode took six presses and the button's label changed meaning each
+   time. The four accessibility palettes now have no `toggle:` and are picked
+   from here instead; see the comment in mkdocs.yml.
+
+   The menu drives Material's own `#__palette_N` radio inputs, so selection is
+   applied and persisted by Material rather than by hand.
+   --------------------------------------------------------------------------- */
+
+.ddi-palette-menu {
+  position: fixed;
+  inset-block-start: 0.35rem;
+  inset-inline-end: 0.35rem;
+  z-index: 5;
+}
+
+.ddi-palette-menu__details {
+  position: relative;
+}
+
+.ddi-palette-menu__summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--md-primary-bg-color, #fff);
+  list-style: none;
+}
+
+/* Safari renders a disclosure triangle without this. */
+.ddi-palette-menu__summary::-webkit-details-marker {
+  display: none;
+}
+
+.ddi-palette-menu__summary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.ddi-palette-menu__summary:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color, #f97316);
+  outline-offset: 2px;
+}
+
+.ddi-palette-menu__icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.ddi-palette-menu__list {
+  position: absolute;
+  inset-block-start: calc(100% + 0.3rem);
+  inset-inline-end: 0;
+  min-width: 11rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  border-radius: 0.2rem;
+  background-color: var(--md-default-bg-color, #fff);
+  color: var(--md-default-fg-color, #000);
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.ddi-palette-menu__list > li {
+  margin: 0;
+}
+
+.ddi-palette-menu__option {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 0.15rem;
+  background: none;
+  color: inherit;
+  font-size: 0.7rem;
+  text-align: start;
+  cursor: pointer;
+}
+
+.ddi-palette-menu__option:hover {
+  background-color: var(--md-default-fg-color--lightest, rgba(0, 0, 0, 0.07));
+}
+
+.ddi-palette-menu__option:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color, #f97316);
+  outline-offset: -2px;
+}
+
+/* The high-contrast palette paints its own borders rather than relying on the
+   shadow, which is invisible against a pure black background. */
+[data-md-color-scheme="high-contrast"] .ddi-palette-menu__list {
+  border: 1px solid var(--md-default-fg-color, #fff);
+}

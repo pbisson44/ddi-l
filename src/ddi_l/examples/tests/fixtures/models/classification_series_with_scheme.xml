@@ -1,0 +1,57 @@
+<l:ClassificationSeries xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3" versionDate="2024-01-05" isPublished="true">
+  <r:URN>urn:ddi:ca.statcan:21ab282f-f61d-5971-9606-a363b57c433e:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>21ab282f-f61d-5971-9606-a363b57c433e</r:ID>
+  <r:Version>1</r:Version>
+  <r:Name>
+    <r:String xml:lang="en">International Activity Series</r:String>
+  </r:Name>
+  <l:SeriesContext controlledVocabularyID="SeriesContext">International</l:SeriesContext>
+  <l:UnitTypeClassifiedReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c8c37952-1d3a-527d-9c1b-481d0b61fbf2</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>UnitType</r:TypeOfObject>
+  </l:UnitTypeClassifiedReference>
+  <l:SubjectArea controlledVocabularyID="SubjectArea">Economy</l:SubjectArea>
+  <l:OwnerReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7f43194b-3b4a-5ac4-bd86-829690e8bc89</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Organization</r:TypeOfObject>
+  </l:OwnerReference>
+  <r:Keyword controlledVocabularyID="KeywordSet">Industry</r:Keyword>
+  <l:StatisticalClassification versionDate="2024-03-01">
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>79591d93-1047-542b-a355-3d028213e31d</r:ID>
+    <r:Version>1</r:Version>
+    <r:Name>
+      <r:String xml:lang="en">Inline Activity Classification</r:String>
+    </r:Name>
+    <l:IsCurrent>true</l:IsCurrent>
+    <l:LevelContext>
+      <l:LevelNumber>1</l:LevelNumber>
+      <l:ClassificationItem>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>592e0469-f154-5936-913b-19886696955f</r:ID>
+        <r:Version>1</r:Version>
+        <r:Name>
+          <r:String xml:lang="en">Processing</r:String>
+        </r:Name>
+        <l:ItemCode>P</l:ItemCode>
+      </l:ClassificationItem>
+    </l:LevelContext>
+  </l:StatisticalClassification>
+  <r:StatisticalClassificationReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
+  </r:StatisticalClassificationReference>
+  <l:CurrentStatisticalClassificationReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
+  </l:CurrentStatisticalClassificationReference>
+</l:ClassificationSeries>

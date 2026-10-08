@@ -1,0 +1,67 @@
+<d:Methodology xmlns:d="ddi:datacollection:3_3" xmlns:m="urn:ddi-l:extension:methodology:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>dc740e23-d67a-56be-9a60-123e11ea2d93</r:ID>
+  <r:Version>1</r:Version>
+  <m:MethodologyName>
+    <r:String xml:lang="en">Household methodology</r:String>
+  </m:MethodologyName>
+  <m:MethodologyItem>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>46f78f92-5591-5fc0-945f-3e5fa440ddb4</r:ID>
+    <r:Version>1</r:Version>
+    <m:MethodologyItemName>
+      <r:String xml:lang="en">Weighting overview</r:String>
+    </m:MethodologyItemName>
+    <m:MethodologyStatement>
+      <r:Content xml:lang="en">Design weights adjusted for unit non-response.</r:Content>
+    </m:MethodologyStatement>
+    <m:ReviewEvent>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>f1cfd04b-cd41-5a25-a9c4-5025c6b0da32</r:ID>
+      <r:Version>1</r:Version>
+      <m:ReviewEventName>
+        <r:String xml:lang="en">Internal QA</r:String>
+      </m:ReviewEventName>
+      <m:TypeOfReviewEvent>internal</m:TypeOfReviewEvent>
+    </m:ReviewEvent>
+  </m:MethodologyItem>
+  <d:SamplingProcedure>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d4ffba25-6a7f-5572-8484-fc27016fa7b9</r:ID>
+    <r:Version>1</r:Version>
+    <m:MethodologyStatement>
+      <r:Content xml:lang="en">Probability proportional to size with stratification.</r:Content>
+    </m:MethodologyStatement>
+    <d:TypeOfSamplingProcedure>pps</d:TypeOfSamplingProcedure>
+    <d:SamplingPlanReference>
+      <r:URN>urn:ddi:ca.statcan:ceacb411-03ff-5df3-9162-0b582dbdbf35:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>ceacb411-03ff-5df3-9162-0b582dbdbf35</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>SamplingPlan</r:TypeOfObject>
+    </d:SamplingPlanReference>
+  </d:SamplingProcedure>
+  <m:ReviewEvent>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>6773f912-0118-538c-a30a-07f891d816c7</r:ID>
+    <r:Version>1</r:Version>
+    <m:ReviewEventName>
+      <r:String xml:lang="en">External panel</r:String>
+    </m:ReviewEventName>
+    <m:TypeOfReviewEvent>external</m:TypeOfReviewEvent>
+  </m:ReviewEvent>
+  <m:ReviewEventReference>
+    <r:URN>urn:ddi:ca.statcan:6773f912-0118-538c-a30a-07f891d816c7:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>6773f912-0118-538c-a30a-07f891d816c7</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ReviewEvent</r:TypeOfObject>
+  </m:ReviewEventReference>
+  <r:QualityStatementReference>
+    <r:URN>urn:ddi:ca.statcan:8cc8436f-641b-5e4c-984f-f30c72f65586:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>8cc8436f-641b-5e4c-984f-f30c72f65586</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStatement</r:TypeOfObject>
+  </r:QualityStatementReference>
+</d:Methodology>

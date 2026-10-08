@@ -1,0 +1,30 @@
+<d:SamplingInformationGroup xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>2d080064-2a30-562e-9715-aa165306d8b2</r:ID>
+  <r:Version>1</r:Version>
+  <d:TypeOfSamplingInformationGroup>PrimarySample</d:TypeOfSamplingInformationGroup>
+  <d:SamplingInformationGroupName>
+    <r:String xml:lang="en">Primary selection</r:String>
+  </d:SamplingInformationGroupName>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:23481873-172e-58eb-ac42-871fbb975889:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>23481873-172e-58eb-ac42-871fbb975889</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <d:SampleFrameReference>
+    <r:URN>urn:ddi:ca.statcan:d6aacb2e-8d27-54d0-a483-a6ea15d1c5b3:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d6aacb2e-8d27-54d0-a483-a6ea15d1c5b3</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>SampleFrame</r:TypeOfObject>
+  </d:SampleFrameReference>
+  <d:SamplingPlanReference>
+    <r:URN>urn:ddi:ca.statcan:d7edab8c-f13c-5eb1-9d37-8f90013f5eae:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d7edab8c-f13c-5eb1-9d37-8f90013f5eae</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>SamplingPlan</r:TypeOfObject>
+  </d:SamplingPlanReference>
+</d:SamplingInformationGroup>

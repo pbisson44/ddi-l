@@ -1,0 +1,90 @@
+name: "Bug report"
+description: "Report incorrect behaviour in the ddi-l library or the ddi CLI."
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The fields below are the ones that usually
+        decide whether a bug can be reproduced on the first try.
+
+        If this is a security issue, please **do not** file it here; follow
+        [SECURITY.md](https://github.com/pbisson44/ddi-l/blob/main/SECURITY.md)
+        so it can be handled privately.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: What did you expect, and what did you get instead?
+      placeholder: "doc.add_variable() raised DDIModelError, but the same call worked in 0.1.0."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: >-
+        The shortest Python snippet or `ddi` command that shows the problem.
+        A snippet that runs as-is is worth far more than a description of one.
+      render: python
+      placeholder: |
+        import ddi_l as ddi
+
+        doc = ddi.new_study(title="Example", agency="example.org")
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Traceback or CLI output
+      description: Paste the full traceback, or the command output and its exit code.
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: ddi-l version
+      description: "Output of `ddi --version`, or `python -c \"import ddi_l; print(ddi_l.__version__)\"`."
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      description: "Output of `python --version`."
+      placeholder: "3.12.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: XML backend
+      description: >-
+        `ddi-l` runs on the standard library by default and on lxml when
+        `ddi-l[full]` is installed. Several past bugs appeared on only one.
+      options:
+        - "Not sure"
+        - "Standard library (default install)"
+        - "lxml (installed ddi-l[full])"
+    validations:
+      required: true
+  - type: input
+    id: ddi-version
+    attributes:
+      label: DDI schema version
+      description: Which DDI Lifecycle release the document targets, if relevant.
+      placeholder: "3.3"
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Ubuntu 24.04 / macOS 15.2 / Windows 11"
+    validations:
+      required: false

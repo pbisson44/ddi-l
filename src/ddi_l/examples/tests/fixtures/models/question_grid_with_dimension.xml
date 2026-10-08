@@ -1,0 +1,71 @@
+<d:QuestionGrid xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>cd435e19-0e9a-57cc-b609-50126a9ae5e0</r:ID>
+  <r:Version>1</r:Version>
+  <d:QuestionGridName>
+    <r:String xml:lang="en">Time diary grid</r:String>
+  </d:QuestionGridName>
+  <d:QuestionText audienceLanguage="en" isStructureRequired="true">
+    <d:LiteralText>
+      <d:Text xml:lang="en">Record activities for each hour.</d:Text>
+    </d:LiteralText>
+  </d:QuestionText>
+  <d:QuestionIntent>
+    <r:Content xml:lang="en">Capture daily routines</r:Content>
+  </d:QuestionIntent>
+  <d:GridDimension rank="1" displayCode="true">
+    <d:CodeDomain>
+      <r:CodeListReference>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>854e5f15-89e7-5d7b-8aa0-b50dd426190b</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>CodeList</r:TypeOfObject>
+      </r:CodeListReference>
+    </d:CodeDomain>
+      <d:CreateSummary>
+        <r:Description>
+          <r:Content xml:lang="en">Total hours</r:Content>
+        </r:Description>
+      </d:CreateSummary>
+  </d:GridDimension>
+  <d:GridDimension rank="2" displayLabel="false">
+    <d:Roster baseCodeValue="1" codeIterationValue="1" />
+  </d:GridDimension>
+  <d:TextDomainReference>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>ca2ec266-a4ab-59f5-aa57-86b53736bfa9</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ManagedTextRepresentation</r:TypeOfObject>
+  </d:TextDomainReference>
+  <d:CellLabel>
+    <r:Content xml:lang="en">Activity</r:Content>
+  </d:CellLabel>
+  <d:FixedCellValue>
+    <r:Value>Sleep</r:Value>
+  </d:FixedCellValue>
+  <d:ExternalAid>
+    <r:OtherMaterialReference>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>273999de-e20d-5db6-86e6-462da3d16b58</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+    </r:OtherMaterialReference>
+  </d:ExternalAid>
+  <d:InterviewerInstructionReference isDisplayed="true">
+    <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Instruction</r:TypeOfObject>
+  </d:InterviewerInstructionReference>
+  <d:ExternalInterviewerInstruction>
+    <r:OtherMaterial>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>aadbbc6f-4ca2-5bdd-aad0-0e6f53036e4b</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Description>
+        <r:Content xml:lang="en">See laminated quick reference.</r:Content>
+      </r:Description>
+    </r:OtherMaterial>
+  </d:ExternalInterviewerInstruction>
+</d:QuestionGrid>

@@ -1,0 +1,12 @@
+<l:LogicalProduct xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>7b33e853-2e17-52fd-9af8-4abf870f2dda</r:ID>
+  <r:Version>1</r:Version>
+  <r:VariableSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:415d3249-bb48-5fec-858e-27a0ac4dec37:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>415d3249-bb48-5fec-858e-27a0ac4dec37</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>VariableScheme</r:TypeOfObject>
+  </r:VariableSchemeReference>
+</l:LogicalProduct>

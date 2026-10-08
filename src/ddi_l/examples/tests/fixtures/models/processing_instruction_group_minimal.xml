@@ -1,0 +1,27 @@
+<d:ProcessingInstructionGroup xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>700a5365-7517-5b1a-99f0-63b48ad3d50b</r:ID>
+  <r:Version>1</r:Version>
+  <d:TypeOfProcessingInstructionGroup>Editing</d:TypeOfProcessingInstructionGroup>
+  <d:ProcessingInstructionGroupName>
+    <r:String xml:lang="en">Edit pass</r:String>
+  </d:ProcessingInstructionGroupName>
+  <r:UniverseReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3ed50c19-cae8-51c9-ab3e-a60e2a30e1a5</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <d:GeneralInstructionReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>71bc1d90-a2bc-552d-a958-66c039b738c7</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GeneralInstruction</r:TypeOfObject>
+  </d:GeneralInstructionReference>
+  <d:GenerationInstructionReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>974d4f8d-9256-5eaa-9caa-ca58af642db9</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>GenerationInstruction</r:TypeOfObject>
+  </d:GenerationInstructionReference>
+</d:ProcessingInstructionGroup>

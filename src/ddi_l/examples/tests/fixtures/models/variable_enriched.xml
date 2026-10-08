@@ -1,0 +1,109 @@
+<l:Variable xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:1c4258d0-c9b7-4b5a-a3bb-1f88ed8fa9f8:6</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>1c4258d0-c9b7-4b5a-a3bb-1f88ed8fa9f8</r:ID>
+  <r:Version>6</r:Version>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:StartPosition</r:AttributeKey>
+    <r:AttributeValue>25</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:Width</r:AttributeKey>
+    <r:AttributeValue>3</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:ShouldCalculateFrequenciesForValidValues</r:AttributeKey>
+    <r:AttributeValue>False</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:ShouldCalculateFrequenciesForInvalidValues</r:AttributeKey>
+    <r:AttributeValue>True</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:VersionResponsibility>STC\bissphi</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en-CA">fixed Rep Vars</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <l:VariableName>
+    <r:String xml:lang="en-CA">AGE</r:String>
+  </l:VariableName>
+  <l:VariableName>
+    <r:String xml:lang="fr-CA">AGE</r:String>
+  </l:VariableName>
+  <r:Label>
+    <r:Content xml:lang="en-CA">Age of respondent at time of the survey interview</r:Content>
+  </r:Label>
+  <r:Label>
+    <r:Content xml:lang="fr-CA">Âge du répondant au moment de l'entretien d'enquête</r:Content>
+  </r:Label>
+  <r:Description>
+    <r:Content xml:lang="en-CA">Based on AGE_Q01A, AGE_Q01B, AGE_Q01C, and AGE_Q02</r:Content>
+    <r:Content xml:lang="fr-CA">Basé sur AGE_Q01A, AGE_Q01B, AGE_Q01C et AGE_Q02</r:Content>
+  </r:Description>
+  <r:SourceVariableReference>
+    <r:URN>urn:ddi:ca.statcan:71b990fc-5ebe-41a9-88fe-310691d3f1c2:11</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>71b990fc-5ebe-41a9-88fe-310691d3f1c2</r:ID>
+    <r:Version>11</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </r:SourceVariableReference>
+  <r:SourceVariableReference>
+    <r:URN>urn:ddi:ca.statcan:0591f90e-8bdc-4be9-8fb9-767d0a466d6a:9</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0591f90e-8bdc-4be9-8fb9-767d0a466d6a</r:ID>
+    <r:Version>9</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </r:SourceVariableReference>
+  <r:SourceVariableReference>
+    <r:URN>urn:ddi:ca.statcan:6388af7e-8c83-4194-9a06-8630f8e1ec1b:12</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>6388af7e-8c83-4194-9a06-8630f8e1ec1b</r:ID>
+    <r:Version>12</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </r:SourceVariableReference>
+  <r:SourceVariableReference>
+    <r:URN>urn:ddi:ca.statcan:606fc2e1-d46d-4601-b558-6f03257a9d2e:6</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>606fc2e1-d46d-4601-b558-6f03257a9d2e</r:ID>
+    <r:Version>6</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+  </r:SourceVariableReference>
+  <r:RepresentedVariableReference>
+    <r:URN>urn:ddi:ca.statcan:79afe111-37e9-41a2-9538-dc27fbbe2448:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>79afe111-37e9-41a2-9538-dc27fbbe2448</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>RepresentedVariable</r:TypeOfObject>
+  </r:RepresentedVariableReference>
+  <r:ConceptualVariableReference>
+    <r:URN>urn:ddi:ca.statcan:c804a92a-30f3-4b52-92df-0352966f6b44:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>c804a92a-30f3-4b52-92df-0352966f6b44</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ConceptualVariable</r:TypeOfObject>
+  </r:ConceptualVariableReference>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:d1cceea5-644c-457d-adbb-0a6f931fac33:3</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d1cceea5-644c-457d-adbb-0a6f931fac33</r:ID>
+    <r:Version>3</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:7932e3cf-155d-4733-8f21-d4b921c1d6ad:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>7932e3cf-155d-4733-8f21-d4b921c1d6ad</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <l:VariableRepresentation>
+    <r:NumericRepresentation blankIsMissingValue="false">
+      <r:NumberRange>
+        <r:Low isInclusive="false">15</r:Low>
+        <r:High isInclusive="false">103</r:High>
+      </r:NumberRange>
+      <r:NumericTypeCode>Integer</r:NumericTypeCode>
+    </r:NumericRepresentation>
+  </l:VariableRepresentation>
+</l:Variable>

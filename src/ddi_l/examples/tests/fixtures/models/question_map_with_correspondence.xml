@@ -1,0 +1,55 @@
+<cmp:QuestionMap xmlns:cmp="ddi:comparative:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>03f54ce8-4a2a-5097-87f0-55fc7ee14728</r:ID>
+  <r:Version>1</r:Version>
+  <cmp:TypeOfMappedItem>Question</cmp:TypeOfMappedItem>
+  <cmp:MapName>
+    <r:String xml:lang="en">Household income question</r:String>
+  </cmp:MapName>
+  <cmp:SourceSchemeReference>
+    <r:URN>urn:ddi:ca.statcan:25e837cf-bab1-5f3a-ace3-d211c7a5853b:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>25e837cf-bab1-5f3a-ace3-d211c7a5853b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionScheme</r:TypeOfObject>
+  </cmp:SourceSchemeReference>
+  <cmp:TargetSchemeReference>
+    <r:URN>urn:ddi:harmonised.agency:1b2ec422-f63f-545c-801c-5ef8f9bd653b:1</r:URN>
+    <r:Agency>harmonised.agency</r:Agency>
+    <r:ID>1b2ec422-f63f-545c-801c-5ef8f9bd653b</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionScheme</r:TypeOfObject>
+  </cmp:TargetSchemeReference>
+  <cmp:ItemMap>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>91cd17c6-caae-5efe-bc67-c0caf74495ac</r:ID>
+    <r:Version>1</r:Version>
+    <cmp:SourceItemReference>
+      <r:URN>urn:ddi:ca.statcan:9d7e7843-e406-5140-b227-2a6e78262422:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>9d7e7843-e406-5140-b227-2a6e78262422</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </cmp:SourceItemReference>
+    <cmp:TargetItemReference>
+      <r:URN>urn:ddi:harmonised.agency:bb522755-2cef-5184-aa32-7ed6848312c4:1</r:URN>
+      <r:Agency>harmonised.agency</r:Agency>
+      <r:ID>bb522755-2cef-5184-aa32-7ed6848312c4</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </cmp:TargetItemReference>
+    <cmp:Correspondence>
+      <cmp:Commonality>
+        <r:Content xml:lang="en">Shared universe and response type</r:Content>
+      </cmp:Commonality>
+      <cmp:CommonalityWeight>0.8</cmp:CommonalityWeight>
+    </cmp:Correspondence>
+    <cmp:RelatedMapReference>
+      <r:URN>urn:ddi:ca.statcan:d9fb6b2a-369a-5a35-8ccf-efef856c517a:1</r:URN>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>d9fb6b2a-369a-5a35-8ccf-efef856c517a</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>VariableMap</r:TypeOfObject>
+    </cmp:RelatedMapReference>
+  </cmp:ItemMap>
+</cmp:QuestionMap>

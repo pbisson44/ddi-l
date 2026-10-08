@@ -1,0 +1,10 @@
+<DDIInstance xmlns="ddi:instance:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>4534a84b-faa5-59f8-8d96-164d86f82d26</r:ID>
+  <r:Version>1.0</r:Version>
+  <r:Citation>
+    <r:Title>
+      <r:String xml:lang="en">Minimal Instance</r:String>
+    </r:Title>
+  </r:Citation>
+</DDIInstance>

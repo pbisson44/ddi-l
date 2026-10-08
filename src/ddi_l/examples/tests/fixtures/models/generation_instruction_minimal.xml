@@ -1,0 +1,24 @@
+<d:GenerationInstruction xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isDerived="false">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>974d4f8d-9256-5eaa-9caa-ca58af642db9</r:ID>
+  <r:Version>1</r:Version>
+  <d:InputQuestionReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>cff13424-39ae-54cb-83ba-29e5219da425</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    <r:Alias>AGE_Q</r:Alias>
+  </d:InputQuestionReference>
+  <d:InputVariableReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>d3f82587-d5ac-5620-addf-d2b2835d3f59</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Variable</r:TypeOfObject>
+    <r:Alias>AGE</r:Alias>
+  </d:InputVariableReference>
+  <r:CommandCode>
+    <r:Description>
+      <r:Content xml:lang="en">Set AGE to 999 if response is missing.</r:Content>
+    </r:Description>
+  </r:CommandCode>
+</d:GenerationInstruction>

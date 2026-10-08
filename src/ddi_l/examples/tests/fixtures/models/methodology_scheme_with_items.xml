@@ -1,0 +1,34 @@
+<m:MethodologyScheme xmlns:m="urn:ddi-l:extension:methodology:1" xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>86378328-b66f-5a3c-8611-b5014153e09d</r:ID>
+  <r:Version>1</r:Version>
+  <m:MethodologySchemeName>
+    <r:String xml:lang="en">Survey methodology scheme</r:String>
+  </m:MethodologySchemeName>
+  <d:Methodology>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>75b4e10d-ae04-5e2d-8e32-e6b98cb724cd</r:ID>
+    <r:Version>1</r:Version>
+    <m:MethodologyName>
+      <r:String xml:lang="en">Inline methodology</r:String>
+    </m:MethodologyName>
+    <m:MethodologyItem>
+      <r:Agency>ca.statcan</r:Agency>
+      <r:ID>592e0469-f154-5936-913b-19886696955f</r:ID>
+      <r:Version>1</r:Version>
+      <m:MethodologyItemName>
+        <r:String xml:lang="en">Collection mode</r:String>
+      </m:MethodologyItemName>
+      <m:MethodologyStatement>
+        <r:Content xml:lang="en">Mixed-mode collection with CATI follow-up.</r:Content>
+      </m:MethodologyStatement>
+    </m:MethodologyItem>
+  </d:Methodology>
+  <m:MethodologyReference>
+    <r:URN>urn:ddi:ca.statcan:dc740e23-d67a-56be-9a60-123e11ea2d93:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>dc740e23-d67a-56be-9a60-123e11ea2d93</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Methodology</r:TypeOfObject>
+  </m:MethodologyReference>
+</m:MethodologyScheme>

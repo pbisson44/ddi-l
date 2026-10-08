@@ -1,0 +1,23 @@
+<d:Sequence xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:c8ef3ea1-425b-57e3-ac7c-c416ccf174c3:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>c8ef3ea1-425b-57e3-ac7c-c416ccf174c3</r:ID>
+  <r:Version>1</r:Version>
+  <r:VersionResponsibility>designer</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">first edition</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <d:ConstructName>
+    <r:String xml:lang="en">Demo Sequence</r:String>
+  </d:ConstructName>
+  <r:OutParameter>
+    <r:URN>urn:ddi:ca.statcan:a13eba57-d926-5153-b989-89a7aae7509d:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a13eba57-d926-5153-b989-89a7aae7509d</r:ID>
+    <r:Version>1</r:Version>
+    <r:Alias>Q1</r:Alias>
+    <r:CodeRepresentation blankIsMissingValue="false" />
+  </r:OutParameter>
+</d:Sequence>

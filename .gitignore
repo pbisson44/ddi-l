@@ -1,0 +1,43 @@
+# Byte-compiled / cache
+*.pyc
+__pycache__/
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Build and packaging artifacts
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+
+# Test and coverage output
+.coverage
+coverage.xml
+htmlcov/
+pytest-error.log
+logs/
+
+# Documentation build output
+site/
+
+# Generated demo artifacts. The demos write real files; the run is not
+# reproducible (identifiers are freshly generated), so the results are not
+# tracked. Tests redirect them via DDI_DEMO_OUTPUT_DIR.
+demo/output/
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# Scratch output from working through the tutorials
+module/
+
+
+# mutmut copies the project here to run mutants
+mutants/
+.mutmut-cache

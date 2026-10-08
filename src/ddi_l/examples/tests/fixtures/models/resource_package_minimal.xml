@@ -1,0 +1,16 @@
+<p0:ResourcePackage xmlns:p0="ddi:group:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:c1e51d4c-ac9d-57e3-a9ed-543e960474a2:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>c1e51d4c-ac9d-57e3-a9ed-543e960474a2</r:ID>
+  <r:Version>1</r:Version>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:CodeListReferences</r:AttributeKey>
+    <r:AttributeValue>["urn:ddi:demo:code:1"]</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:VersionResponsibility>curator</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">initial bundle</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+</p0:ResourcePackage>

@@ -1,0 +1,15 @@
+<d:InstructionGroup xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>9c7402f4-a692-56ee-a17f-efc4e8b1a454</r:ID>
+  <r:Version>1</r:Version>
+  <d:InstructionGroupName>
+    <r:String xml:lang="en">Training set</r:String>
+  </d:InstructionGroupName>
+  <d:InstructionReference>
+    <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Instruction</r:TypeOfObject>
+  </d:InstructionReference>
+</d:InstructionGroup>

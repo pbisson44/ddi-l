@@ -1,0 +1,22 @@
+<r:QualityStatement xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>d1030bb2-3d85-5892-9e8b-b7c50bd068dc</r:ID>
+  <r:Version>1</r:Version>
+  <r:QualityStatementName>
+    <r:String xml:lang="en">Overall quality</r:String>
+  </r:QualityStatementName>
+  <r:QualityStandardReference>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a7b7e383-45a9-57ae-8b2b-4e1f1795385c</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStandard</r:TypeOfObject>
+  </r:QualityStandardReference>
+  <r:ComplianceStatement>
+    <r:Content xml:lang="en">All applicable checks satisfied.</r:Content>
+  </r:ComplianceStatement>
+  <r:Compliance>
+    <r:ComplianceDescription>
+      <r:Content xml:lang="en">Meets dissemination criteria.</r:Content>
+    </r:ComplianceDescription>
+  </r:Compliance>
+</r:QualityStatement>

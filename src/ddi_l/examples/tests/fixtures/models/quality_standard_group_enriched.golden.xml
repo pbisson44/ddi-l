@@ -1,0 +1,47 @@
+<r:QualityStandardGroup xmlns:r="ddi:reusable:3_3" isOrdered="true">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>e2f2d975-480c-5ee0-8a25-a1a78dfab7dc</r:ID>
+  <r:Version>2</r:Version>
+  <r:TypeOfQualityStandardGroup controlledVocabularyID="QualityGroupType">Certification</r:TypeOfQualityStandardGroup>
+  <r:QualityStandardGroupName>
+    <r:String xml:lang="en">Certification standards</r:String>
+  </r:QualityStandardGroupName>
+  <r:QualityStandardGroupName>
+    <r:String xml:lang="fr">Normes de certification</r:String>
+  </r:QualityStandardGroupName>
+  <r:UniverseReference>
+    <r:URN>urn:ddi:ca.statcan:95d78479-4a3e-53b4-980f-036cf912ee4f:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>95d78479-4a3e-53b4-980f-036cf912ee4f</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Universe</r:TypeOfObject>
+  </r:UniverseReference>
+  <r:ConceptReference>
+    <r:URN>urn:ddi:ca.statcan:43a43a1a-d193-53e7-b97a-d2531713d7f9:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>43a43a1a-d193-53e7-b97a-d2531713d7f9</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Concept</r:TypeOfObject>
+  </r:ConceptReference>
+  <r:QualityStandardReference>
+    <r:URN>urn:ddi:ca.statcan:673839e8-e3d0-5a64-ad36-6255c03337fe:2</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>673839e8-e3d0-5a64-ad36-6255c03337fe</r:ID>
+    <r:Version>2</r:Version>
+    <r:TypeOfObject>QualityStandard</r:TypeOfObject>
+  </r:QualityStandardReference>
+  <r:QualityStandardReference>
+    <r:URN>urn:ddi:ca.statcan:9f6c2ba2-3b34-562a-84d0-6baac0803b44:1.1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9f6c2ba2-3b34-562a-84d0-6baac0803b44</r:ID>
+    <r:Version>1.1</r:Version>
+    <r:TypeOfObject>QualityStandard</r:TypeOfObject>
+  </r:QualityStandardReference>
+  <r:QualityStandardGroupReference>
+    <r:URN>urn:ddi:ca.statcan:303d7ef4-f5d4-51ec-a27b-d51bfc8e6f67:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>303d7ef4-f5d4-51ec-a27b-d51bfc8e6f67</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QualityStandardGroup</r:TypeOfObject>
+  </r:QualityStandardGroupReference>
+</r:QualityStandardGroup>

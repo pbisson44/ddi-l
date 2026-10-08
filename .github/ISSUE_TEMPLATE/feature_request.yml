@@ -1,0 +1,41 @@
+name: "Feature request"
+description: "Suggest a capability or an ergonomics improvement."
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `ddi-l` models all of DDI Lifecycle 3.3: every XSD complex type has a
+        generated class. Most requests are therefore about *ergonomics* (a
+        one-line helper for something that currently takes ten) rather than
+        missing coverage. The
+        [schema coverage page](https://pbisson44.github.io/ddi-l/schema-coverage/)
+        shows which modules already have high-level helpers.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: >-
+        Describe the task, not the solution. Knowing the underlying goal often
+        surfaces an API that already exists.
+      placeholder: "I need to attach a code list to 40 variables loaded from a CSV..."
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: How do you do it today?
+      description: The current workaround, if there is one, and why it falls short.
+      render: python
+    validations:
+      required: false
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like instead?
+      description: A sketch of the API or CLI you have in mind. Rough is fine.
+      render: python
+    validations:
+      required: false

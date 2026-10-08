@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FragmentInstance xmlns="ddi:instance:3_3" xmlns:r="ddi:reusable:3_3">
+  <TopLevelReference>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>Census2026</r:ID>
+    <r:Version>1.0</r:Version>
+    <r:TypeOfObject>StudyUnit</r:TypeOfObject>
+  </TopLevelReference>
+  <Fragment>
+    <StudyUnit xmlns="ddi:studyunit:3_3">
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>Census2026</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Citation>
+        <r:Title>
+          <r:String xml:lang="en">Census of population - 2026</r:String>
+        </r:Title>
+      </r:Citation>
+      <r:Abstract>
+        <r:Content xml:lang="en">Statistics Canada's 2026 Census of Population study unit.</r:Content>
+      </r:Abstract>
+      <r:DataCollectionReference>
+        <r:URN>urn:ddi:example.agency:c72d1e91-8d4a-5067-b15c-3b8e83daf1da:1.0</r:URN>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>c72d1e91-8d4a-5067-b15c-3b8e83daf1da</r:ID>
+        <r:Version>1.0</r:Version>
+        <r:TypeOfObject>DataCollection</r:TypeOfObject>
+      </r:DataCollectionReference>
+    </StudyUnit>
+  </Fragment>
+</FragmentInstance>

@@ -1,0 +1,59 @@
+name: Mutation testing
+
+# Weekly and on demand, not a PR gate: the run takes tens of minutes, and
+# surviving mutants (many equivalent) need judgement rather than a threshold.
+# The report is uploaded as an artifact; real findings become tests.
+on:
+  schedule:
+    # Mondays, 06:00 UTC.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      mutants:
+        description: >-
+          Specific mutant names to run (space-separated), e.g.
+          "ddi_l.io.x__tree_uses_namespace__mutmut_5". Empty runs everything in
+          scope.
+        required: false
+        default: ""
+
+env:
+  UV_VERSION: "0.9.7"
+
+jobs:
+  mutation:
+    name: Mutation testing
+    runs-on: ubuntu-latest
+    # Generous: a full run is long by nature, and killing it halfway produces
+    # no report at all.
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev --extra full --extra server
+      - name: Run mutmut
+        # Survivors are the point of the report, not a failure of the job.
+        run: uv run mutmut run ${{ inputs.mutants }} || true
+      - name: Summarise
+        run: |
+          uv run mutmut results > mutmut-results.txt 2>&1 || true
+          echo '### Surviving mutants' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          grep -c 'survived' mutmut-results.txt >> "$GITHUB_STEP_SUMMARY" || true
+          grep 'survived' mutmut-results.txt | head -40 >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: mutmut-results
+          path: mutmut-results.txt
+          if-no-files-found: warn

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DDIInstance xmlns="ddi:instance:3_3"
+             xmlns:r="ddi:reusable:3_3"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>4534a84b-faa5-59f8-8d96-164d86f82d26</r:ID>
+    <r:Version>1.0</r:Version>
+    <r:Citation>
+        <r:Title>
+            <r:String xml:lang="en">Minimal Instance</r:String>
+        </r:Title>
+    </r:Citation>
+</DDIInstance>

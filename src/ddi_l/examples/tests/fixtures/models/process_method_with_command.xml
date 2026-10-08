@@ -1,0 +1,18 @@
+<proc:ProcessMethod xmlns:proc="urn:ddi-l:extension:process:1" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>aeb66fe1-f1ea-5354-bf4e-404b461ef039</r:ID>
+  <r:Version>1</r:Version>
+  <proc:ProcessMethodName>
+    <r:String xml:lang="en">Cleaning transformation</r:String>
+  </proc:ProcessMethodName>
+  <proc:TypeOfMethod>Editing</proc:TypeOfMethod>
+  <r:CommandCode>
+    <r:Description>
+      <r:Content xml:lang="en">Normalize incoming records.</r:Content>
+    </r:Description>
+    <r:Command>
+      <r:ProgramLanguage>Python</r:ProgramLanguage>
+      <r:CommandContent>print("clean")</r:CommandContent>
+    </r:Command>
+  </r:CommandCode>
+</proc:ProcessMethod>

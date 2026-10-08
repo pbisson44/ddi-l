@@ -1,0 +1,39 @@
+<d:QuestionBlock xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>07bceaa1-296a-5d15-97e0-b39ca5e330a7</r:ID>
+  <r:Version>1</r:Version>
+  <d:QuestionBlockName>
+    <r:String xml:lang="en">Household roster block</r:String>
+  </d:QuestionBlockName>
+  <d:QuestionItemReference>
+    <r:URN>urn:ddi:example.agency:item-1:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+  </d:QuestionItemReference>
+  <d:QuestionGridReference>
+    <r:URN>urn:ddi:example.agency:grid-1:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>cd435e19-0e9a-57cc-b609-50126a9ae5e0</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
+  </d:QuestionGridReference>
+  <d:InterviewerInstructionReference>
+    <r:URN>urn:ddi:example.agency:0027ae0d-2abd-5582-915a-ef2370170221:1</r:URN>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Instruction</r:TypeOfObject>
+  </d:InterviewerInstructionReference>
+  <d:ExternalInterviewerInstruction>
+    <r:OtherMaterial>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>a0d7ec9b-092a-57ec-84b2-0188f75a10d7</r:ID>
+      <r:Version>1.0</r:Version>
+      <r:Description>
+        <r:Content xml:lang="fr">Consultez l'aide-mémoire.</r:Content>
+      </r:Description>
+    </r:OtherMaterial>
+  </d:ExternalInterviewerInstruction>
+</d:QuestionBlock>

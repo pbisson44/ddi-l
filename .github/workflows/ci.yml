@@ -1,0 +1,253 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  UV_VERSION: "0.9.7"
+
+jobs:
+  tests:
+    # `full` is the extra that installs the optional lxml backend.
+    name: Python ${{ matrix.python-version }} (${{ matrix.backend }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        backend:
+          - stdlib
+          - lxml
+        include:
+          - backend: stdlib
+            extras: ""
+          - backend: lxml
+            extras: "--extra full"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: uv sync --locked --group dev ${{ matrix.extras }}
+      - name: Assert the lxml backend resolves to the real package
+        if: matrix.backend == 'lxml'
+        # Guard against a stub shadowing the real lxml package.
+        run: |
+          uv run python - <<'PY'
+          import lxml
+          from lxml import etree
+
+          assert "site-packages" in lxml.__file__, f"stub shadows real lxml: {lxml.__file__}"
+          assert hasattr(etree, "LXML_VERSION"), f"not the real lxml.etree: {etree!r}"
+          print("real lxml:", lxml.__file__, etree.LXML_VERSION)
+          PY
+      - name: Scan dependencies for vulnerabilities
+        # Audit the locked dependency set; `--no-emit-project` leaves out
+        # ddi-l itself.
+        run: |
+          uv export --frozen --no-emit-project --all-extras --group dev --group docs \
+            --format requirements-txt > /tmp/requirements-audit.txt
+          uv run --with pip-audit pip-audit --strict -r /tmp/requirements-audit.txt
+      - name: Check formatting
+        run: uv run ruff format --check .
+      - name: Run Ruff
+        run: uv run ruff check .
+      # mypy runs once, in the `types` job.
+      - name: Run pytest
+        # Documented samples run in their own job (they need the server extra).
+        run: uv run pytest -m "not docs"
+      - name: Assert the test run left the tree clean
+        run: git diff --exit-code
+
+  types:
+    name: Type check
+    runs-on: ubuntu-latest
+    # One job: mypy pins python_version, and it needs every extra installed to
+    # type-check ddi_l.server.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev --all-extras
+      - name: Run mypy
+        run: uv run mypy src tests
+
+  codegen-drift:
+    name: Codegen drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+      - name: Regenerate models and check for drift
+        run: |
+          uv run python -m codegen.generate_model_bases
+          git diff --exit-code src/ddi_l/models/_generated/
+
+  release-check:
+    name: Packaging check
+    runs-on: ubuntu-latest
+    # Not gated on `tests`, so the built wheel is always checked.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install build tooling
+        # `build` comes from the dev group; the Makefile runs `python -m build`.
+        run: uv sync --locked --group dev
+      - name: Run release checks
+        run: uv run make release-check
+      - name: Run the test suite from the unpacked sdist
+        # Redistributors build and test from the sdist; tests that need
+        # repository-only files (docs/, demo/) skip there.
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/sdist
+          tar -xzf dist/*.tar.gz -C /tmp/sdist
+          cd /tmp/sdist/ddi_l-*
+          UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv sync --locked --group dev
+          UV_PROJECT_ENVIRONMENT=/tmp/sdist-venv uv run --no-sync pytest --no-cov -q
+      - name: Upload distributions
+        uses: actions/upload-artifact@v6
+        with:
+          name: release-distributions
+          path: dist/*
+
+  docs:
+    name: Documentation build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install documentation dependencies
+        run: uv sync --locked --group docs
+      - name: Build MkDocs site
+        # Silences Material's advisory banner.
+        env:
+          NO_MKDOCS_2_WARNING: "1"
+        run: uv run mkdocs build --strict
+
+  http-api:
+    name: HTTP API (server extra)
+    runs-on: ubuntu-latest
+    # The server is a thin adapter over ddi_l.operations, which the matrix
+    # already covers on every interpreter, so one Python version suffices.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev --extra server
+      - name: Run the HTTP API tests
+        run: uv run pytest tests/test_server.py tests/test_server_i18n.py --no-cov
+
+      # The documented OpenAPI examples are lxml output, so they are checked
+      # with both the server and full extras; this also runs the server on both
+      # XML backends.
+      - name: Install the lxml backend
+        run: uv sync --locked --group dev --extra server --extra full
+      - name: Verify the documented OpenAPI examples
+        run: uv run pytest tests/test_server.py tests/test_server_examples.py --no-cov
+
+      - name: Assert the server stays optional
+        run: |
+          uv run python - <<'PY'
+          import ddi_l, sys
+          assert "litestar" not in sys.modules, "importing ddi_l pulled in Litestar"
+          assert "ddi_l.server.app" not in sys.modules, "ddi_l imported the server app"
+          print("ddi_l imports cleanly without touching the server")
+          PY
+
+  documented-samples:
+    name: Documented samples execute
+    runs-on: ubuntu-latest
+    # One interpreter is enough: the samples exercise the public API.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        # docs/server.en.md has a runnable sample that needs the server extra.
+        run: uv sync --locked --group dev --extra server
+      - name: Execute every documented sample
+        run: uv run pytest -m docs --no-cov
+
+  r-interop:
+    name: R examples (reticulate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - name: Install reticulate and jsonlite
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::reticulate
+            any::jsonlite
+      - name: Run the documented R examples
+        # Fails rather than skips if R or reticulate is missing here.
+        run: |
+          Rscript -e 'library(reticulate); library(jsonlite)'
+          uv run pytest tests/test_docs_r.py -m docs --no-cov -rs

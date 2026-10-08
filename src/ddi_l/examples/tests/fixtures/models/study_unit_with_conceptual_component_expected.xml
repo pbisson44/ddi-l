@@ -1,0 +1,36 @@
+<s:StudyUnit xmlns:c="ddi:conceptualcomponent:3_3" xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3">
+  <r:Agency>example.agency</r:Agency>
+  <r:ID>1f8fe282-90f0-5c88-b6e9-bdfc2b4836aa</r:ID>
+  <r:Version>1</r:Version>
+  <c:ConceptualComponent>
+    <r:Agency>example.agency</r:Agency>
+    <r:ID>52fba088-dffa-5e1d-90a0-5b9a46df70f3</r:ID>
+    <r:Version>1</r:Version>
+    <c:ConceptScheme>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>d69e0e12-d7b4-505f-8302-2eafeee483a2</r:ID>
+      <r:Version>1</r:Version>
+      <c:Concept>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>8e018353-9fed-513e-a4b6-ddb5ab770447</r:ID>
+        <r:Version>1</r:Version>
+        <c:ConceptName>
+          <r:String xml:lang="en">Income</r:String>
+        </c:ConceptName>
+      </c:Concept>
+    </c:ConceptScheme>
+    <c:UniverseScheme>
+      <r:Agency>example.agency</r:Agency>
+      <r:ID>dec5d76f-6b3f-5b71-8c97-d8d0df3659d4</r:ID>
+      <r:Version>1</r:Version>
+      <c:Universe>
+        <r:Agency>example.agency</r:Agency>
+        <r:ID>c0d1109e-b02a-56a6-9a0e-a130eeac3bc7</r:ID>
+        <r:Version>1</r:Version>
+        <c:UniverseName>
+          <r:String xml:lang="en">Adults</r:String>
+        </c:UniverseName>
+      </c:Universe>
+    </c:UniverseScheme>
+  </c:ConceptualComponent>
+</s:StudyUnit>

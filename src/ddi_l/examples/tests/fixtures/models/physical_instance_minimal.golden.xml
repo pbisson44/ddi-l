@@ -1,0 +1,23 @@
+<pi:PhysicalInstance xmlns:pi="ddi:physicalinstance:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:eb652699-bcbb-54bb-bb3f-5d4cecb4b42b:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>eb652699-bcbb-54bb-bb3f-5d4cecb4b42b</r:ID>
+  <r:Version>1</r:Version>
+  <r:UserAttributePair>
+    <r:AttributeKey>extension:Format</r:AttributeKey>
+    <r:AttributeValue>CSV</r:AttributeValue>
+  </r:UserAttributePair>
+  <r:VersionResponsibility>processor</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">first release</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <r:VariableGroupReference>
+    <r:URN>urn:ddi:ca.statcan:a195581f-cf26-5004-b2b8-7bfb28ea4a20:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a195581f-cf26-5004-b2b8-7bfb28ea4a20</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>VariableGroup</r:TypeOfObject>
+  </r:VariableGroupReference>
+</pi:PhysicalInstance>

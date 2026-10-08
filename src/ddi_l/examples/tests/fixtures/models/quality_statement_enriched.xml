@@ -1,0 +1,38 @@
+<r:QualityStatement xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>c30b02a2-3bd1-54a8-8994-23537c31b315</r:ID>
+  <r:Version>2</r:Version>
+  <r:QualityStatementName>
+    <r:String xml:lang="en">Disclosure review statement</r:String>
+  </r:QualityStatementName>
+  <r:QualityStatementName>
+    <r:String xml:lang="es">Declaración de revisión de divulgación</r:String>
+  </r:QualityStatementName>
+  <r:QualityStatementName>
+    <r:String xml:lang="fr">Déclaration de conformité</r:String>
+  </r:QualityStatementName>
+  <r:QualityStandard>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>9f6c2ba2-3b34-562a-84d0-6baac0803b44</r:ID>
+    <r:Version>1.1</r:Version>
+    <r:QualityStandardName>
+      <r:String xml:lang="en">Inline disclosure checks</r:String>
+    </r:QualityStandardName>
+    <r:StandardUsed>
+      <r:OtherMaterialReference>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>c63c11a4-1576-50b6-80a2-ccdb16e6b343</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
+      </r:OtherMaterialReference>
+    </r:StandardUsed>
+  </r:QualityStandard>
+  <r:ComplianceStatement>
+    <r:Content xml:lang="en">Checks executed on 2024-05-01.</r:Content>
+  </r:ComplianceStatement>
+  <r:Compliance>
+    <r:ComplianceDescription>
+      <r:Content xml:lang="en">Meets all disclosure avoidance requirements.</r:Content>
+    </r:ComplianceDescription>
+  </r:Compliance>
+</r:QualityStatement>

@@ -1,0 +1,33 @@
+<p0:Group xmlns:p0="ddi:group:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:URN>urn:ddi:ca.statcan:2f75eec8-db22-50fa-8afd-4e2d61f7e8ba:1</r:URN>
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>2f75eec8-db22-50fa-8afd-4e2d61f7e8ba</r:ID>
+  <r:Version>1</r:Version>
+  <r:UserID typeOfUserID="Record">G-1</r:UserID>
+  <r:VersionResponsibility>owner</r:VersionResponsibility>
+  <r:VersionRationale>
+    <r:RationaleDescription>
+      <r:String xml:lang="en">initial publication</r:String>
+    </r:RationaleDescription>
+  </r:VersionRationale>
+  <r:Abstract>
+    <r:Content xml:lang="en">A concise abstract.</r:Content>
+  </r:Abstract>
+  <r:Purpose>
+    <r:Content xml:lang="en">Demonstrate group wrapper.</r:Content>
+  </r:Purpose>
+  <r:DataCollectionReference>
+    <r:URN>urn:ddi:ca.statcan:91e3ed20-69da-54df-b271-6e5de1aa1ac4:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>91e3ed20-69da-54df-b271-6e5de1aa1ac4</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DataCollection</r:TypeOfObject>
+  </r:DataCollectionReference>
+  <r:StudyUnitReference>
+    <r:URN>urn:ddi:ca.statcan:3d4d6424-44a9-51b1-9108-7756c43b4716:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>3d4d6424-44a9-51b1-9108-7756c43b4716</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StudyUnit</r:TypeOfObject>
+  </r:StudyUnitReference>
+</p0:Group>

@@ -1,0 +1,42 @@
+name: "Learner feedback"
+description: "Share questions, blockers, or suggestions from the ddi-l training materials."
+title: "[Feedback]: "
+labels:
+  - feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for questions, problems or suggestions about the ddi-l training material.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What did you run into?
+      description: Describe the question, blocker, or idea you encountered while working through the training content.
+      placeholder: "While completing the validation lab I wasn't sure how to interpret the XML schema warning..."
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Where were you in the training?
+      description: Point us to the specific page, section, or exercise so we can reproduce the issue.
+      placeholder: "Tutorials > Interactive Training Exercises > Step 4"
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Did you find a workaround?
+      description: Optional hints or resources that helped you move forward.
+      placeholder: "I searched the CLI reference and used the --validate option instead."
+    validations:
+      required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Follow-up preference (optional)
+      description: Leave a contact method if you'd like us to reach out when the documentation is updated.
+      placeholder: "email@example.com or GitHub handle"
+    validations:
+      required: false

@@ -1,0 +1,14 @@
+<cmp:Comparison xmlns:cmp="ddi:comparative:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>f4bff2bc-4a1f-556a-b441-6691706e933e</r:ID>
+  <r:Version>1</r:Version>
+  <cmp:ComparisonName>
+    <r:String xml:lang="en">Household vs Individual</r:String>
+  </cmp:ComparisonName>
+  <cmp:ComparisonName>
+    <r:String xml:lang="fr">Ménages vs Individus</r:String>
+  </cmp:ComparisonName>
+  <cmp:ComparisonName>
+    <r:String xml:lang="es">Comparación secundaria</r:String>
+  </cmp:ComparisonName>
+</cmp:Comparison>

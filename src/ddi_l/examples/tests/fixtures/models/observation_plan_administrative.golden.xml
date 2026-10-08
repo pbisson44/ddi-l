@@ -1,0 +1,31 @@
+<d:ObservationPlan xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+  <r:Agency>ca.statcan</r:Agency>
+  <r:ID>c0ef1603-997e-5961-94b1-b557f892e2b2</r:ID>
+  <r:Version>1</r:Version>
+  <d:ObservationPlanName>
+    <r:String xml:lang="en">Quarterly register snapshot</r:String>
+  </d:ObservationPlanName>
+  <d:TypeOfObservationPlan controlledVocabularyID="plan">Administrative</d:TypeOfObservationPlan>
+  <d:ObservationUnit controlledVocabularyID="observation-unit">Case</d:ObservationUnit>
+  <d:CollectionActivityReference>
+    <r:URN>urn:ddi:ca.statcan:cb22b07a-9565-5e1d-a69c-d2df9331834f:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>cb22b07a-9565-5e1d-a69c-d2df9331834f</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionActivity</r:TypeOfObject>
+  </d:CollectionActivityReference>
+  <d:CollectionEventReference>
+    <r:URN>urn:ddi:ca.statcan:0dc2edde-3e79-5004-9a1b-932824759135:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>0dc2edde-3e79-5004-9a1b-932824759135</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>CollectionEvent</r:TypeOfObject>
+  </d:CollectionEventReference>
+  <d:ObservationSequenceReference>
+    <r:URN>urn:ddi:ca.statcan:ae5baf56-f36f-56d0-8fbf-be203b5df350:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>ae5baf56-f36f-56d0-8fbf-be203b5df350</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>ObservationSequence</r:TypeOfObject>
+  </d:ObservationSequenceReference>
+</d:ObservationPlan>
