@@ -1,3 +1,9 @@
+---
+description: >-
+  Les profils d'espaces de noms DDI 3.x et les liaisons de préfixes de
+  ddi_l.namespaces, et leur application à l'écriture du XML.
+---
+
 # Profils et liaisons d'espaces de noms
 
 Le module `ddi_l.namespaces` centralise les liaisons d'espaces de noms présentes dans les documents d'instances DDI 3.x. Les profils exposent des ensembles de paires préfixe/URI pour les modules de maintainables courants afin que les outils en aval appliquent des liaisons cohérentes, qu'ils reposent sur l'implémentation XML de la bibliothèque standard ou sur lxml. Les liaisons par défaut ciblent la version 3.3 fournie, tandis que les assistants de `ddi_l.schema_loader` exposent des cartes d'espaces de noms pour 3.1 et 3.2 lorsque vous devez traiter du contenu patrimonial.

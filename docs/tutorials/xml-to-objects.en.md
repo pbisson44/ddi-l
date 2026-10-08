@@ -1,3 +1,9 @@
+---
+description: >-
+  Move between raw DDI XML and ddi-l Python objects: open files, explore
+  their contents and use the model layer.
+---
+
 # From XML to objects
 
 This tutorial shows how to move between raw DDI XML and the `ddi-l` Python

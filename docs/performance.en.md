@@ -1,3 +1,9 @@
+---
+description: >-
+  Measured timings and memory use for ddi-l, and the settings that change
+  them: the lxml backend, validation caching and streaming.
+---
+
 # Performance
 
 What costs time and memory in ddi-l, with measured numbers and the settings

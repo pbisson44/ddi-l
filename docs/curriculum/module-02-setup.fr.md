@@ -1,3 +1,9 @@
+---
+description: >-
+  Module 2 du cours ddi-l : installer Python, ddi-l et les paquets utiles,
+  puis vérifier que tout fonctionne.
+---
+
 # Module 2 : Préparer votre environnement Python
 
 !!! info "Ce que vous apprendrez"
@@ -146,6 +152,11 @@ pip install ddi-l pandas openpyxl
 Collez la **dernière ligne** de la sortie. Elle dit généralement quelque chose
 comme `Successfully installed ...`.
 
+??? success "Réponse"
+    La dernière ligne commence par `Successfully installed` et mentionne
+    `ddi-l-...` parmi les paquets (la version peut varier). Si les paquets étaient
+    déjà installés, pip affiche plutôt `Requirement already satisfied`.
+
 **Exercice 2.** Ouvrez une session Python et exécutez :
 
 ```python
@@ -156,8 +167,16 @@ print(ddi.__version__)
 
 Notez le numéro de version que vous voyez.
 
+??? success "Réponse"
+    La version installée, par exemple `0.1.0` ou plus récente.
+
 **Exercice 3.** Exécutez `ddi --help` dans votre terminal. **Combien de
 commandes** sont listées dans la sortie ?
+
+??? success "Réponse"
+    Huit dans `ddi-l` 0.1.0 : `validate`, `to-json`, `from-json`, `roundtrip`,
+    `lint`, `versions`, `to-jsonld` et `serve`. Les versions ultérieures peuvent
+    en ajouter.
 
 ---
 
@@ -211,7 +230,7 @@ commandes** sont listées dans la sortie ?
     - **Ayez une solution de secours** prête : un notebook en ligne (comme
       Google Colab) ou un conteneur pré-configuré avec tout installé.
     - **Pourquoi installer pandas maintenant ?** L'installer ici évite de
-      perturber le Module 6, où les apprenants chargeront des fichiers CSV et
+      perturber le Module 8, où les apprenants chargeront des fichiers CSV et
       Excel. Faire l'installation tôt permet aux modules suivants de rester
       concentrés sur DDI.
     - **Mettez en binôme** les apprenants qui finissent tôt avec ceux qui ont

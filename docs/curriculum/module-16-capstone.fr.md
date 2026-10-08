@@ -1,3 +1,9 @@
+---
+description: >-
+  Module 16 du cours ddi-l : quatre projets de synthèse, pour étudiants,
+  chercheurs, archivistes et personnel d'organismes statistiques.
+---
+
 # Module 16 : Projets de synthèse
 
 !!! info "Ce que vous apprendrez"
@@ -113,6 +119,67 @@ Si vous ne savez pas quelle piste choisir, essayez la **Piste A** (Étudiant uni
 - `thesis-v1.xml` : document DDI valide avec 10+ variables.
 - `thesis-v1.1.xml` : version mise à jour avec la nouvelle variable et une justification.
 
+??? success "Exemple de solution"
+    Un script complet pour toutes les étapes ci-dessus, avec
+    [`thesis-data.csv`](thesis-data.csv){ download="thesis-data.csv" }.
+
+    ```python
+    import csv
+    import ddi_l as ddi
+    from ddi_l.models.base import VersionRationale, InternationalString
+
+    # Read CSV
+    with open("thesis-data.csv") as f:
+        columns = csv.DictReader(f).fieldnames
+
+    # Create v1.0
+    doc = ddi.new_study(title="Thesis Dataset", agency="university.edu")
+    # Comment chaque colonne a été demandée. StudentID est attribué et AnxietyScore
+    # est calculé à partir d'un questionnaire : ni l'un ni l'autre n'a de question.
+    QUESTIONS = {
+        "Age": "Quel âge avez-vous ?",
+        "Gender": "Quel est votre genre ?",
+        "YearOfStudy": "En quelle année de votre programme êtes-vous ?",
+        "Program": "Dans quel programme êtes-vous inscrit(e) ?",
+        "StudyHours": "Lors d'une journée typique, combien d'heures étudiez-vous ?",
+        "SleepHours": "Lors d'une nuit typique, combien d'heures dormez-vous ?",
+        "WorkHours": "Combien d'heures par semaine travaillez-vous contre rémunération ?",
+        "ExerciseDays": "Combien de jours avez-vous fait de l'exercice la semaine dernière ?",
+        "StressLevel": "Sur une échelle de 1 à 10, quel a été votre niveau de stress ce trimestre ?",
+        "SoughtSupport": "Avez-vous demandé de l'aide aux services du campus ce trimestre ?",
+    }
+    for col in columns:
+        libelle = QUESTIONS.get(col)
+        q = doc.add_question(text=libelle, lang="fr") if libelle else None
+        v = doc.add_variable(name=col, question=q)
+        v.set_property("source", "Primary survey data")
+
+    doc.add_concept(name="Demographics")
+    doc.add_concept(name="Academic Performance")
+    doc.add_concept(name="Well-Being")
+    doc.add_universe(name="Undergraduate students at University X")
+
+    doc.save("thesis-v1.xml")
+    issues = doc.validate()
+    print(f"v1 valid: {not issues}")
+
+    # Update to v1.1
+    doc = ddi.open_ddi("thesis-v1.xml")
+    q_new = doc.add_question(text="What is the student's GPA?")
+    v_new = doc.add_variable(name="GPA", question=q_new)
+
+    study = doc.study_unit
+    study.increment_minor_version()
+    study.version_rationales.append(
+        VersionRationale(
+            descriptions=[InternationalString(text="Added GPA variable for analysis")]
+        )
+    )
+    study.version_responsibility = "Thesis Author"
+    doc.save("thesis-v1.1.xml")
+    print(f"v1.1 valid: {not doc.validate()}")
+    ```
+
 ---
 
 ## Piste B : Chercheur : Préparer une enquête de santé pour publication
@@ -143,7 +210,7 @@ Si vous ne savez pas quelle piste choisir, essayez la **Piste A** (Étudiant uni
     print(f"{len(columns)} columns")  # -> 15 columns
     ```
 
-    Si vos données sont dans un classeur Excel, lisez plutôt le nom des colonnes avec pandas (voir le [Module 6](module-06-csv-to-ddi.md)) :
+    Si vos données sont dans un classeur Excel, lisez plutôt le nom des colonnes avec pandas (voir le [Module 8](module-08-csv-to-ddi.md)) :
 
     <!-- docs-test: skip -- needs pandas and a workbook the reader supplies -->
     ```python
@@ -405,7 +472,7 @@ Si vous ne savez pas quelle piste choisir, essayez la **Piste A** (Étudiant uni
     doc.save("census-v1.1.xml")
     ```
 
-7. **Mettez à jour en version 2.0** : refonte majeure (ajoutez 5 nouvelles questions, retirez-en 3 anciennes). Retirer une question retire aussi les variables qui enregistraient ses réponses ; sinon, elles continueraient de pointer vers une question qui n'est plus dans le fichier (voir le [Module 13](module-13-update-and-version.md)) :
+7. **Mettez à jour en version 2.0** : refonte majeure (ajoutez 5 nouvelles questions, retirez-en 3 anciennes). Retirer une question retire aussi les variables qui enregistraient ses réponses ; sinon, elles continueraient de pointer vers une question qui n'est plus dans le fichier (voir le [Module 15](module-15-update-and-version.md)) :
 
     ```python
     # Add new questions

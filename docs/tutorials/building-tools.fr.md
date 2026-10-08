@@ -1,3 +1,9 @@
+---
+description: >-
+  Utiliser ddi-l comme base pour des tableaux de bord, des services web, des
+  outils en ligne de commande et des pipelines de données.
+---
+
 # Construire des outils et applications avec ddi-l
 
 Ce guide est destiné aux développeurs qui souhaitent utiliser `ddi-l` comme

@@ -1,3 +1,9 @@
+---
+description: >-
+  La couche de modèles de ddi-l : des dataclasses générées pour les types
+  DDI 3.3, quand l'API Document ne suffit pas.
+---
+
 # Référence des modèles (couche avancée)
 
 Le paquet `ddi_l.models` fournit des dataclasses générées pour les types
@@ -81,5 +87,5 @@ régénérer :
 python -m codegen.generate_model_bases
 ```
 
-Consultez le [guide du contributeur](DEVELOPMENT.md) pour plus de détails sur
+Consultez le [guide de développement](DEVELOPMENT.md) pour plus de détails sur
 le pipeline de génération.

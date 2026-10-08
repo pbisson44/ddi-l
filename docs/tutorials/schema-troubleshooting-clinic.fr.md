@@ -1,9 +1,28 @@
+---
+description: >-
+  S'exercer à diagnostiquer les erreurs de validation de schéma DDI en CLI
+  et en Python, à partir de fichiers volontairement altérés.
+---
+
 # Clinique de dépannage des schémas
 
 Entraînez-vous à diagnostiquer des erreurs de schéma avec la ligne de commande et l'API Python. Chaque exercice part d'un fichier volontairement altéré : vous lisez les erreurs, puis vous corrigez le fichier.
 
-!!! note
-    Installez ``ddi-l`` en mode éditable (``pip install -e .``) pour que les imports de modules fonctionnent.
+!!! note "Avant de commencer"
+    Installez `ddi-l` avec `pip install ddi-l`. Les étapes ci-dessous
+    utilisent des fichiers d'exemple fournis avec le paquet. Exécutez une fois
+    ce code Python pour les copier dans un dossier `examples/` de votre
+    répertoire de travail :
+
+    ```python
+    import shutil
+    from importlib.resources import files
+    from pathlib import Path
+
+    Path("examples").mkdir(exist_ok=True)
+    for name in ("Quality_of_Life.xml", "example_instance.xml", "example_fragment.xml"):
+        shutil.copy(files("ddi_l.examples") / name, "examples")
+    ```
 
 ## 1. Provoquer un échec de validation
 

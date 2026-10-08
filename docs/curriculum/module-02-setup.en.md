@@ -1,4 +1,10 @@
-# Module 2: Set Up Your Python Environment
+---
+description: >-
+  Module 2 of the ddi-l course: install Python, ddi-l and the helper
+  packages, and check that everything works.
+---
+
+# Module 2: Set up your Python environment
 
 !!! info "What you will learn"
     - Install Python and verify the version.
@@ -6,7 +12,7 @@
     - Confirm everything works by running a quick test.
     - Choose a workspace for writing Python code.
 
-**Prerequisites:** [Module 1: What Is Metadata and Why Does It Matter?](module-01-what-is-metadata.md)
+**Prerequisites:** [Module 1: What is metadata and why does it matter?](module-01-what-is-metadata.md)
 
 **Time:** 20 min self-paced / 30 min instructor-led.
 
@@ -142,6 +148,11 @@ pip install ddi-l pandas openpyxl
 Paste the **last line** of the output. It usually says something like
 `Successfully installed ...`.
 
+??? success "Answer"
+    The last line starts with `Successfully installed` and lists `ddi-l-...` among
+    the packages (the version may vary). If the packages were already installed,
+    pip says `Requirement already satisfied` instead.
+
 **Exercise 2.** Open a Python session and run:
 
 ```python
@@ -152,8 +163,15 @@ print(ddi.__version__)
 
 Write down the version number you see.
 
+??? success "Answer"
+    The installed version, such as `0.1.0` or later.
+
 **Exercise 3.** Run `ddi --help` in your terminal. **How many commands** are
 listed in the output?
+
+??? success "Answer"
+    Eight in `ddi-l` 0.1.0: `validate`, `to-json`, `from-json`, `roundtrip`,
+    `lint`, `versions`, `to-jsonld` and `serve`. Later versions may add more.
 
 ---
 
@@ -205,7 +223,7 @@ listed in the output?
     - **Have a fallback** ready: a cloud notebook (such as Google Colab) or a
       pre-built container with everything installed.
     - **Why install pandas now?** Installing it here avoids disruption in
-      Module 6, where learners will load CSV and Excel files. Getting the
+      Module 8, where learners will load CSV and Excel files. Getting the
       install out of the way early keeps later modules focused on DDI.
     - **Pair up** learners who finish early with those who need help. Setup
       problems are easier to solve with a partner.

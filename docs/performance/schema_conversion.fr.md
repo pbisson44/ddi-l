@@ -1,3 +1,9 @@
+---
+description: >-
+  Un benchmark reproductible pour analyser, valider et convertir des sources
+  de schémas DDI en objets ddi-l.
+---
+
 # Benchmark de conversion de schémas
 
 Cette page décrit un benchmark de référence pour convertir des définitions de schémas en objets ddi-l. Utilisez-le pour valider les changements de performance et pour éviter les régressions.

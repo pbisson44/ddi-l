@@ -1,10 +1,16 @@
+---
+description: >-
+  A one-page tour of the ddi-l Document API: create a study, add questions,
+  variables and code lists, find, remove, save and validate.
+---
+
 # User guide
 
 This guide walks you through the main features of the `ddi-l` CRUD API.
 Each section is self-contained, so you can jump to the workflow you need.
 
 !!! info "Prerequisites"
-    - Python 3.11 or newer with `ddi-l` installed (`pip install .`).
+    - Python 3.11 or newer with `ddi-l` installed (`pip install ddi-l`).
     - No XML knowledge is required for the simple API.
 
 ## Create a study

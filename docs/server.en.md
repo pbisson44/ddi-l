@@ -1,3 +1,9 @@
+---
+description: >-
+  The ddi-l HTTP API: validate, lint and convert DDI documents over HTTP
+  with ddi serve, with Swagger UI and deployment limits.
+---
+
 # HTTP API
 
 `ddi-l` ships an optional HTTP service that exposes the same validate, lint and

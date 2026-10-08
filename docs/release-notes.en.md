@@ -1,4 +1,36 @@
+---
+description: >-
+  What changed in each ddi-l release, including breaking changes while the
+  version is 0.x.
+---
+
 # Release notes
+
+## Unreleased
+
+### Documentation
+
+- **Links without a version no longer 404.** The README and issue template
+  link through `/latest/`, and the site root now serves a `404.html` that
+  sends any unversioned path (`/ddi-l/server/`) to the same page under
+  `/latest/` and maps renamed curriculum pages to their new names.
+- **Install from PyPI everywhere.** Pages that said `pip install .` or
+  `pip install -e .` now say `pip install ddi-l`, and the install tabs add
+  `uv add ddi-l`.
+- **One place to learn.** The site is organized as Learn (the curriculum),
+  How-to guides, Reference and About. The authoring tutorial, training labs
+  and persona tracks are folded into the curriculum, which now has a single
+  set of learner profiles and an automation track.
+- **Curriculum order.** Opening files and command-line validation move up to
+  Modules 6 and 7, and Module 3 now checks its work with `doc.validate()` and
+  `doc.lint()`, so learners validate from the start. Modules 6 to 13 become 8
+  to 15.
+- **Answers under each exercise.** Every exercise has a collapsible answer.
+  The answer-key page for instructors is generated from the modules, so it can
+  no longer drift from them.
+- **Homepage.** A lint-clean first example, what DDI is, DDI 3.1, 3.2 and 3.3
+  scope, a study diagram, a Learn tile, an R / HTTP API tile and a "Cite ddi-l"
+  section. Every page now has its own search description.
 
 ## 0.1.0
 

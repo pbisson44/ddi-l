@@ -97,3 +97,40 @@ def test_readme_has_no_relative_links() -> None:
     ]
 
     assert relative == [], f"README links that break on PyPI: {relative}"
+
+
+def test_readme_links_into_the_docs_site_name_a_version() -> None:
+    """mike serves every page under a version directory.
+
+    ``/ddi-l/server/`` is a 404; ``/ddi-l/latest/server/`` is the page. The
+    README is also the PyPI page, so a broken deep link there is the first one
+    most readers hit. The bare site root is fine: mike redirects it.
+    """
+    import re
+
+    readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+    unversioned = [
+        url
+        for url in re.findall(r"https://pbisson44\.github\.io/ddi-l/[^\s)\"']+", readme)
+        if not re.match(r"https://pbisson44\.github\.io/ddi-l/(latest|dev)/", url)
+    ]
+
+    assert unversioned == [], f"README links without a docs version: {unversioned}"
+
+
+@pytest.mark.parametrize(
+    "relative_path", ["README.md", "docs/index.en.md", "docs/index.fr.md"]
+)
+def test_published_citations_match_citation_cff(relative_path: str) -> None:
+    """The "Cite ddi-l" sections restate CITATION.cff's version and year."""
+    path = PROJECT_ROOT / relative_path
+    if not path.is_file():
+        pytest.skip(f"{relative_path} is not shipped in the sdist")
+    citation = (PROJECT_ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    fields = dict(line.split(":", 1) for line in citation.splitlines() if ":" in line)
+    version = fields["version"].strip().strip("\"'")
+    year = fields["date-released"].strip().strip("\"'")[:4]
+    text = path.read_text(encoding="utf-8")
+
+    assert f"Bisson, P. ({year})" in text
+    assert f"(Version {version})" in text

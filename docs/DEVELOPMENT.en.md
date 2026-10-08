@@ -1,8 +1,19 @@
-# Contributor guide
+---
+description: >-
+  The ddi-l development guide: environment, quality gates, the XSD code
+  generator, architecture, documentation toolchain and releases.
+---
 
-Thanks for helping improve `ddi-l`! This guide covers the development
-environment, coding standards, the XSD-driven codegen pipeline, and how to run
-the quality gates.
+# Development guide
+
+Thanks for helping improve `ddi-l`! Two documents cover contributing:
+
+- [`CONTRIBUTING.md`](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md)
+  on GitHub is the short version: set up, run the checks, open a pull request.
+  Start there.
+- This guide is the in-depth reference behind it: the architecture, the
+  XSD-driven code generator, adding a DDI version, the two XML backends, the
+  documentation toolchain, and the release process.
 
 ## Set up your environment
 
@@ -423,6 +434,13 @@ make docs-build    # Build and validate
 Prefer the `make` targets over calling `mkdocs` directly: they set
 `NO_MKDOCS_2_WARNING`, without which every invocation prints a multi-line
 advisory from the Material for MkDocs authors about MkDocs 2.0.
+
+The logo, favicon and their usage rules are described in
+[branding assets](assets/README.md).
+
+The curriculum's [answer keys](curriculum/answer-keys.md) page is generated
+by `hooks/answer_keys.py` from the `??? success` answers in each module. Add
+or change an answer in the module, never on the answer-key page.
 
 ### Documentation toolchain versions
 

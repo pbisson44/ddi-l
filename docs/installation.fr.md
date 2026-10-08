@@ -1,3 +1,9 @@
+---
+description: >-
+  Installer ddi-l depuis PyPI avec pip, uv ou Poetry, ajouter les extras
+  lxml et API HTTP, ou préparer un environnement de développement.
+---
+
 # Installation
 
 `ddi-l` nécessite **Python 3.11 ou plus récent** et est disponible sur PyPI.
@@ -10,6 +16,12 @@ Utilisez cette méthode, sauf si vous voulez modifier `ddi-l` lui-même.
     ```bash
     pip install ddi-l
     ddi --help
+    ```
+
+=== "uv"
+    ```bash
+    uv add ddi-l
+    uv run ddi --help
     ```
 
 === "Poetry"
@@ -83,4 +95,4 @@ print(f"Questions : {len(doc.questions)}")  # -> 1
 ```
 
 Pour plus de détails, consultez le [guide d'utilisation](user-guide.md) ou le
-[guide du contributeur](DEVELOPMENT.md).
+[guide de développement](DEVELOPMENT.md).

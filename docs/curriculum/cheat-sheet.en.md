@@ -1,4 +1,10 @@
-# Cheat Sheet
+---
+description: >-
+  A one-page quick reference to the ddi-l API and imports used in the
+  training curriculum.
+---
+
+# Cheat sheet
 
 This page is a quick reference for the `ddi-l` package. Keep it open
 while you work through the modules or build your own projects.
@@ -155,7 +161,7 @@ tagged = [x for x in doc.variables if any(k.startswith("myorg:") for k in x.prop
 ```
 
 Custom fields serialize to `r:UserAttributePair` (and `r:UserID`), which is still valid
-DDI. See [Module 12](module-12-custom-fields.md).
+DDI. See [Module 14](module-14-custom-fields.md).
 
 ---
 
@@ -186,7 +192,7 @@ item.version_rationales.append(
 item.version_responsibility = "Survey Design Team"
 ```
 
-Edit an item that is already in the file, then version it (see Module 13, sections 6 and 7):
+Edit an item that is already in the file, then version it (see Module 15, sections 6 and 7):
 
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
@@ -252,7 +258,7 @@ doc.add_item(Instrument, name="Survey Instrument")
 
 `Loop` works the same way (`doc.add_item(Loop, name="...")`), with its
 repeated section set via `loop.control_construct_reference`. See
-[Module 8](module-08-questionnaire-flows.md) for the full worked example.
+[Module 10](module-10-questionnaire-flows.md) for the full worked example.
 
 ---
 
@@ -284,7 +290,7 @@ rl.add_data_item(income.to_reference(), start_position=3, width=8)
 Omit the positions for a delimited (comma/tab) file.
 
 To update many variables from a new data file, and version each change, see
-[Module 13, section 8](module-13-update-and-version.md#8-update-many-variables-from-a-new-data-file).
+[Module 15, section 8](module-15-update-and-version.md#8-update-many-variables-from-a-new-data-file).
 
 ---
 
@@ -455,7 +461,7 @@ linked.source_variable_references = [
 ```
 
 Cross-study `source_variable_references` warn on save. That is expected for
-linkage. See [Module 10](module-10-data-linkage.md).
+linkage. See [Module 12](module-12-data-linkage.md).
 
 ---
 

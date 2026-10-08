@@ -1,3 +1,9 @@
+---
+description: >-
+  L'API Python publique de ddi-l, générée à partir des docstrings :
+  new_study, open_ddi, Document et la couche avancée.
+---
+
 # Référence de l'API
 
 !!! note "Cette page est en anglais"
@@ -7,7 +13,7 @@
     Le reste de la documentation (guides, tutoriels et les seize modules du
     programme de formation) est disponible en français.
 
-    [Consulter la référence de l'API (en anglais) →](https://pbisson44.github.io/ddi-l/api/){ .md-button .md-button--primary }
+    [Consulter la référence de l'API (en anglais) →](https://pbisson44.github.io/ddi-l/latest/api/){ .md-button .md-button--primary }
 
 ## Par où commencer
 

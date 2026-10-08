@@ -1,4 +1,10 @@
-# Instructor Guide
+---
+description: >-
+  Schedules, setup checklist, facilitation tips and common mistakes for
+  teaching the ddi-l training curriculum.
+---
+
+# Instructor guide
 
 This guide helps facilitators deliver the `ddi-l` training curriculum
 in classrooms, workshops, or online sessions. It also works for
@@ -18,9 +24,9 @@ The curriculum works in both modes:
 
 | Format | Modules | Total time |
 | -------- | --------- | ------------ |
-| Half-day workshop (3 h) | 1-6 | Foundations + CSV-to-DDI |
-| Full-day workshop (6 h) | 1-14 | Everything except CLI and capstone |
-| Two-day intensive (8 h) | 1-16 | Full curriculum with capstone |
+| Half-day workshop (3.5 h) | 1-7 | Foundations, including opening files and validation |
+| Full-day workshop (6 h) | 1-10 | Foundations + CSV-to-DDI, code lists and questionnaire flows |
+| Two-day intensive (11 h) | 1-16 | Full curriculum with capstone |
 | Self-paced | 1 per session | ~3 weeks at 30-45 min/session |
 
 ## Environment setup checklist
@@ -42,7 +48,7 @@ pre-built container with everything installed.
 
 ## Facilitation tips by module
 
-### Module 1: What Is Metadata?
+### Module 1: What is metadata?
 
 - Start with the "messy table" exercise *before* defining metadata. Let
   learners discover the problem.
@@ -54,20 +60,22 @@ pre-built container with everything installed.
   the rest of the curriculum.
 - Time: 45 min including discussion.
 
-### Module 2: Set Up Your Environment
+### Module 2: Set up your environment
 
 - Budget 30 min: environment issues are the #1 classroom time sink.
 - Walk around and help with PATH issues, wrong Python versions, and
   virtual environments.
 - If installs fail, switch to the fallback environment immediately.
 
-### Module 3: Create Your First Study
+### Module 3: Create your first study
 
 - This is the "aha" moment. Type the code live and show the XML output.
 - Common mistake: forgetting quotes around strings.
+- Section 9 introduces `doc.validate()` and `doc.lint()`. Ask learners to
+  run both at the end of every later module, before they save.
 - Time: 45 min with live demo.
 
-### Module 4: Variables and Questions
+### Module 4: Variables and questions
 
 - Draw the mental model on a whiteboard: Question → Variable → Data
   column.
@@ -75,13 +83,24 @@ pre-built container with everything installed.
   question object to `question=`.
 - Time: 40 min.
 
-### Module 5: Concepts and Universes
+### Module 5: Concepts and universes
 
 - Use a diagram: Universe = "who", Concept = "what", Variable = "how
   it is measured", Question = "how it is asked".
 - Time: 40 min.
 
-### Module 6: From CSV/Excel to DDI
+### Module 6: Open and modify files
+
+- This is the archivist workflow: receive → inspect → enrich → validate
+  → save.
+- Time: 40 min.
+
+### Module 7: Validate from the command line
+
+- For NSO audiences, spend extra time on batch validation and exit codes.
+- Time: 40 min.
+
+### Module 8: From CSV/Excel to DDI
 
 - This is the most important module for researchers and NSO staff.
   Demonstrate the full workflow: open a CSV, run the script, show the
@@ -91,14 +110,14 @@ pre-built container with everything installed.
 - Skip the SQL section for non-technical audiences.
 - Time: 60 min with exercises.
 
-### Module 7: Code Lists
+### Module 9: Code lists
 
 - Show a real-world code list (ISO country codes, employment
   classifications).
 - Common mistake: forgetting to import Category.
 - Time: 50 min.
 
-### Module 8: Questionnaire Flows
+### Module 10: Questionnaire flows
 
 - Start with a paper spec on screen. Have learners circle questions,
   underline skip rules, and box repeat instructions before touching code.
@@ -107,7 +126,7 @@ pre-built container with everything installed.
   content vs. flow separation.
 - Time: 60 min.
 
-### Module 9: Data Lineage
+### Module 11: Data lineage
 
 - Use the "recipe" analogy: raw ingredients (collection), cooking
   (production), plated dish (master). Provenance is the recipe.
@@ -120,7 +139,7 @@ pre-built container with everything installed.
 - For NSO staff: this is audit trail documentation that regulators need.
 - Time: 75 min.
 
-### Module 10: Data Linkage
+### Module 12: Data linkage
 
 - Anchor with the burden argument: reuse the tax file instead of re-asking
   income. Linkage creates new information from existing data.
@@ -134,20 +153,20 @@ pre-built container with everything installed.
 - Always end a linkage on de-identification and, often, synthetic data.
 - Time: 75 min.
 
-### Module 11: Properties, Find, and Validate
+### Module 13: Properties, find, and validate
 
 - Demonstrate that custom properties survive XML round-trips.
 - Show passing a code list object as a property value (stores URN).
 - Common mistake: trying to `find()` by name instead of by identifier.
 - Time: 50 min.
 
-### Module 12: Custom Fields
+### Module 14: Custom fields
 
 - Open with the "side spreadsheet" problem: local metadata kept outside the
   file always drifts out of sync. Custom fields keep it in the DDI.
 - Make the openness point explicit: DDI provides a *standardized* extension
   point. Show the `UserAttributePair` XML so learners see it is still valid DDI.
-- Contrast with Module 11: that module taught the `set_property` mechanics;
+- Contrast with Module 13: that module taught the `set_property` mechanics;
   this one governs extensions: namespaces, catalogs, controlled values, audit.
 - Clarify `UserID` vs custom property: identify vs describe.
 - For NSO/archive staff: connect to real governance (retention schedules,
@@ -155,25 +174,14 @@ pre-built container with everything installed.
 - Caution: do not reinvent built-in DDI; custom fields are for genuine gaps.
 - Time: 55 min.
 
-### Module 13: Update and Version
+### Module 15: Update and version
 
 - Key module for archivists and NSO staff managing long-running surveys.
 - Show the XML before and after versioning so learners see the version
   number and rationale in the file.
 - Time: 50 min.
 
-### Module 14: Open and Modify Files
-
-- This is the archivist workflow: receive → inspect → enrich → validate
-  → save.
-- Time: 40 min.
-
-### Module 15: CLI Validation
-
-- For NSO audiences, spend extra time on batch validation and exit codes.
-- Time: 40 min.
-
-### Module 16: Capstone Projects
+### Module 16: Capstone projects
 
 - Let learners choose their persona track. If in a mixed group, form
   teams by role.
@@ -186,20 +194,21 @@ pre-built container with everything installed.
 | --------- | -------- | ----- |
 | Forgetting quotes around strings | 3 | Show the error message and explain |
 | Passing text instead of object to `question=` | 4 | Show the difference between `"age"` and `q1` |
-| Forgetting to import Category/Instrument | 7 | Show the import line explicitly |
-| Confusing Question with QuestionConstruct | 8 | Question = content, QuestionConstruct = flow step |
-| Confusing question_references with source_variable_references | 9 | question_ref = what was asked, source_var_ref = what data was used |
-| Using `find()` with a name instead of identifier | 11 | Print `item.identifier` first |
-| Not validating before saving | 11-13 | Make validation a habit: always validate before save |
+| Forgetting to import Category/Instrument | 9 | Show the import line explicitly |
+| Confusing Question with QuestionConstruct | 10 | Question = content, QuestionConstruct = flow step |
+| Confusing question_references with source_variable_references | 11 | question_ref = what was asked, source_var_ref = what data was used |
+| Using `find()` with a name instead of identifier | 13 | Print `item.identifier` first |
+| Not validating before saving | 3 onwards | Make validation a habit: always validate before save |
 
 ## Adapting for each audience
 
 | Audience | Emphasize | Skip or skim |
 | ---------- | ----------- | ------------- |
-| University students | Modules 1 (motivation), 3-6 (basics) | SQL section in Module 6 |
-| Researchers | Modules 6 (CSV workflow), 7-11 (code lists, flows, lineage, linkage, properties) | Module 1 if they know metadata |
-| Archivists | Modules 13-14 (versioning, open/modify), 12 (custom fields) | Modules 3-5 if DDI-experienced |
-| NSO staff | Modules 6-13 (full pipeline), 8 (flows), 9 (lineage), 10 (linkage), 12 (custom fields), 15 (CLI) | Module 1 if DDI-experienced |
+| University students | Modules 1 (motivation), 3-7 (basics and checking your work) | SQL section in Module 8 |
+| Researchers | Modules 1, 4 and 5 (DDI vocabulary), 8 (CSV workflow), 9-13 (code lists, flows, lineage, linkage, properties) | Module 2 if they already use Python |
+| Archivists | Modules 2-7 (Python, open/modify, validation), 14 (custom fields), 15 (versioning) | Module 1 if DDI-experienced |
+| NSO staff | Modules 8-15 (full pipeline), especially 10 (flows), 11 (lineage), 12 (linkage), 14 (custom fields) | Modules 1 and 3 |
+| Developers automating DDI checks | Modules 3 and 7, then the [automation track](index.md#automation-track) | Modules 1, 4 and 5 |
 
 ## Assessment approach
 
@@ -247,7 +256,7 @@ After the final session:
 
 ## Additional resources
 
-- [Persona-based learning tracks](../tutorials/persona-learning-paths.md):
-  Additional workshop formats
-- [Authoring tutorials](../tutorials/authoring.md): Standalone exercises
-- [Training labs](../tutorials/training-labs.md): Interactive labs
+- [Automation track](index.md#automation-track): A workshop plan for teams
+  that automate validation
+- [Answer keys](answer-keys.md): Every exercise solution and quiz answer on
+  one page

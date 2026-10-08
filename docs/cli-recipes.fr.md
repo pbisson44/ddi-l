@@ -1,3 +1,9 @@
+---
+description: >-
+  Recettes pour la commande ddi : valider, analyser, convertir en JSON et
+  JSON-LD, faire l'aller-retour du XML DDI et lancer les contrôles en CI.
+---
+
 # Recettes CLI
 
 Le point d’entrée `ddi` regroupe les commandes de validation et de
@@ -168,7 +174,7 @@ disque, indiquez un chemin de destination plutôt que `-`. Avec l’option
 `--validate`, la commande se comporte comme `ddi validate` en renvoyant le code
 `1` et en produisant les anomalies JSON si la source est invalide.
 
-Le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.fr.md)
+Le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.md)
 montre comment intégrer cette étape avec les conversions et la préparation de
 paquets dans un pipeline de publication plus large.
 
@@ -214,8 +220,9 @@ relecture.
 
 Considérez la validation et la conversion comme des tests de non-régression en
 les exécutant dans vos workflows d’intégration continue. L’exemple ci-dessous
-montre un job GitHub Actions qui valide tous les fichiers XML et maintient les
-résultats de round-trip à jour.
+montre un job GitHub Actions qui valide tous les fichiers XML du dossier
+`metadata/` (remplacez ce chemin par celui de vos fichiers DDI) et maintient
+les résultats de round-trip à jour.
 
 ```yaml
 name: Validate DDI payloads
@@ -236,16 +243,16 @@ jobs:
           python-version: "3.11"
       - name: Install ddi-l
         run: |
-          pip install . lxml
-      - name: Validate XML fixtures
+          pip install 'ddi-l[full]'
+      - name: Validate DDI files
         run: |
           set -euo pipefail
-          find src/ddi_l/examples/tests/fixtures -name "*.xml" -print0 \
+          find metadata -name "*.xml" -print0 \
             | xargs -0 -n1 -P4 ddi validate
       - name: Rebuild round-trip artefacts
         run: |
           mkdir -p build/roundtrip
-          for input in src/ddi_l/examples/tests/fixtures/*.xml; do
+          for input in metadata/*.xml; do
             output="build/roundtrip/$(basename "$input")"
             ddi roundtrip "$input" --output "$output" --validate
           done
@@ -253,4 +260,4 @@ jobs:
 
 Complétez le workflow avec `ddi to-json` pour publier des instantanés lisibles
 par machine aux côtés des sorties XML ou déléguez à un script sur mesure comme
-proposé dans le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.fr.md).
+proposé dans le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.md).

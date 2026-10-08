@@ -1,3 +1,9 @@
+---
+description: >-
+  Module 1 du cours ddi-l : ce que sont les métadonnées, pourquoi la
+  documentation compte, les principes FAIR et la place du DDI.
+---
+
 # Module 1 : Qu'est-ce que les métadonnées et pourquoi sont-elles importantes ?
 
 !!! info "Ce que vous apprendrez"
@@ -215,8 +221,22 @@ public puisse accéder à des données fiables et bien documentées.
 Notez **3 choses** qu'une nouvelle personne aurait besoin de savoir avant de
 pouvoir utiliser ces données. Par exemple : que mesure la colonne A ?
 
+??? success "Réponse"
+    Trois de ces éléments, ou d'autres semblables :
+
+    1. Ce que signifie chaque colonne (A est-elle un âge ? En années ou en mois ?)
+    2. Qui a été interrogé (des étudiants ? des adultes ? tout le monde ?)
+    3. Quand les données ont été collectées
+
 **Exercice 2.** Visitez <https://ddialliance.org> et trouvez une phrase sur le
 site qui décrit ce que fait DDI. Notez cette phrase.
+
+??? success "Réponse"
+    Par exemple : « The Data Documentation Initiative (DDI) is an international
+    standard for describing data from the social, behavioral, economic, and health
+    sciences. » (L'initiative de documentation des données est une norme
+    internationale pour décrire les données des sciences sociales,
+    comportementales, économiques et de la santé.)
 
 ---
 

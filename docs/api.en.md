@@ -1,3 +1,9 @@
+---
+description: >-
+  The ddi-l public Python API, generated from the source docstrings:
+  new_study, open_ddi, Document and the advanced layer.
+---
+
 # API reference
 
 Generated from the docstrings in the source.

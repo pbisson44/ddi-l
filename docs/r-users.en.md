@@ -1,3 +1,9 @@
+---
+description: >-
+  Use ddi-l from R through reticulate: create, open, validate and lint DDI
+  documents without leaving R.
+---
+
 # Using ddi-l from R
 
 R users can call `ddi-l` directly through

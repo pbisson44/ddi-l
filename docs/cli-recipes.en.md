@@ -1,3 +1,9 @@
+---
+description: >-
+  Recipes for the ddi command: validate, lint, convert to JSON and JSON-LD,
+  round-trip DDI XML, and run the checks in CI.
+---
+
 # CLI recipes
 
 The `ddi` console entry point bundles commands for validating and transforming
@@ -163,7 +169,7 @@ destination path instead of `-`. With `--validate`, the command mirrors
 `ddi validate` by returning exit code `1` and streaming JSON issues if the
 source is invalid.
 
-The [Command-line Automation Playbook](tutorials/automation-playbook.md)
+The [command-line automation playbook](tutorials/automation-playbook.md)
 shows how to integrate round-tripping with conversion and packaging steps for a
 larger publishing pipeline.
 
@@ -208,8 +214,8 @@ preparing review packages.
 
 Treat validation and conversion as regression tests by running them in your
 continuous integration workflows. The snippet below illustrates a GitHub
-Actions job that validates all XML files and keeps round-tripped output up to
-date.
+Actions job that validates every XML file under `metadata/` (change the path to
+wherever your DDI files live) and keeps round-tripped output up to date.
 
 ```yaml
 name: Validate DDI payloads
@@ -230,16 +236,16 @@ jobs:
           python-version: "3.11"
       - name: Install ddi-l
         run: |
-          pip install . lxml
-      - name: Validate XML fixtures
+          pip install 'ddi-l[full]'
+      - name: Validate DDI files
         run: |
           set -euo pipefail
-          find src/ddi_l/examples/tests/fixtures -name "*.xml" -print0 \
+          find metadata -name "*.xml" -print0 \
             | xargs -0 -n1 -P4 ddi validate
       - name: Rebuild round-trip artefacts
         run: |
           mkdir -p build/roundtrip
-          for input in src/ddi_l/examples/tests/fixtures/*.xml; do
+          for input in metadata/*.xml; do
             output="build/roundtrip/$(basename "$input")"
             ddi roundtrip "$input" --output "$output" --validate
           done
@@ -247,4 +253,4 @@ jobs:
 
 Augment the workflow with `ddi to-json` to publish machine-readable snapshots
 alongside XML outputs or hand control to a custom script as described in the
-[Command-line Automation Playbook](tutorials/automation-playbook.md).
+[command-line automation playbook](tutorials/automation-playbook.md).

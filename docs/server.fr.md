@@ -1,3 +1,9 @@
+---
+description: >-
+  L'API HTTP de ddi-l : valider, analyser et convertir des documents DDI par
+  HTTP avec ddi serve, avec Swagger UI et les limites de déploiement.
+---
+
 # API HTTP
 
 `ddi-l` fournit un service HTTP optionnel qui expose les mêmes opérations de

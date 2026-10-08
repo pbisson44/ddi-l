@@ -1,3 +1,9 @@
+---
+description: >-
+  DDI 3.x namespace profiles and prefix bindings in ddi_l.namespaces, and
+  how ddi-l applies them when it writes XML.
+---
+
 # Namespace profiles and bindings
 
 The `ddi_l.namespaces` module centralizes the namespace bindings that appear

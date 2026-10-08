@@ -1,3 +1,9 @@
+---
+description: >-
+  How much of the DDI Lifecycle 3.3 schema ddi-l supports, and at which
+  level: round-trip, typed models or the Document API.
+---
+
 # Schema coverage
 
 This page is an honest map of how much of the DDI Lifecycle 3.3 schema
@@ -70,7 +76,7 @@ typed model instead. n/a means not applicable.
 `add_item()` / `items()` currently recognize 30 item types, including the
 full questionnaire-flow set (`QuestionConstruct`, `Sequence`, `IfThenElse`,
 `StatementItem`, `ComputationItem`, `Loop`; see
-[Module 8](curriculum/module-08-questionnaire-flows.md)), `PhysicalInstance`,
+[Module 10](curriculum/module-10-questionnaire-flows.md)), `PhysicalInstance`,
 `RecordLayout`, `DataRelationship`, and `NCube`. A physical instance describes
 one data file; a record layout maps variables to positions within it.
 

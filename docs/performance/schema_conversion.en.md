@@ -1,3 +1,9 @@
+---
+description: >-
+  A repeatable benchmark for parsing, validating and converting DDI schema
+  sources into ddi-l objects.
+---
+
 # Schema conversion benchmark
 
 This page outlines a baseline benchmark for converting schema definitions into ddi-l objects. Use it to validate performance changes and to keep regression testing repeatable.

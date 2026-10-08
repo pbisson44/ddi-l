@@ -1,3 +1,9 @@
+---
+description: >-
+  Une référence rapide d'une page de l'API ddi-l et des imports utilisés
+  dans le programme de formation.
+---
+
 # Aide-mémoire
 
 Cette page est un guide de référence rapide pour le paquet `ddi-l`.
@@ -159,7 +165,7 @@ tagged = [x for x in doc.variables if any(k.startswith("myorg:") for k in x.prop
 ```
 
 Les champs personnalisés se sérialisent en `r:UserAttributePair` (et `r:UserID`),
-ce qui reste du DDI valide. Voir [Module 12](module-12-custom-fields.md).
+ce qui reste du DDI valide. Voir [Module 14](module-14-custom-fields.md).
 
 ---
 
@@ -194,7 +200,7 @@ item.version_rationales.append(
 item.version_responsibility = "Equipe de conception d'enquete"
 ```
 
-Modifier un élément déjà présent dans le fichier, puis le versionner (voir le Module 13, sections 6 et 7) :
+Modifier un élément déjà présent dans le fichier, puis le versionner (voir le Module 15, sections 6 et 7) :
 
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
@@ -260,7 +266,7 @@ doc.add_item(Instrument, name="Instrument d'enquete")
 
 `Loop` fonctionne de la même façon (`doc.add_item(Loop, name="...")`), avec
 sa section répétée définie via `loop.control_construct_reference`. Voir le
-[Module 8](module-08-questionnaire-flows.md) pour l'exemple complet.
+[Module 10](module-10-questionnaire-flows.md) pour l'exemple complet.
 
 ---
 
@@ -292,7 +298,7 @@ rl.add_data_item(income.to_reference(), start_position=3, width=8)
 Omettez les positions pour un fichier délimité (virgule/tabulation).
 
 Pour mettre à jour plusieurs variables à partir d'un nouveau fichier de données, en versionnant chaque changement, voir le
-[Module 13, section 8](module-13-update-and-version.md#8-mettre-a-jour-plusieurs-variables-a-partir-dun-nouveau-fichier-de-donnees).
+[Module 15, section 8](module-15-update-and-version.md#8-mettre-a-jour-plusieurs-variables-a-partir-dun-nouveau-fichier-de-donnees).
 
 ---
 
@@ -461,7 +467,7 @@ linked.source_variable_references = [
 
 Les `source_variable_references` inter-études émettent un avertissement à
 l'enregistrement. C'est attendu pour le couplage. Voir
-[Module 10](module-10-data-linkage.md).
+[Module 12](module-12-data-linkage.md).
 
 ---
 

@@ -1,3 +1,9 @@
+---
+description: >-
+  Module 4 du cours ddi-l : ajouter des variables et lier chacune à la
+  question qui l'a collectée.
+---
+
 # Module 4 : Ajouter des variables et les associer aux questions
 
 !!! info "Ce que vous apprendrez"
@@ -181,42 +187,57 @@ questions, puis ajoutez trois variables associées à ces questions :
 
 Affichez le nombre de variables.
 
-```python
-import ddi_l as ddi
-
-doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
-
-q1 = doc.add_question(text="What is your age?")
-q2 = doc.add_question(text="How would you rate your health?")
-q3 = doc.add_question(text="How many hours do you sleep per night?")
-
-v1 = doc.add_variable(name="Age", question=q1)
-v2 = doc.add_variable(name="HealthRating", question=q2)
-v3 = doc.add_variable(name="SleepHours", question=q3)
-
-print(f"Variables: {len(doc.variables)}")
-```
-
 Résultat attendu :
 
 ```text
 Variables: 3
 ```
 
+??? success "Réponse"
+    ```python
+    import ddi_l as ddi
+
+    doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
+
+    q1 = doc.add_question(text="What is your age?")
+    q2 = doc.add_question(text="How would you rate your health?")
+    q3 = doc.add_question(text="How many hours do you sleep per night?")
+
+    v1 = doc.add_variable(name="Age", question=q1)
+    v2 = doc.add_variable(name="HealthRating", question=q2)
+    v3 = doc.add_variable(name="SleepHours", question=q3)
+
+    print(f"Variables: {len(doc.variables)}")
+    ```
+
 **Exercice 2.** Affichez l'identifiant de chaque variable à l'aide d'une
-boucle for :
+boucle for. Vous devriez voir trois identifiants uniques, un par ligne.
 
-```python
-for v in doc.variables:
-    print(v.identifier)
-```
+??? success "Réponse"
+    ```python
+    for v in doc.variables:
+        print(v.identifier)
+    ```
 
-Vous devriez voir trois identifiants uniques affichés, un par ligne.
+    Chaque identifiant est un UUID, par exemple `a1b2c3d4-...`.
 
 **Exercice 3.** Sauvegardez le document avec `doc.save("well-being.xml")`.
 Ouvrez le fichier XML dans un éditeur de texte. Pouvez-vous trouver un
 élément `<l:Variable>` ? Notez le nom de la variable que vous voyez dans le
 XML.
+
+??? success "Réponse"
+    Chaque variable est un élément `<l:Variable>`. Son nom se trouve dans
+    `<l:VariableName>`, par exemple :
+
+    ```xml
+    <l:VariableName>
+      <r:String xml:lang="en">Age</r:String>
+    </l:VariableName>
+    ```
+
+    L'élément `<r:QuestionReference>` juste en dessous est le lien vers la
+    question.
 
 ---
 

@@ -1,3 +1,9 @@
+---
+description: >-
+  Validate DDI documents against the bundled 3.1, 3.2 and 3.3 schemas, run
+  the lint rules, and read the results in Python or the CLI.
+---
+
 # Validate and lint DDI content
 
 `ddi-l` checks documents in two ways: schema validation against the DDI

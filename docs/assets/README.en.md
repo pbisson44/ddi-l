@@ -1,3 +1,9 @@
+---
+description: >-
+  The ddi-l logo, favicon and documentation stylesheets, and the rules for
+  using them.
+---
+
 # Documentation assets
 
 Branding and styling assets used by MkDocs.

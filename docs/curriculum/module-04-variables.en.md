@@ -1,4 +1,10 @@
-# Module 4: Add Variables and Link Them to Questions
+---
+description: >-
+  Module 4 of the ddi-l course: add variables and link each one to the
+  question that collected it.
+---
+
+# Module 4: Add variables and link them to questions
 
 !!! info "What you will learn"
     - Define what a variable is in DDI.
@@ -7,7 +13,7 @@
     - List variables with `doc.variables`.
     - Explain why linking questions to variables matters.
 
-**Prerequisites:** [Module 3: Create Your First DDI Study](module-03-first-study.md)
+**Prerequisites:** [Module 3: Create your first DDI study](module-03-first-study.md)
 
 **Time:** 30 min self-paced / 40 min instructor-led.
 
@@ -177,40 +183,55 @@ then add three variables linked to those questions:
 
 Print the variable count.
 
-```python
-import ddi_l as ddi
-
-doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
-
-q1 = doc.add_question(text="What is your age?")
-q2 = doc.add_question(text="How would you rate your health?")
-q3 = doc.add_question(text="How many hours do you sleep per night?")
-
-v1 = doc.add_variable(name="Age", question=q1)
-v2 = doc.add_variable(name="HealthRating", question=q2)
-v3 = doc.add_variable(name="SleepHours", question=q3)
-
-print(f"Variables: {len(doc.variables)}")
-```
-
 Expected output:
 
 ```text
 Variables: 3
 ```
 
-**Exercise 2.** Print the identifier of each variable using a for loop:
+??? success "Answer"
+    ```python
+    import ddi_l as ddi
 
-```python
-for v in doc.variables:
-    print(v.identifier)
-```
+    doc = ddi.new_study(title="Student Well-Being Survey", agency="university.edu")
 
-You should see three unique identifiers printed, one per line.
+    q1 = doc.add_question(text="What is your age?")
+    q2 = doc.add_question(text="How would you rate your health?")
+    q3 = doc.add_question(text="How many hours do you sleep per night?")
+
+    v1 = doc.add_variable(name="Age", question=q1)
+    v2 = doc.add_variable(name="HealthRating", question=q2)
+    v3 = doc.add_variable(name="SleepHours", question=q3)
+
+    print(f"Variables: {len(doc.variables)}")
+    ```
+
+**Exercise 2.** Print the identifier of each variable using a for loop. You
+should see three unique identifiers, one per line.
+
+??? success "Answer"
+    ```python
+    for v in doc.variables:
+        print(v.identifier)
+    ```
+
+    Each identifier is a UUID, such as `a1b2c3d4-...`.
 
 **Exercise 3.** Save the document with `doc.save("well-being.xml")`. Open the
 XML file in a text editor. Can you find a `<l:Variable>` element? Write down
 the variable name you see inside the XML.
+
+??? success "Answer"
+    Each variable is an `<l:Variable>` element. Its name is in
+    `<l:VariableName>`, for example:
+
+    ```xml
+    <l:VariableName>
+      <r:String xml:lang="en">Age</r:String>
+    </l:VariableName>
+    ```
+
+    The `<r:QuestionReference>` just below it is the link to the question.
 
 ---
 

@@ -1,3 +1,9 @@
+---
+description: >-
+  Use ddi-l as the foundation for dashboards, web services, CLI utilities
+  and data pipelines.
+---
+
 # Build tools and applications with ddi-l
 
 This guide is for developers who want to use `ddi-l` as a foundation for
