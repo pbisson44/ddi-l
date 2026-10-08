@@ -183,6 +183,20 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-06-csv-to-ddi/"/>
     </url>
     <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-06-open-modify/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-06-open-modify/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-06-open-modify/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-07-cli-validation/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-07-cli-validation/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-07-cli-validation/"/>
+    </url>
+    <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-07-code-lists/</loc>
         <lastmod>2026-10-08</lastmod>
         <changefreq>daily</changefreq>
@@ -190,11 +204,25 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-07-code-lists/"/>
     </url>
     <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-08-csv-to-ddi/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-08-csv-to-ddi/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-08-csv-to-ddi/"/>
+    </url>
+    <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-08-questionnaire-flows/</loc>
         <lastmod>2026-10-08</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-08-questionnaire-flows/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-08-questionnaire-flows/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-09-code-lists/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-09-code-lists/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-09-code-lists/"/>
     </url>
     <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-09-data-lineage/</loc>
@@ -211,6 +239,20 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-10-data-linkage/"/>
     </url>
     <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-10-questionnaire-flows/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-10-questionnaire-flows/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-10-questionnaire-flows/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-11-data-lineage/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-11-data-lineage/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-11-data-lineage/"/>
+    </url>
+    <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-11-properties-find-validate/</loc>
         <lastmod>2026-10-08</lastmod>
         <changefreq>daily</changefreq>
@@ -225,11 +267,32 @@
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-12-custom-fields/"/>
     </url>
     <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-12-data-linkage/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-12-data-linkage/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-12-data-linkage/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-13-properties-find-validate/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-13-properties-find-validate/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-13-properties-find-validate/"/>
+    </url>
+    <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-13-update-and-version/</loc>
         <lastmod>2026-10-08</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-13-update-and-version/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-13-update-and-version/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-14-custom-fields/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-14-custom-fields/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-14-custom-fields/"/>
     </url>
     <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-14-open-modify/</loc>
@@ -244,6 +307,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-15-cli-validation/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-15-cli-validation/"/>
+    </url>
+    <url>
+        <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-15-update-and-version/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://pbisson44.github.io/ddi-l/latest/curriculum/module-15-update-and-version/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://pbisson44.github.io/ddi-l/latestfr/curriculum/module-15-update-and-version/"/>
     </url>
     <url>
         <loc>https://pbisson44.github.io/ddi-l/latest/curriculum/module-16-capstone/</loc>

@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Reference and tutorials for the ddi-l toolkit.">
+        <meta name="description" content="L'API Python publique de ddi-l, générée à partir des docstrings : new_study, open_ddi, Document et la couche avancée.">
       
       
       
         <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/api/">
       
       
-        <link rel="prev" href="../curriculum/answer-keys/">
+        <link rel="prev" href="../user-guide/">
       
       
-        <link rel="next" href="../namespaces/">
+        <link rel="next" href="../models/">
       
       
         
@@ -489,79 +489,16 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Aperçu
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
     
     
       <li class="md-tabs__item">
-        <a href="../installation/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
     
   
-  Bien démarrer
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../validation/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Guides
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../tutorials/authoring/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Bibliothèque de tutoriels
+  Accueil
 
         </a>
       </li>
@@ -583,7 +520,29 @@
   
     
   
-  Programme de formation
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../validation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides pratiques
 
         </a>
       </li>
@@ -601,7 +560,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../user-guide/" class="md-tabs__link">
           
   
   
@@ -629,7 +588,7 @@
   
     
   
-  Projet
+  À propos
 
         </a>
       </li>
@@ -758,38 +717,11 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Aperçu
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
     
     
       
         
-      
+          
         
       
         
@@ -807,17 +739,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
     
   
-    Bien démarrer
+    Accueil
   
 
     
@@ -825,19 +758,27 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bien démarrer
+    Accueil
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -867,544 +808,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../user-guide/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Guide d'utilisation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cli-recipes/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Parcourir les recettes CLI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Guides
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Guides
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../validation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Valider et analyser le contenu DDI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    API HTTP
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Référence des modèles
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Bibliothèque de tutoriels
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Bibliothèque de tutoriels
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/authoring/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Workflows d'auteur
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/training-labs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Exercices d'entraînement interactifs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/persona-learning-paths/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Parcours d'apprentissage par persona
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    De XML aux objets
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Clinique de dépannage des schémas
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/automation-playbook/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Guide d'automatisation en ligne de commande
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Laboratoire de réutilisation de fragments
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorials/building-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Construire des outils et applications
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../r-users/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Utiliser ddi-l depuis R
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1476,7 +879,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -1487,7 +890,7 @@
   <span class="md-ellipsis">
     
   
-    Programme de formation
+    Apprendre
   
 
     
@@ -1498,18 +901,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Programme de formation
+    Apprendre
   
 
           </label>
@@ -1664,14 +1067,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-06-csv-to-ddi/" class="md-nav__link">
+      <a href="../curriculum/module-06-open-modify/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 6 : Du CSV/Excel au DDI
+    Module 6 : Ouvrir et modifier des fichiers
   
 
     
@@ -1692,14 +1095,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-07-code-lists/" class="md-nav__link">
+      <a href="../curriculum/module-07-cli-validation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 7 : Listes de codes
+    Module 7 : Valider depuis la ligne de commande
   
 
     
@@ -1720,14 +1123,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-08-questionnaire-flows/" class="md-nav__link">
+      <a href="../curriculum/module-08-csv-to-ddi/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 8 : Flux de questionnaire
+    Module 8 : Du CSV/Excel au DDI
   
 
     
@@ -1748,14 +1151,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-09-data-lineage/" class="md-nav__link">
+      <a href="../curriculum/module-09-code-lists/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 9 : Traçabilité des données
+    Module 9 : Listes de codes
   
 
     
@@ -1776,14 +1179,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-10-data-linkage/" class="md-nav__link">
+      <a href="../curriculum/module-10-questionnaire-flows/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 10 : Couplage de données
+    Module 10 : Flux de questionnaire
   
 
     
@@ -1804,14 +1207,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-11-properties-find-validate/" class="md-nav__link">
+      <a href="../curriculum/module-11-data-lineage/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 11 : Propriétés, recherche et validation
+    Module 11 : Traçabilité des données
   
 
     
@@ -1832,14 +1235,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-12-custom-fields/" class="md-nav__link">
+      <a href="../curriculum/module-12-data-linkage/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 12 : Champs personnalisés
+    Module 12 : Couplage de données
   
 
     
@@ -1860,14 +1263,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-13-update-and-version/" class="md-nav__link">
+      <a href="../curriculum/module-13-properties-find-validate/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 13 : Mise à jour et versionnage
+    Module 13 : Propriétés, recherche et validation
   
 
     
@@ -1888,14 +1291,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-14-open-modify/" class="md-nav__link">
+      <a href="../curriculum/module-14-custom-fields/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 14 : Ouvrir et modifier des fichiers
+    Module 14 : Champs personnalisés
   
 
     
@@ -1916,14 +1319,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-15-cli-validation/" class="md-nav__link">
+      <a href="../curriculum/module-15-update-and-version/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 15 : Validation en ligne de commande
+    Module 15 : Mise à jour et versionnage
   
 
     
@@ -2060,6 +1463,337 @@
       
   
   
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides pratiques
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides pratiques
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser la ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatiser la validation en CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dépanner les erreurs de schéma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Réutiliser des fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passer du XML aux objets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servir l'API HTTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser ddi-l depuis R
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Construire des outils et applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -2093,10 +1827,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -2114,8 +1848,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2124,6 +1858,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'utilisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2218,6 +1980,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des modèles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../namespaces/" class="md-nav__link">
         
   
@@ -2267,6 +2057,75 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    À propos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    À propos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -2274,14 +2133,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
+      <a href="../release-notes/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Paquets Python associés
+    Notes de version
   
 
     
@@ -2314,20 +2173,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
         
           
-          <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
             
   
   
@@ -2345,8 +2201,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2370,7 +2226,7 @@
   <span class="md-ellipsis">
     
   
-    Aperçu
+    Performance
   
 
     
@@ -2420,82 +2276,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../assets/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Projet
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Projet
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
                 
   
@@ -2503,14 +2283,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../release-notes/" class="md-nav__link">
+      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Notes de version
+    Paquets Python associés
   
 
     
@@ -2538,7 +2318,7 @@
   <span class="md-ellipsis">
     
   
-    Guide du contributeur
+    Guide de développement
   
 
     
@@ -2550,8 +2330,6 @@
     </li>
   
 
-              
-            
               
             
           </ul>
@@ -2626,7 +2404,7 @@
       <a href="../" class="md-path__link">
         
   <span class="md-ellipsis">
-    Aperçu
+    ddi-l
   </span>
 
       </a>
@@ -2641,7 +2419,7 @@
     
     
       <li class="md-path__item">
-        <a href="./" class="md-path__link">
+        <a href="../user-guide/" class="md-path__link">
           
   <span class="md-ellipsis">
     Référence
@@ -2678,7 +2456,7 @@
 qui sont rédigées en anglais ; elle n'est donc pas traduite.</p>
 <p>Le reste de la documentation (guides, tutoriels et les seize modules du
 programme de formation) est disponible en français.</p>
-<p><a class="md-button md-button--primary" href="https://pbisson44.github.io/ddi-l/api/">Consulter la référence de l'API (en anglais) →</a></p>
+<p><a class="md-button md-button--primary" href="https://pbisson44.github.io/ddi-l/latest/api/">Consulter la référence de l'API (en anglais) →</a></p>
 </div>
 <h2 id="par-ou-commencer">Par où commencer<a class="headerlink" href="#par-ou-commencer" title="Permanent link">&para;</a></h2>
 <p><code>new_study()</code> et <code>open_ddi()</code> renvoient un objet <code>Document</code>, qui est le point
@@ -2695,6 +2473,9 @@ quel niveau, voir la <a href="../schema-coverage/">couverture du schéma</a>.</p
 
 
 
+
+  
+  
 
 
 
@@ -2726,7 +2507,7 @@ quel niveau, voir la <a href="../schema-coverage/">couverture du schéma</a>.</p
       <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
         
           
-          <a href="../curriculum/answer-keys/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Corrigés">
+          <a href="../user-guide/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Guide d&#39;utilisation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2736,20 +2517,20 @@ quel niveau, voir la <a href="../schema-coverage/">couverture du schéma</a>.</p
                 Précédent
               </span>
               <div class="md-ellipsis">
-                Corrigés
+                Guide d'utilisation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../namespaces/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Catalogue des espaces de noms">
+          <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Référence des modèles">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Suivant
               </span>
               <div class="md-ellipsis">
-                Catalogue des espaces de noms
+                Référence des modèles
               </div>
             </div>
             <div class="md-footer__button md-icon">
