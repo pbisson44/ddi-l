@@ -2,13 +2,6 @@
   <r:Agency>example.agency</r:Agency>
   <r:ID>1f8fe282-90f0-5c88-b6e9-bdfc2b4836aa</r:ID>
   <r:Version>1</r:Version>
-  <r:DataCollectionReference>
-    <r:URN>urn:ddi:ca.statcan:90072ecf-b791-525d-baf6-c64d016e4b36:1</r:URN>
-    <r:Agency>ca.statcan</r:Agency>
-    <r:ID>90072ecf-b791-525d-baf6-c64d016e4b36</r:ID>
-    <r:Version>1</r:Version>
-    <r:TypeOfObject>DataCollection</r:TypeOfObject>
-  </r:DataCollectionReference>
   <c:ConceptualComponent>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>2d855270-eb54-5a35-9f40-597c93beea09</r:ID>
@@ -107,4 +100,11 @@
       </c:UnitType>
     </c:UnitTypeScheme>
   </c:ConceptualComponent>
+  <r:DataCollectionReference>
+    <r:URN>urn:ddi:ca.statcan:90072ecf-b791-525d-baf6-c64d016e4b36:1</r:URN>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>90072ecf-b791-525d-baf6-c64d016e4b36</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>DataCollection</r:TypeOfObject>
+  </r:DataCollectionReference>
 </s:StudyUnit>

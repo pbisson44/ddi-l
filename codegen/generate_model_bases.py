@@ -22,8 +22,12 @@ from codegen.xsd_introspect import (
     DDI_NS_PREFIXES,
     ChildElement,
     ComplexTypeInfo,
+    collect_child_ranks,
+    collect_element_layout,
     collect_fixed_attributes_by_element,
+    collect_fragment_items,
     collect_label_slot_tags,
+    collect_substitution_heads,
     introspect_schemas,
 )
 
@@ -525,6 +529,120 @@ def _generate_fixed_attributes() -> str:
     return "\n".join(lines)
 
 
+def _generate_element_layout() -> str:
+    """Emit the empty-element and attribute-order tables the XML writers use."""
+    text_tags, attribute_order = collect_element_layout()
+    lines = [
+        '"""How DDI 3.3 elements are laid out when written, per the XSDs.',
+        "",
+        "Generated from the XSDs. Consumed by the Colectica-layout writer",
+        "(``ddi_l.colectica``), which writes byte-for-byte what Colectica",
+        "Designer writes. A parsed tree keeps neither fact below:",
+        "",
+        "- ``TEXT_CONTENT_TAGS``: elements whose type holds text. Empty, they",
+        "  are written ``<r:UserID></r:UserID>``; every other empty element is",
+        "  written self-closed, ``<r:ResponseCardinality ... />``.",
+        "- ``ATTRIBUTE_ORDER``: attribute names in declaration order (base type",
+        "  first), for each element that declares two or more.",
+        "- ``SUBSTITUTION_HEADS``: the head each substitution-group member",
+        "  stands in for, so the models can put a member where its head goes.",
+        "",
+        "Regenerate with: python -m codegen.generate_model_bases",
+        '"""',
+        "",
+        "from __future__ import annotations",
+        "",
+        "from typing import Final",
+        "",
+        "TEXT_CONTENT_TAGS: Final[frozenset[str]] = frozenset(",
+        "    {",
+    ]
+    lines.extend(f'        "{tag}",' for tag in text_tags)
+    lines.extend(["    }", ")", ""])
+    lines.append("ATTRIBUTE_ORDER: Final[dict[str, tuple[str, ...]]] = {")
+    for tag, names in attribute_order.items():
+        rendered = ", ".join(f'"{name}"' for name in names)
+        lines.append(f'    "{tag}": ({rendered},),')
+    lines.extend(["}", ""])
+    lines.extend(
+        [
+            "",
+            "# Substitution-group member -> the head a content model names, so a",
+            "# d:CodeDomain is ordered where its type declares d:ResponseDomain.",
+            "SUBSTITUTION_HEADS: Final[dict[str, str]] = {",
+        ]
+    )
+    for member, head in collect_substitution_heads().items():
+        lines.append(f'    "{member}": "{head}",')
+    lines.extend(["}", ""])
+    return "\n".join(lines)
+
+
+def _generate_fragment_items() -> str:
+    """Emit the table of fragment item types and their generated bases."""
+    items = collect_fragment_items()
+    lines = [
+        '"""Every element a ``ddi:Fragment`` may carry, and its generated base.',
+        "",
+        "Generated from the XSDs. ``ddi_l.models`` registers a typed model for",
+        "each item type that has no hand-written one, built on the generated",
+        "base named here, so every item a Colectica repository can export parses",
+        "into a model. Keyed by element tag; the value is ``(module, class)``",
+        "in ``ddi_l.models._generated`` -- several elements share one XSD type.",
+        "",
+        "Regenerate with: python -m codegen.generate_model_bases",
+        '"""',
+        "",
+        "from __future__ import annotations",
+        "",
+        "from typing import Final",
+        "",
+        "FRAGMENT_ITEM_TYPES: Final[dict[str, tuple[str, str]]] = {",
+    ]
+    for tag, (module, type_name) in items.items():
+        class_name = _to_class_name(type_name) + "Fields"
+        lines.append(f'    "{tag}": ("{module}", "{class_name}"),')
+    lines.extend(["}", ""])
+    return "\n".join(lines)
+
+
+def _generate_child_order() -> str:
+    """Emit the per-type child rank table the models order output by."""
+    ranks_by_type, type_by_element = collect_child_ranks()
+    lines = [
+        '"""The order each DDI 3.3 content model gives its children.',
+        "",
+        "Generated from the XSDs. ``CHILD_RANKS`` maps a type to its child tags",
+        "in rank groups: groups appear in list order; tags within a group (the",
+        "members of a repeating choice or sequence) may interleave freely.",
+        "``ELEMENT_TYPES`` maps each element to its type's key.",
+        "",
+        "The models use it to put content they keep without mapping back where",
+        "the schema wants it, at any depth -- a nested ``l:Code`` or",
+        "``cm:ItemMap`` as much as the item itself. Imported on first use.",
+        "",
+        "Regenerate with: python -m codegen.generate_model_bases",
+        '"""',
+        "",
+        "from __future__ import annotations",
+        "",
+        "from typing import Final",
+        "",
+        "CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {",
+    ]
+    for key, groups in ranks_by_type.items():
+        lines.append(f'    "{key}": (')
+        for members in groups:
+            rendered = ", ".join(f'"{tag}"' for tag in members)
+            lines.append(f"        ({rendered},),")
+        lines.append("    ),")
+    lines.extend(["}", "", "ELEMENT_TYPES: Final[dict[str, str]] = {"])
+    for element, key in type_by_element.items():
+        lines.append(f'    "{element}": "{key}",')
+    lines.extend(["}", ""])
+    return "\n".join(lines)
+
+
 def generate_all(
     modules: list[str] | None = None,
 ) -> dict[str, Path]:
@@ -550,6 +668,21 @@ def generate_all(
     label_slots_path.write_text(_generate_label_slots(), encoding="utf-8")
     written["label_slots"] = label_slots_path
     print(f"  Generated {label_slots_path.name}")
+
+    child_order_path = OUTPUT_DIR / "child_order.py"
+    child_order_path.write_text(_generate_child_order(), encoding="utf-8")
+    written["child_order"] = child_order_path
+    print(f"  Generated {child_order_path.name}")
+
+    fragment_items_path = OUTPUT_DIR / "fragment_items.py"
+    fragment_items_path.write_text(_generate_fragment_items(), encoding="utf-8")
+    written["fragment_items"] = fragment_items_path
+    print(f"  Generated {fragment_items_path.name}")
+
+    element_layout_path = OUTPUT_DIR / "element_layout.py"
+    element_layout_path.write_text(_generate_element_layout(), encoding="utf-8")
+    written["element_layout"] = element_layout_path
+    print(f"  Generated {element_layout_path.name}")
 
     fixed_attributes_path = OUTPUT_DIR / "fixed_attributes.py"
     fixed_attributes_path.write_text(_generate_fixed_attributes(), encoding="utf-8")

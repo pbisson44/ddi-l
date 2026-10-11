@@ -140,8 +140,8 @@ class RecordLayoutFields(MaintainableBase):
     default_numeric_data_type_reference: Optional[Reference] = None  # [0..1]
     default_text_data_type_reference: Optional[Reference] = None  # [0..1]
     default_date_time_data_type_reference: Optional[Reference] = None  # [0..1]
-    coded_data_as_numeric: Optional[Element] = None  # [1..1]
-    coded_data_as_text: Optional[Element] = None  # [1..1]
+    coded_data_as_numeric: Optional[Reference] = None  # [1..1]
+    coded_data_as_text: Optional[Reference] = None  # [1..1]
     default_variable_scheme_reference: Optional[Reference] = None  # [0..1]
     proprietary_info: Optional[Element] = None  # [0..1]
     data_items: list[Element] = field(default_factory=list)  # [0..*]
@@ -161,8 +161,8 @@ class RecordLayoutFields(MaintainableBase):
         "default_numeric_data_type_reference": (qn("ddi:physicaldataproduct_proprietary:3_3", "DefaultNumericDataTypeReference"), "reference", False),
         "default_text_data_type_reference": (qn("ddi:physicaldataproduct_proprietary:3_3", "DefaultTextDataTypeReference"), "reference", False),
         "default_date_time_data_type_reference": (qn("ddi:physicaldataproduct_proprietary:3_3", "DefaultDateTimeDataTypeReference"), "reference", False),
-        "coded_data_as_numeric": (qn("ddi:physicaldataproduct_proprietary:3_3", "CodedDataAsNumeric"), "element", False),
-        "coded_data_as_text": (qn("ddi:physicaldataproduct_proprietary:3_3", "CodedDataAsText"), "element", False),
+        "coded_data_as_numeric": (qn("ddi:physicaldataproduct_proprietary:3_3", "CodedDataAsNumeric"), "reference", False),
+        "coded_data_as_text": (qn("ddi:physicaldataproduct_proprietary:3_3", "CodedDataAsText"), "reference", False),
         "default_variable_scheme_reference": (qn(REUSABLE_NS, "DefaultVariableSchemeReference"), "reference", False),
         "proprietary_info": (qn(REUSABLE_NS, "ProprietaryInfo"), "element", False),
         "data_items": (qn("ddi:physicaldataproduct_proprietary:3_3", "DataItem"), "element", True),

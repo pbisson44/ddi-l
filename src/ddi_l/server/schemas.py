@@ -18,13 +18,17 @@ from litestar.openapi.spec import Example
 from litestar.params import KwargDefinition
 
 __all__ = [
+    "EXAMPLE_BAD_LANGUAGE",
     "EXAMPLE_CLIENT_ERROR",
     "EXAMPLE_HEALTH",
     "EXAMPLE_INDEX",
     "EXAMPLE_INVALID_DOCUMENT",
     "EXAMPLE_LINT",
+    "EXAMPLE_NOT_TABLES",
     "EXAMPLE_PAYLOAD_TOO_LARGE",
     "EXAMPLE_PROFILE",
+    "EXAMPLE_TABLES",
+    "EXAMPLE_TABLE_PROBLEMS",
     "EXAMPLE_TIMEOUT",
     "EXAMPLE_VALID_DOCUMENT",
     "EXAMPLE_VERSIONS",
@@ -35,6 +39,10 @@ __all__ = [
     "LintResponse",
     "ProfileResponse",
     "SchemaIssueModel",
+    "SettingModel",
+    "TableColumnModel",
+    "TableModel",
+    "TablesResponse",
     "ValidationMessageModel",
     "ValidationResponse",
     "VersionsResponse",
@@ -282,10 +290,101 @@ class ErrorResponse:
     extra: Annotated[
         list[dict[str, Any]] | None,
         _field(
-            "Per-field detail, present only when a query parameter failed "
-            "validation -- for example `?lint=maybe`.",
+            "Itemized detail: the query parameters that failed validation (a "
+            "400, for example `?lint=maybe`), or every problem in the tables "
+            "sent to `POST /v1/tables/import` (a 422), each with `where` and "
+            "`message`. Absent otherwise.",
         ),
     ] = None
+
+
+@dataclass
+class TableColumnModel:
+    """One column of a metadata table."""
+
+    name: Annotated[str, _field("The column's name in the header row.", "parent")]
+    help: Annotated[
+        str,
+        _field(
+            "What goes in it.",
+            "The broader concept(s) this one narrows (ids in `concepts`).",
+        ),
+    ]
+    required: Annotated[bool, _field("Whether every row must fill it.", False)]
+    multilingual: Annotated[
+        bool,
+        _field(
+            "Whether it takes one column per language: `label@en`, `label@fr`.",
+            True,
+        ),
+    ]
+    references: Annotated[
+        str | None,
+        _field("The table whose `id`s it holds, if it points at one.", "concepts"),
+    ]
+    multiple: Annotated[
+        bool, _field("Whether it takes several values separated by `|`.", True)
+    ]
+
+
+@dataclass
+class TableModel:
+    """One metadata table: a CSV file, or a sheet of a workbook."""
+
+    name: Annotated[
+        str,
+        _field("The file name without `.csv`, or the sheet name.", "concepts"),
+    ]
+    help: Annotated[
+        str, _field("What one row is.", "What is measured: one row per concept.")
+    ]
+    custom_columns: Annotated[
+        bool,
+        _field(
+            "Whether it takes `custom:<name>` columns, stored as "
+            "`r:UserAttributePair`.",
+            True,
+        ),
+    ]
+    columns: Annotated[list[TableColumnModel], _field("Its columns, in order.")]
+
+
+@dataclass
+class SettingModel:
+    """One row of the `settings` table."""
+
+    name: Annotated[str, _field("The setting, in the `setting` column.", "agency")]
+    required: Annotated[bool, _field("Whether it must be given.", True)]
+    default: Annotated[
+        str | None, _field("Its value when not given; `null` if required.", "1")
+    ]
+    help: Annotated[
+        str,
+        _field(
+            "What it sets.",
+            "The maintenance agency of every item, such as ca.statcan.",
+        ),
+    ]
+
+
+@dataclass
+class TablesResponse:
+    """The result of `GET /v1/tables`."""
+
+    tables: Annotated[
+        list[TableModel],
+        _field("Every table `POST /v1/tables/import` reads, in display order."),
+    ]
+    settings: Annotated[
+        list[SettingModel], _field("The rows the `settings` table takes.")
+    ]
+    multi_value_separator: Annotated[
+        str, _field("What separates several ids in one cell.", "|")
+    ]
+    custom_prefix: Annotated[
+        str,
+        _field("What starts the name of a column of your own.", "custom:"),
+    ]
 
 
 # --- Whole-payload examples: verbatim responses from the service -----------
@@ -426,21 +525,27 @@ EXAMPLE_HEALTH = Example(
     summary="Service is up", value={"status": "ok", "version": "0.1.0"}
 )
 
+#: Every route, as `GET /` lists them.
+ENDPOINTS: dict[str, str] = {
+    "health": "/health",
+    "versions": "/v1/versions",
+    "validate": "POST /v1/validate",
+    "lint": "POST /v1/lint",
+    "to_json": "POST /v1/convert/json",
+    "to_jsonld": "POST /v1/convert/jsonld",
+    "to_xml": "POST /v1/convert/xml",
+    "roundtrip": "POST /v1/roundtrip",
+    "tables": "/v1/tables",
+    "tables_template": "/v1/tables/template",
+    "tables_import": "POST /v1/tables/import",
+}
+
 EXAMPLE_INDEX = Example(
     summary="Service index",
     value={
         "service": "ddi-l",
         "version": "0.1.0",
-        "endpoints": {
-            "health": "/health",
-            "versions": "/v1/versions",
-            "validate": "POST /v1/validate",
-            "lint": "POST /v1/lint",
-            "to_json": "POST /v1/convert/json",
-            "to_jsonld": "POST /v1/convert/jsonld",
-            "to_xml": "POST /v1/convert/xml",
-            "roundtrip": "POST /v1/roundtrip",
-        },
+        "endpoints": ENDPOINTS,
         "documentation": "/schema",
     },
 )
@@ -453,6 +558,40 @@ EXAMPLE_CLIENT_ERROR = Example(
             "Document root must be DDIInstance or FragmentInstance in the DDI "
             "instance namespace. (line 1, xpath /not-ddi)"
         ),
+    },
+)
+
+EXAMPLE_NOT_TABLES = Example(
+    summary="Not a workbook or a zip",
+    value={
+        "status_code": 400,
+        "detail": "The body is not an .xlsx workbook or a .zip of CSV files.",
+    },
+)
+
+EXAMPLE_TABLE_PROBLEMS = Example(
+    summary="Tables with a problem",
+    description=(
+        "Every problem found, at once, each with its file (or sheet), row and "
+        "column, so one request lists everything to fix."
+    ),
+    value={
+        "status_code": 422,
+        "detail": "The tables have 1 problem; `extra` lists them.",
+        "extra": [
+            {
+                "where": "variables.csv, row 2, column question",
+                "message": "no row in questions has id 'Q_AGE'",
+            }
+        ],
+    },
+)
+
+EXAMPLE_BAD_LANGUAGE = Example(
+    summary="A malformed language tag",
+    value={
+        "status_code": 400,
+        "detail": "'e n' is not a language tag, such as en or fr-CA.",
     },
 )
 
@@ -500,3 +639,21 @@ def validation_message(payload: dict[str, Any]) -> ValidationMessageModel:
         location=payload.get("location"),
         rule_id=payload.get("rule_id"),
     )
+
+
+def _tables_example() -> Example:
+    """Two of the tables, as `GET /v1/tables` describes them."""
+    from ..operations import tables_spec
+
+    spec = tables_spec()
+    shown = [table for table in spec["tables"] if table["name"] in {"concepts"}]
+    return Example(
+        summary="The settings and one of the tables",
+        description=(
+            "The response lists every table; this example shows `concepts` only."
+        ),
+        value={**spec, "tables": shown},
+    )
+
+
+EXAMPLE_TABLES = _tables_example()

@@ -455,6 +455,7 @@ def write_ddi(
     xml_declaration: bool = True,
     encoding: str = "utf-8",
     version: str | None = None,
+    layout: str = "default",
 ) -> bytes:
     """Serialize a document to ``destination`` (or return bytes when omitted).
 
@@ -473,6 +474,12 @@ def write_ddi(
             text streams.
         version: Optional DDI schema version override used to assert the target
             release is supported when specified.
+        layout: ``"default"``, or ``"colectica"`` to write a
+            ``FragmentInstance`` exactly as Colectica Designer does (UTF-8 with
+            a byte-order mark, one item per ``<Fragment>`` with its module as
+            the default namespace). ``pretty_print``, ``xml_declaration`` and
+            ``encoding`` do not apply to that layout. See
+            :mod:`ddi_l.colectica`.
 
     Returns:
         The serialized XML bytes regardless of ``destination``.
@@ -521,7 +528,16 @@ def write_ddi(
             location=location,
         ) from exc
 
+    if layout not in ("default", "colectica"):
+        raise ValueError(
+            f"Unknown layout {layout!r}; expected 'default' or 'colectica'."
+        )
     try:
+        if layout == "colectica":
+            from .colectica import to_colectica_bytes
+
+            xml_bytes = to_colectica_bytes(element)
+            return _write_to_destination(xml_bytes, destination, encoding="utf-8")
         xml_bytes = _emit_xml(
             element,
             pretty_print=pretty_print,

@@ -11,6 +11,7 @@ from ..namespaces import NamespaceBindings, build_namespace_map
 from ._generated.archive import ArchiveFields, OrganizationFields
 from .base import (
     InternationalString,
+    append_intl_strings,
     apply_other_attributes,
     clone_element,
     collect_other_attributes,
@@ -57,10 +58,9 @@ class OrganizationIdentification:
 
     def to_xml(self) -> Element:
         element = create_element(self.TAG)
-        for name in self.names:
-            container = create_element(qn(ARCHIVE_NS, "OrganizationName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element, qn(ARCHIVE_NS, "OrganizationName"), self.names, child_tag="String"
+        )
         for child in self.other_elements:
             element.append(clone_element(child))
         apply_other_attributes(element, self.other_attributes)

@@ -8,8 +8,144 @@ description: >-
 
 ## Non publié
 
+### Exports Colectica
+
+- **Lire, modifier et écrire les exports `FragmentInstance` de Colectica.**
+  `ddi.open_fragment()` en ouvre un ; `DDIFragment.items()`, `get()`,
+  `top_level_item()`, `put()` et `remove()` en manipulent les éléments comme
+  modèles typés ; `DDIFragment.save()` écrit exactement la mise en forme de
+  Colectica Designer (UTF-8 avec marque d'ordre des octets, un élément par
+  `<Fragment>`, chaque élément déclarant son module comme espace de noms par
+  défaut, attributs dans l'ordre du schéma) : un export ouvert puis enregistré
+  revient octet pour octet. `DDIFragment.from_items()` construit un nouvel
+  export avec ce que Colectica écrit sur chaque élément. Aussi
+  `write_ddi(..., layout="colectica")`, `ddi roundtrip --layout colectica` et
+  le module `ddi_l.colectica`. Voir *Travailler avec les exports Colectica*.
+- **Un modèle typé pour chaque type d'élément de fragment.** Les 161 types
+  d'éléments qu'un fragment DDI 3.3 peut contenir s'analysent maintenant avec
+  `MaintainableBase.from_xml` ; les 91 sans classe écrite à la main en
+  reçoivent une de `ddi_l.models.items`. Un test construit à partir des XSD un
+  échantillon valide de chacun et vérifie qu'il fait l'aller-retour à
+  l'identique.
+- **`version_date`** lit et modifie `versionDate` sur tout élément.
+
+### Charger du DDI depuis des tableurs
+
+- **Charger en lot les métadonnées d'une étude depuis des fichiers CSV, un zip
+  de ces fichiers, ou un classeur Excel.** Un tableau par type d'élément, des lignes liées par `id`,
+  couvrant ce que la plupart des organisations documentent :
+  - l'étude, ses groupes, organisations et personnes (`studies`, `groups`,
+    `organizations`, `individuals`) ;
+  - concepts, univers, types d'unités et la cascade des variables
+    (`conceptual_variables`, `represented_variables`, `variables`) ;
+  - listes de codes, y compris les classifications hiérarchiques
+    (`codes.parent`) ;
+  - questions avec instructions, grilles, blocs et groupes de questions,
+    formulées par langue et par public (`question_texts`) ;
+  - questionnaires et leur cheminement (`instruments`, `flow`) : séquences,
+    énoncés, conditions et boucles ;
+  - groupes de variables, fichiers de données (`datasets`) et n-cubes ;
+  - méthodologie, traitements, énoncés de qualité et tables de
+    correspondance.
+
+  Le texte va dans une colonne par langue (`label@en`, `label@fr`) et les
+  colonnes `custom:<nom>` sont enregistrées comme `r:UserAttributePair`.
+  `ddi_l.tables.load_tables()` renvoie des modèles typés ; `to_fragment()`
+  écrit une `FragmentInstance` Colectica qui contient tous les éléments,
+  valide selon le schéma DDI 3.3, et `to_study()` une étude DDI pour les tableaux qu'un
+  document d'étude peut contenir. Les éléments qu'impliquent les lignes sont
+  écrits aussi : une collecte de données par étude, des séquences pour le
+  cheminement, une relation de données par fichier. Les identifiants sont
+  dérivés de l'agence et de vos id : recharger donne les mêmes éléments. Tous
+  les problèmes sont signalés d'un coup, avec leur fichier, leur ligne et leur
+  colonne. Aussi `ddi tables template` et `ddi tables import`, et
+  `Document.attach()` pour placer dans une étude un élément construit
+  ailleurs. Les classeurs Excel sont lus et écrits avec la bibliothèque
+  standard : aucune nouvelle dépendance. Voir *Charger du DDI depuis des
+  tableurs* et *Modèles de tableurs*, qui offre des modèles vides et
+  d'exemple à télécharger.
+
+### API HTTP
+
+- **Les exports Colectica font l'aller-retour octet pour octet.** `POST
+  /v1/roundtrip?layout=colectica` écrit une `FragmentInstance` comme Colectica
+  Designer : un export inchangé revient identique, et une comparaison ne
+  montre que ce que l'analyse a perdu. Sans ce paramètre, chaque fichier
+  Colectica semblait modifié.
+- **Charger des tableaux de métadonnées par HTTP.** `POST /v1/tables/import`
+  reçoit un classeur `.xlsx` ou un `.zip` de fichiers CSV et répond par une
+  `FragmentInstance` Colectica (ou, avec `?study=`, une étude). Des tableaux
+  qui ont des problèmes donnent un `422` dont `extra` énumère chaque problème
+  avec son fichier, sa ligne et sa colonne. `GET /v1/tables/template`
+  télécharge les tableaux vides ou d'exemple, et `GET /v1/tables` décrit
+  chaque tableau et chaque colonne en JSON. Les envois sont lus en mémoire,
+  dans des limites de taille, de nombre de fichiers, de lignes et de colonnes.
+- **`load_tables()` lit aussi un zip de fichiers CSV, ou les octets d'un
+  classeur ou d'un zip.** Tout comme `ddi tables import`.
+
+### Corrections
+
+- **Une étude dans un fragment ne signale plus ses références.**
+  `DDIFragment.from_items()` et `put()` signalaient chaque référence d'un
+  `StudyUnit` comme non résolue, alors que dans un fragment les éléments
+  qu'elle désigne sont chacun dans leur propre fragment.
+- **Les modèles typés ne perdent plus de contenu.** Lire un élément puis le
+  réécrire supprimait `versionDate`, `r:VersionResponsibility` et la filiation
+  `r:BasedOnObject` dans les modèles écrits à la main (Variable, CodeList,
+  RepresentedVariable, DataRelationship, StudyUnit et d'autres) ; scindait un
+  `r:Label` ou un nom bilingue en un élément par langue ; supprimait
+  `audienceLanguage` et `d:ConditionalText` du texte des questions, les paires
+  d'attributs utilisateur et les attributs dans les références, les
+  attributs de `r:URN`/`r:ID`, les attributs de vocabulaire contrôlé et les
+  métadonnées des schémas en ligne ; et écrivait certains contenus hors de
+  l'ordre du schéma (QuestionItem, Sequence), ce que le schéma refuse.
+- **`DDIFragment.from_items()` retire chaque URN de référence redondant.** Il
+  sautait la référence suivant chaque URN retiré : un élément à plusieurs
+  références gardait des `r:URN` que Colectica n'écrit pas.
+- **Les références sont écrites telles que lues.** Une référence lue sans
+  `r:URN` n'en reçoit plus ; une référence construite dans le code en reçoit
+  toujours une.
+- **Le `xs:boolean` `"1"` est vrai.** Plusieurs enveloppes le lisaient comme
+  faux et écrivaient `"false"`. Les valeurs gardent leur orthographe d'origine
+  tant qu'elles ne changent pas.
+- **Les identifiants lus dans un fichier sont conservés.** `DataCollection`
+  réécrivait les `r:ID` non UUID (le sien et ceux de tout ce qu'elle contient)
+  en UUID générés, ce qui brisait les références d'autres éléments ; elle ne
+  le fait plus que pour les objets construits dans le code.
+- **La validation des fragments ne pardonne plus de vraies erreurs.** Une
+  erreur dans le `StudyUnit` d'un fragment (et quelques autres vrais éléments
+  DDI) était ignorée, et la validation s'arrêtait là, masquant toute erreur
+  suivante. Seuls les types d'extension de la bibliothèque sont exemptés, et
+  toutes les erreurs sont vérifiées.
+- `ConceptualComponent` écrit toujours les concepts, univers, variables
+  conceptuelles et types d'unités dans leurs schémas ; écrits seuls, ils
+  étaient invalides.
+- `d:Methodology` écrit `d:MethodologyName` dans l'espace de noms DDI 3.3.
+- `r:ExternalURLReference`, `r:ExternalURNReference` et quelques autres
+  éléments nommés `*Reference` ne sont plus lus comme des références DDI (ce
+  qui les vidait).
+- Une valeur valide selon le schéma qui ne s'analyse pas comme le type
+  numérique déclaré n'empêche plus le chargement d'un élément.
+- Construire un fragment est linéaire en sa taille (c'était quadratique :
+  53 s pour un export de 4 478 éléments, moins de 3 s maintenant).
+
 ### Documentation
 
+- **Un seul jeu de couleurs, lisible dans chaque mode.** Le site emploie un
+  seul bleu de marque pour l'en-tête, les liens et les boutons, l'orange ne
+  marquant que l'anneau de focus du clavier, et chaque couleur de texte
+  respecte le niveau AA des WCAG en mode clair, sombre et contraste élevé. Le
+  mode sombre utilise désormais les couleurs du site plutôt que celles de
+  Material par défaut, et ses boutons sont lisibles : les boutons à contour
+  étaient à 2,3:1, et un bouton de téléchargement dans une page à 1,1:1, bleu
+  marine sur noir. Le contraste élevé a un en-tête noir, des onglets de
+  navigation visibles et du code lisible, et ses notes et astuces sont sombres
+  comme la page au lieu d'être des encadrés blancs dont les tableaux étaient
+  blanc sur blanc. Le logo suit la couleur de l'en-tête au lieu de
+  s'afficher en noir, et le menu des palettes se trouve dans l'en-tête, à côté
+  du bouton clair/sombre, au lieu de recouvrir l'icône de recherche sur
+  téléphone. Les trois palettes adaptées à la vision des couleurs sont
+  retirées : le bleu et l'orange conviennent déjà à ces lecteurs.
 - **Les liens sans version ne renvoient plus d'erreur 404.** Le README et le
   modèle de ticket passent par `/latest/`, et la racine du site sert désormais
   un `404.html` qui redirige tout chemin sans version (`/ddi-l/server/`) vers

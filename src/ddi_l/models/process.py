@@ -9,7 +9,14 @@ from typing import Any, ClassVar
 from .._etree import Element, create_element
 from ..constants import PROCESS_NS, REUSABLE_NS
 from ..namespaces import NamespaceBindings, build_namespace_map
-from .base import InternationalString, MaintainableBase, Reference, clone_element, qn
+from .base import (
+    InternationalString,
+    MaintainableBase,
+    Reference,
+    append_intl_strings,
+    clone_element,
+    qn,
+)
 from .datacollection import VersionableMaintainableBase
 
 __all__ = [
@@ -54,10 +61,9 @@ class _ProcessMaintainableBase(VersionableMaintainableBase):
 
     def _append_process_common(self, element: Element) -> None:
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(PROCESS_NS, self.NAME_TAG))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element, qn(PROCESS_NS, self.NAME_TAG), self.names, child_tag="String"
+        )
 
 
 @dataclass
@@ -342,10 +348,9 @@ class _ProcessSchemeBase(MaintainableBase):
         return data
 
     def _append_scheme_common(self, element: Element) -> None:
-        for name in self.names:
-            container = create_element(qn(PROCESS_NS, self.NAME_TAG))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element, qn(PROCESS_NS, self.NAME_TAG), self.names, child_tag="String"
+        )
 
 
 @dataclass

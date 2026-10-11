@@ -850,6 +850,7 @@ def _run_roundtrip(args: argparse.Namespace) -> int:
                 xml_declaration=not args.no_declaration,
                 encoding=args.encoding,
                 version=args.version,
+                layout=args.layout,
             )
             if destination is sys.stdout.buffer:
                 sys.stdout.flush()
@@ -863,6 +864,56 @@ def _run_roundtrip(args: argparse.Namespace) -> int:
             )
 
     return _finalize_statuses(statuses)
+
+
+def _run_tables_template(args: argparse.Namespace) -> int:
+    """Write the metadata tables to fill in, blank or with the example."""
+    from .tables import write_table_templates
+
+    languages = tuple(args.languages) if args.languages else ("en", "fr")
+    path = write_table_templates(
+        args.destination,
+        example=args.example,
+        languages=languages,
+        layout=args.format,
+    )
+    print(f"Wrote {path}", file=sys.stderr)
+    return 0
+
+
+def _run_tables_import(args: argparse.Namespace) -> int:
+    """Load metadata tables and write them as DDI XML."""
+    from .tables import TableImportError, load_tables
+
+    try:
+        tables = load_tables(
+            args.source,
+            agency=args.agency,
+            version=args.item_version,
+            language=args.language,
+        )
+    except TableImportError as error:
+        if _DEBUG:
+            raise
+        print(f"Error: {error}", file=sys.stderr)
+        return 1
+    destination = _resolve_destination_for_source(
+        args.output,
+        source_label=args.source,
+        multiple_inputs=False,
+        fallback_suffix=".xml",
+    )
+    if args.study:
+        write(tables.to_study(args.study), destination=destination)
+    else:
+        write(tables.to_fragment(), destination=destination, layout="colectica")
+    if destination is sys.stdout.buffer:
+        sys.stdout.flush()
+    print(
+        f"Loaded {len(tables.items)} items from {args.source}",
+        file=sys.stderr,
+    )
+    return 0
 
 
 def _run_lint(args: argparse.Namespace) -> int:
@@ -1302,7 +1353,92 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Omit contextual snippets when validation issues are reported.",
     )
+    roundtrip_parser.add_argument(
+        "--layout",
+        choices=("default", "colectica"),
+        default="default",
+        help=(
+            "Output layout. 'colectica' writes a FragmentInstance exactly as "
+            "Colectica Designer does, so an export read and written back is "
+            "byte-identical."
+        ),
+    )
     roundtrip_parser.set_defaults(func=_run_roundtrip)
+
+    tables_parser = subparsers.add_parser(
+        "tables",
+        help="Load DDI from spreadsheets (CSV files or an .xlsx workbook).",
+    )
+    tables_commands = tables_parser.add_subparsers(dest="tables_command")
+
+    def _tables_help(_args: argparse.Namespace) -> int:
+        tables_parser.print_help()
+        return 1
+
+    tables_parser.set_defaults(func=_tables_help)
+    template_parser = tables_commands.add_parser(
+        "template",
+        help="Write the metadata tables to fill in.",
+    )
+    template_parser.add_argument(
+        "destination",
+        help="A folder for --format csv; a .zip or .xlsx file otherwise.",
+    )
+    template_parser.add_argument(
+        "--example",
+        action="store_true",
+        help="Fill the tables with a small bilingual example survey.",
+    )
+    template_parser.add_argument(
+        "--lang",
+        dest="languages",
+        action="append",
+        metavar="LANGUAGE",
+        help=(
+            "A language to give columns such as label@en for; repeat for "
+            "several. Defaults to en and fr."
+        ),
+    )
+    template_parser.add_argument(
+        "--format",
+        choices=("csv", "zip", "xlsx"),
+        default="csv",
+        help="A folder of CSV files (default), the same zipped, or a workbook.",
+    )
+    template_parser.set_defaults(func=_run_tables_template)
+    import_parser = tables_commands.add_parser(
+        "import",
+        help="Load metadata tables and write them as DDI XML.",
+    )
+    import_parser.add_argument(
+        "source", help="A folder of CSV files, a .zip of them, or an .xlsx workbook."
+    )
+    import_parser.add_argument(
+        "-o",
+        "--output",
+        default="-",
+        help="Destination path, or '-' for stdout (default).",
+    )
+    import_parser.add_argument(
+        "--study",
+        metavar="TITLE",
+        help=(
+            "Write a DDIInstance with the items inside a study of this title, "
+            "instead of a Colectica FragmentInstance."
+        ),
+    )
+    import_parser.add_argument(
+        "--agency", help="The agency of every item; overrides settings."
+    )
+    import_parser.add_argument(
+        "--item-version",
+        dest="item_version",
+        help="The version of items without their own; overrides settings.",
+    )
+    import_parser.add_argument(
+        "--language", help="The language of names; overrides settings."
+    )
+    import_parser.set_defaults(func=_run_tables_import)
 
     lint_parser = subparsers.add_parser(
         "lint",

@@ -6,22 +6,32 @@
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>2fe03c94-5409-5c07-820c-9d8fec115f94</r:ID>
     <r:Version>1</r:Version>
-    <c:Concept>
+    <c:ConceptScheme>
       <r:Agency>ca.statcan</r:Agency>
-      <r:ID>196d33a4-7699-5eef-b71a-c7f42db2f25d</r:ID>
+      <r:ID>13cdde1c-f24c-5f08-81fb-7abddb32e9bf</r:ID>
       <r:Version>1</r:Version>
-      <c:ConceptName>
-        <r:String xml:lang="en">Satisfaction concept</r:String>
-      </c:ConceptName>
-    </c:Concept>
-    <c:Universe>
+      <c:Concept>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>196d33a4-7699-5eef-b71a-c7f42db2f25d</r:ID>
+        <r:Version>1</r:Version>
+        <c:ConceptName>
+          <r:String xml:lang="en">Satisfaction concept</r:String>
+        </c:ConceptName>
+      </c:Concept>
+    </c:ConceptScheme>
+    <c:UniverseScheme>
       <r:Agency>ca.statcan</r:Agency>
-      <r:ID>fc9ee73f-84c6-5168-8215-5a6b6d4425fb</r:ID>
+      <r:ID>0158591f-2702-57ca-ae03-12e77c1533ff</r:ID>
       <r:Version>1</r:Version>
-      <c:UniverseName>
-        <r:String xml:lang="en">Adults 18+</r:String>
-      </c:UniverseName>
-    </c:Universe>
+      <c:Universe>
+        <r:Agency>ca.statcan</r:Agency>
+        <r:ID>fc9ee73f-84c6-5168-8215-5a6b6d4425fb</r:ID>
+        <r:Version>1</r:Version>
+        <c:UniverseName>
+          <r:String xml:lang="en">Adults 18+</r:String>
+        </c:UniverseName>
+      </c:Universe>
+    </c:UniverseScheme>
   </c:ConceptualComponent>
   <d:DataCollection>
     <r:Agency>ca.statcan</r:Agency>
@@ -168,7 +178,7 @@
           <r:String xml:lang="en">Standard access</r:String>
         </a:AccessTypeName>
         <a:Restrictions>
-          <r:Content xml:lang="en" isPlainText="true">None</r:Content>
+          <r:Content>None</r:Content>
         </a:Restrictions>
       </a:DefaultAccess>
     </a:ArchiveSpecific>

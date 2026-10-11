@@ -8,7 +8,6 @@
   </r:Name>
   <l:ItemCode>A</l:ItemCode>
   <r:DefiningConceptReference>
-    <r:URN>urn:ddi:ca.statcan:329ea7fa-2bfd-5df4-a8dd-91484397e772:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>329ea7fa-2bfd-5df4-a8dd-91484397e772</r:ID>
     <r:Version>1</r:Version>
@@ -21,7 +20,6 @@
     <r:Content xml:lang="en">Excludes agricultural activities.</r:Content>
   </l:Excludes>
   <l:ExcludedClassificationItemReference>
-    <r:URN>urn:ddi:ca.statcan:703ba5a8-565b-5f1e-a1cc-be8b11a0b36f:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>703ba5a8-565b-5f1e-a1cc-be8b11a0b36f</r:ID>
     <r:Version>1</r:Version>
@@ -34,7 +32,6 @@
     <r:Content xml:lang="en">Will transition to updated classification in 2026.</r:Content>
   </l:FutureEvents>
   <l:SuccessorClassificationItemReference>
-    <r:URN>urn:ddi:ca.statcan:daf71e49-d24d-59d1-a927-a8a0e60152e8:2</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>daf71e49-d24d-59d1-a927-a8a0e60152e8</r:ID>
     <r:Version>2</r:Version>
@@ -47,7 +44,6 @@
     <r:Content xml:lang="en">Annual review of included industries.</r:Content>
   </l:Updates>
   <l:ParentClassificationItemReference>
-    <r:URN>urn:ddi:ca.statcan:d6389049-4534-5395-aefc-f8fbb5f63166:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>d6389049-4534-5395-aefc-f8fbb5f63166</r:ID>
     <r:Version>1</r:Version>

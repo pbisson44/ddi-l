@@ -154,6 +154,7 @@ EXPECTED_PUBLIC_API = [
     "iterparse_ddi",
     "new_study",
     "open_ddi",
+    "open_fragment",
     "read_ddi",
     "write_ddi",
 ]

@@ -16,6 +16,7 @@ from ..constants import DATASET_NS, PHYSICAL_DATA_PRODUCT_NS, REUSABLE_NS
 from .base import (
     InternationalString,
     Reference,
+    append_intl_strings,
     apply_other_attributes,
     clone_element,
     collect_other_attributes,
@@ -126,10 +127,9 @@ class DataSet:
         array_base = create_element(qn(REUSABLE_NS, "ArrayBase"))
         array_base.text = str(self.array_base)
         element.append(array_base)
-        for name in self.names:
-            name_el = create_element(qn(DATASET_NS, "DataSetName"))
-            name_el.append(name.to_child(child_tag="String"))
-            element.append(name_el)
+        append_intl_strings(
+            element, qn(DATASET_NS, "DataSetName"), self.names, child_tag="String"
+        )
         # RecordSet, ItemSet, and VariableSet are mutually exclusive (an XSD
         # choice); emit whichever form has been populated.
         if self.records:
@@ -169,7 +169,7 @@ class DataSet:
         segment_used = None
         link_reference = None
         if link_el is not None:
-            link_reference = Reference.from_xml(link_el)
+            link_reference = Reference.from_xml(link_el, extras=False)
             segment_el = link_el.find(
                 qn(PHYSICAL_DATA_PRODUCT_NS, "PhysicalRecordSegmentUsed")
             )

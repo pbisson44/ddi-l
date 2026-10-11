@@ -10,6 +10,43 @@
 {% block extrahead %}
   {{ super() }}
   <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {%- for option in config.theme.palette %}
+        {{ {"scheme": option.scheme | d("default", true), "primary": option.primary | d("indigo", true), "accent": option.accent | d("indigo", true)} | tojson }}{{ "," if not loop.last }}
+        {%- endfor %}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
     // Driven by Material's `document$` observable rather than DOMContentLoaded.
     // `document$` emits on the initial load and again after every page swap, so
     // this keeps working if `navigation.instant` is ever enabled -- it is off
@@ -73,6 +110,19 @@
         }, 50);
       }
 
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
       function setupOnce() {
         if (initialised) {
           return;
@@ -94,23 +144,25 @@
             if (scheme && scheme !== lastScheme) {
               lastScheme = scheme;
               announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
             }
           });
         }).observe(document.body, { attributes: true });
 
-        // -- Accessibility palette menu -------------------------------------
+        // -- Palette menu ----------------------------------------------------
         //
-        // The four accessibility palettes are entries 2-5 of theme.palette and
-        // carry no `toggle:`, so they stay off the header cycle (see the
-        // override in partials/palette.html) while Material still renders a
-        // radio input for each. Clicking that input is the supported way in:
-        // Material's own subscription applies the colours and persists the
-        // choice under `<scope>.__palette`. Writing localStorage directly here
-        // is what the previous version did, against a key Material never reads.
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
         //
         // Delegated from the menu container, which lives in the header and so
         // survives instant navigation.
         var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
         if (menu) {
           menu.addEventListener("click", function (event) {
             var button = event.target.closest("[data-ddi-palette-index]");
@@ -173,42 +225,6 @@
       }
     })();
   </script>
-{% endblock %}
-
-{% block header %}
-  {{ super() }}
-  <!--
-    Rendered after the header so the palette radio inputs Material writes in
-    `partials/palette.html` already exist in the document.
-  -->
-  <div class="ddi-palette-menu" data-ddi-palette-menu>
-    <details class="ddi-palette-menu__details">
-      <summary class="ddi-palette-menu__summary"
-               title="{{ config.extra.palette_menu_label | default('Accessibility palettes') }}">
-        <span class="sr-only">{{ config.extra.palette_menu_label | default("Accessibility palettes") }}</span>
-        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
-      </summary>
-      <ul class="ddi-palette-menu__list">
-        {% for option in config.theme.palette %}
-          {% if not option.toggle %}
-            <li>
-              {#
-                `loop.index0` is the position in the full palette list, which is
-                exactly the N in Material's `__palette_N` input id. Do not
-                offset it by the number of toggle entries: the loop runs over
-                every palette entry and only the body is filtered.
-              #}
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="{{ loop.index0 }}">
-                {{ config.extra.palette_labels[option.scheme] | default(option.scheme) }}
-              </button>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </details>
-  </div>
 {% endblock %}
 
 {#

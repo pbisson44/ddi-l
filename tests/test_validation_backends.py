@@ -7,9 +7,6 @@ from typing import Any
 
 import pytest
 
-import ddi_l as ddi
-from ddi_l import schema_loader
-
 STRUCTURAL_WARNINGS_XML = """
 <FragmentInstance xmlns="ddi:instance:3_3" xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3">
   <TopLevelReference>
@@ -215,19 +212,23 @@ def _backend(name: str):
 
 def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:
     _lxml_only()
+    import ddi_l as ddi
+    from ddi_l import schema_loader
 
     doc = ddi.new_study(title="Fast", agency="example.org")
     doc.add_variable(name="age", label="Age")
     root = doc.inner.root
     calls: list[int] = []
     schema = schema_loader.get_schema("3.3")
-    original = type(schema).validate
+    original = type(schema).iter_errors
 
     def counting(self, *args, **kwargs):
         calls.append(1)
         return original(self, *args, **kwargs)
 
-    monkeypatch.setattr(type(schema), "validate", counting)
+    # The python backend walks every error with iter_errors, so a gap early in
+    # a fragment cannot hide a later error.
+    monkeypatch.setattr(type(schema), "iter_errors", counting)
     with _backend("lxml") as runtime:
         assert runtime.validate(root, raise_error=False) == []
     assert calls == []
@@ -238,7 +239,9 @@ def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:
 
 def test_backends_report_identical_issues() -> None:
     _lxml_only()
-    etree = pytest.importorskip("lxml.etree")
+    from lxml import etree  # type: ignore[import-untyped]
+
+    import ddi_l as ddi
 
     doc = ddi.new_study(title="Broken", agency="example.org")
     doc.add_variable(name="age", label="Age")
@@ -255,5 +258,7 @@ def test_backends_report_identical_issues() -> None:
 
 
 def test_unknown_backend_is_rejected() -> None:
+    from ddi_l import schema_loader
+
     with pytest.raises(ValueError):
         schema_loader.set_validation_backend("rust")

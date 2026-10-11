@@ -59,6 +59,7 @@ from ddi_l.models import (
     QualityStatement,
     QualityStatementGroup,
     QuestionMap,
+    Reference,
     RepresentedVariable,
     SamplingPlan,
     StudyUnit,
@@ -678,7 +679,21 @@ def test_classification_item_nested_metadata() -> None:
     assert serialized.get("isPublished") == "true"
     concept_ref = serialized.find(f".//{qn(REUSABLE_NS, 'DefiningConceptReference')}")
     assert concept_ref is not None
-    urn = concept_ref.find(qn(REUSABLE_NS, "URN"))
+    # The fixture's reference has no r:URN, and a parsed reference is written
+    # back as it was read rather than gaining a synthesized one.
+    assert concept_ref.find(qn(REUSABLE_NS, "URN")) is None
+    assert concept_ref.findtext(qn(REUSABLE_NS, "ID")) == fixture_identifier(
+        "concept-manufacturing"
+    )
+    # A reference built in code still gets a canonical r:URN.
+    reference = item.defining_concept_references[0]
+    rebuilt = Reference(
+        agency=reference.agency,
+        identifier=reference.identifier,
+        version=reference.version,
+        type_of_object=reference.type_of_object,
+    ).to_xml("DefiningConceptReference")
+    urn = rebuilt.find(qn(REUSABLE_NS, "URN"))
     assert urn is not None and urn.text == fixture_urn("concept-manufacturing")
 
 

@@ -41,12 +41,16 @@ from .base import (
     UserAttributePair,
     UserID,
     VersionRationale,
+    append_intl_strings,
     apply_other_attributes,
     build_identification_elements,
     clone_element,
     collect_other_attributes,
+    identification_attributes,
     preserve_unrecognized_children,
+    preserves_source,
     qn,
+    restore_identification_attributes,
     should_validate_on_serialize,
 )
 
@@ -105,7 +109,7 @@ __all__ = [
 def _parse_bool(value: str | None) -> bool | None:
     if value is None:
         return None
-    return value.lower() == "true"
+    return value.strip().lower() in ("true", "1")  # xs:boolean
 
 
 def _format_bool(value: bool) -> str:
@@ -151,6 +155,7 @@ def _append_version_metadata(
         element.append(rationale.to_xml())
 
 
+@preserves_source
 @dataclass
 class NumberRange:
     """Lightweight representation of ``r:NumberRange`` structures."""
@@ -206,6 +211,7 @@ class NumberRange:
         return element
 
 
+@preserves_source
 @dataclass
 class CodeRepresentation:
     """Wrapper for ``r:CodeRepresentation`` nodes."""
@@ -253,6 +259,7 @@ class CodeRepresentation:
         return element
 
 
+@preserves_source
 @dataclass
 class NumericRepresentation:
     """Wrapper for ``r:NumericRepresentation`` nodes."""
@@ -311,6 +318,7 @@ class NumericRepresentation:
         return element
 
 
+@preserves_source
 @dataclass
 class DateTimeRepresentation:
     """Wrapper for ``r:DateTimeRepresentation`` nodes."""
@@ -358,6 +366,7 @@ class DateTimeRepresentation:
         return element
 
 
+@preserves_source
 @dataclass
 class TextRepresentation:
     """Wrapper for ``r:TextRepresentation`` nodes."""
@@ -396,6 +405,7 @@ class TextRepresentation:
         return element
 
 
+@preserves_source
 @dataclass
 class VariableRepresentation:
     """Wrapper for ``l:VariableRepresentation`` containers."""
@@ -518,6 +528,12 @@ class CodeItem:
     children: list[CodeItem] = field(default_factory=list)
     other_elements: list[Element] = field(default_factory=list)
     other_attributes: dict[str, str] = field(default_factory=dict)
+    # Attributes on r:Value (``xml:space``) and on the identification
+    # elements, kept so a code is written back as read.
+    value_attributes: dict[str, str] = field(default_factory=dict)
+    _identification_attributes: dict[str, dict[str, str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
 
     TAG: ClassVar[str] = qn(LOGICAL_PRODUCT_NS, "Code")
 
@@ -555,6 +571,8 @@ class CodeItem:
             children=children,
             other_elements=extras,
             other_attributes=collect_other_attributes(element),
+            value_attributes=dict(value_el.attrib) if value_el is not None else {},
+            _identification_attributes=identification_attributes(element),
         )
 
     def _append_identification(self, element: Element) -> None:
@@ -581,12 +599,14 @@ class CodeItem:
         if self.value is not None:
             value_el = create_element(qn(REUSABLE_NS, "Value"))
             value_el.text = self.value
+            apply_other_attributes(value_el, self.value_attributes)
             element.append(value_el)
         for child in self.children:
             element.append(child.to_xml())
         for extra in self.other_elements:
             element.append(clone_element(extra))
         apply_other_attributes(element, self.other_attributes)
+        restore_identification_attributes(element, self._identification_attributes)
         return element
 
 
@@ -598,6 +618,10 @@ class CodeList(CodeListFields):
     recommended_datatype: str | None = None
     code_list_references: list[Reference] = field(default_factory=list)
     category_scheme_reference: Reference | None = None
+    # Controlled-vocabulary attributes on r:RecommendedDataType.
+    _recommended_datatype_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
     hierarchy_type: str | None = None  # type: ignore[assignment]
     levels: list[Element] = field(default_factory=list)
     codes: list[CodeItem] = field(default_factory=list)  # type: ignore[assignment]
@@ -650,18 +674,24 @@ class CodeList(CodeListFields):
             hierarchy_type=hierarchy_type,
             levels=levels,
             codes=codes,
+            _recommended_datatype_attributes=(
+                dict(datatype_el.attrib) if datatype_el is not None else {}
+            ),
             **data,
         )
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
-        for name in self.names:
-            name_el = create_element(qn(LOGICAL_PRODUCT_NS, "CodeListName"))
-            name_el.append(name.to_child(child_tag="String"))
-            element.append(name_el)
+        append_intl_strings(
+            element,
+            qn(LOGICAL_PRODUCT_NS, "CodeListName"),
+            self.names,
+            child_tag="String",
+        )
         if self.recommended_datatype:
             datatype_el = create_element(qn(REUSABLE_NS, "RecommendedDataType"))
             datatype_el.text = self.recommended_datatype
+            apply_other_attributes(datatype_el, self._recommended_datatype_attributes)
             element.append(datatype_el)
         for ref in self.code_list_references:
             element.append(ref.to_xml("CodeListReference", namespace=REUSABLE_NS))
@@ -942,10 +972,12 @@ class Variable(VariableFields):
         ]
         for child in trailing_children:
             element.remove(child)
-        for name in self.names:
-            name_el = create_element(qn(LOGICAL_PRODUCT_NS, "VariableName"))
-            name_el.append(name.to_child(child_tag="String"))
-            element.append(name_el)
+        append_intl_strings(
+            element,
+            qn(LOGICAL_PRODUCT_NS, "VariableName"),
+            self.names,
+            child_tag="String",
+        )
         for child in trailing_children:
             element.append(child)
         if self.out_parameter is not None:
@@ -1168,10 +1200,12 @@ class RepresentedVariable(RepresentedVariableFields):
             version_responsibility_references=self.version_responsibility_references,
             version_rationales=self.version_rationales,
         )
-        for name in self.names:
-            name_el = create_element(qn(LOGICAL_PRODUCT_NS, "RepresentedVariableName"))
-            name_el.append(name.to_child(child_tag="String"))
-            element.append(name_el)
+        append_intl_strings(
+            element,
+            qn(LOGICAL_PRODUCT_NS, "RepresentedVariableName"),
+            self.names,
+            child_tag="String",
+        )
         for child in trailing_children:
             element.append(child)
         if self.conceptual_variable_reference is not None:
@@ -1271,10 +1305,12 @@ class DataRelationship(DataRelationshipFields):
         element = self._build_base_element()
         # DataRelationshipName precedes r:Label in the content model.
         with self._labels_last(element):
-            for name in self.names:
-                name_el = create_element(qn(LOGICAL_PRODUCT_NS, "DataRelationshipName"))
-                name_el.append(name.to_child(child_tag="String"))
-                element.append(name_el)
+            append_intl_strings(
+                element,
+                qn(LOGICAL_PRODUCT_NS, "DataRelationshipName"),
+                self.names,
+                child_tag="String",
+            )
         for record in self.logical_records:
             element.append(record.to_xml())
         for relationship in self.record_relationships:
@@ -1487,6 +1523,7 @@ class LogicalProduct(LogicalProductFields):
         default_factory=list, init=False, repr=False
     )
 
+    KEEPS_SCHEME_SHELLS: ClassVar[bool] = True
     TAG: ClassVar[str] = qn(LOGICAL_PRODUCT_NS, "LogicalProduct")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("l")
 
@@ -1740,10 +1777,12 @@ class LogicalProduct(LogicalProductFields):
             self.validate()
         element = self._build_base_element()
         # LogicalProductName
-        for name in self.names:
-            name_el = create_element(qn(LOGICAL_PRODUCT_NS, "LogicalProductName"))
-            name_el.append(name.to_child(child_tag="String"))
-            element.append(name_el)
+        append_intl_strings(
+            element,
+            qn(LOGICAL_PRODUCT_NS, "LogicalProductName"),
+            self.names,
+            child_tag="String",
+        )
         # Coverage
         for coverage_el in self.coverage:
             element.append(clone_element(coverage_el))

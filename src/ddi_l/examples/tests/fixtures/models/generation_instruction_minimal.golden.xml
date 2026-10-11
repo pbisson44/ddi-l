@@ -3,7 +3,6 @@
   <r:ID>974d4f8d-9256-5eaa-9caa-ca58af642db9</r:ID>
   <r:Version>1</r:Version>
   <d:InputQuestionReference>
-    <r:URN>urn:ddi:ca.statcan:cff13424-39ae-54cb-83ba-29e5219da425:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>cff13424-39ae-54cb-83ba-29e5219da425</r:ID>
     <r:Version>1</r:Version>
@@ -11,7 +10,6 @@
     <r:Alias>AGE_Q</r:Alias>
   </d:InputQuestionReference>
   <d:InputVariableReference>
-    <r:URN>urn:ddi:ca.statcan:d3f82587-d5ac-5620-addf-d2b2835d3f59:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>d3f82587-d5ac-5620-addf-d2b2835d3f59</r:ID>
     <r:Version>1</r:Version>

@@ -147,7 +147,18 @@ les espaces de noms et la documentation.
    `_generated/fixed_attributes.py`, recense les attributs que le XSD fixe à
    une valeur donnée ; la conversion JSON vers XML les supprime, puisqu'un
    attribut fixé par le schéma ne porte aucune information et que le réécrire
-   ferait rendre au aller-retour plus que ce qu'on lui a fourni.
+   ferait rendre au aller-retour plus que ce qu'on lui a fourni. Trois autres
+   servent la fidélité des allers-retours : `_generated/child_order.py` donne
+   les enfants de chaque modèle de contenu par groupes de rang (les membres
+   d'un choix répétable partagent un rang, si bien que leur entrelacement est
+   conservé), dont les modèles se servent pour remettre dans l'ordre du schéma,
+   à toute profondeur, le contenu qu'ils conservent sans le mapper ;
+   `_generated/element_layout.py` indique quels éléments vides portent du
+   texte, l'ordre de déclaration des attributs et les têtes des groupes de
+   substitution, pour l'écrivain Colectica (`ddi_l.colectica`) ; et
+   `_generated/fragment_items.py` liste chaque type d'élément qu'un
+   `ddi:Fragment` peut contenir, à partir de quoi `ddi_l.models.items`
+   enregistre un modèle pour chaque type sans classe écrite à la main.
 3. Le moteur XML générique de `MaintainableBase.from_xml()` / `.to_xml()`
    (`src/ddi_l/models/base.py`) pilote la sérialisation à partir de ces tables
    et émet les enfants dans l'ordre déclaré par le XSD. Tout ce que les tables

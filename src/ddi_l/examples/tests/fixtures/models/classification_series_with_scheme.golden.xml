@@ -8,7 +8,6 @@
   </r:Name>
   <l:SeriesContext controlledVocabularyID="SeriesContext">International</l:SeriesContext>
   <l:UnitTypeClassifiedReference>
-    <r:URN>urn:ddi:ca.statcan:c8c37952-1d3a-527d-9c1b-481d0b61fbf2:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>c8c37952-1d3a-527d-9c1b-481d0b61fbf2</r:ID>
     <r:Version>1</r:Version>
@@ -16,7 +15,6 @@
   </l:UnitTypeClassifiedReference>
   <l:SubjectArea controlledVocabularyID="SubjectArea">Economy</l:SubjectArea>
   <l:OwnerReference>
-    <r:URN>urn:ddi:ca.statcan:7f43194b-3b4a-5ac4-bd86-829690e8bc89:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>7f43194b-3b4a-5ac4-bd86-829690e8bc89</r:ID>
     <r:Version>1</r:Version>
@@ -45,14 +43,12 @@
     </l:LevelContext>
   </l:StatisticalClassification>
   <r:StatisticalClassificationReference>
-    <r:URN>urn:ddi:ca.statcan:94738d4e-0297-559b-ae55-eb03ff8a6ebe:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
     <r:Version>1</r:Version>
     <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
   </r:StatisticalClassificationReference>
   <l:CurrentStatisticalClassificationReference>
-    <r:URN>urn:ddi:ca.statcan:94738d4e-0297-559b-ae55-eb03ff8a6ebe:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
     <r:Version>1</r:Version>

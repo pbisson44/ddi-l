@@ -25,11 +25,45 @@ semantic versioning applies to. For the wider model layer, see
 
 ::: ddi_l.document.open_ddi
 
+::: ddi_l.document.open_fragment
+
 ## Document
 
 ::: ddi_l.document.Document
     options:
       members_order: source
+      show_root_heading: true
+      heading_level: 3
+
+## DDIFragment
+
+A `FragmentInstance`, such as a Colectica export. See
+[Work with Colectica exports](colectica.md).
+
+::: ddi_l.document.DDIFragment
+    options:
+      members_order: source
+      show_root_heading: true
+      heading_level: 3
+
+::: ddi_l.colectica
+    options:
+      show_root_heading: true
+      heading_level: 3
+
+## Spreadsheets
+
+Load a study's metadata (concepts, questions and the questionnaire flow, code
+lists, variables, data files and more) from CSV files or an Excel workbook. See [Load DDI from spreadsheets](spreadsheet-import.md).
+
+::: ddi_l.tables
+    options:
+      members:
+        - load_tables
+        - TableImport
+        - TableImportError
+        - TableProblem
+        - write_table_templates
       show_root_heading: true
       heading_level: 3
 

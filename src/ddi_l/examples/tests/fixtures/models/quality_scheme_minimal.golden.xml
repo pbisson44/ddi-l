@@ -14,7 +14,6 @@
     </r:QualityStatementName>
   </r:QualityStatement>
   <r:QualityStatementReference>
-    <r:URN>urn:ddi:ca.statcan:d1030bb2-3d85-5892-9e8b-b7c50bd068dc:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>d1030bb2-3d85-5892-9e8b-b7c50bd068dc</r:ID>
     <r:Version>1</r:Version>
@@ -29,21 +28,18 @@
     </r:QualityStandardName>
   </r:QualityStandard>
   <r:QualityStandardReference>
-    <r:URN>urn:ddi:ca.statcan:a7b7e383-45a9-57ae-8b2b-4e1f1795385c:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>a7b7e383-45a9-57ae-8b2b-4e1f1795385c</r:ID>
     <r:Version>1</r:Version>
     <r:TypeOfObject>QualityStandard</r:TypeOfObject>
   </r:QualityStandardReference>
   <r:QualityStatementGroupReference>
-    <r:URN>urn:ddi:ca.statcan:97baeea4-82e8-5ddb-a33b-f1ee2128cf14:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>97baeea4-82e8-5ddb-a33b-f1ee2128cf14</r:ID>
     <r:Version>1</r:Version>
     <r:TypeOfObject>QualityStatementGroup</r:TypeOfObject>
   </r:QualityStatementGroupReference>
   <r:QualityStandardGroupReference>
-    <r:URN>urn:ddi:ca.statcan:92984e14-0ae7-5c70-a5b8-6d221ced56fa:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>92984e14-0ae7-5c70-a5b8-6d221ced56fa</r:ID>
     <r:Version>1</r:Version>

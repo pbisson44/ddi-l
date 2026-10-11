@@ -8,8 +8,133 @@ description: >-
 
 ## Unreleased
 
+### Colectica exports
+
+- **Read, edit and write Colectica `FragmentInstance` exports.**
+  `ddi.open_fragment()` opens one; `DDIFragment.items()`, `get()`,
+  `top_level_item()`, `put()` and `remove()` work with its items as typed
+  models; `DDIFragment.save()` writes Colectica Designer's exact layout (UTF-8
+  with a byte-order mark, one item per `<Fragment>`, each item declaring its
+  module as the default namespace, attributes in schema order), so an export
+  opened and saved comes back byte for byte. `DDIFragment.from_items()` builds
+  a new export with what Colectica writes on every item. Also
+  `write_ddi(..., layout="colectica")`, `ddi roundtrip --layout colectica` and
+  the `ddi_l.colectica` module. See *Work with Colectica exports*.
+- **A typed model for every fragment item type.** All 161 item types a DDI 3.3
+  fragment can carry now parse with `MaintainableBase.from_xml`; the 91 without
+  a hand-written class get one from `ddi_l.models.items`. A test builds a
+  schema-valid sample of each from the XSDs and checks it round-trips
+  exactly.
+- **`version_date`** reads and sets `versionDate` on any item.
+
+### Load DDI from spreadsheets
+
+- **Bulk-load a study's metadata from CSV files, a zip of them, or an Excel
+  workbook.** One
+  table per kind of item, rows linked by `id`, covering what most
+  organizations document:
+  - the study, its groups, organizations and people (`studies`, `groups`,
+    `organizations`, `individuals`);
+  - concepts, universes, unit types and the variable cascade
+    (`conceptual_variables`, `represented_variables`, `variables`);
+  - code lists, including hierarchical classifications (`codes.parent`);
+  - questions with instructions, grids, blocks and question groups, worded
+    per language and per audience (`question_texts`);
+  - questionnaires and their flow (`instruments`, `flow`): sequences,
+    statements, if-then-else and loops;
+  - variable groups, data files (`datasets`) and n-cubes;
+  - methodology, processing events, quality statements and comparison maps.
+
+  Text goes in one column per language (`label@en`, `label@fr`) and
+  `custom:<name>` columns are stored as `r:UserAttributePair`.
+  `ddi_l.tables.load_tables()` returns typed models; `to_fragment()` writes a
+  Colectica `FragmentInstance` holding every item, valid against the DDI 3.3
+  schema, and `to_study()` a DDI study for tables a study document can hold.
+  The items the rows imply are written too: a data collection per study,
+  sequences for the flow, a data relationship per data file. Identifiers are
+  derived from the agency and your ids, so loading again gives the same
+  items. Every problem is reported at once with its file, row and column.
+  Also `ddi tables template` and `ddi tables import`, and
+  `Document.attach()` to place an item built elsewhere into a study. Excel
+  workbooks are read and written with the standard library: no new
+  dependency. See *Load DDI from spreadsheets* and *Spreadsheet templates*,
+  which has blank and example templates to download.
+
+### HTTP API
+
+- **Colectica exports round-trip byte for byte.** `POST
+  /v1/roundtrip?layout=colectica` writes a `FragmentInstance` as Colectica
+  Designer does, so an unchanged export comes back identical and a diff shows
+  only what a parse lost. Without it, every Colectica file looked changed.
+- **Load metadata tables over HTTP.** `POST /v1/tables/import` takes an
+  `.xlsx` workbook or a `.zip` of CSV files and answers with a Colectica
+  `FragmentInstance` (or, with `?study=`, a study). Tables with problems are a
+  `422` whose `extra` lists every problem with its file, row and column.
+  `GET /v1/tables/template` downloads the blank or example tables, and
+  `GET /v1/tables` describes every table and column as JSON. Uploads are read
+  in memory, within limits on their size, number of files, and rows and
+  columns.
+- **`load_tables()` also reads a zip of CSV files, or the bytes of a workbook
+  or a zip.** So does `ddi tables import`.
+
+### Fixed
+
+- **A study in a fragment no longer warns about its references.**
+  `DDIFragment.from_items()` and `put()` reported every reference of a
+  `StudyUnit` as unresolved, since in a fragment the items it references sit
+  in fragments of their own.
+- **The typed models no longer lose content.** Reading an item and writing it
+  back used to drop `versionDate`, `r:VersionResponsibility` and the
+  `r:BasedOnObject` lineage on hand-written models (Variable, CodeList,
+  RepresentedVariable, DataRelationship, StudyUnit and others); split a
+  bilingual `r:Label` or name into one element per language; drop
+  `audienceLanguage` and `d:ConditionalText` from question text, user
+  attribute pairs and attributes inside references, attributes on
+  `r:URN`/`r:ID`, controlled-vocabulary attributes, and the scheme-level
+  metadata of inline schemes; and wrote some content out of schema order
+  (QuestionItem, Sequence), which the schema rejects.
+- **`DDIFragment.from_items()` drops every restated reference URN.** It
+  skipped the reference after each one it removed, so an item with several
+  references kept some `r:URN`s Colectica does not write.
+- **References are written as read.** A reference read without an `r:URN`
+  no longer gains one; a reference built in code still does.
+- **`xs:boolean` `"1"` is true.** Several wrappers read it as false and wrote
+  `"false"`. Values keep their original spelling while unchanged.
+- **Identifiers read from a file are kept.** `DataCollection` rewrote
+  non-UUID `r:ID`s (its own and those of everything inside it) into generated
+  UUIDs, breaking references from other items; it now does so only for
+  objects built in code.
+- **Validation of fragments no longer forgives real errors.** An error inside
+  a fragment's `StudyUnit` (and a few other real DDI items) was passed over,
+  and validation stopped there, hiding any error after it. Only the library's
+  own extension types are exempt now, and every error is checked.
+- `ConceptualComponent` always writes concepts, universes, conceptual
+  variables and unit types inside their schemes; written bare they were
+  invalid.
+- `d:Methodology` writes `d:MethodologyName` in the DDI 3.3 namespace.
+- `r:ExternalURLReference`, `r:ExternalURNReference` and a few other
+  elements named `*Reference` are no longer read as DDI references (which
+  emptied them).
+- A schema-valid value that does not parse as its declared number type no
+  longer stops an item from loading.
+- Building a fragment is linear in its size (it was quadratic: 53 s for a
+  4,478-item export, now under 3 s).
+
 ### Documentation
 
+- **One colour scheme that works in every mode.** The site uses one brand
+  blue for the header, links and buttons, with orange only for the keyboard
+  focus ring, and every text colour meets WCAG AA in light, dark and high
+  contrast. Dark mode now uses the site's own colours rather than Material's
+  defaults, and its buttons are readable: the outline buttons were 2.3:1, and
+  a download button in a page was 1.1:1, navy on black. High contrast has a
+  black header, visible navigation tabs and readable code, and its notes and
+  tips are dark like the page instead of white boxes whose tables were white
+  on white. The
+  logo follows the header colour instead of drawing in black, and the palette
+  menu sits in the header beside the light/dark toggle instead of overlapping
+  the search icon on phones. The three colour-vision palettes are gone: the
+  blue-and-orange scheme already suits those readers.
 - **Links without a version no longer 404.** The README and issue template
   link through `/latest/`, and the site root now serves a `404.html` that
   sends any unversioned path (`/ddi-l/server/`) to the same page under

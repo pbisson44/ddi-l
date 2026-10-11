@@ -7,6 +7,7 @@ a document invalid, and the library's parser hardening applies over HTTP.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -433,3 +434,181 @@ def test_the_default_schema_is_loaded_at_startup():
 def test_max_concurrent_jobs_must_be_positive():
     with pytest.raises(ValueError, match="max_concurrent_jobs"):
         ServerConfig(max_concurrent_jobs=0)
+
+
+# --- Colectica exports and metadata tables ----------------------------------
+
+COLECTICA_EXPORT = Path(__file__).parent / "fixtures" / "colectica_group_fragment.xml"
+
+
+def test_roundtrip_returns_a_colectica_export_byte_for_byte(client):
+    """Without `?layout=colectica` every Colectica file looks changed."""
+    export = COLECTICA_EXPORT.read_bytes()
+
+    response = client.post("/v1/roundtrip?layout=colectica", content=export)
+
+    assert response.status_code == 200
+    assert response.content == export
+    assert client.post("/v1/roundtrip", content=export).content != export
+
+
+def test_the_colectica_layout_is_for_fragments_only(client, document):
+    response = client.post("/v1/roundtrip?layout=colectica", content=document)
+
+    assert response.status_code == 400
+    assert "writes a FragmentInstance" in response.json()["detail"]
+    assert client.post("/v1/roundtrip?layout=tidy", content=document).status_code == 400
+
+
+def _template(client, query: str = "") -> bytes:
+    response = client.get(f"/v1/tables/template{query}")
+    assert response.status_code == 200
+    return response.content
+
+
+@pytest.mark.parametrize("template_format", ["xlsx", "zip"])
+def test_the_example_tables_import_into_a_valid_fragment(
+    client, tmp_path, template_format
+):
+    tables = _template(client, f"?format={template_format}&example=true")
+
+    response = client.post("/v1/tables/import", content=tables)
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("application/xml")
+    path = tmp_path / "fragment.xml"
+    path.write_bytes(response.content)
+    fragment = ddi.open_fragment(path)
+    assert fragment.validate() == []
+    # Every row of the example, and the items its rows imply.
+    assert len(fragment.items()) == 77
+
+
+def test_import_overrides_settings_from_the_query(client):
+    from ddi_l.server.samples import SAMPLE_TABLES, tables_zip
+
+    response = client.post(
+        "/v1/tables/import?agency=other.org&item_version=2",
+        content=tables_zip(SAMPLE_TABLES),
+    )
+
+    assert b"<r:Agency>other.org</r:Agency>" in response.content
+    assert b"<r:Version>2</r:Version>" in response.content
+
+
+def test_import_can_write_a_study(client, tmp_path):
+    from ddi_l.server.samples import SAMPLE_TABLES, tables_zip
+
+    response = client.post(
+        "/v1/tables/import?study=Household Survey", content=tables_zip(SAMPLE_TABLES)
+    )
+
+    assert response.status_code == 200
+    path = tmp_path / "study.xml"
+    path.write_bytes(response.content)
+    assert ddi.open_ddi(path).validate() == []
+
+
+def test_tables_a_study_has_no_place_for_are_a_422(client):
+    example = _template(client, "?example=true")
+
+    response = client.post("/v1/tables/import?study=S", content=example)
+
+    assert response.status_code == 422
+    assert {problem["where"] for problem in response.json()["extra"]} >= {
+        "studies",
+        "comparisons",
+    }
+
+
+def test_every_problem_in_the_tables_is_listed(client):
+    from ddi_l.server.samples import tables_zip
+
+    response = client.post(
+        "/v1/tables/import",
+        content=tables_zip(
+            {
+                "settings.csv": "setting,value\r\nagency,example.org\r\n",
+                "variables.csv": "id,question,concept\r\nAGE,Q_AGE,AGE\r\n",
+            }
+        ),
+    )
+
+    assert response.status_code == 422
+    payload = response.json()
+    assert payload["detail"] == "The tables have 2 problems; `extra` lists them."
+    assert [problem["message"] for problem in payload["extra"]] == [
+        "no row in concepts has id 'AGE'",
+        "no row in questions has id 'Q_AGE'",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        (b"", "Request body is empty."),
+        (
+            b"<DDIInstance/>",
+            "The body is not an .xlsx workbook or a .zip of CSV files.",
+        ),
+    ],
+)
+def test_a_body_that_is_not_tables_is_a_400(client, body, expected):
+    response = client.post("/v1/tables/import", content=body)
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == expected
+
+
+def test_a_zip_without_tables_says_so(client):
+    from ddi_l.server.samples import tables_zip
+
+    response = client.post("/v1/tables/import", content=tables_zip({"notes.txt": "hi"}))
+
+    assert response.status_code == 422
+    messages = [problem["message"] for problem in response.json()["extra"]]
+    assert any(message.startswith("no rows found") for message in messages)
+
+
+@pytest.mark.parametrize(
+    ("query", "media_type", "file_name"),
+    [
+        ("", "spreadsheetml.sheet", "ddi-tables-template.xlsx"),
+        ("?format=zip", "application/zip", "ddi-tables-template.zip"),
+        ("?format=zip&example=true", "application/zip", "ddi-tables-example.zip"),
+    ],
+)
+def test_templates_download_as_attachments(client, query, media_type, file_name):
+    response = client.get(f"/v1/tables/template{query}")
+
+    assert response.status_code == 200
+    assert media_type in response.headers["content-type"]
+    assert response.headers["content-disposition"] == (
+        f'attachment; filename="{file_name}"'
+    )
+
+
+def test_templates_take_languages(client):
+    import io
+    import zipfile
+
+    blank = _template(client, "?format=zip&lang=en&lang=iu")
+    with zipfile.ZipFile(io.BytesIO(blank)) as archive:
+        header = archive.read("concepts.csv").decode("utf-8-sig").splitlines()[0]
+
+    assert "label@en,label@iu" in header
+    assert client.get("/v1/tables/template?lang=e n").status_code == 400
+    assert client.get("/v1/tables/template?example=true&lang=en").status_code == 400
+
+
+def test_the_tables_are_described(client):
+    from ddi_l.tables import TABLES
+
+    payload = client.get("/v1/tables").json()
+
+    assert [table["name"] for table in payload["tables"]] == [t.name for t in TABLES]
+    concepts = next(t for t in payload["tables"] if t["name"] == "concepts")
+    parent = next(c for c in concepts["columns"] if c["name"] == "parent")
+    assert parent["references"] == "concepts"
+    assert parent["multiple"] is True
+    assert payload["settings"][0]["name"] == "agency"

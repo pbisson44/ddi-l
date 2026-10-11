@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import threading
 from functools import partial
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 import anyio
 import anyio.to_thread
@@ -27,6 +27,8 @@ from litestar.params import QueryParameter
 from litestar.response import Redirect
 from litestar.status_codes import (
     HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_422_UNPROCESSABLE_ENTITY,
     HTTP_503_SERVICE_UNAVAILABLE,
     HTTP_504_GATEWAY_TIMEOUT,
 )
@@ -34,19 +36,27 @@ from litestar.status_codes import (
 from .. import __version__, operations
 from ..exceptions import DDIError
 from ..lint import ProfileResult
+from ..tables import TableImportError
 from .samples import (
     EXAMPLE_JSON_DOCUMENT,
     EXAMPLE_JSONLD_GRAPH,
+    EXAMPLE_TABLES_FRAGMENT,
+    EXAMPLE_TEMPLATE_WORKBOOK,
     EXAMPLE_XML_DOCUMENT,
 )
 from .schemas import (
+    ENDPOINTS,
+    EXAMPLE_BAD_LANGUAGE,
     EXAMPLE_CLIENT_ERROR,
     EXAMPLE_HEALTH,
     EXAMPLE_INDEX,
     EXAMPLE_INVALID_DOCUMENT,
     EXAMPLE_LINT,
+    EXAMPLE_NOT_TABLES,
     EXAMPLE_PAYLOAD_TOO_LARGE,
     EXAMPLE_PROFILE,
+    EXAMPLE_TABLE_PROBLEMS,
+    EXAMPLE_TABLES,
     EXAMPLE_TIMEOUT,
     EXAMPLE_VALID_DOCUMENT,
     EXAMPLE_VERSIONS,
@@ -55,6 +65,10 @@ from .schemas import (
     IndexResponse,
     LintResponse,
     ProfileResponse,
+    SettingModel,
+    TableColumnModel,
+    TableModel,
+    TablesResponse,
     ValidationResponse,
     VersionsResponse,
     lint_finding,
@@ -236,10 +250,32 @@ async def _run(request: Request, operation, /, *args, **kwargs):
             status_code=HTTP_504_GATEWAY_TIMEOUT,
             detail=f"Document took longer than {timeout:g}s to process.",
         ) from error
+    except TableImportError as error:
+        raise _table_problems(error) from error
     except _BAD_REQUEST_ERRORS as error:
         raise ClientException(detail=_detail(error)) from error
     finally:
         job.abandon()
+
+
+def _table_problems(error: TableImportError) -> HTTPException:
+    """Tables that were read but are wrong: a 422 listing every problem.
+
+    A body that could not be read as tables at all is a 400, like any other
+    malformed body.
+    """
+    if not error.problems:
+        return ClientException(detail=_detail(error))
+    count = len(error.problems)
+    return HTTPException(
+        status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+        detail=f"The tables have {count} problem{'s' if count != 1 else ''}; "
+        "`extra` lists them.",
+        extra=[
+            {"where": problem.where, "message": problem.message}
+            for problem in error.problems
+        ],
+    )
 
 
 @get(
@@ -261,18 +297,7 @@ def index(request: Request) -> Response[IndexResponse] | Redirect:
         return Redirect(path="/schema")
 
     payload = IndexResponse(
-        service="ddi-l",
-        version=__version__,
-        endpoints={
-            "health": "/health",
-            "versions": "/v1/versions",
-            "validate": "POST /v1/validate",
-            "lint": "POST /v1/lint",
-            "to_json": "POST /v1/convert/json",
-            "to_jsonld": "POST /v1/convert/jsonld",
-            "to_xml": "POST /v1/convert/xml",
-            "roundtrip": "POST /v1/roundtrip",
-        },
+        service="ddi-l", version=__version__, endpoints=dict(ENDPOINTS)
     )
     if request.app.openapi_config is not None:
         payload.documentation = "/schema"
@@ -524,16 +549,232 @@ async def to_xml(request: Request, version: VersionParam = None) -> Response[byt
         )
     ),
 )
-async def roundtrip(request: Request, version: VersionParam = None) -> Response[bytes]:
+async def roundtrip(
+    request: Request,
+    version: VersionParam = None,
+    layout: Annotated[
+        Literal["default", "colectica"],
+        QueryParameter(
+            name="layout",
+            required=False,
+            description=(
+                "`colectica` writes a FragmentInstance as Colectica Designer "
+                "does (UTF-8 with a byte-order mark, one item per fragment), "
+                "so an unchanged Colectica export comes back byte for byte. "
+                "Only for a FragmentInstance."
+            ),
+        ),
+    ] = "default",
+) -> Response[bytes]:
     """Parse a document with the model layer and serialize it again.
 
     A smoke test for formatting, namespace and encoding problems introduced by
     hand-editing: if the response differs from what was sent, something in the
-    document did not survive a parse.
+    document did not survive a parse. Send a Colectica export with
+    `?layout=colectica` to compare it with what Colectica wrote.
     """
     data = await _body_bytes(request)
     xml = await _run(
-        request, operations.roundtrip_source, data, version=_clean(version)
+        request,
+        operations.roundtrip_source,
+        data,
+        version=_clean(version),
+        layout=layout,
+    )
+    return Response(content=xml, media_type="application/xml")
+
+
+@get(
+    "/v1/tables",
+    summary="The metadata tables and their columns",
+    sync_to_thread=False,
+    responses={
+        HTTP_200_OK: _spec(
+            TablesResponse,
+            "Every table `POST /v1/tables/import` reads, and every column, "
+            "with what goes in it: enough to build a form or check a file "
+            "before sending it.",
+            EXAMPLE_TABLES,
+        )
+    },
+)
+def tables() -> TablesResponse:
+    """Describe the metadata tables, as the guide and the templates do."""
+    spec = operations.tables_spec()
+    return TablesResponse(
+        tables=[
+            TableModel(
+                name=table["name"],
+                help=table["help"],
+                custom_columns=table["custom_columns"],
+                columns=[TableColumnModel(**column) for column in table["columns"]],
+            )
+            for table in spec["tables"]
+        ],
+        settings=[SettingModel(**setting) for setting in spec["settings"]],
+        multi_value_separator=spec["multi_value_separator"],
+        custom_prefix=spec["custom_prefix"],
+    )
+
+
+@get(
+    "/v1/tables/template",
+    summary="Download the metadata tables to fill in",
+    media_type=operations.TEMPLATE_FORMATS["xlsx"],
+    responses={
+        HTTP_200_OK: _spec(
+            str,
+            "The tables, as a workbook or (with `?format=zip`) a zip of CSV "
+            "files, sent as an attachment.",
+            EXAMPLE_TEMPLATE_WORKBOOK,
+            media_type=operations.TEMPLATE_FORMATS["xlsx"],
+        ),
+        HTTP_400_BAD_REQUEST: _spec(
+            ErrorResponse,
+            "A language that is not a language tag, or the example asked for "
+            "in languages other than English and French.",
+            EXAMPLE_BAD_LANGUAGE,
+        ),
+    },
+)
+async def tables_template(
+    request: Request,
+    template_format: Annotated[
+        Literal["xlsx", "zip"],
+        QueryParameter(
+            name="format",
+            required=False,
+            description="`xlsx` for one workbook, `zip` for one CSV file per table.",
+        ),
+    ] = "xlsx",
+    example: Annotated[
+        bool,
+        QueryParameter(
+            name="example",
+            required=False,
+            description=(
+                "The bilingual example that fills every table, instead of "
+                "empty tables. In English and French only."
+            ),
+        ),
+    ] = False,
+    lang: Annotated[
+        list[str] | None,
+        QueryParameter(
+            name="lang",
+            required=False,
+            description=(
+                "The languages to give columns such as `label@en` for. Repeat "
+                "it for each: `?lang=en&lang=fr`. Defaults to English and "
+                "French."
+            ),
+        ),
+    ] = None,
+) -> Response[bytes]:
+    """The blank tables, or the example, as on the templates page."""
+    data = await _run(
+        request,
+        operations.tables_template,
+        template_format=template_format,
+        example=example,
+        languages=tuple(lang) if lang else ("en", "fr"),
+    )
+    name = f"ddi-tables-{'example' if example else 'template'}.{template_format}"
+    return Response(
+        content=data,
+        media_type=operations.TEMPLATE_FORMATS[template_format],
+        headers={"Content-Disposition": f'attachment; filename="{name}"'},
+    )
+
+
+AgencyParam = Annotated[
+    str | None,
+    QueryParameter(
+        name="agency",
+        required=False,
+        description="The agency of every item; overrides `settings`.",
+    ),
+]
+ItemVersionParam = Annotated[
+    str | None,
+    QueryParameter(
+        name="item_version",
+        required=False,
+        description="The version of items without their own; overrides `settings`.",
+    ),
+]
+LanguageParam = Annotated[
+    str | None,
+    QueryParameter(
+        name="language",
+        required=False,
+        description="The language of names; overrides `settings`.",
+    ),
+]
+StudyParam = Annotated[
+    str | None,
+    QueryParameter(
+        name="study",
+        required=False,
+        description=(
+            "Write a DDIInstance with the items inside a study of this title, "
+            "instead of a Colectica FragmentInstance. The tables that describe "
+            "studies, groups, people, variable groups, processing, quality or "
+            "comparisons do not fit in a study document."
+        ),
+    ),
+]
+
+
+@post(
+    "/v1/tables/import",
+    summary="Load metadata tables as DDI",
+    status_code=HTTP_200_OK,
+    media_type="application/xml",
+    responses={
+        HTTP_200_OK: _spec(
+            str,
+            "A Colectica FragmentInstance holding every item, or with "
+            "`?study=` a DDIInstance study.",
+            EXAMPLE_TABLES_FRAGMENT,
+            media_type="application/xml",
+        ),
+        HTTP_400_BAD_REQUEST: _spec(
+            ErrorResponse,
+            "The body was empty, or not an .xlsx workbook or a .zip of CSV files.",
+            EXAMPLE_NOT_TABLES,
+        ),
+        413: _ERROR_RESPONSES[413],
+        HTTP_422_UNPROCESSABLE_ENTITY: _spec(
+            ErrorResponse,
+            "The tables were read but have problems: `extra` lists every one, "
+            "with its file (or sheet), row and column.",
+            EXAMPLE_TABLE_PROBLEMS,
+        ),
+        504: _ERROR_RESPONSES[504],
+    },
+)
+async def tables_import(
+    request: Request,
+    agency: AgencyParam = None,
+    item_version: ItemVersionParam = None,
+    language: LanguageParam = None,
+    study: StudyParam = None,
+) -> Response[bytes]:
+    """Load the tables of a workbook, or of a zip of CSV files, as DDI.
+
+    The same tables, columns and rules as `ddi tables import` and the
+    "Load DDI from spreadsheets" guide. Every problem is reported at once.
+    """
+    data = await _body_bytes(request)
+    xml = await _run(
+        request,
+        operations.tables_import,
+        data,
+        agency=_clean(agency),
+        item_version=_clean(item_version),
+        language=_clean(language),
+        study_title=_clean(study),
     )
     return Response(content=xml, media_type="application/xml")
 
@@ -548,4 +789,7 @@ ROUTE_HANDLERS = [
     to_jsonld,
     to_xml,
     roundtrip,
+    tables,
+    tables_template,
+    tables_import,
 ]

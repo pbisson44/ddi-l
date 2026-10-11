@@ -37,6 +37,7 @@ _LAZY_ATTRIBUTES: dict[str, tuple[str, str]] = {
     "StudyCursor": (".document", "StudyCursor"),
     "new_study": (".document", "new_study"),
     "open_ddi": (".document", "open_ddi"),
+    "open_fragment": (".document", "open_fragment"),
     # Exceptions
     "DDIError": (".exceptions", "DDIError"),
     "DDIModelError": (".exceptions", "DDIModelError"),
@@ -105,6 +106,7 @@ __all__ = [
     "iterparse_ddi",
     "new_study",
     "open_ddi",
+    "open_fragment",
     "read_ddi",
     "write_ddi",
 ]
@@ -147,6 +149,7 @@ if TYPE_CHECKING:
         StudyCursor,
         new_study,
         open_ddi,
+        open_fragment,
     )
     from .exceptions import (
         DDIError,

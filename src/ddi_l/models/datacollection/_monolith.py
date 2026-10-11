@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import typing
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass, field, is_dataclass
+from dataclasses import dataclass, field, is_dataclass, replace
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -44,10 +44,13 @@ from ..base import (
     UserAttributePair,
     UserID,
     VersionRationale,
+    append_intl_strings,
     apply_other_attributes,
     clone_element,
     collect_other_attributes,
+    next_intl_group,
     preserve_unrecognized_children,
+    preserves_source,
     qn,
     should_validate_on_serialize,
 )
@@ -125,7 +128,13 @@ def _is_uuid_like(value: str | None) -> bool:
 
 
 def _maybe_generate_reference_urn(reference: Reference) -> str | None:
-    """Ensure ``reference`` has a stable URN when only human readable IDs exist."""
+    """Ensure ``reference`` has a stable URN when only human readable IDs exist.
+
+    Only for a reference built in code. One read from a file points at an item
+    by the identifiers that file uses; replacing them would break the link.
+    """
+    if reference._urn_layout is not None:
+        return None
     canonical = reference._canonical_urn()
     if canonical is None:
         return None
@@ -229,6 +238,7 @@ def _normalize_reference_collections(
                 and identifier_attr
                 and not _is_uuid_like(identifier_attr)
                 and type_name not in _INLINE_FRAGMENT_TYPES
+                and not value._from_xml
             ):
                 key = (agency_attr, identifier_attr, type_name)
                 generated_identifier = generated_identifiers.get(key)
@@ -393,7 +403,7 @@ class VersionableMaintainableBase(MaintainableBase):
 def _parse_bool_attribute(value: str | None) -> bool | None:
     if value is None:
         return None
-    return value.lower() == "true"
+    return value.strip().lower() in ("true", "1")  # xs:boolean
 
 
 def _format_bool_attribute(value: bool | None) -> str | None:
@@ -402,9 +412,15 @@ def _format_bool_attribute(value: bool | None) -> str | None:
     return "true" if value else "false"
 
 
+@preserves_source
 @dataclass
 class DynamicText:
-    """Wrapper for ``d:DynamicTextType`` elements with literal content."""
+    """Wrapper for ``d:DynamicTextType`` elements with literal content.
+
+    ``texts`` holds the literal text only. An element read from a file is
+    written back unchanged until a field is edited (``preserves_source``),
+    so d:ConditionalText and the Text element's attributes survive.
+    """
 
     texts: list[InternationalString] = field(default_factory=list)
     audience_language: str | None = None
@@ -428,7 +444,7 @@ class DynamicText:
             is_plain_raw = text_el.get("isPlainText")
             is_plain_text = None
             if is_plain_raw is not None:
-                is_plain_text = is_plain_raw.lower() == "true"
+                is_plain_text = is_plain_raw.strip().lower() in ("true", "1")
             texts.append(
                 InternationalString(
                     text=text_el.text or "",
@@ -484,6 +500,7 @@ class DynamicText:
         return element
 
 
+@preserves_source
 @dataclass
 class GridDimension:
     """Representation of ``d:GridDimension`` entries within question grids."""
@@ -495,6 +512,8 @@ class GridDimension:
     display_code: bool | None = None
     display_label: bool | None = None
     other_elements: list[Element] = field(default_factory=list)
+    # ``rank`` as written ("01"), reused while it still means ``rank``.
+    _rank_text: str | None = field(default=None, repr=False, compare=False)
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "GridDimension")
 
@@ -528,11 +547,15 @@ class GridDimension:
             display_code=_parse_bool_attribute(element.get("displayCode")),
             display_label=_parse_bool_attribute(element.get("displayLabel")),
             other_elements=other_elements,
+            _rank_text=rank_attr,
         )
 
     def to_xml(self) -> Element:
         element = create_element(self.TAG)
-        element.set("rank", str(self.rank))
+        rank_text = self._rank_text
+        if rank_text is None or int(rank_text) != self.rank:
+            rank_text = str(self.rank)
+        element.set("rank", rank_text)
         if self.display_code is not None:
             formatted = _format_bool_attribute(self.display_code)
             if formatted is not None:
@@ -558,6 +581,7 @@ class GridDimension:
         return element
 
 
+@preserves_source
 @dataclass
 class SourceReference:
     """Representation of ``d:SourceReferenceType`` entries with alias support."""
@@ -578,7 +602,7 @@ class SourceReference:
 
     @classmethod
     def from_xml(cls, element: Element) -> SourceReference:
-        reference = Reference.from_xml(element)
+        reference = Reference.from_xml(element, extras=False)
         alias_el = element.find(qn(REUSABLE_NS, "Alias"))
         extras = [
             clone_element(child)
@@ -640,10 +664,12 @@ class ControlConstructBase(VersionableMaintainableBase):
         # ConstructName precedes r:Label in every ControlConstruct's content
         # model, so the label has to step aside and come back after it.
         with self._labels_last(element):
-            for name in self.construct_names:
-                container = create_element(qn(DATA_COLLECTION_NS, "ConstructName"))
-                container.append(name.to_child(child_tag="String"))
-                element.append(container)
+            append_intl_strings(
+                element,
+                qn(DATA_COLLECTION_NS, "ConstructName"),
+                self.construct_names,
+                child_tag="String",
+            )
 
 
 @dataclass
@@ -719,6 +745,14 @@ class QuestionItem(QuestionMaintainableBase):
     """Representation of a ``d:QuestionItem`` including dynamic text support."""
 
     question_texts: list[InternationalString] = field(default_factory=list)
+    # Each d:QuestionText read from a file, in document order, with the
+    # strings parsed from it. A container whose strings are unchanged is
+    # written back verbatim, keeping what the flat ``question_texts`` list
+    # cannot hold: ``audienceLanguage``, d:ConditionalText, and one
+    # d:QuestionText per language as Colectica writes them.
+    _question_text_sources: list[tuple[int, Element, list[InternationalString]]] = (
+        field(default_factory=list, repr=False, compare=False)
+    )
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "QuestionItem")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
@@ -727,28 +761,18 @@ class QuestionItem(QuestionMaintainableBase):
     def from_xml(cls, element: Element) -> QuestionItem:
         recognized = {qn(DATA_COLLECTION_NS, "QuestionText")}
         texts: list[InternationalString] = []
+        sources: list[tuple[int, Element, list[InternationalString]]] = []
         for container in element.findall(qn(DATA_COLLECTION_NS, "QuestionText")):
-            for literal in container.findall(qn(DATA_COLLECTION_NS, "LiteralText")):
-                text_el = literal.find(qn(DATA_COLLECTION_NS, "Text"))
-                if text_el is None:
-                    continue
-                found = InternationalString.from_container(text_el)
-                if found:
-                    texts.extend(found)
-                    continue
-                lang = text_el.get(qn(XML_NS, "lang")) or "en"
-                is_plain_raw = text_el.get("isPlainText")
-                is_plain_text = None
-                if is_plain_raw is not None:
-                    is_plain_text = is_plain_raw.lower() == "true"
-                texts.append(
-                    InternationalString(
-                        text=text_el.text or "",
-                        lang=lang,
-                        child_tag="Content",
-                        is_plain_text=is_plain_text,
-                    )
-                )
+            first = len(texts)
+            cls._parse_question_text(container, texts)
+            parsed = texts[first:]
+            group = next_intl_group()
+            for string in parsed:
+                string._group = group
+                string._container_attributes = dict(container.attrib)
+            sources.append(
+                (group, clone_element(container), [replace(s) for s in parsed])
+            )
         data = cls._collect_question_common(element, recognized_children=recognized)
         other_elements = [
             child
@@ -756,28 +780,108 @@ class QuestionItem(QuestionMaintainableBase):
             if child.tag != qn(DATA_COLLECTION_NS, "QuestionText")
         ]
         data["other_elements"] = other_elements
-        return cls(question_texts=texts, **data)
+        return cls(question_texts=texts, _question_text_sources=sources, **data)
+
+    @staticmethod
+    def _parse_question_text(
+        container: Element, texts: list[InternationalString]
+    ) -> None:
+        for literal in container.findall(qn(DATA_COLLECTION_NS, "LiteralText")):
+            text_el = literal.find(qn(DATA_COLLECTION_NS, "Text"))
+            if text_el is None:
+                continue
+            found = InternationalString.from_container(text_el)
+            if found:
+                texts.extend(found)
+                continue
+            lang = text_el.get(qn(XML_NS, "lang")) or "en"
+            is_plain_raw = text_el.get("isPlainText")
+            is_plain_text = None
+            if is_plain_raw is not None:
+                is_plain_text = is_plain_raw.strip().lower() in ("true", "1")
+            texts.append(
+                InternationalString(
+                    text=text_el.text or "",
+                    lang=lang,
+                    child_tag="Content",
+                    is_plain_text=is_plain_text,
+                )
+            )
+
+    def _question_text_elements(self) -> list[Element]:
+        """The d:QuestionText containers, reusing unchanged parsed ones."""
+        groups = {
+            group[0]._group: group
+            for group in _group_question_texts(self.question_texts)
+            if group[0]._group is not None
+        }
+        elements: list[Element] = []
+        emitted: set[int] = set()
+        for token, source, parsed in self._question_text_sources:
+            group = groups.get(token)
+            if not parsed:
+                # Nothing flat to edit (d:ConditionalText only): keep as read.
+                elements.append(clone_element(source))
+            elif group is not None and _same_strings(group, parsed):
+                elements.append(clone_element(source))
+            elif group is not None:
+                elements.append(_build_question_text(group))
+            emitted.add(token)
+        for group in _group_question_texts(self.question_texts):
+            if group[0]._group is None or group[0]._group not in emitted:
+                elements.append(_build_question_text(group))
+        return elements
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_question_common(element)
-        if self.question_texts:
-            question_text = create_element(qn(DATA_COLLECTION_NS, "QuestionText"))
-            for string in self.question_texts:
-                literal = create_element(qn(DATA_COLLECTION_NS, "LiteralText"))
-                text_el = create_element(qn(DATA_COLLECTION_NS, "Text"))
-                if string.lang:
-                    text_el.set(qn(XML_NS, "lang"), string.lang)
-                if string.is_plain_text is not None:
-                    text_el.set(
-                        "isPlainText", "true" if string.is_plain_text else "false"
-                    )
-                text_el.text = string.text
-                literal.append(text_el)
-                question_text.append(literal)
+        for question_text in self._question_text_elements():
             element.append(question_text)
         self._append_other_elements(element)
         return element
+
+
+def _group_question_texts(
+    strings: list[InternationalString],
+) -> list[list[InternationalString]]:
+    """Group question strings by the d:QuestionText they came from.
+
+    Strings built in code have no group and share one container, as
+    ``QuestionItem`` has always written them.
+    """
+    groups: list[list[InternationalString]] = []
+    for string in strings:
+        if groups and groups[-1][0]._group == string._group:
+            groups[-1].append(string)
+        else:
+            groups.append([string])
+    return groups
+
+
+def _same_strings(
+    current: list[InternationalString], parsed: list[InternationalString]
+) -> bool:
+    def key(string: InternationalString) -> tuple[str, str | None, bool | None]:
+        return (string.text, string.lang, string.is_plain_text)
+
+    return [key(s) for s in current] == [key(s) for s in parsed]
+
+
+def _build_question_text(strings: list[InternationalString]) -> Element:
+    question_text = create_element(qn(DATA_COLLECTION_NS, "QuestionText"))
+    for name, value in strings[0]._container_attributes.items():
+        question_text.set(name, value)
+    for string in strings:
+        literal = create_element(qn(DATA_COLLECTION_NS, "LiteralText"))
+        text_el = create_element(qn(DATA_COLLECTION_NS, "Text"))
+        if string.lang:
+            text_el.set(qn(XML_NS, "lang"), string.lang)
+        if string.is_plain_text is not None:
+            text_el.set("isPlainText", "true" if string.is_plain_text else "false")
+        text_el.text = string.text
+        literal.append(text_el)
+        question_text.append(literal)
+    return question_text
 
 
 @dataclass
@@ -917,10 +1021,12 @@ class QuestionScheme(QuestionSchemeFields):
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "QuestionSchemeName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "QuestionSchemeName"),
+            self.names,
+            child_tag="String",
+        )
         for reference in self.scheme_references:
             element.append(reference.to_xml("QuestionSchemeReference"))
 
@@ -1053,6 +1159,7 @@ class InstructionAttachmentLocationNode:
         return clone_element(self.element)
 
 
+@preserves_source
 @dataclass
 class InterviewerInstructionReference:
     """Structured representation of ``d:InterviewerInstructionReference``."""
@@ -1086,7 +1193,7 @@ class InterviewerInstructionReference:
             raise ValueError(
                 "Expected a datacollection:InterviewerInstructionReference element."
             )
-        reference = Reference.from_xml(element)
+        reference = Reference.from_xml(element, extras=False)
         attachments = [
             InstructionAttachmentLocationNode.from_xml(node)
             for node in element.findall(
@@ -1132,6 +1239,15 @@ class InterviewerInstructionReference:
             element = self.reference.to_xml(
                 tag or "InterviewerInstructionReference", namespace=DATA_COLLECTION_NS
             )
+        # d:InstructionReference defaults isDisplayed to true, the
+        # interviewer-instruction form to false; write it when it was read or
+        # when it departs from the element's default.
+        displayed_by_default = element.tag == self.ALT_TAG
+        if (
+            self._is_displayed_attribute_present
+            or self.is_displayed != displayed_by_default
+        ):
+            element.set("isDisplayed", "true" if self.is_displayed else "false")
         for location in self.attachment_locations:
             element.append(location.to_xml())
         for child in self.other_elements:
@@ -1266,10 +1382,12 @@ class QuestionGrid(QuestionMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_question_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "QuestionGridName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "QuestionGridName"),
+            self.names,
+            child_tag="String",
+        )
         for text in self.question_texts:
             element.append(text.to_xml("QuestionText"))
         if self.question_intent:
@@ -1405,10 +1523,12 @@ class QuestionBlock(QuestionMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_question_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "QuestionBlockName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "QuestionBlockName"),
+            self.names,
+            child_tag="String",
+        )
         if self.intent:
             intent_el = create_element(qn(DATA_COLLECTION_NS, "QuestionBlockIntent"))
             for string in self.intent:
@@ -1552,18 +1672,22 @@ class QuestionGroup(QuestionMaintainableBase):
                     "TypeOfQuestionGroup", namespace=DATA_COLLECTION_NS
                 )
             )
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "QuestionGroupName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "QuestionGroupName"),
+            self.names,
+            child_tag="String",
+        )
         for reference in self.universe_references:
             element.append(reference.to_xml("UniverseReference"))
         for reference in self.concept_references:
             element.append(reference.to_xml("ConceptReference"))
+        # r:Subject and r:Keyword hold their text directly (with xml:lang),
+        # not in an r:Content child.
         for subject in self.subjects:
-            element.append(subject.to_element("Subject"))
+            element.append(subject.to_text_element(qn(REUSABLE_NS, "Subject")))
         for keyword in self.keywords:
-            element.append(keyword.to_element("Keyword"))
+            element.append(keyword.to_text_element(qn(REUSABLE_NS, "Keyword")))
         for reference in self.question_item_references:
             element.append(
                 reference.to_xml("QuestionItemReference", namespace=DATA_COLLECTION_NS)
@@ -1706,10 +1830,12 @@ class CollectionActivity(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "CollectionActivityName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "CollectionActivityName"),
+            self.names,
+            child_tag="String",
+        )
         for activity_type in self.activity_types:
             element.append(
                 activity_type.to_xml(
@@ -1812,10 +1938,12 @@ class ObservationPlan(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "ObservationPlanName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "ObservationPlanName"),
+            self.names,
+            child_tag="String",
+        )
         for plan_type in self.plan_types:
             element.append(
                 plan_type.to_xml("TypeOfObservationPlan", namespace=DATA_COLLECTION_NS)
@@ -1924,10 +2052,12 @@ class DataCaptureMethod(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "DataCaptureMethodName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "DataCaptureMethodName"),
+            self.names,
+            child_tag="String",
+        )
         for method_type in self.method_types:
             element.append(
                 method_type.to_xml(
@@ -2063,6 +2193,7 @@ class DataCollection(VersionableMaintainableBase):
     )
     data_capture_development_references: list[Reference] = field(default_factory=list)
 
+    KEEPS_SCHEME_SHELLS: ClassVar[bool] = True
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "DataCollection")
     NSMAP: ClassVar[dict[str | None, str]] = build_namespace_map(
         "r", default_namespace=DATA_COLLECTION_NS
@@ -2728,6 +2859,7 @@ class DataCaptureDevelopment(DataCaptureDevelopmentFields):
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
 
 
+@preserves_source
 @dataclass
 class OutParameter:
     """Representation of ``r:OutParameter`` definitions."""
@@ -2869,6 +3001,10 @@ class Sequence(ControlConstructBase):
 
     out_parameters: list[OutParameter] = field(default_factory=list)
     type_of_sequence: str | None = None
+    # Controlled-vocabulary attributes on d:TypeOfSequence.
+    _type_of_sequence_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
     control_construct_references: list[Reference] = field(default_factory=list)
     construct_sequence: ConstructSequence | None = None
     bindings: list[Element] = field(default_factory=list)
@@ -2914,6 +3050,11 @@ class Sequence(ControlConstructBase):
         bindings = [
             clone_element(node) for node in element.findall(qn(REUSABLE_NS, "Binding"))
         ]
+        # TypeOfSequence repeats; the field holds the first, the rest are kept.
+        extra_constructs.extend(
+            clone_element(node)
+            for node in element.findall(qn(DATA_COLLECTION_NS, "TypeOfSequence"))[1:]
+        )
         if extra_constructs:
             other_elements = data.get("other_elements", [])
             other_elements.extend(extra_constructs)
@@ -2921,6 +3062,11 @@ class Sequence(ControlConstructBase):
         return cls(
             out_parameters=out_parameters,
             type_of_sequence=type_of_sequence,
+            _type_of_sequence_attributes=(
+                dict(type_of_sequence_el.attrib)
+                if type_of_sequence_el is not None
+                else {}
+            ),
             control_construct_references=references,
             construct_sequence=construct_sequence,
             bindings=bindings,
@@ -2930,9 +3076,16 @@ class Sequence(ControlConstructBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_control_common(element)
+        # SequenceType: ... r:OutParameter, r:Binding, ..., TypeOfSequence,
+        # ControlConstructReference, ConstructSequence.
+        for parameter in self.out_parameters:
+            element.append(parameter.to_xml())
+        for binding in self.bindings:
+            element.append(clone_element(binding))
         if self.type_of_sequence is not None:
             type_el = create_element(qn(DATA_COLLECTION_NS, "TypeOfSequence"))
             type_el.text = self.type_of_sequence
+            apply_other_attributes(type_el, self._type_of_sequence_attributes)
             element.append(type_el)
         for reference in self.control_construct_references:
             element.append(
@@ -2942,10 +3095,6 @@ class Sequence(ControlConstructBase):
             )
         if self.construct_sequence is not None:
             element.append(self.construct_sequence.to_xml())
-        for binding in self.bindings:
-            element.append(clone_element(binding))
-        for parameter in self.out_parameters:
-            element.append(parameter.to_xml())
         self._append_other_elements(element)
         return element
 
@@ -3029,10 +3178,12 @@ class ProcessingEvent(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(DATA_COLLECTION_NS, "ProcessingEventName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(DATA_COLLECTION_NS, "ProcessingEventName"),
+            self.names,
+            child_tag="String",
+        )
         for node in self.control_operations:
             element.append(clone_element(node))
         for node in self.cleaning_operations:

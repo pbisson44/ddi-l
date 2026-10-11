@@ -16,6 +16,7 @@ pytest.importorskip("lxml", reason="the documented examples are lxml-backend out
 from litestar.testing import TestClient
 
 import ddi_l as ddi
+from ddi_l.operations import TEMPLATE_FORMATS
 from ddi_l.server import create_app
 from ddi_l.server.openapi import _BODIES
 from ddi_l.server.samples import SAMPLE_JSON, SAMPLE_JSONLD, SAMPLE_XML
@@ -102,11 +103,16 @@ def test_every_documented_request_body_names_a_real_endpoint(schema):
 def test_each_post_documents_what_to_send(schema, path):
     """Without this the Swagger page has an Execute button and no input box."""
     body = schema["paths"][path]["post"]["requestBody"]
-    media_type, media = next(iter(body["content"].items()))
 
     assert body["required"] is True
-    assert media_type in {"application/xml", "application/json"}
-    assert media["examples"], f"{path} documents no sample payload"
+    for media_type, media in body["content"].items():
+        assert media_type in {
+            "application/xml",
+            "application/json",
+            TEMPLATE_FORMATS["xlsx"],
+            TEMPLATE_FORMATS["zip"],
+        }
+        assert media["examples"], f"{path} documents no sample payload"
 
 
 # --- The documented responses ---------------------------------------------
@@ -219,3 +225,106 @@ def test_every_response_the_schema_declares_carries_an_example(schema):
                         missing.append(f"{method.upper()} {path} -> {status}")
 
     assert not missing, f"undocumented response payloads: {missing}"
+
+
+# --- Metadata tables ----------------------------------------------------------
+
+
+def test_the_import_example_is_what_the_service_returns(client):
+    """Only `versionDate`, the time of the request, and line endings differ."""
+    import re
+
+    from ddi_l.server.samples import SAMPLE_TABLES, SAMPLE_TABLES_FRAGMENT, tables_zip
+
+    response = client.post("/v1/tables/import", content=tables_zip(SAMPLE_TABLES))
+
+    def stamped(text: str) -> str:
+        # Colectica's layout ends lines with CRLF; the documented copy is text.
+        text = text.replace("\r\n", "\n").rstrip("\n")
+        return re.sub(r'versionDate="[^"]*"', 'versionDate=""', text)
+
+    assert stamped(response.content.decode("utf-8-sig")) == stamped(
+        SAMPLE_TABLES_FRAGMENT
+    )
+
+
+@pytest.mark.parametrize(
+    ("request_args", "status", "example"),
+    [
+        (
+            {"content": "tables-with-a-problem"},
+            422,
+            "EXAMPLE_TABLE_PROBLEMS",
+        ),
+        ({"content": b"<DDIInstance/>"}, 400, "EXAMPLE_NOT_TABLES"),
+    ],
+)
+def test_the_import_error_examples_are_exact(client, request_args, status, example):
+    from ddi_l.server import schemas
+    from ddi_l.server.samples import SAMPLE_TABLES_WITH_A_PROBLEM, tables_zip
+
+    body = request_args["content"]
+    if body == "tables-with-a-problem":
+        body = tables_zip(SAMPLE_TABLES_WITH_A_PROBLEM)
+
+    response = client.post("/v1/tables/import", content=body)
+
+    assert response.status_code == status
+    assert response.json() == getattr(schemas, example).value
+
+
+def test_the_language_error_example_is_exact(client):
+    from ddi_l.server.schemas import EXAMPLE_BAD_LANGUAGE
+
+    response = client.get("/v1/tables/template?lang=e n")
+
+    assert response.json() == EXAMPLE_BAD_LANGUAGE.value
+
+
+def test_the_tables_example_shows_real_tables(client):
+    """The example shows `concepts` only; it has to be the real one."""
+    from ddi_l.server.schemas import EXAMPLE_TABLES
+
+    actual = client.get("/v1/tables").json()
+    documented = EXAMPLE_TABLES.value
+    assert isinstance(documented, dict)
+
+    assert {key: documented[key] for key in documented if key != "tables"} == {
+        key: actual[key] for key in actual if key != "tables"
+    }
+    for table in documented["tables"]:
+        assert table in actual["tables"]
+
+
+def test_the_linked_downloads_are_the_committed_ones():
+    """Swagger links to the docs site's downloads for the binary examples."""
+    from pathlib import Path
+
+    from ddi_l.server import samples
+
+    downloads = Path(__file__).resolve().parents[1] / "docs" / "downloads"
+    if not downloads.is_dir():
+        pytest.skip("docs/ is not shipped in the sdist")
+    for example in (
+        samples.EXAMPLE_TABLES_WORKBOOK,
+        samples.EXAMPLE_TABLES_ZIP,
+        samples.EXAMPLE_TEMPLATE_WORKBOOK,
+        samples.EXAMPLE_TEMPLATE_ZIP,
+    ):
+        assert example.external_value is not None
+        name = example.external_value.rsplit("/", 1)[-1]
+        assert (downloads / name).is_file(), name
+
+
+def test_the_new_query_parameters_are_documented(schema):
+    def names(path: str, method: str) -> set[str]:
+        return {p["name"] for p in schema["paths"][path][method]["parameters"]}
+
+    assert names("/v1/roundtrip", "post") == {"version", "layout"}
+    assert names("/v1/tables/template", "get") == {"format", "example", "lang"}
+    assert names("/v1/tables/import", "post") == {
+        "agency",
+        "item_version",
+        "language",
+        "study",
+    }

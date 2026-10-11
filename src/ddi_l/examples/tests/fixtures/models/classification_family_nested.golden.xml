@@ -64,7 +64,6 @@
     </l:CurrentStatisticalClassificationReference>
   </l:ClassificationSeries>
   <r:ClassificationSeriesReference>
-    <r:URN>urn:ddi:ca.statcan:21ab282f-f61d-5971-9606-a363b57c433e:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>21ab282f-f61d-5971-9606-a363b57c433e</r:ID>
     <r:Version>1</r:Version>

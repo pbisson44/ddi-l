@@ -30,6 +30,13 @@ so the table separates them into three tiers.
     100,000-element production file re-saves with zero element loss. The only
     thing that varies by module is **ergonomics**: how much typing you do.
 
+    The typed models are as faithful. Each of the 161 item types a
+    `ddi:Fragment` can carry has a model, and reading an item with
+    `from_xml()` and writing it with `to_xml()` returns it unchanged: same
+    elements, attributes, text and order. The test suite checks this for every
+    type against samples built from the XSD, and byte for byte against real
+    Colectica exports (see [Work with Colectica exports](colectica.md)).
+
 ## Coverage by module
 
 | DDI module | High-level API | Typed model | Round-trip |

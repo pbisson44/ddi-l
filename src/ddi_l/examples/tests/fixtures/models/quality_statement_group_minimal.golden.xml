@@ -7,14 +7,12 @@
     <r:String xml:lang="en">Primary statements</r:String>
   </r:QualityStatementGroupName>
   <r:UniverseReference>
-    <r:URN>urn:ddi:ca.statcan:3ed50c19-cae8-51c9-ab3e-a60e2a30e1a5:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>3ed50c19-cae8-51c9-ab3e-a60e2a30e1a5</r:ID>
     <r:Version>1</r:Version>
     <r:TypeOfObject>Universe</r:TypeOfObject>
   </r:UniverseReference>
   <r:QualityStatementReference>
-    <r:URN>urn:ddi:ca.statcan:d1030bb2-3d85-5892-9e8b-b7c50bd068dc:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>d1030bb2-3d85-5892-9e8b-b7c50bd068dc</r:ID>
     <r:Version>1</r:Version>
