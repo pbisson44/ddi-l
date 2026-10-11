@@ -19,7 +19,7 @@
     <r:Version>1</r:Version>
     <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
   </d:QuestionGridReference>
-  <d:InterviewerInstructionReference>
+  <d:InterviewerInstructionReference isDisplayed="false">
     <r:URN>urn:ddi:example.agency:0027ae0d-2abd-5582-915a-ef2370170221:1</r:URN>
     <r:Agency>example.agency</r:Agency>
     <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>

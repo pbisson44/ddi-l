@@ -5,19 +5,30 @@ parameter (see :mod:`ddi_l.server.routes`), so Litestar cannot infer their
 request bodies. They are added to the generated spec here. Paths are checked
 against the app's routes at startup, and the sample payloads come from
 :mod:`ddi_l.server.samples`.
+
+Also added here: the zip variant of `GET /v1/tables/template`, since a route
+declares one media type per response.
 """
 
 from __future__ import annotations
 
 from litestar.openapi.spec import (
     OpenAPI,
+    OpenAPIFormat,
     OpenAPIMediaType,
     OpenAPIType,
     RequestBody,
     Schema,
 )
 
-from .samples import EXAMPLE_JSON_DOCUMENT, EXAMPLE_XML_DOCUMENT
+from ..operations import TEMPLATE_FORMATS
+from .samples import (
+    EXAMPLE_JSON_DOCUMENT,
+    EXAMPLE_TABLES_WORKBOOK,
+    EXAMPLE_TABLES_ZIP,
+    EXAMPLE_TEMPLATE_ZIP,
+    EXAMPLE_XML_DOCUMENT,
+)
 
 __all__ = ["document_request_bodies"]
 
@@ -59,6 +70,39 @@ def _json_body() -> RequestBody:
     )
 
 
+_TABLES_DESCRIPTION = (
+    "The metadata tables: an .xlsx workbook with one sheet per table, or a "
+    ".zip of CSV files, one per table, sent as the raw request body. "
+    "`curl --data-binary @my-survey.xlsx` is the shape."
+)
+
+
+def _binary(description: str) -> Schema:
+    return Schema(
+        type=OpenAPIType.STRING,
+        format=OpenAPIFormat.BINARY,
+        description=description,
+    )
+
+
+def _tables_body() -> RequestBody:
+    """The request body of `POST /v1/tables/import`: a workbook or a zip."""
+    return RequestBody(
+        required=True,
+        description=_TABLES_DESCRIPTION,
+        content={
+            TEMPLATE_FORMATS["xlsx"]: OpenAPIMediaType(
+                schema=_binary(_TABLES_DESCRIPTION),
+                examples={"workbook": EXAMPLE_TABLES_WORKBOOK},
+            ),
+            TEMPLATE_FORMATS["zip"]: OpenAPIMediaType(
+                schema=_binary(_TABLES_DESCRIPTION),
+                examples={"csv-files": EXAMPLE_TABLES_ZIP},
+            ),
+        },
+    )
+
+
 #: Which body each POST accepts. Every key is verified against the app's routes.
 _BODIES = {
     "/v1/validate": _xml_body,
@@ -67,7 +111,10 @@ _BODIES = {
     "/v1/convert/jsonld": _xml_body,
     "/v1/roundtrip": _xml_body,
     "/v1/convert/xml": _json_body,
+    "/v1/tables/import": _tables_body,
 }
+
+_TEMPLATE_PATH = "/v1/tables/template"
 
 
 def document_request_bodies(schema: OpenAPI) -> OpenAPI:
@@ -88,4 +135,23 @@ def document_request_bodies(schema: OpenAPI) -> OpenAPI:
                 "ddi_l.server.openapi is out of step with ddi_l.server.routes."
             )
         operation.request_body = build()
+    _document_template_formats(paths)
     return schema
+
+
+def _document_template_formats(paths: dict) -> None:
+    """Give `GET /v1/tables/template` its zip response next to the workbook."""
+    operation = getattr(paths.get(_TEMPLATE_PATH), "get", None)
+    responses = getattr(operation, "responses", None) or {}
+    success = responses.get("200")
+    if success is None or not success.content:
+        raise RuntimeError(
+            f"{_TEMPLATE_PATH} has no documented 200 response. "
+            "ddi_l.server.openapi is out of step with ddi_l.server.routes."
+        )
+    workbook = success.content[TEMPLATE_FORMATS["xlsx"]]
+    success.content[TEMPLATE_FORMATS["zip"]] = OpenAPIMediaType(
+        schema=_binary("A zip of CSV files, one per table."),
+        examples={"csv-files": EXAMPLE_TEMPLATE_ZIP},
+    )
+    workbook.schema = _binary("An .xlsx workbook, one sheet per table.")

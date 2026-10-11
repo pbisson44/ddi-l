@@ -6,6 +6,9 @@
     <r:String xml:lang="en">Sensor capture development</r:String>
   </d:DataCaptureDevelopmentName>
   <d:DevelopmentPlan>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>6f1c2a0e-3b7d-5c1e-9a24-1d7e0b6c8f31</r:ID>
+    <r:Version>1</r:Version>
     <r:Description>
       <r:Content xml:lang="en" isPlainText="true">Outline pilot testing</r:Content>
     </r:Description>
@@ -18,6 +21,9 @@
     <r:TypeOfObject>DevelopmentPlan</r:TypeOfObject>
   </d:DevelopmentPlanReference>
   <d:DevelopmentResults>
+    <r:Agency>ca.statcan</r:Agency>
+    <r:ID>a3e9d4b2-7c58-5f0a-8e16-4b2d9c7f1a05</r:ID>
+    <r:Version>1</r:Version>
     <r:Description>
       <r:Content xml:lang="en">Pilot indicated minor tweaks</r:Content>
     </r:Description>

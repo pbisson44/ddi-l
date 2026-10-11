@@ -104,11 +104,11 @@ class ItemValueFields(MaintainableBase):
 
     TAG: ClassVar[str] = qn(DATASET_NS, "ItemValue")
     variable_reference: Optional[Reference] = None  # [0..1]
-    record_reference: Optional[Reference] = None  # [1..1]
+    record_reference: Optional[str] = None  # [1..1]
     values: list[Element] = field(default_factory=list)  # [1..*]
     _FIELD_XML_MAP: ClassVar[dict] = {
         "variable_reference": (qn(REUSABLE_NS, "VariableReference"), "reference", False),
-        "record_reference": (qn(DATASET_NS, "RecordReference"), "reference", False),
+        "record_reference": (qn(DATASET_NS, "RecordReference"), "str", False),
         "values": (qn(REUSABLE_NS, "Value"), "element", True),
     }
     _ELEMENT_ORDER: ClassVar[list[str]] = [

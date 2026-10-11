@@ -33,6 +33,14 @@ trois choses différentes, alors le tableau les sépare en trois niveaux.
     sans perte d'élément. La seule chose qui varie selon le module est
     l'**ergonomie** : la quantité de code à écrire.
 
+    Les modèles typés sont aussi fidèles. Chacun des 161 types d'éléments
+    qu'un `ddi:Fragment` peut contenir a un modèle, et lire un élément avec
+    `from_xml()` puis l'écrire avec `to_xml()` le rend inchangé : mêmes
+    éléments, attributs, texte et ordre. La suite de tests le vérifie pour
+    chaque type sur des échantillons construits à partir du XSD, et octet pour
+    octet sur de vrais exports Colectica (voir
+    [Travailler avec les exports Colectica](colectica.md)).
+
 ## Couverture par module
 
 | Module DDI | API de haut niveau | Modèle typé | Aller-retour |

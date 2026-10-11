@@ -193,10 +193,14 @@ _FR: Final[dict[str, str]] = {
         "terminaison de document, c'est le message propre à l'analyseur ou au "
         "validateur, position comprise lorsqu'il en fournit une."
     ),
-    "Per-field detail, present only when a query parameter failed validation "
-    "-- for example `?lint=maybe`.": (
-        "Détail par champ, présent uniquement lorsqu'un paramètre de requête a "
-        "échoué à la validation -- par exemple `?lint=maybe`."
+    "Itemized detail: the query parameters that failed validation (a 400, for "
+    "example `?lint=maybe`), or every problem in the tables sent to `POST "
+    "/v1/tables/import` (a 422), each with `where` and `message`. Absent "
+    "otherwise.": (
+        "Détail par élément : les paramètres de requête qui ont échoué à la "
+        "validation (un 400, par exemple `?lint=maybe`), ou chaque problème des "
+        "tableaux envoyés à `POST /v1/tables/import` (un 422), chacun avec "
+        "`where` et `message`. Absent sinon."
     ),
     "Always `ok`; a failing service does not answer.": (
         "Toujours `ok` ; un service en panne ne répond pas."
@@ -287,6 +291,179 @@ _FR: Final[dict[str, str]] = {
     ),
     "Every release accepted in `?version=`.": (
         "Toutes les versions acceptées dans `?version=`."
+    ),
+    # --- Metadata tables and the Colectica layout ---------------------------
+    "`colectica` writes a FragmentInstance as Colectica Designer does (UTF-8 "
+    "with a byte-order mark, one item per fragment), so an unchanged Colectica "
+    "export comes back byte for byte. Only for a FragmentInstance.": (
+        "`colectica` écrit une FragmentInstance comme Colectica Designer (UTF-8 "
+        "avec indicateur d'ordre des octets, un élément par fragment) : un "
+        "export Colectica inchangé revient octet pour octet. Seulement pour une "
+        "FragmentInstance."
+    ),
+    "The metadata tables and their columns": (
+        "Les tableaux de métadonnées et leurs colonnes"
+    ),
+    "Every table `POST /v1/tables/import` reads, and every column, with what "
+    "goes in it: enough to build a form or check a file before sending it.": (
+        "Chaque tableau que lit `POST /v1/tables/import`, et chaque colonne, "
+        "avec son contenu : de quoi construire un formulaire ou vérifier un "
+        "fichier avant de l'envoyer."
+    ),
+    "The settings and one of the tables": "Les paramètres et l'un des tableaux",
+    "The response lists every table; this example shows `concepts` only.": (
+        "La réponse énumère tous les tableaux ; cet exemple ne montre que `concepts`."
+    ),
+    "Every table `POST /v1/tables/import` reads, in display order.": (
+        "Chaque tableau que lit `POST /v1/tables/import`, dans l'ordre d'affichage."
+    ),
+    "The rows the `settings` table takes.": (
+        "Les lignes que prend le tableau `settings`."
+    ),
+    "What separates several ids in one cell.": (
+        "Ce qui sépare plusieurs id dans une cellule."
+    ),
+    "What starts the name of a column of your own.": (
+        "Ce par quoi commence le nom d'une colonne à vous."
+    ),
+    "The file name without `.csv`, or the sheet name.": (
+        "Le nom du fichier sans `.csv`, ou le nom de la feuille."
+    ),
+    "What one row is.": "Ce qu'est une ligne.",
+    "Whether it takes `custom:<name>` columns, stored as `r:UserAttributePair`.": (
+        "S'il accepte des colonnes `custom:<nom>`, enregistrées comme "
+        "`r:UserAttributePair`."
+    ),
+    "Its columns, in order.": "Ses colonnes, dans l'ordre.",
+    "The column's name in the header row.": (
+        "Le nom de la colonne dans la ligne d'en-tête."
+    ),
+    "What goes in it.": "Ce qu'elle contient.",
+    "Whether every row must fill it.": "Si chaque ligne doit la remplir.",
+    "Whether it takes one column per language: `label@en`, `label@fr`.": (
+        "Si elle se répète en une colonne par langue : `label@en`, `label@fr`."
+    ),
+    "The table whose `id`s it holds, if it points at one.": (
+        "Le tableau dont elle contient des `id`, si elle en désigne un."
+    ),
+    "Whether it takes several values separated by `|`.": (
+        "Si elle accepte plusieurs valeurs séparées par `|`."
+    ),
+    "The setting, in the `setting` column.": "Le paramètre, dans la colonne `setting`.",
+    "Whether it must be given.": "S'il doit être fourni.",
+    "Its value when not given; `null` if required.": (
+        "Sa valeur s'il n'est pas fourni ; `null` s'il est requis."
+    ),
+    "What it sets.": "Ce qu'il fixe.",
+    "Download the metadata tables to fill in": (
+        "Télécharger les tableaux de métadonnées à remplir"
+    ),
+    "The tables, as a workbook or (with `?format=zip`) a zip of CSV files, "
+    "sent as an attachment.": (
+        "Les tableaux, en classeur ou (avec `?format=zip`) en zip de fichiers "
+        "CSV, envoyés en pièce jointe."
+    ),
+    "The blank workbook": "Le classeur vide",
+    "One sheet per table and a README sheet listing every column.": (
+        "Une feuille par tableau et une feuille README qui décrit chaque colonne."
+    ),
+    "The blank CSV files": "Les fichiers CSV vides",
+    "One CSV file per table, and a README.txt listing every column.": (
+        "Un fichier CSV par tableau, et un README.txt qui décrit chaque colonne."
+    ),
+    "An .xlsx workbook, one sheet per table.": (
+        "Un classeur .xlsx, une feuille par tableau."
+    ),
+    "A zip of CSV files, one per table.": "Un zip de fichiers CSV, un par tableau.",
+    "A language that is not a language tag, or the example asked for in "
+    "languages other than English and French.": (
+        "Une langue qui n'est pas une étiquette de langue, ou l'exemple demandé "
+        "dans d'autres langues que l'anglais et le français."
+    ),
+    "A malformed language tag": "Une étiquette de langue mal formée",
+    "`xlsx` for one workbook, `zip` for one CSV file per table.": (
+        "`xlsx` pour un classeur, `zip` pour un fichier CSV par tableau."
+    ),
+    "The bilingual example that fills every table, instead of empty tables. In "
+    "English and French only.": (
+        "L'exemple bilingue qui remplit chaque tableau, au lieu de tableaux "
+        "vides. En anglais et en français seulement."
+    ),
+    "The languages to give columns such as `label@en` for. Repeat it for "
+    "each: `?lang=en&lang=fr`. Defaults to English and French.": (
+        "Les langues pour lesquelles créer des colonnes comme `label@en`. "
+        "Répétez-le pour chacune : `?lang=en&lang=fr`. Par défaut, l'anglais "
+        "et le français."
+    ),
+    "Load metadata tables as DDI": "Charger des tableaux de métadonnées en DDI",
+    "The metadata tables: an .xlsx workbook with one sheet per table, or a "
+    ".zip of CSV files, one per table, sent as the raw request body. `curl "
+    "--data-binary @my-survey.xlsx` is the shape.": (
+        "Les tableaux de métadonnées : un classeur .xlsx avec une feuille par "
+        "tableau, ou un .zip de fichiers CSV, un par tableau, envoyé tel quel "
+        "dans le corps de la requête. `curl --data-binary @my-survey.xlsx` en "
+        "donne la forme."
+    ),
+    "The example workbook": "Le classeur d'exemple",
+    "A bilingual labour survey that fills every table. Download it, then "
+    "choose it as the file to send.": (
+        "Une enquête bilingue sur le travail qui remplit chaque tableau. "
+        "Téléchargez-le, puis choisissez-le comme fichier à envoyer."
+    ),
+    "The example as CSV files": "L'exemple en fichiers CSV",
+    "The same tables as a zip of CSV files, one file per table.": (
+        "Les mêmes tableaux en zip de fichiers CSV, un fichier par tableau."
+    ),
+    "The agency of every item; overrides `settings`.": (
+        "L'agence de chaque élément ; remplace `settings`."
+    ),
+    "The version of items without their own; overrides `settings`.": (
+        "La version des éléments qui n'en ont pas ; remplace `settings`."
+    ),
+    "The language of names; overrides `settings`.": (
+        "La langue des noms ; remplace `settings`."
+    ),
+    "Write a DDIInstance with the items inside a study of this title, instead "
+    "of a Colectica FragmentInstance. The tables that describe studies, "
+    "groups, people, variable groups, processing, quality or comparisons do "
+    "not fit in a study document.": (
+        "Écrire une DDIInstance avec les éléments dans une étude de ce titre, "
+        "au lieu d'une FragmentInstance Colectica. Les tableaux qui décrivent "
+        "des études, des groupes, des personnes, des groupes de variables, des "
+        "traitements, la qualité ou des comparaisons n'ont pas leur place dans "
+        "un document d'étude."
+    ),
+    "A Colectica FragmentInstance holding every item, or with `?study=` a "
+    "DDIInstance study.": (
+        "Une FragmentInstance Colectica qui contient tous les éléments, ou, avec "
+        "`?study=`, une étude DDIInstance."
+    ),
+    "One concept and its variable": "Un concept et sa variable",
+    "From a zip of three CSV files: `settings.csv` (the agency), "
+    "`concepts.csv` (AGE) and `variables.csv` (AGE, a numeric variable "
+    "measuring that concept). Written as Colectica Designer writes an export, "
+    "so it imports into a Colectica repository.": (
+        "À partir d'un zip de trois fichiers CSV : `settings.csv` (l'agence), "
+        "`concepts.csv` (AGE) et `variables.csv` (AGE, une variable numérique "
+        "qui mesure ce concept). Écrite comme Colectica Designer écrit un "
+        "export : elle s'importe dans un dépôt Colectica."
+    ),
+    "The body was empty, or not an .xlsx workbook or a .zip of CSV files.": (
+        "Le corps était vide, ou n'était ni un classeur .xlsx ni un .zip de "
+        "fichiers CSV."
+    ),
+    "Not a workbook or a zip": "Ni un classeur ni un zip",
+    "The tables were read but have problems: `extra` lists every one, with "
+    "its file (or sheet), row and column.": (
+        "Les tableaux ont été lus mais ont des problèmes : `extra` les énumère "
+        "tous, avec leur fichier (ou feuille), leur ligne et leur colonne."
+    ),
+    "Tables with a problem": "Des tableaux avec un problème",
+    "Every problem found, at once, each with its file (or sheet), row and "
+    "column, so one request lists everything to fix.": (
+        "Tous les problèmes trouvés, d'un coup, chacun avec son fichier (ou sa "
+        "feuille), sa ligne et sa colonne : une seule requête énumère tout ce "
+        "qu'il faut corriger."
     ),
 }
 

@@ -103,10 +103,15 @@ française dans une interface à l'habillage anglais.
 | `POST` | `/v1/convert/jsonld` | XML DDI → JSON-LD (données liées, sens unique). |
 | `POST` | `/v1/convert/xml` | JSON → XML DDI. |
 | `POST` | `/v1/roundtrip` | Re-sérialise un document via la couche de modèles. |
+| `GET` | `/v1/tables` | Les tableaux de métadonnées et leurs colonnes, en JSON. |
+| `GET` | `/v1/tables/template` | Les tableaux à remplir : un classeur, ou un zip de fichiers CSV. |
+| `POST` | `/v1/tables/import` | Tableaux de métadonnées → XML DDI. |
 
-Les points `POST` reçoivent le document dans le corps brut de la requête. Tous
-acceptent `?version=3.1|3.2|3.3` pour imposer une version du schéma plutôt que
-celle déclarée par le document.
+Les points de document reçoivent le document dans le corps brut de la
+requête : une `DDIInstance`, ou une `FragmentInstance` Colectica. Ils acceptent
+`?version=3.1|3.2|3.3` pour imposer une version du schéma plutôt que celle
+déclarée par le document. `/v1/tables/import` reçoit plutôt un classeur ou un
+zip ; voir [Charger des tableaux de métadonnées](#charger-des-tableaux-de-metadonnees).
 
 ### Valider
 
@@ -192,6 +197,77 @@ déjà, qui sont des IRI valides.
     Ce format est une transcription exacte et fait l'aller-retour via
     `/v1/convert/xml`.
 
+    Une `FragmentInstance` Colectica n'a pas d'étude à décrire : ce point de
+    terminaison répond `400` pour une telle instance.
+
+### Exports Colectica
+
+La validation, l'analyse et la conversion en JSON acceptent une
+`FragmentInstance` Colectica comme une `DDIInstance`. Pour vérifier qu'un
+export survit à l'analyse, faites-lui faire l'aller-retour dans la mise en
+forme de Colectica : un export inchangé revient octet pour octet.
+
+```bash
+curl --data-binary @export.xml 'http://localhost:8000/v1/roundtrip?layout=colectica' > retour.xml
+cmp export.xml retour.xml && echo inchangé
+```
+
+Sans `?layout=colectica`, la réponse est écrite dans la mise en forme de cette
+bibliothèque (sans indicateur d'ordre des octets, avec ses propres préfixes
+d'espaces de noms) : elle diffère de l'export même quand rien n'a été perdu.
+Voir [Travailler avec les exports Colectica](colectica.md).
+
+### Charger des tableaux de métadonnées
+
+`/v1/tables/import` charge des métadonnées tenues dans des tableurs, disposées
+comme dans [Charger du DDI depuis des tableurs](spreadsheet-import.md) : un
+classeur `.xlsx` avec une feuille par tableau, ou un `.zip` de fichiers CSV.
+Il répond par une `FragmentInstance` Colectica qui contient tous les éléments :
+
+```bash
+curl --data-binary @mon-enquete.xlsx http://localhost:8000/v1/tables/import > mon-enquete.xml
+curl --data-binary @mon-enquete.zip  http://localhost:8000/v1/tables/import > mon-enquete.xml
+```
+
+| Paramètre de requête | Rôle |
+| --- | --- |
+| `agency` | l'agence de chaque élément ; remplace `settings` |
+| `item_version` | la version des éléments qui n'en ont pas ; remplace `settings` |
+| `language` | la langue des noms ; remplace `settings` |
+| `study` | un titre : répondre par une étude `DDIInstance` plutôt qu'un fragment |
+
+Des tableaux lus mais qui ont des problèmes donnent un `422`. Tous les
+problèmes sont énumérés d'un coup, chacun avec son fichier (ou sa feuille), sa
+ligne et sa colonne :
+
+```json
+{
+  "status_code": 422,
+  "detail": "The tables have 1 problem; `extra` lists them.",
+  "extra": [
+    {
+      "where": "variables.csv, row 2, column question",
+      "message": "no row in questions has id 'Q_AGE'"
+    }
+  ]
+}
+```
+
+Un corps qui n'est ni un classeur ni un zip donne un `400`, comme tout autre
+corps mal formé.
+
+Les tableaux à remplir viennent de `/v1/tables/template`, en pièce jointe :
+
+```bash
+curl -OJ http://localhost:8000/v1/tables/template                          # classeur vide
+curl -OJ 'http://localhost:8000/v1/tables/template?format=zip&example=true' # l'exemple, en fichiers CSV
+curl -OJ 'http://localhost:8000/v1/tables/template?lang=fr&lang=iu'         # colonnes en français et en inuktitut
+```
+
+`/v1/tables` décrit chaque tableau et chaque colonne en JSON (son contenu, si
+elle est requise, si elle se répète par langue, quel tableau elle désigne),
+pour construire un formulaire ou vérifier un fichier avant de l'envoyer.
+
 ## Exploitation en sécurité
 
 Une bibliothèque analyse ce que son appelant a choisi d'ouvrir. Un service
@@ -215,7 +291,13 @@ délibérément prudentes.
   à la fois (par défaut : le nombre de processeurs) ; les requêtes suivantes
   reçoivent `503` avec `Retry-After`. Le schéma par défaut est chargé au
   démarrage : la première requête n'a pas à en payer le coût.
-- **Rien n'est écrit sur disque.** Les documents sont analysés en mémoire.
+- **Rien n'est écrit sur disque.** Les documents et les tableaux sont lus en
+  mémoire.
+- **Les classeurs et les zip sont lus dans des limites.** Leurs fichiers
+  peuvent occuper 256 Mio en tout une fois décompressés, ils peuvent être
+  10 000 au plus, et une cellule de classeur au-delà de la dernière ligne ou
+  colonne d'Excel est refusée : un petit envoi ne peut pas faire allouer le
+  lecteur sans fin.
 - **CORS est désactivé.** Autorisez des origines nommées avec
   `--cors-allow-origin` ; il n'existe volontairement pas d'option joker.
 - **`/schema` peut être désactivé** avec `--no-openapi` pour un déploiement

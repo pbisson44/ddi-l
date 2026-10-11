@@ -38,6 +38,7 @@ class ConceptualComponent(ConceptualComponentFields):
     has_unit_type_scheme: bool = False
     inline_only: bool = False
 
+    KEEPS_SCHEME_SHELLS: ClassVar[bool] = True
     TAG: ClassVar[str] = qn(CONCEPTUAL_COMPONENT_NS, "ConceptualComponent")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("c")
 
@@ -179,56 +180,42 @@ class ConceptualComponent(ConceptualComponentFields):
                 " a standalone ConceptualComponent element."
             )
         element = self._build_base_element()
+        # DDI 3.3 holds these only inside their schemes; written bare they are
+        # invalid, so a scheme is created even when none was read.
         if self.concepts:
-            if self.has_concept_scheme:
-                concept_scheme = create_element(
-                    qn(CONCEPTUAL_COMPONENT_NS, "ConceptScheme")
-                )
-                self._append_child_identification(concept_scheme, suffix="concepts")
-                for concept in self.concepts:
-                    concept_scheme.append(concept.to_xml())
-                element.append(concept_scheme)
-            else:
-                for concept in self.concepts:
-                    element.append(concept.to_xml())
+            concept_scheme = create_element(
+                qn(CONCEPTUAL_COMPONENT_NS, "ConceptScheme")
+            )
+            self._append_child_identification(concept_scheme, suffix="concepts")
+            for concept in self.concepts:
+                concept_scheme.append(concept.to_xml())
+            element.append(concept_scheme)
         if self.universes:
-            if self.has_universe_scheme:
-                universe_scheme = create_element(
-                    qn(CONCEPTUAL_COMPONENT_NS, "UniverseScheme")
-                )
-                self._append_child_identification(universe_scheme, suffix="universes")
-                for universe in self.universes:
-                    universe_scheme.append(universe.to_xml())
-                element.append(universe_scheme)
-            else:
-                for universe in self.universes:
-                    element.append(universe.to_xml())
+            universe_scheme = create_element(
+                qn(CONCEPTUAL_COMPONENT_NS, "UniverseScheme")
+            )
+            self._append_child_identification(universe_scheme, suffix="universes")
+            for universe in self.universes:
+                universe_scheme.append(universe.to_xml())
+            element.append(universe_scheme)
         if self.conceptual_variables:
-            if self.has_conceptual_variable_scheme:
-                variable_scheme = create_element(
-                    qn(CONCEPTUAL_COMPONENT_NS, "ConceptualVariableScheme")
-                )
-                self._append_child_identification(
-                    variable_scheme, suffix="conceptual-variables"
-                )
-                for conceptual_variable in self.conceptual_variables:
-                    variable_scheme.append(conceptual_variable.to_xml())
-                element.append(variable_scheme)
-            else:
-                for conceptual_variable in self.conceptual_variables:
-                    element.append(conceptual_variable.to_xml())
+            variable_scheme = create_element(
+                qn(CONCEPTUAL_COMPONENT_NS, "ConceptualVariableScheme")
+            )
+            self._append_child_identification(
+                variable_scheme, suffix="conceptual-variables"
+            )
+            for conceptual_variable in self.conceptual_variables:
+                variable_scheme.append(conceptual_variable.to_xml())
+            element.append(variable_scheme)
         if self.unit_types:
-            if self.has_unit_type_scheme:
-                unit_type_scheme = create_element(
-                    qn(CONCEPTUAL_COMPONENT_NS, "UnitTypeScheme")
-                )
-                self._append_child_identification(unit_type_scheme, suffix="unit-types")
-                for unit_type in self.unit_types:
-                    unit_type_scheme.append(unit_type.to_xml())
-                element.append(unit_type_scheme)
-            else:
-                for unit_type in self.unit_types:
-                    element.append(unit_type.to_xml())
+            unit_type_scheme = create_element(
+                qn(CONCEPTUAL_COMPONENT_NS, "UnitTypeScheme")
+            )
+            self._append_child_identification(unit_type_scheme, suffix="unit-types")
+            for unit_type in self.unit_types:
+                unit_type_scheme.append(unit_type.to_xml())
+            element.append(unit_type_scheme)
         for ref in self.concept_scheme_references:
             element.append(ref.to_xml("ConceptSchemeReference"))
         for ref in self.universe_scheme_references:

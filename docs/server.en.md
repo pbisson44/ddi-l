@@ -95,10 +95,15 @@ Stoplight, so a French reader gets French prose in an English-chromed page.
 | `POST` | `/v1/convert/jsonld` | DDI XML → JSON-LD (linked data, one-way). |
 | `POST` | `/v1/convert/xml` | JSON → DDI XML. |
 | `POST` | `/v1/roundtrip` | Re-serialize a document through the model layer. |
+| `GET` | `/v1/tables` | The metadata tables and their columns, as JSON. |
+| `GET` | `/v1/tables/template` | The tables to fill in: a workbook, or a zip of CSV files. |
+| `POST` | `/v1/tables/import` | Metadata tables → DDI XML. |
 
-`POST` endpoints take the document as the raw request body. All accept
+The document endpoints take the document as the raw request body: a
+`DDIInstance`, or a Colectica `FragmentInstance`. They accept
 `?version=3.1|3.2|3.3` to pin the schema release instead of using the one the
-document declares.
+document declares. `/v1/tables/import` takes a workbook or a zip instead; see
+[Load metadata tables](#load-metadata-tables).
 
 ### Validate
 
@@ -180,6 +185,74 @@ the DDI URNs the library already mints, which are valid IRIs.
     Use `/v1/convert/json` when the payload has to come back as XML. That format
     is an exact transcription and round-trips through `/v1/convert/xml`.
 
+    A Colectica `FragmentInstance` has no study to describe, so this endpoint
+    answers `400` for one.
+
+### Colectica exports
+
+Validate, lint and the JSON conversion take a Colectica `FragmentInstance` as
+they take a `DDIInstance`. To check that an export survives a parse, round-trip
+it in Colectica's own layout, so an unchanged export comes back byte for byte:
+
+```bash
+curl --data-binary @export.xml 'http://localhost:8000/v1/roundtrip?layout=colectica' > back.xml
+cmp export.xml back.xml && echo unchanged
+```
+
+Without `?layout=colectica`, the response is written in this library's layout
+(no byte-order mark, its own namespace prefixes), so it differs from the export
+even when nothing was lost. See [Work with Colectica exports](colectica.md).
+
+### Load metadata tables
+
+`/v1/tables/import` loads metadata kept in spreadsheets, laid out as in
+[Load DDI from spreadsheets](spreadsheet-import.md): an `.xlsx` workbook with
+one sheet per table, or a `.zip` of CSV files. It answers with a Colectica
+`FragmentInstance` holding every item:
+
+```bash
+curl --data-binary @my-survey.xlsx http://localhost:8000/v1/tables/import > my-survey.xml
+curl --data-binary @my-survey.zip  http://localhost:8000/v1/tables/import > my-survey.xml
+```
+
+| Query parameter | Does |
+| --- | --- |
+| `agency` | the agency of every item; overrides `settings` |
+| `item_version` | the version of items without their own; overrides `settings` |
+| `language` | the language of names; overrides `settings` |
+| `study` | a title: answer with a `DDIInstance` study instead of a fragment |
+
+Tables that were read but have problems are a `422`. Every problem is listed
+at once, each with its file (or sheet), row and column:
+
+```json
+{
+  "status_code": 422,
+  "detail": "The tables have 1 problem; `extra` lists them.",
+  "extra": [
+    {
+      "where": "variables.csv, row 2, column question",
+      "message": "no row in questions has id 'Q_AGE'"
+    }
+  ]
+}
+```
+
+A body that is not a workbook or a zip at all is a `400`, like any other
+malformed body.
+
+The tables to fill in come from `/v1/tables/template`, as an attachment:
+
+```bash
+curl -OJ http://localhost:8000/v1/tables/template                          # blank workbook
+curl -OJ 'http://localhost:8000/v1/tables/template?format=zip&example=true' # the example, as CSV files
+curl -OJ 'http://localhost:8000/v1/tables/template?lang=en&lang=iu'         # columns for English and Inuktitut
+```
+
+`/v1/tables` describes every table and column as JSON (what goes in it,
+whether it is required, whether it takes one column per language, which table
+it points to), for building a form or checking a file before sending it.
+
 ## Running it safely
 
 A library parses what its caller chose to open. A service parses whatever
@@ -201,7 +274,11 @@ reaches the port, so the defaults are deliberately conservative.
   at once (default: the number of CPUs); further requests get `503` with
   `Retry-After`. The default schema is loaded at startup, so the first request
   does not pay for it.
-- **Nothing is written to disk.** Documents are parsed from memory.
+- **Nothing is written to disk.** Documents and tables are read from memory.
+- **Workbooks and zips are read within limits.** Their files may expand to
+  256 MiB in all, there may be 10,000 of them, and a workbook cell past
+  Excel's last row or column is refused, so a small upload cannot make the
+  reader allocate without end.
 - **CORS is off.** Enable named origins with `--cors-allow-origin`; there is
   deliberately no wildcard flag.
 - **`/schema` can be turned off** with `--no-openapi` for an internet-facing

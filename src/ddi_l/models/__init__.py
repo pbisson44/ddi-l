@@ -284,3 +284,7 @@ __all__ = [
     "clone_element",
     "qn",
 ]
+
+# Typed models for every other Fragment item type. Imported last, so the
+# hand-written models above are registered first and keep their tags.
+from . import items  # noqa: F401

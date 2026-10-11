@@ -4,7 +4,7 @@
   <r:Version>1</r:Version>
   <d:QuestionScheme>
     <r:Agency>example.agency</r:Agency>
-    <r:ID>03088309-1009-5f8d-9b9e-e6f483deaacf</r:ID>
+    <r:ID>28930648-603e-5f6d-baf2-4d4518f24e36</r:ID>
     <r:Version>1</r:Version>
     <d:QuestionItem>
       <r:Agency>example.agency</r:Agency>
@@ -83,7 +83,7 @@
           <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
         </r:OtherMaterialReference>
       </d:ExternalAid>
-      <d:InterviewerInstructionReference>
+      <d:InterviewerInstructionReference isDisplayed="true">
         <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
@@ -116,20 +116,20 @@
         <r:String xml:lang="en">Household roster block</r:String>
       </d:QuestionBlockName>
       <d:QuestionItemReference>
-        <r:URN>urn:ddi:example.agency:4b3ca828-1aa5-53d2-a019-bc43fe4e6c62:1</r:URN>
+        <r:URN>urn:ddi:example.agency:item-1:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
         <r:Version>1</r:Version>
         <r:TypeOfObject>QuestionItem</r:TypeOfObject>
       </d:QuestionItemReference>
       <d:QuestionGridReference>
-        <r:URN>urn:ddi:example.agency:cd435e19-0e9a-57cc-b609-50126a9ae5e0:1</r:URN>
+        <r:URN>urn:ddi:example.agency:grid-1:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>cd435e19-0e9a-57cc-b609-50126a9ae5e0</r:ID>
         <r:Version>1</r:Version>
         <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
       </d:QuestionGridReference>
-      <d:InterviewerInstructionReference>
+      <d:InterviewerInstructionReference isDisplayed="false">
         <r:URN>urn:ddi:example.agency:0027ae0d-2abd-5582-915a-ef2370170221:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>
@@ -162,14 +162,14 @@
         <r:String xml:lang="en">Roster</r:String>
       </d:QuestionGroupName>
       <d:QuestionItemReference>
-        <r:URN>urn:ddi:example.agency:4b3ca828-1aa5-53d2-a019-bc43fe4e6c62:1</r:URN>
+        <r:URN>urn:ddi:example.agency:item-1:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>4b3ca828-1aa5-53d2-a019-bc43fe4e6c62</r:ID>
         <r:Version>1</r:Version>
         <r:TypeOfObject>QuestionItem</r:TypeOfObject>
       </d:QuestionItemReference>
       <d:QuestionBlockReference>
-        <r:URN>urn:ddi:example.agency:07bceaa1-296a-5d15-97e0-b39ca5e330a7:1</r:URN>
+        <r:URN>urn:ddi:example.agency:block-1:1</r:URN>
         <r:Agency>example.agency</r:Agency>
         <r:ID>07bceaa1-296a-5d15-97e0-b39ca5e330a7</r:ID>
         <r:Version>1</r:Version>
@@ -193,7 +193,7 @@
   </r:InterviewerInstructionSchemeReference>
   <d:InterviewerInstructionScheme>
     <r:Agency>example.agency</r:Agency>
-    <r:ID>f581c978-37d0-5aa6-a218-294b23bb86bd</r:ID>
+    <r:ID>5e1592e5-d9cb-518a-954a-094b79e41ce6</r:ID>
     <r:Version>1</r:Version>
     <d:Instruction>
       <r:Agency>example.agency</r:Agency>

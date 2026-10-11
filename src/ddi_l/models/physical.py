@@ -205,17 +205,19 @@ class RecordLayout(RecordLayoutFields):
     def to_xml(self) -> Element:
         element = super().to_xml()
         # PhysicalStructureLinkReference requires a PhysicalRecordSegmentUsed
-        # child that the generic reference serializer does not emit.
+        # child. A link read from a file still carries it (the reference keeps
+        # what follows r:TypeOfObject); one built in code does not.
         if self.physical_record_segment_used is not None:
             link = element.find(
                 qn(PHYSICAL_DATA_PRODUCT_NS, "PhysicalStructureLinkReference")
             )
             if link is not None:
-                segment = create_element(
-                    qn(PHYSICAL_DATA_PRODUCT_NS, "PhysicalRecordSegmentUsed")
-                )
+                segment_tag = qn(PHYSICAL_DATA_PRODUCT_NS, "PhysicalRecordSegmentUsed")
+                segment = link.find(segment_tag)
+                if segment is None:
+                    segment = create_element(segment_tag)
+                    link.append(segment)
                 segment.text = self.physical_record_segment_used
-                link.append(segment)
         return element
 
     @classmethod

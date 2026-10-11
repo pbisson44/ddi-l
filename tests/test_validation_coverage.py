@@ -282,14 +282,16 @@ def test_identify_fragment_schema_gap_invalid_child():
     dc_ns = ns["DATA_COLLECTION_NS"]
     gap_tags, child_gaps = _build_fragment_gap_sets(ns, ns["REUSABLE_NS"])
     root = create_element(qn(INSTANCE_NS, "FragmentInstance"))
+    fragment = create_element(qn(INSTANCE_NS, "Fragment"))
+    root.append(fragment)
     child = create_element(f"{{{dc_ns}}}CollectionEvent")
-    root.append(child)
+    fragment.append(child)
 
     class FakeError(Exception):
         def __init__(self):
             super().__init__("err")
             self.invalid_child = child
-            self.obj = root
+            self.obj = fragment
 
     result = _identify_fragment_schema_gap(
         FakeError(),
@@ -300,14 +302,44 @@ def test_identify_fragment_schema_gap_invalid_child():
     assert result is child
 
 
-def test_identify_fragment_schema_gap_obj_fallback():
+def test_identify_fragment_schema_gap_ignores_ddi_elements_inside_items():
+    """A DDI non-item nested in a real item is content: its errors count."""
     from ddi_l.constants import get_namespace_set
 
     ns = get_namespace_set("3.3")
     dc_ns = ns["DATA_COLLECTION_NS"]
     gap_tags, child_gaps = _build_fragment_gap_sets(ns, ns["REUSABLE_NS"])
     root = create_element(qn(INSTANCE_NS, "FragmentInstance"))
-    candidate = create_element(f"{{{dc_ns}}}CollectionEvent")
+    data_collection = create_element(f"{{{dc_ns}}}DataCollection")
+    root.append(data_collection)
+    event = create_element(f"{{{dc_ns}}}CollectionEvent")
+    data_collection.append(event)
+
+    class FakeError(Exception):
+        def __init__(self):
+            super().__init__("err")
+            self.invalid_child = event
+            self.obj = data_collection
+
+    assert (
+        _identify_fragment_schema_gap(
+            FakeError(),
+            root=root,
+            fragment_gap_tags=gap_tags,
+            fragment_child_gaps=child_gaps,
+        )
+        is None
+    )
+
+
+def test_identify_fragment_schema_gap_obj_fallback():
+    from ddi_l.constants import get_namespace_set
+
+    ns = get_namespace_set("3.3")
+    process_ns = ns["PROCESS_NS"]
+    gap_tags, child_gaps = _build_fragment_gap_sets(ns, ns["REUSABLE_NS"])
+    root = create_element(qn(INSTANCE_NS, "FragmentInstance"))
+    candidate = create_element(f"{{{process_ns}}}Process")
     root.append(candidate)
 
     class FakeError(Exception):
@@ -328,9 +360,9 @@ def test_identify_fragment_schema_gap_path_search():
     from ddi_l.constants import get_namespace_set
 
     ns = get_namespace_set("3.3")
-    dc_ns = ns["DATA_COLLECTION_NS"]
+    process_ns = ns["PROCESS_NS"]
     gap_tags, child_gaps = _build_fragment_gap_sets(ns, ns["REUSABLE_NS"])
-    tag = f"{{{dc_ns}}}CollectionEvent"
+    tag = f"{{{process_ns}}}Process"
     root = create_element(qn(INSTANCE_NS, "FragmentInstance"))
     child = create_element(tag)
     root.append(child)

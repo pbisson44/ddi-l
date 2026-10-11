@@ -75,7 +75,7 @@
         <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
       </r:OtherMaterialReference>
     </d:ExternalAid>
-    <d:InterviewerInstructionReference>
+    <d:InterviewerInstructionReference isDisplayed="true">
       <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
       <r:Agency>example.agency</r:Agency>
       <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>
@@ -121,7 +121,7 @@
       <r:Version>1</r:Version>
       <r:TypeOfObject>QuestionGrid</r:TypeOfObject>
     </d:QuestionGridReference>
-    <d:InterviewerInstructionReference>
+    <d:InterviewerInstructionReference isDisplayed="false">
       <r:URN>urn:ddi:example.agency:0027ae0d-2abd-5582-915a-ef2370170221:1</r:URN>
       <r:Agency>example.agency</r:Agency>
       <r:ID>0027ae0d-2abd-5582-915a-ef2370170221</r:ID>

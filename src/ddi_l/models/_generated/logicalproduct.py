@@ -1470,7 +1470,7 @@ class LogicalRecordFields(MaintainableBase):
     TAG: ClassVar[str] = qn(LOGICAL_PRODUCT_NS, "LogicalRecord")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("l")
     names: list[InternationalString] = field(default_factory=list)  # [0..*]
-    variable_value_reference: Optional[Reference] = None  # [0..1]
+    variable_value_reference: Optional[Element] = None  # [0..1]
     support_for_multiple_segments: Optional[Element] = None  # [0..1]
     case_identifications: list[Element] = field(default_factory=list)  # [0..*]
     variables_in_record: Optional[Element] = None  # [1..1]
@@ -1483,7 +1483,7 @@ class LogicalRecordFields(MaintainableBase):
     variableQuantity: Optional[int] = None  # @attr
     _FIELD_XML_MAP: ClassVar[dict] = {
         "names": (qn(LOGICAL_PRODUCT_NS, "LogicalRecordName"), "intl_string", True),
-        "variable_value_reference": (qn(LOGICAL_PRODUCT_NS, "VariableValueReference"), "reference", False),
+        "variable_value_reference": (qn(LOGICAL_PRODUCT_NS, "VariableValueReference"), "element", False),
         "support_for_multiple_segments": (qn(LOGICAL_PRODUCT_NS, "SupportForMultipleSegments"), "element", False),
         "case_identifications": (qn(LOGICAL_PRODUCT_NS, "CaseIdentification"), "element", True),
         "variables_in_record": (qn(LOGICAL_PRODUCT_NS, "VariablesInRecord"), "element", False),

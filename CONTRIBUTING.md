@@ -95,7 +95,8 @@ Key codegen files:
   `_ATTR_XML_MAP`, and `_ELEMENT_ORDER` tables
 - `src/ddi_l/models/_generated/`: Generated output (do not edit), including
   `label_slots.py`, the schema-derived table of elements that may carry an
-  `r:Label`
+  `r:Label`, and the round-trip tables `child_order.py`, `element_layout.py`
+  and `fragment_items.py`
 
 ## Bundled schemas
 

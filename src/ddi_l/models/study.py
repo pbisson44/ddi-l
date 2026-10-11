@@ -167,6 +167,9 @@ class StudyUnit(StudyUnitFields):
     conceptual_component_references: list[Reference] = field(default_factory=list)
     universe_references: list[Reference] = field(default_factory=list)
 
+    PASSTHROUGH_WHEN_UNCHANGED: ClassVar[tuple[str, ...]] = (
+        qn(PHYSICAL_DATA_PRODUCT_NS, "PhysicalDataProduct"),
+    )
     TAG: ClassVar[str] = qn(STUDY_UNIT_NS, "StudyUnit")
     NSMAP: ClassVar[dict[str | None, str]] = build_namespace_map(
         "a", "c", "d", "l", "p", "r", "s"

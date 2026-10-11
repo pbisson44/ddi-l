@@ -371,9 +371,12 @@ class TestConceptualComponentToXml:
             has_universe_scheme=False,
         )
         xml = cc.to_xml()
-        # Concepts and universes should be inline, not in scheme wrappers
-        assert xml.find(qn(CC, "ConceptScheme")) is None
-        assert xml.find(qn(CC, "Concept")) is not None
+        # DDI 3.3 has no slot for a bare Concept or Universe in a
+        # ConceptualComponent, so schemes are written even when none was read.
+        assert xml.find(qn(CC, "Concept")) is None
+        scheme = xml.find(qn(CC, "ConceptScheme"))
+        assert scheme is not None and scheme.find(qn(CC, "Concept")) is not None
+        assert xml.find(qn(CC, "UniverseScheme")) is not None
 
     def test_to_xml_with_schemes(self):
         from ddi_l.models.concept import Concept, Universe

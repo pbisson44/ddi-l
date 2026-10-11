@@ -286,16 +286,27 @@ def test_validate_reports_coordinates_with_xmlschema(
                 if line is not None and column is not None:
                     self.position = (line, column)
 
-        def fake_validate(self, node):
-            raise DummyValidationError(
+        def fake_iter_errors(self, node):
+            yield DummyValidationError(
                 "boom", elem=node, xpath="/Fake", line=42, column=7
             )
 
         monkeypatch.setattr(
             schema_loader, "XMLSchemaValidationError", DummyValidationError
         )
-        monkeypatch.setattr(type(schema), "validate", fake_validate, raising=False)
+        # xmlschema-backed validation walks iter_errors, so one error cannot
+        # hide another.
+        monkeypatch.setattr(
+            type(schema), "iter_errors", fake_iter_errors, raising=False
+        )
 
+        # The document is valid, so the libxml2 fast path would accept it
+        # before the patched full validator runs; this test is about the
+        # latter. (Without this it passed only after a test that switched the
+        # validation backend.)
+        monkeypatch.setattr(
+            "ddi_l.schema_loader._libxml2.is_valid", lambda *_a, **_k: False
+        )
         with pytest.raises(SchemaValidationError) as excinfo:
             schema_loader.validate(schema_fixtures / "minimal_instance.xml")
 
@@ -349,6 +360,13 @@ def test_validate_reports_coordinates_with_fallback(schema_fixtures: Path, monke
         )
         monkeypatch.setattr(schema, "validate", fake_validate)
 
+        # The document is valid, so the libxml2 fast path would accept it
+        # before the patched full validator runs; this test is about the
+        # latter. (Without this it passed only after a test that switched the
+        # validation backend.)
+        monkeypatch.setattr(
+            "ddi_l.schema_loader._libxml2.is_valid", lambda *_a, **_k: False
+        )
         with pytest.raises(SchemaValidationError) as excinfo:
             schema_loader.validate(schema_fixtures / "minimal_instance.xml")
 

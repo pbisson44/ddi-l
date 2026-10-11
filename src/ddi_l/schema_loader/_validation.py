@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable, Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import (
     Any,
@@ -205,21 +205,23 @@ def _build_fragment_gap_sets(
     data_collection_ns = _namespace_value(namespaces, "DATA_COLLECTION_NS")
     methodology_ns = _namespace_value(namespaces, "METHODOLOGY_NS")
     process_ns = _namespace_value(namespaces, "PROCESS_NS")
-    study_unit_ns = _namespace_value(namespaces, "STUDY_UNIT_NS")
     logical_product_ns = _namespace_value(namespaces, "LOGICAL_PRODUCT_NS")
 
+    # Elements this library writes as fragments that DDI's FragmentType does
+    # not list (DDI elements that are not items), plus the library's own
+    # extension types, which no DDI schema defines. Real fragment items --
+    # s:StudyUnit, d:DataCaptureDevelopment, d:WeightingMethodology -- are not
+    # gaps: an error inside one is an error.
     gap_tags: frozenset[str] = frozenset(
         {
             f"{{{data_collection_ns}}}CollectionActivity",
             f"{{{data_collection_ns}}}CollectionEvent",
-            f"{{{data_collection_ns}}}DataCaptureDevelopment",
             f"{{{data_collection_ns}}}DataCaptureMethod",
             f"{{{data_collection_ns}}}DataCollectionMethodology",
             f"{{{data_collection_ns}}}DeviationFromSampleDesign",
             f"{{{data_collection_ns}}}ObservationPlan",
             f"{{{data_collection_ns}}}SamplingProcedure",
             f"{{{data_collection_ns}}}TimeMethod",
-            f"{{{data_collection_ns}}}WeightingMethodology",
             f"{{{methodology_ns}}}Methodology",
             f"{{{methodology_ns}}}MethodologyItem",
             f"{{{methodology_ns}}}MethodologyScheme",
@@ -232,7 +234,6 @@ def _build_fragment_gap_sets(
             f"{{{process_ns}}}ProcessScheme",
             f"{{{process_ns}}}ProcessStep",
             f"{{{process_ns}}}ProcessStepScheme",
-            f"{{{study_unit_ns}}}StudyUnit",
         }
     )
 
@@ -583,9 +584,10 @@ def validate(
     if IMPLEMENTATION == "lxml" and _libxml2.is_valid(root, target_version):
         return preflight_warnings
 
-    try:
-        schema.validate(root)
-    except validation_error_cls as exc:
+    # A known gap is checked for identification and passed over; validation
+    # then goes on, so a gap early in a fragment no longer hides an error in
+    # a later one.
+    for exc in _schema_errors(schema, root, validation_error_cls):
         gap_child = (
             _identify_fragment_schema_gap(
                 exc,
@@ -597,6 +599,10 @@ def validate(
             else None
         )
         if gap_child is not None:
+            if gap_child.tag not in fragment_gap_tags:
+                # Extension content nested in an item (m:MethodologyStatement):
+                # nothing a schema or an identification check can say about it.
+                continue
             try:
                 _ensure_identification_elements(
                     gap_child, reusable_namespace=reusable_namespace
@@ -612,9 +618,7 @@ def validate(
                 if raise_error:
                     raise SchemaValidationError(issues) from None
                 return issues
-            if preflight_warnings:
-                return preflight_warnings
-            return []
+            continue
 
         issue = _build_validation_issue(
             exc,
@@ -633,6 +637,24 @@ def validate(
     return []
 
 
+def _schema_errors(
+    schema: Any, root: Element, error_cls: type[BaseException]
+) -> Iterator[BaseException]:
+    """Yield the schema errors in ``root``.
+
+    All of them where the schema object can iterate them (xmlschema), else
+    the first one ``validate`` raises.
+    """
+    iter_errors = getattr(schema, "iter_errors", None)
+    if callable(iter_errors):
+        yield from iter_errors(root)
+        return
+    try:
+        schema.validate(root)
+    except error_cls as exc:
+        yield exc
+
+
 def _identify_fragment_schema_gap(
     error: BaseException,
     *,
@@ -640,28 +662,42 @@ def _identify_fragment_schema_gap(
     fragment_gap_tags: Collection[str],
     fragment_child_gaps: Collection[tuple[str, str]],
 ) -> Element | None:
-    """Return the fragment child associated with a known schema gap if present."""
+    """Return the fragment child associated with a known schema gap if present.
+
+    A DDI element that is not a fragment item (``d:CollectionEvent``) is a gap
+    only where it stands as a fragment: directly in a ``<Fragment>``. Inside
+    an item it is ordinary DDI content and its errors are real. Only the
+    library's extension types (``urn:ddi-l:extension:...``), which no schema
+    can check, are passed over wherever an error inside them is reported.
+    """
+    extension_tags = frozenset(tag for tag in fragment_gap_tags if _is_extension(tag))
     invalid_child = getattr(error, "invalid_child", None)
+    parent = getattr(error, "obj", None)
     if isinstance(invalid_child, Element):
-        if invalid_child.tag in fragment_gap_tags:
+        if _is_extension(invalid_child.tag):
             return invalid_child
-        parent = getattr(error, "obj", None)
+        if (
+            invalid_child.tag in fragment_gap_tags
+            and isinstance(parent, Element)
+            and isinstance(parent.tag, str)
+            and parent.tag.endswith("}Fragment")
+        ):
+            return invalid_child
         if (
             isinstance(parent, Element)
             and (parent.tag, invalid_child.tag) in fragment_child_gaps
         ):
             return parent
-    candidate = getattr(error, "obj", None)
-    if isinstance(candidate, Element) and candidate.tag in fragment_gap_tags:
+    candidate = parent
+    if isinstance(candidate, Element) and _is_extension(candidate.tag):
         return candidate
 
-    # Walk up from the element the error was reported on. The offending element
-    # is often nested inside the gap-tagged maintainable rather than being it,
-    # so neither `invalid_child` nor `obj` matches directly.
+    # Walk up from the element the error was reported on: content nested in
+    # an extension type is reported on the nested element, not on it.
     for element in (invalid_child, candidate):
         if not isinstance(element, Element):
             continue
-        ancestor = _find_gap_ancestor(root, element, fragment_gap_tags)
+        ancestor = _find_gap_ancestor(root, element, extension_tags)
         if ancestor is not None:
             return ancestor
 
@@ -670,7 +706,7 @@ def _identify_fragment_schema_gap(
     # alone would not work on lxml.
     path = getattr(error, "path", None)
     if isinstance(path, str):
-        for tag in fragment_gap_tags:
+        for tag in extension_tags:
             namespace, _, local = tag.partition("}")
             local_name = local or namespace
             if tag in path or f":{local_name}" in path or f"/{local_name}" in path:
@@ -678,6 +714,11 @@ def _identify_fragment_schema_gap(
                 if isinstance(located, Element):
                     return located
     return None
+
+
+def _is_extension(tag: object) -> bool:
+    """Whether ``tag`` is in one of this library's extension namespaces."""
+    return isinstance(tag, str) and tag.startswith("{urn:ddi-l:extension:")
 
 
 def _find_gap_ancestor(

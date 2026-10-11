@@ -51,7 +51,7 @@
       <r:TypeOfObject>OtherMaterial</r:TypeOfObject>
     </r:OtherMaterialReference>
   </d:ExternalAid>
-  <d:InterviewerInstructionReference>
+  <d:InterviewerInstructionReference isDisplayed="true">
     <r:URN>urn:ddi:example.agency:db07bfbf-0ba3-5cfb-a4d4-4be33cf98722:1</r:URN>
     <r:Agency>example.agency</r:Agency>
     <r:ID>db07bfbf-0ba3-5cfb-a4d4-4be33cf98722</r:ID>

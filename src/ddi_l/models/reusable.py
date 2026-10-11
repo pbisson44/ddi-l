@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import ClassVar
 
-from .._etree import Element, create_element
+from .._etree import Element
 from ..constants import REUSABLE_NS, XML_NS
 from ..namespaces import NamespaceBindings, build_namespace_map
 from ._generated.reusable import (
@@ -17,6 +17,7 @@ from ._generated.reusable import (
 from .base import (
     InternationalString,
     Reference,
+    append_intl_strings,
     clone_element,
     preserve_unrecognized_children,
     qn,
@@ -46,7 +47,7 @@ def _retagged(element: Element, tag: str) -> Iterator[Element]:
 def _parse_bool(value: str | None) -> bool | None:
     if value is None:
         return None
-    return value.lower() == "true"
+    return value.strip().lower() in ("true", "1")  # xs:boolean
 
 
 def _format_bool(value: bool) -> str:
@@ -174,7 +175,7 @@ class ManagedMissingValuesRepresentation(ManagedMissingValuesRepresentationField
         processing_instruction_reference_extras: list[Element] = []
         pir_el = element.find(qn(REUSABLE_NS, "ProcessingInstructionReference"))
         if pir_el is not None:
-            processing_instruction_reference = Reference.from_xml(pir_el)
+            processing_instruction_reference = Reference.from_xml(pir_el, extras=False)
             processing_instruction_reference_extras = preserve_unrecognized_children(
                 pir_el, _REFERENCE_CHILDREN
             )
@@ -224,12 +225,12 @@ class ManagedMissingValuesRepresentation(ManagedMissingValuesRepresentationField
             if key in self._ALLOWED_OTHER_ATTRIBUTES:
                 element.set(key, value)
 
-        for name in self.names:
-            container = create_element(
-                qn(REUSABLE_NS, "ManagedMissingValuesRepresentationName")
-            )
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(REUSABLE_NS, "ManagedMissingValuesRepresentationName"),
+            self.names,
+            child_tag="String",
+        )
 
         for child in label_children:
             element.append(child)

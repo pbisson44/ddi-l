@@ -29,6 +29,13 @@ They need DDI metadata that describes that data.
 This module teaches the real-world workflow:
 start from data you already have and produce a DDI document.
 
+!!! tip "Already documenting in spreadsheets?"
+    This module builds the DDI in code, one column at a time. If your study's
+    concepts, questions, questionnaire, code lists, variables and data files
+    are already in spreadsheets, lay them out as in [Load DDI from spreadsheets](../spreadsheet-import.md) and load
+    them all in one step, in any number of languages. The
+    [spreadsheet templates](../spreadsheet-templates.md) are a starting point.
+
 ---
 
 ## 1. The workflow overview

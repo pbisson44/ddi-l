@@ -23,11 +23,16 @@ from .base import (
     UserAttributePair,
     UserID,
     VersionRationale,
+    append_intl_strings,
     apply_other_attributes,
     build_identification_elements,
     clone_element,
     collect_other_attributes,
+    identification_attributes,
+    intl_container,
+    preserves_source,
     qn,
+    restore_identification_attributes,
 )
 from .datacollection import VersionableMaintainableBase
 
@@ -52,6 +57,8 @@ class _CorrespondenceProperty:
     key: str | None = None
     value: str | None = None
     other_attributes: dict[str, str] = field(default_factory=dict)
+    key_attributes: dict[str, str] = field(default_factory=dict)
+    value_attributes: dict[str, str] = field(default_factory=dict)
 
     TAG: ClassVar[str] = qn(REUSABLE_NS, "UserDefinedCorrespondenceProperty")
 
@@ -67,6 +74,8 @@ class _CorrespondenceProperty:
             key=key_el.text if key_el is not None else None,
             value=value_el.text if value_el is not None else None,
             other_attributes=collect_other_attributes(element),
+            key_attributes=dict(key_el.attrib) if key_el is not None else {},
+            value_attributes=dict(value_el.attrib) if value_el is not None else {},
         )
 
     def to_xml(self) -> Element:
@@ -74,10 +83,12 @@ class _CorrespondenceProperty:
         if self.key is not None:
             key_el = create_element(qn(REUSABLE_NS, "AttributeKey"))
             key_el.text = self.key
+            apply_other_attributes(key_el, self.key_attributes)
             element.append(key_el)
         if self.value is not None:
             value_el = create_element(qn(REUSABLE_NS, "AttributeValue"))
             value_el.text = self.value
+            apply_other_attributes(value_el, self.value_attributes)
             element.append(value_el)
         apply_other_attributes(element, self.other_attributes)
         return element
@@ -94,6 +105,9 @@ class Correspondence:
     properties: list[_CorrespondenceProperty] = field(default_factory=list)
     other_elements: list[Element] = field(default_factory=list)
     other_attributes: dict[str, str] = field(default_factory=dict)
+    # The weight as written ("1", "0.50"), reused while it still parses to
+    # ``commonality_weight``; str(float) would turn "1" into "1.0".
+    _weight_text: str | None = field(default=None, repr=False, compare=False)
 
     TAG: ClassVar[str] = qn(COMPARATIVE_NS, "Correspondence")
 
@@ -144,20 +158,21 @@ class Correspondence:
             properties=properties,
             other_elements=other,
             other_attributes=collect_other_attributes(element),
+            _weight_text=(
+                weight_el.text if weight is not None and weight_el is not None else None
+            ),
         )
 
     def to_xml(self) -> Element:
         element = create_element(self.TAG)
         if self.commonalities:
-            container = create_element(qn(COMPARATIVE_NS, "Commonality"))
-            for value in self.commonalities:
-                container.append(value.to_child())
-            element.append(container)
+            element.append(
+                intl_container(qn(COMPARATIVE_NS, "Commonality"), self.commonalities)
+            )
         if self.differences:
-            container = create_element(qn(REUSABLE_NS, "Difference"))
-            for value in self.differences:
-                container.append(value.to_child())
-            element.append(container)
+            element.append(
+                intl_container(qn(REUSABLE_NS, "Difference"), self.differences)
+            )
         if self.commonality_type is not None:
             element.append(
                 self.commonality_type.to_xml(
@@ -166,7 +181,12 @@ class Correspondence:
             )
         if self.commonality_weight is not None:
             weight_el = create_element(qn(COMPARATIVE_NS, "CommonalityWeight"))
-            weight_el.text = str(self.commonality_weight)
+            weight_el.text = (
+                self._weight_text
+                if self._weight_text is not None
+                and float(self._weight_text) == self.commonality_weight
+                else str(self.commonality_weight)
+            )
             element.append(weight_el)
         for prop in self.properties:
             element.append(prop.to_xml())
@@ -194,6 +214,9 @@ class ItemMap:
     related_map_references: list[Reference] = field(default_factory=list)
     other_elements: list[Element] = field(default_factory=list)
     other_attributes: dict[str, str] = field(default_factory=dict)
+    _identification_attributes: dict[str, dict[str, str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
 
     TAG: ClassVar[str] = qn(COMPARATIVE_NS, "ItemMap")
 
@@ -270,6 +293,7 @@ class ItemMap:
             related_map_references=related_map_references,
             other_elements=other,
             other_attributes=collect_other_attributes(element),
+            _identification_attributes=identification_attributes(element),
         )
 
     def to_xml(self) -> Element:
@@ -311,6 +335,7 @@ class ItemMap:
         for child in self.other_elements:
             element.append(clone_element(child))
         apply_other_attributes(element, self.other_attributes)
+        restore_identification_attributes(element, self._identification_attributes)
         return element
 
 
@@ -401,10 +426,12 @@ class _GenericMap(VersionableMaintainableBase):
                         "TypeOfMappedItem", namespace=COMPARATIVE_NS
                     )
                 )
-            for name in self.names:
-                container = create_element(qn(COMPARATIVE_NS, self.NAME_TAG))
-                container.append(name.to_child(child_tag="String"))
-                element.append(container)
+            append_intl_strings(
+                element,
+                qn(COMPARATIVE_NS, self.NAME_TAG),
+                self.names,
+                child_tag="String",
+            )
         if self.source_scheme_reference is not None:
             element.append(
                 self.source_scheme_reference.to_xml(
@@ -551,6 +578,7 @@ class UsageGuide:
         return element
 
 
+@preserves_source
 @dataclass
 class StandardWeight:
     """Representation of ``d:StandardWeight`` entries."""

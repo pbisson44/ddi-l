@@ -7,6 +7,9 @@ Everything here takes bytes or plain Python objects and returns objects
 
 from __future__ import annotations
 
+import io
+import zipfile
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 from . import schema_loader
@@ -23,16 +26,30 @@ if TYPE_CHECKING:  # pragma: no cover - imported for type checking only
     from .lint import LintFinding
 
 __all__ = [
+    "LAYOUTS",
+    "TEMPLATE_FORMATS",
     "coerce_json_payload",
     "from_json_payload",
     "lint_source",
     "roundtrip_source",
     "supported_versions",
+    "tables_import",
+    "tables_spec",
+    "tables_template",
     "to_json_payload",
     "to_jsonld_payload",
     "validate_source",
     "wrap_element",
 ]
+
+#: Output layouts :func:`roundtrip_source` writes.
+LAYOUTS = ("default", "colectica")
+
+#: Formats :func:`tables_template` writes, with their media types.
+TEMPLATE_FORMATS = {
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "zip": "application/zip",
+}
 
 
 def wrap_element(element: schema_loader.Element) -> DDIDocument | DDIFragment:
@@ -226,14 +243,150 @@ def from_json_payload(payload: dict, *, version: str | None = None) -> bytes:
     return write(document, None)
 
 
-def roundtrip_source(data: bytes, *, version: str | None = None) -> bytes:
+def roundtrip_source(
+    data: bytes, *, version: str | None = None, layout: str = "default"
+) -> bytes:
     """Parse a document with the model layer and re-serialize it.
 
     Useful as a smoke test for formatting, namespace or encoding problems
     introduced by hand-editing.
+
+    Args:
+        data: The XML document as bytes.
+        version: DDI schema version, or ``None`` to detect it.
+        layout: ``"default"``, or ``"colectica"`` to write a
+            ``FragmentInstance`` the way Colectica Designer does, so an
+            unchanged export comes back byte for byte.
+
+    Raises:
+        ValueError: ``layout`` is unknown, or is ``"colectica"`` for a
+            ``DDIInstance``.
     """
+    from .document import DDIFragment
+
+    if layout not in LAYOUTS:
+        raise ValueError(
+            f"Unknown layout {layout!r}; expected 'default' or 'colectica'."
+        )
     document = read(data, version=version)
-    return write(document, None)
+    if layout == "colectica" and not isinstance(document, DDIFragment):
+        raise ValueError(
+            "The colectica layout writes a FragmentInstance; this document is a "
+            "DDIInstance."
+        )
+    return write(document, None, layout=layout)
+
+
+def tables_import(
+    data: bytes,
+    *,
+    agency: str | None = None,
+    item_version: str | None = None,
+    language: str | None = None,
+    study_title: str | None = None,
+) -> bytes:
+    """Load metadata tables sent as one file and write them as DDI XML.
+
+    Args:
+        data: An ``.xlsx`` workbook, or a ``.zip`` of CSV files.
+        agency: The agency of every item; overrides ``settings``.
+        item_version: The version of items without their own.
+        language: The language of names.
+        study_title: Write a ``DDIInstance`` with the items inside a study of
+            this title instead of a Colectica ``FragmentInstance``.
+
+    Returns:
+        The XML: a ``FragmentInstance`` in Colectica's layout, or the study.
+
+    Raises:
+        ValueError: ``data`` is neither a workbook nor a zip.
+        ddi_l.tables.TableImportError: The tables have problems, listed in
+            its ``problems``.
+    """
+    from .tables import load_tables
+
+    if not zipfile.is_zipfile(io.BytesIO(data)):
+        raise ValueError("The body is not an .xlsx workbook or a .zip of CSV files.")
+    tables = load_tables(data, agency=agency, version=item_version, language=language)
+    if study_title is not None:
+        return write(tables.to_study(study_title), None)
+    return write(tables.to_fragment(), None, layout="colectica")
+
+
+def tables_template(
+    *,
+    template_format: str = "xlsx",
+    example: bool = False,
+    languages: Sequence[str] = ("en", "fr"),
+) -> bytes:
+    """The metadata tables to fill in, blank or with the example.
+
+    Args:
+        template_format: ``"xlsx"`` for a workbook, ``"zip"`` for CSV files.
+        example: The bilingual example instead of empty tables.
+        languages: The languages to give columns such as ``label@en`` for.
+
+    Raises:
+        ValueError: An unknown format, no language, a malformed language tag,
+            or an example in languages other than English and French.
+    """
+    from .tables._spec import LANGUAGE_TAG
+    from .tables._templates import table_template_bytes
+
+    if template_format not in TEMPLATE_FORMATS:
+        raise ValueError(
+            f"Unknown format {template_format!r}; expected 'xlsx' or 'zip'."
+        )
+    if not languages:
+        raise ValueError("Give at least one language.")
+    for language in languages:
+        if not LANGUAGE_TAG.match(language):
+            raise ValueError(
+                f"{language!r} is not a language tag, such as en or fr-CA."
+            )
+    return table_template_bytes(
+        example=example,
+        languages=tuple(languages),
+        layout=template_format,  # type: ignore[arg-type]
+    )
+
+
+def tables_spec() -> dict[str, Any]:
+    """Every metadata table and column, with what goes in it."""
+    from .tables._spec import (
+        CUSTOM_PREFIX,
+        MULTI_VALUE_SEPARATOR,
+        SETTING_NAMES,
+        TABLES,
+    )
+
+    return {
+        "tables": [
+            {
+                "name": table.name,
+                "help": table.help,
+                "custom_columns": table.custom,
+                "columns": [
+                    {
+                        "name": column.name,
+                        "help": column.help,
+                        "required": column.required,
+                        "multilingual": column.multilingual,
+                        "references": column.reference,
+                        "multiple": column.multiple,
+                    }
+                    for column in table.columns
+                ],
+            }
+            for table in TABLES
+        ],
+        "settings": [
+            {"name": name, "required": required, "default": default, "help": help_}
+            for name, (required, default, help_) in SETTING_NAMES.items()
+        ],
+        "multi_value_separator": MULTI_VALUE_SEPARATOR,
+        "custom_prefix": CUSTOM_PREFIX,
+    }
 
 
 def supported_versions() -> dict[str, Any]:

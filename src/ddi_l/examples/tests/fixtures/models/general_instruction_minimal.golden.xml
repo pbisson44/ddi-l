@@ -11,7 +11,6 @@
     </r:Description>
   </r:CommandCode>
   <d:OverriddenCodeReference>
-    <r:URN>urn:ddi:ca.statcan:7be9e380-2247-56f3-8c32-efd19788a85a:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>7be9e380-2247-56f3-8c32-efd19788a85a</r:ID>
     <r:Version>1</r:Version>

@@ -139,7 +139,17 @@ documentation text.
    schema-wide table, `_generated/fixed_attributes.py`, records the attributes
    the XSD pins to a `fixed` value; the JSON-to-XML conversion drops them,
    since an attribute the schema pins carries no information and writing it
-   back would make the round-trip return more than it was given.
+   back would make the round-trip return more than it was given. Three more
+   serve round-trip fidelity: `_generated/child_order.py` gives each content
+   model's children in rank groups (members of a repeating choice share one,
+   so their interleaving survives), which the models use to put content they
+   keep without mapping back in schema order at any depth;
+   `_generated/element_layout.py` records which empty elements hold text,
+   attribute declaration order and substitution-group heads, for the
+   Colectica writer (`ddi_l.colectica`); and `_generated/fragment_items.py`
+   lists every item type a `ddi:Fragment` can carry, from which
+   `ddi_l.models.items` registers a model for each type without a
+   hand-written one.
 3. The generic XML engine in `MaintainableBase.from_xml()` / `.to_xml()`
    (`src/ddi_l/models/base.py`) drives serialization off those tables, emitting
    children in XSD-declared order. Anything the tables do not name is preserved

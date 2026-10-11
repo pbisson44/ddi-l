@@ -47,6 +47,9 @@ nav:
       - Automate validation in CI: tutorials/automation-playbook.md
       - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
       - Reuse fragments: tutorials/fragment-reuse-lab.md
+      - Work with Colectica exports: colectica.md
+      - Load DDI from spreadsheets: spreadsheet-import.md
+      - Spreadsheet templates: spreadsheet-templates.md
       - Move between XML and objects: tutorials/xml-to-objects.md
       - Serve the HTTP API: server.md
       - Use ddi-l from R: r-users.md
@@ -183,6 +186,9 @@ plugins:
                 - Automate validation in CI: tutorials/automation-playbook.md
                 - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
                 - Reuse fragments: tutorials/fragment-reuse-lab.md
+                - Work with Colectica exports: colectica.md
+                - Load DDI from spreadsheets: spreadsheet-import.md
+                - Spreadsheet templates: spreadsheet-templates.md
                 - Move between XML and objects: tutorials/xml-to-objects.md
                 - Serve the HTTP API: server.md
                 - Use ddi-l from R: r-users.md
@@ -251,6 +257,9 @@ plugins:
                 - Automatiser la validation en CI: tutorials/automation-playbook.md
                 - "D\xE9panner les erreurs de sch\xE9ma": tutorials/schema-troubleshooting-clinic.md
                 - "R\xE9utiliser des fragments": tutorials/fragment-reuse-lab.md
+                - Travailler avec les exports Colectica: colectica.md
+                - Charger du DDI depuis des tableurs: spreadsheet-import.md
+                - Modèles de tableurs: spreadsheet-templates.md
                 - Passer du XML aux objets: tutorials/xml-to-objects.md
                 - Servir l'API HTTP: server.md
                 - Utiliser ddi-l depuis R: r-users.md

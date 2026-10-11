@@ -1455,7 +1455,7 @@ class ExternalCategoryRepresentationBaseFields(MaintainableBase):
     recommended_data_type: Optional[CodeValue] = None  # [0..1]
     generic_output_format: Optional[CodeValue] = None  # [0..1]
     measurement_unit: Optional[CodeValue] = None  # [0..1]
-    external_category_reference: Optional[Reference] = None  # [1..1]
+    external_category_reference: Optional[str] = None  # [1..1]
     usage_description: Optional[Element] = None  # [0..1]
     missingValue: Optional[str] = None  # @attr
     blankIsMissingValue: Optional[bool] = None  # @attr
@@ -1464,7 +1464,7 @@ class ExternalCategoryRepresentationBaseFields(MaintainableBase):
         "recommended_data_type": (qn(REUSABLE_NS, "RecommendedDataType"), "code_value", False),
         "generic_output_format": (qn(REUSABLE_NS, "GenericOutputFormat"), "code_value", False),
         "measurement_unit": (qn(REUSABLE_NS, "MeasurementUnit"), "code_value", False),
-        "external_category_reference": (qn(REUSABLE_NS, "ExternalCategoryReference"), "reference", False),
+        "external_category_reference": (qn(REUSABLE_NS, "ExternalCategoryReference"), "str", False),
         "usage_description": (qn(REUSABLE_NS, "UsageDescription"), "element", False),
     }
     _ATTR_XML_MAP: ClassVar[dict] = {
@@ -1554,8 +1554,8 @@ class GeographicCoverageFields(MaintainableBase):
     geographic_location_references: list[Reference] = field(default_factory=list)  # [0..*]
     location_value_references: list[Reference] = field(default_factory=list)  # [0..*]
     summary_data_references: list[Reference] = field(default_factory=list)  # [0..*]
-    highest_level_reference: Optional[Reference] = None  # [0..1]
-    lowest_level_reference: Optional[Reference] = None  # [0..1]
+    highest_level_reference: Optional[Element] = None  # [0..1]
+    lowest_level_reference: Optional[Element] = None  # [0..1]
     inheritanceAction: Optional[str] = None  # @attr
     objectSource: Optional[str] = None  # @attr
     scopeOfUniqueness: Optional[str] = None  # @attr
@@ -1569,8 +1569,8 @@ class GeographicCoverageFields(MaintainableBase):
         "geographic_location_references": (qn(REUSABLE_NS, "GeographicLocationReference"), "reference", True),
         "location_value_references": (qn(REUSABLE_NS, "LocationValueReference"), "reference", True),
         "summary_data_references": (qn(REUSABLE_NS, "SummaryDataReference"), "reference", True),
-        "highest_level_reference": (qn(REUSABLE_NS, "HighestLevelReference"), "reference", False),
-        "lowest_level_reference": (qn(REUSABLE_NS, "LowestLevelReference"), "reference", False),
+        "highest_level_reference": (qn(REUSABLE_NS, "HighestLevelReference"), "element", False),
+        "lowest_level_reference": (qn(REUSABLE_NS, "LowestLevelReference"), "element", False),
     }
     _ATTR_XML_MAP: ClassVar[dict] = {
         "inheritanceAction": ("inheritanceAction", "str"),
@@ -2603,8 +2603,8 @@ class LocationValueFields(MaintainableBase):
     immediate_parent_locations: list[Element] = field(default_factory=list)  # [0..*]
     geographic_time: Optional[Element] = None  # [0..1]
     geographic_boundaries: list[Element] = field(default_factory=list)  # [0..*]
-    supersedes_location_values: list[Element] = field(default_factory=list)  # [0..*]
-    precedes_location_values: list[Element] = field(default_factory=list)  # [0..*]
+    supersedes_location_values: list[Reference] = field(default_factory=list)  # [0..*]
+    precedes_location_values: list[Reference] = field(default_factory=list)  # [0..*]
     inheritanceAction: Optional[str] = None  # @attr
     objectSource: Optional[str] = None  # @attr
     scopeOfUniqueness: Optional[str] = None  # @attr
@@ -2616,8 +2616,8 @@ class LocationValueFields(MaintainableBase):
         "immediate_parent_locations": (qn(REUSABLE_NS, "ImmediateParentLocation"), "element", True),
         "geographic_time": (qn(REUSABLE_NS, "GeographicTime"), "element", False),
         "geographic_boundaries": (qn(REUSABLE_NS, "GeographicBoundary"), "element", True),
-        "supersedes_location_values": (qn(REUSABLE_NS, "SupersedesLocationValue"), "element", True),
-        "precedes_location_values": (qn(REUSABLE_NS, "PrecedesLocationValue"), "element", True),
+        "supersedes_location_values": (qn(REUSABLE_NS, "SupersedesLocationValue"), "reference", True),
+        "precedes_location_values": (qn(REUSABLE_NS, "PrecedesLocationValue"), "reference", True),
     }
     _ATTR_XML_MAP: ClassVar[dict] = {
         "inheritanceAction": ("inheritanceAction", "str"),
@@ -3610,8 +3610,8 @@ class OtherMaterialFields(MaintainableBase):
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("r")
     type_of_material: Optional[CodeValue] = None  # [0..1]
     citation: Optional[Element] = None  # [0..1]
-    external_url_references: list[Reference] = field(default_factory=list)  # [0..*]
-    external_urn_reference: Optional[Reference] = None  # [0..1]
+    external_url_references: list[str] = field(default_factory=list)  # [0..*]
+    external_urn_reference: Optional[str] = None  # [0..1]
     relationships: list[Element] = field(default_factory=list)  # [0..*]
     mime_type: Optional[CodeValue] = None  # [0..1]
     segments: list[Element] = field(default_factory=list)  # [0..*]
@@ -3625,8 +3625,8 @@ class OtherMaterialFields(MaintainableBase):
     _FIELD_XML_MAP: ClassVar[dict] = {
         "type_of_material": (qn(REUSABLE_NS, "TypeOfMaterial"), "code_value", False),
         "citation": (qn(REUSABLE_NS, "Citation"), "element", False),
-        "external_url_references": (qn(REUSABLE_NS, "ExternalURLReference"), "reference", True),
-        "external_urn_reference": (qn(REUSABLE_NS, "ExternalURNReference"), "reference", False),
+        "external_url_references": (qn(REUSABLE_NS, "ExternalURLReference"), "str", True),
+        "external_urn_reference": (qn(REUSABLE_NS, "ExternalURNReference"), "str", False),
         "relationships": (qn(REUSABLE_NS, "Relationship"), "element", True),
         "mime_type": (qn(REUSABLE_NS, "MIMEType"), "code_value", False),
         "segments": (qn(REUSABLE_NS, "Segment"), "element", True),

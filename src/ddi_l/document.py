@@ -408,6 +408,12 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
         self._default_ns_map = get_default_nsmap(detected_version)
 
         if root.tag != qn(instance_namespace, "DDIInstance"):
+            if root.tag == qn(instance_namespace, "FragmentInstance"):
+                raise ValueError(
+                    "Root element must be DDIInstance in the DDI instance "
+                    "namespace; this is a FragmentInstance (a Colectica export, "
+                    "for one). Open it with ddi_l.open_fragment()."
+                )
             raise ValueError(
                 "Root element must be DDIInstance in the DDI instance namespace."
             )
@@ -968,7 +974,10 @@ class DDIFragment:
                 fragment.append(element)
 
         self._root.append(fragment)
-        cleanup_namespaces(self._root, dict(_DEFAULT_NS_MAP))
+        # The new subtree only: cleaning the whole document on every append
+        # made building a fragment of n items quadratic (53 s for a 4,478-item
+        # Colectica export, under a second now).
+        cleanup_namespaces(fragment, dict(_DEFAULT_NS_MAP))
         return fragment
 
     def iter_fragments(self) -> Iterator[Element]:
@@ -981,6 +990,258 @@ class DDIFragment:
         for fragment in self.iter_fragments():
             if len(fragment):
                 yield from fragment
+
+    # ---- Typed items ----------------------------------------------------
+
+    def _require_typed_models(self) -> None:
+        if self._version != "3.3":
+            raise DDIModelError(
+                f"Typed models are available for DDI 3.3 only; this fragment is "
+                f"DDI {self._version}. Use iter_fragment_payloads() for its XML."
+            )
+
+    def items(
+        self, item_type: type[MaintainableT] | None = None
+    ) -> list[MaintainableBase]:
+        """Parse every item in the fragment into its typed model.
+
+        Each ``<Fragment>`` payload becomes an instance of the model registered
+        for its tag; every item type a DDI 3.3 fragment can carry has one. The
+        models are copies: change one and :meth:`put` it back.
+
+        Args:
+            item_type: Only return items of this model class (or a subclass),
+                e.g. :class:`~ddi_l.models.Variable`.
+
+        Returns:
+            The items in document order. Payloads that are not items (an
+            ``r:Note`` beside the item in a fragment) are skipped.
+
+        Raises:
+            DDIModelError: If the fragment is not DDI 3.3.
+        """
+        self._require_typed_models()
+        MaintainableBase.maintainable_types()
+        found: list[MaintainableBase] = []
+        for payload in self.iter_fragment_payloads():
+            model = MaintainableBase.for_tag(payload.tag)
+            if model is None:
+                continue
+            if item_type is not None and not issubclass(model, item_type):
+                continue
+            found.append(model.from_xml(payload))
+        return found
+
+    def _matching_payloads(
+        self, identifier: str, version: str | None, agency: str | None
+    ) -> list[tuple[Element, Element]]:
+        """``(fragment, payload)`` pairs whose identification matches."""
+        id_tag = qn(self._reusable_ns, "ID")
+        version_tag = qn(self._reusable_ns, "Version")
+        agency_tag = qn(self._reusable_ns, "Agency")
+        matches: list[tuple[Element, Element]] = []
+        for fragment in self.iter_fragments():
+            for payload in fragment:
+                if payload.findtext(id_tag) != identifier:
+                    continue
+                if version is not None and payload.findtext(version_tag) != version:
+                    continue
+                if agency is not None and payload.findtext(agency_tag) != agency:
+                    continue
+                matches.append((fragment, payload))
+        return matches
+
+    def get(
+        self,
+        identifier: str,
+        version: str | None = None,
+        *,
+        agency: str | None = None,
+    ) -> MaintainableBase | None:
+        """Return the item with ``identifier``, as its typed model.
+
+        Args:
+            identifier: The item's ``r:ID``.
+            version: A specific ``r:Version``; by default the highest one in
+                the fragment (a Colectica export can carry several).
+            agency: Restrict the match to this ``r:Agency``.
+
+        Returns:
+            The item, or ``None`` when the fragment does not contain it.
+        """
+        self._require_typed_models()
+        matches = self._matching_payloads(identifier, version, agency)
+        if not matches:
+            return None
+        version_tag = qn(self._reusable_ns, "Version")
+        _, payload = max(
+            matches,
+            key=lambda pair: _version_key(pair[1].findtext(version_tag) or ""),
+        )
+        MaintainableBase.maintainable_types()
+        model = MaintainableBase.for_tag(payload.tag)
+        if model is None:
+            return None
+        return model.from_xml(payload)
+
+    def top_level_item(self) -> MaintainableBase | None:
+        """Return the item the ``TopLevelReference`` names, if present."""
+        reference = self.get_top_level_reference()
+        if reference is None or reference.identifier is None:
+            return None
+        return self.get(
+            reference.identifier, reference.version, agency=reference.agency
+        )
+
+    def put(self, item: MaintainableBase) -> Element:
+        """Write ``item`` into the fragment, replacing the item it supersedes.
+
+        The item replaces the payload with the same agency, ID and version; if
+        there is none, the single payload with the same agency and ID (the
+        previous version, after :meth:`MaintainableBase.increment_minor_version`
+        or similar); otherwise it is added in a new ``<Fragment>``.
+
+        Returns:
+            The element written.
+        """
+        self._require_typed_models()
+        element = _fragment_payload(item)
+        if item.identifier is not None:
+            matches = self._matching_payloads(
+                item.identifier, item.version, item.agency
+            )
+            if not matches:
+                same_id = self._matching_payloads(item.identifier, None, item.agency)
+                matches = same_id if len(same_id) == 1 else []
+            if matches:
+                fragment, payload = matches[0]
+                superseded = payload.findtext(qn(REUSABLE_NS, "Version"))
+                position = list(fragment).index(payload)
+                fragment.remove(payload)
+                fragment.insert(position, element)
+                if superseded != item.version:
+                    self._follow_new_version(item, superseded)
+                return element
+        self.add_fragment(element)
+        return element
+
+    def _follow_new_version(
+        self, item: MaintainableBase, superseded: str | None
+    ) -> None:
+        """Point a TopLevelReference at ``item`` if it named the version replaced.
+
+        Edited in place, so the reference keeps its layout and other content.
+        """
+        reference = self._root.find(qn(self._instance_ns, "TopLevelReference"))
+        if reference is None:
+            return
+        agency = reference.findtext(qn(REUSABLE_NS, "Agency"))
+        version_el = reference.find(qn(REUSABLE_NS, "Version"))
+        if (
+            reference.findtext(qn(REUSABLE_NS, "ID")) != item.identifier
+            or (agency is not None and agency != item.agency)
+            or version_el is None
+            or version_el.text != superseded
+        ):
+            return
+        version_el.text = item.version
+        urn_el = reference.find(qn(REUSABLE_NS, "URN"))
+        if urn_el is not None and urn_el.text and superseded:
+            prefix, _, last = urn_el.text.rpartition(":")
+            if last == superseded and item.version:
+                urn_el.text = f"{prefix}:{item.version}"
+
+    def remove(
+        self,
+        identifier: str,
+        version: str | None = None,
+        *,
+        agency: str | None = None,
+    ) -> int:
+        """Remove matching items, and any ``<Fragment>`` left empty.
+
+        Returns:
+            The number of items removed.
+        """
+        matches = self._matching_payloads(identifier, version, agency)
+        for fragment, payload in matches:
+            fragment.remove(payload)
+            if not len(fragment):
+                self._root.remove(fragment)
+        return len(matches)
+
+    @classmethod
+    def from_items(
+        cls,
+        items: Iterable[MaintainableBase | Element],
+        *,
+        top_level: Reference | MaintainableBase | None = None,
+        colectica: bool = True,
+        version_date: str | None = None,
+    ) -> DDIFragment:
+        """Build a fragment holding one item per ``<Fragment>``.
+
+        Args:
+            items: Typed items (or their elements), in the order to write.
+            top_level: The ``TopLevelReference``; by default the first item.
+            colectica: Give each item what Colectica writes on every item
+                (``isUniversallyUnique``, ``versionDate``, ``r:URN``) where it
+                is missing, and identify references by Agency/ID/Version
+                alone. Items read from a Colectica export already conform and
+                are left untouched. See
+                :func:`ddi_l.colectica.apply_colectica_conventions`.
+            version_date: ``versionDate`` for items that have none (default:
+                now, in Colectica's format).
+
+        Returns:
+            The fragment. Write it with :meth:`save`.
+        """
+        from .colectica import apply_colectica_conventions
+
+        elements = [
+            _fragment_payload(item) if isinstance(item, MaintainableBase) else item
+            for item in items
+        ]
+        if top_level is None and elements:
+            top_level = _reference_to(elements[0])
+        fragment = cls.create(top_level=top_level)
+        if colectica:
+            apply_colectica_conventions(
+                elements,
+                reusable_ns=fragment._reusable_ns,
+                version_date=version_date,
+            )
+            top = fragment._root.find(qn(fragment._instance_ns, "TopLevelReference"))
+            if top is not None:
+                _drop_restated_urn(top, fragment._reusable_ns)
+        for element in elements:
+            fragment.add_fragment(element)
+        return fragment
+
+    def to_colectica_bytes(self) -> bytes:
+        """Serialize in Colectica Designer's exact layout (UTF-8 with BOM).
+
+        A fragment read from a Colectica export comes back byte for byte.
+        """
+        from .colectica import to_colectica_bytes
+
+        return to_colectica_bytes(self._root)
+
+    def save(self, destination: str | Path, *, layout: str = "colectica") -> bytes:
+        """Write the fragment to ``destination``.
+
+        Args:
+            destination: File path.
+            layout: ``"colectica"`` (default) writes Colectica's layout, so an
+                export read and saved again is unchanged; ``"default"`` writes
+                this library's usual pretty-printed layout.
+
+        Returns:
+            The bytes written.
+        """
+        from .io import write_ddi
+
+        return write_ddi(self, destination, layout=layout)
 
     def to_etree(self) -> Element:
         """Return the fragment root element for downstream XML operations.
@@ -1880,6 +2141,26 @@ class Document:
             and hasattr(item, "set_citation_title")
         ):
             item.set_citation_title(name, lang=lang)
+        getattr(module, slot.attr).append(item)
+        if slot.scheme_flag is not None:
+            setattr(module, slot.scheme_flag, True)
+        self._dirty = True
+        return item
+
+    def attach(self, item: MaintainableBase) -> MaintainableBase:
+        """Put an item built elsewhere into the study, where its type belongs.
+
+        Unlike :meth:`add_item`, the item keeps its own agency, identifier
+        and version: a ``Concept`` goes into the conceptual component, a
+        ``Variable`` into the logical product, and so on.
+
+        Raises:
+            TypeError: If the item's type is not in the item registry.
+        """
+        slot = _get_item_registry().get(type(item))
+        if slot is None:
+            raise TypeError(f"{type(item).__name__} is not a registered item type.")
+        module = self._get_module(slot)
         getattr(module, slot.attr).append(item)
         if slot.scheme_flag is not None:
             setattr(module, slot.scheme_flag, True)
@@ -3041,6 +3322,74 @@ def new_study(
     return doc
 
 
+def open_fragment(
+    path: str | Path,
+    *,
+    validate: bool = False,
+) -> DDIFragment:
+    """Open a DDI ``FragmentInstance`` file, such as a Colectica export.
+
+    Args:
+        path: Filesystem path to read.
+        validate: Whether to validate against the DDI schema on load.
+
+    Returns:
+        DDIFragment: The fragment. Read items with :meth:`DDIFragment.items`
+        or :meth:`DDIFragment.get`, write them back with
+        :meth:`DDIFragment.put`, and save with :meth:`DDIFragment.save`, which
+        writes Colectica's layout byte for byte.
+
+    Example:
+        >>> import ddi_l as ddi
+        >>> fragment = ddi.open_fragment("export.ddi33.xml")
+        >>> variables = fragment.items(ddi.Variable)
+    """
+    return DDIFragment.from_xml(Path(path), validate=validate)
+
+
+def _version_key(version: str) -> tuple[int, ...]:
+    """Sort key for a DDI version string (``"1.10"`` after ``"1.9"``)."""
+    parts: list[int] = []
+    for part in version.split("."):
+        parts.append(int(part) if part.isdigit() else -1)
+    return tuple(parts)
+
+
+def _fragment_payload(item: MaintainableBase) -> Element:
+    """``item`` as a fragment's payload.
+
+    A study checks, when written, that each item it references is inside it.
+    In a fragment every item sits in a fragment of its own, so the check
+    would report every reference.
+    """
+    from .models.study import StudyUnit
+
+    if isinstance(item, StudyUnit):
+        return item.to_xml(validate_refs=False)
+    return item.to_xml()
+
+
+def _reference_to(element: Element) -> Reference:
+    """A reference to the DDI 3.3 item ``element``, typed by its local name."""
+    return Reference(
+        type_of_object=element.tag.rsplit("}", 1)[-1],
+        agency=element.findtext(qn(REUSABLE_NS, "Agency")),
+        identifier=element.findtext(qn(REUSABLE_NS, "ID")),
+        version=element.findtext(qn(REUSABLE_NS, "Version")),
+        urn=element.findtext(qn(REUSABLE_NS, "URN")),
+    )
+
+
+def _drop_restated_urn(reference: Element, reusable_ns: str) -> None:
+    """Remove a reference's r:URN when it only restates Agency/ID/Version."""
+    urn = reference.find(qn(reusable_ns, "URN"))
+    agency = reference.findtext(qn(reusable_ns, "Agency"))
+    identifier = reference.findtext(qn(reusable_ns, "ID"))
+    version = reference.findtext(qn(reusable_ns, "Version"))
+    if urn is not None and urn.text == f"urn:ddi:{agency}:{identifier}:{version}":
+        reference.remove(urn)
+
+
 def open_ddi(
     path: str | Path,
     *,
@@ -3075,5 +3424,6 @@ __all__ = [
     "MaintainableT",
     "new_study",
     "open_ddi",
+    "open_fragment",
 ]
 _DEFAULT_NS_MAP: Mapping[str | None, str] = DEFAULT_NSMAP

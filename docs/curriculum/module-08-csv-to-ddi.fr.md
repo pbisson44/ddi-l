@@ -29,6 +29,15 @@ Ils ont besoin de métadonnées DDI qui décrivent ces données.
 Ce module enseigne le flux de travail réel :
 partir des données que vous avez déjà et produire un document DDI.
 
+!!! tip "Vous documentez déjà dans des tableurs ?"
+    Ce module construit le DDI en code, une colonne à la fois. Si les
+    concepts, questions, questionnaire, listes de codes, variables et
+    fichiers de données de votre étude sont déjà dans des tableurs,
+    disposez-les comme dans
+    [Charger du DDI depuis des tableurs](../spreadsheet-import.md) et
+    chargez-les tous en une étape, dans autant de langues que voulu. Les
+    [modèles de tableurs](../spreadsheet-templates.md) sont un point de départ.
+
 ---
 
 ## 1. Vue d'ensemble du flux de travail

@@ -23,6 +23,15 @@ couche avancée sous-jacente : utilisez-les lorsque vous devez manipuler des
 éléments XML bruts, des instances partielles, ou une étude précise dans un
 fichier qui en contient plusieurs.
 
+`open_fragment()` ouvre une `FragmentInstance` (un export Colectica, par
+exemple) et renvoie un `DDIFragment` ; voir
+[Travailler avec les exports Colectica](colectica.md).
+
+`ddi_l.tables.load_tables()` charge les métadonnées d'une étude (concepts,
+questions et cheminement du questionnaire, listes de codes, variables,
+fichiers de données et plus) depuis des fichiers CSV ou un classeur Excel ; voir
+[Charger du DDI depuis des tableurs](spreadsheet-import.md).
+
 Pour une présentation guidée de la couche de modèles, voir la
 [référence des modèles](models.md). Pour savoir ce qui est pris en charge et à
 quel niveau, voir la [couverture du schéma](schema-coverage.md).

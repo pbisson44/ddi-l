@@ -6,7 +6,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import ClassVar
 
-from .._etree import Element, create_element
+from .._etree import Element
 from ..constants import DATA_COLLECTION_NS, METHODOLOGY_NS, REUSABLE_NS
 from ..namespaces import NamespaceBindings, build_namespace_map
 from .base import (
@@ -14,6 +14,7 @@ from .base import (
     InternationalString,
     MaintainableBase,
     Reference,
+    append_intl_strings,
     clone_element,
     qn,
 )
@@ -127,10 +128,12 @@ class ReviewEvent(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(METHODOLOGY_NS, "ReviewEventName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(METHODOLOGY_NS, "ReviewEventName"),
+            self.names,
+            child_tag="String",
+        )
         if self.event_type is not None:
             element.append(
                 self.event_type.to_xml("TypeOfReviewEvent", namespace=METHODOLOGY_NS)
@@ -179,6 +182,7 @@ class MethodologyItem(VersionableMaintainableBase):
             qn(DATA_COLLECTION_NS, "TypeOfTimeMethod"),
             qn(DATA_COLLECTION_NS, "TypeOfSamplingProcedure"),
             qn(DATA_COLLECTION_NS, "TypeOfDeviationFromSampleDesign"),
+            qn(DATA_COLLECTION_NS, "TypeOfWeightingMethodology"),
             qn(DATA_COLLECTION_NS, "SamplingPlanReference"),
             qn(DATA_COLLECTION_NS, "SampleReference"),
             qn(METHODOLOGY_NS, "TypeOfReviewEvent"),
@@ -262,15 +266,16 @@ class MethodologyItem(VersionableMaintainableBase):
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(METHODOLOGY_NS, "MethodologyItemName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(METHODOLOGY_NS, "MethodologyItemName"),
+            self.names,
+            child_tag="String",
+        )
         if self.statements:
-            for statement in self.statements:
-                container = create_element(qn(METHODOLOGY_NS, "MethodologyStatement"))
-                container.append(statement.to_child())
-                element.append(container)
+            append_intl_strings(
+                element, qn(METHODOLOGY_NS, "MethodologyStatement"), self.statements
+            )
         if self.classification is not None:
             if self.item_kind == "MethodologyItem":
                 element.append(
@@ -338,6 +343,10 @@ class Methodology(VersionableMaintainableBase):
     review_events: list[ReviewEvent] = field(default_factory=list)
     review_event_references: list[Reference] = field(default_factory=list)
     quality_statement_references: list[Reference] = field(default_factory=list)
+    # Namespace the names were read in. DDI 3.3 puts d:MethodologyName in
+    # ddi:datacollection:3_3; documents from this library's earlier releases
+    # used its own extension namespace, and keep it.
+    _name_namespace: str | None = field(default=None, repr=False, compare=False)
 
     # DDI 3.3 declares <Methodology> in ddi:datacollection:3_3. Emitting it
     # into the library's own namespace produced files no DDI tool could read.
@@ -367,12 +376,16 @@ class Methodology(VersionableMaintainableBase):
             normalized, recognized_children=recognized
         )
         names: list[InternationalString] = []
-        for container in _iter_children(
+        name_containers = _iter_children(
             normalized,
             "MethodologyName",
             namespaces=(METHODOLOGY_NS, DATA_COLLECTION_NS),
-        ):
+        )
+        for container in name_containers:
             names.extend(InternationalString.from_container(container))
+        name_namespace = (
+            name_containers[0].tag[1:].split("}", 1)[0] if name_containers else None
+        )
         methodology_items: list[MethodologyItem] = []
         for child in normalized:
             if child.tag.split("}")[-1] in _ITEM_LOCAL_NAMES:
@@ -408,16 +421,19 @@ class Methodology(VersionableMaintainableBase):
             review_events=review_events,
             review_event_references=review_event_references,
             quality_statement_references=quality_statement_references,
+            _name_namespace=name_namespace,
             **data,
         )
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
         self._append_versionable_common(element)
-        for name in self.names:
-            container = create_element(qn(METHODOLOGY_NS, "MethodologyName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(self._name_namespace or DATA_COLLECTION_NS, "MethodologyName"),
+            self.names,
+            child_tag="String",
+        )
         for item in self.methodology_items:
             element.append(item.to_xml())
         for reference in self.methodology_item_references:
@@ -518,10 +534,12 @@ class MethodologyScheme(MaintainableBase):
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
-        for name in self.names:
-            container = create_element(qn(METHODOLOGY_NS, "MethodologySchemeName"))
-            container.append(name.to_child(child_tag="String"))
-            element.append(container)
+        append_intl_strings(
+            element,
+            qn(METHODOLOGY_NS, "MethodologySchemeName"),
+            self.names,
+            child_tag="String",
+        )
         for methodology in self.methodologies:
             element.append(methodology.to_xml())
         for reference in self.methodology_references:

@@ -19,12 +19,16 @@ Example:
 from __future__ import annotations
 
 import copy
+import dataclasses
+import functools
+import itertools
 import re
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from typing import (
+    Any,
     ClassVar,
     TypedDict,
     TypeVar,
@@ -36,6 +40,7 @@ from ..constants import REUSABLE_NS, XML_NS
 from ..exceptions import DDIParseError, ModelValidationError
 from ..namespaces import canonicalize_prefixes
 from ..registry import MaintainableRegistry
+from ._generated.element_layout import SUBSTITUTION_HEADS
 from ._generated.label_slots import SCHEMA_NAMESPACES, TAGS_ALLOWING_LABEL
 
 _SERIALIZE_VALIDATION_SUPPRESSED: ContextVar[bool] = ContextVar(
@@ -79,6 +84,16 @@ def should_validate_on_serialize(obj: object) -> bool:
     """Return whether ``obj.to_xml`` should validate the model first."""
     return bool(getattr(obj, "VALIDATE_ON_SERIALIZE", False)) and not (
         _SERIALIZE_VALIDATION_SUPPRESSED.get()
+    )
+
+
+def _is_reusable(element: Element, local_name: str) -> bool:
+    """Whether ``element`` is ``r:<local_name>`` in any DDI 3.x version."""
+    tag = element.tag
+    return (
+        isinstance(tag, str)
+        and tag.startswith("{ddi:reusable:")
+        and tag.rsplit("}", 1)[1] == local_name
     )
 
 
@@ -160,12 +175,20 @@ __all__ = [
     "UserID",
     "ValidationContext",
     "VersionRationale",
+    "append_intl_strings",
     "apply_other_attributes",
     "build_identification_elements",
     "clone_element",
     "collect_other_attributes",
+    "group_intl_strings",
+    "identification_attributes",
+    "intl_container",
+    "next_intl_group",
+    "order_by_schema",
     "preserve_unrecognized_children",
+    "preserves_source",
     "qn",
+    "restore_identification_attributes",
 ]
 
 # ============================================================================
@@ -175,6 +198,8 @@ __all__ = [
 _AGENCY_SEGMENT_PATTERN = r"[A-Za-z0-9-]{1,63}"
 _ID_SEGMENT_PATTERN = r"[A-Za-z0-9*@$_-]+"
 _VERSION_PATTERN = r"[0-9]+(?:\.[0-9]+)*"
+
+_INTL_GROUPS = itertools.count(1)
 
 _ID_RE = re.compile(rf"^{_ID_SEGMENT_PATTERN}(?:\.{_ID_SEGMENT_PATTERN})*$")
 # Mirrors DDI 3.3's ``r:VersionType``, whose XSD restriction is
@@ -388,15 +413,15 @@ def _emit_field_value(
     # Extract namespace
     ns = xml_tag[1 : xml_tag.index("}")] if xml_tag.startswith("{") else None
 
+    if kind == "intl_string" and not is_typed:
+        append_intl_strings(parent, xml_tag, cast("list[InternationalString]", items))
+        return
+
     for item in items:  # type: ignore[attr-defined]
         if is_typed:
             parent.append(item.to_xml())
         elif kind == "reference":
             parent.append(item.to_xml(local_name, namespace=ns))
-        elif kind == "intl_string":
-            container = create_element(xml_tag)
-            container.append(item.to_child())
-            parent.append(container)
         elif kind == "code_value":
             # Accept a plain string for a coded field (``file_format="text/csv"``)
             # and use it as the code's text.
@@ -420,16 +445,56 @@ def _emit_field_value(
 
 
 def _convert_text(text: str | None, kind: str) -> object:
-    """Convert XML text content to a Python value."""
+    """Convert XML text content to a Python value.
+
+    Text that does not parse as ``kind`` is kept as the string read rather
+    than failing the whole item: a validator lets some through (an
+    ``accuracy`` of ``"1 2"``), and the value then round-trips unchanged.
+    """
     if text is None:
         return None
     if kind == "bool":
         return text.strip().lower() in ("true", "1")
-    if kind == "int":
-        return int(text.strip())
-    if kind == "float":
-        return float(text.strip())
+    try:
+        if kind == "int":
+            return int(text.strip())
+        if kind == "float":
+            return float(text.strip())
+    except ValueError:
+        return text
     return text.strip() if text else ""
+
+
+def _parse_xs_boolean(text: str) -> bool:
+    return text.strip().lower() in ("true", "1")
+
+
+_BOOLEAN_TOKENS = {"true": True, "1": True, "false": False, "0": False}
+
+
+def _same_meaning(lexical: str, written: str, kind: str) -> bool:
+    """Whether two spellings carry one value of type ``kind``.
+
+    True for strings equal once trimmed (the models trim text they read),
+    and, for ``kind`` "bool", two xs:boolean tokens of one truth value ("1"
+    and "true"), or for "int" and "float", numbers equal as numbers ("01" and
+    "1"). A ``str`` field edited from "01" to "1" is an edit, not a respelling.
+    """
+    if lexical == written or lexical.strip() == written:
+        return True
+    left, right = lexical.strip(), written.strip()
+    if kind == "bool":
+        # xs:boolean literals are case-sensitive: "True" is not one, and must
+        # not be restored over a valid "true".
+        if left in _BOOLEAN_TOKENS and right in _BOOLEAN_TOKENS:
+            return _BOOLEAN_TOKENS[left] == _BOOLEAN_TOKENS[right]
+        return False
+    if kind in ("int", "float"):
+        try:
+            return float(left) == float(right)
+        except ValueError:
+            return False
+    return False
 
 
 def _format_text(value: object, kind: str) -> str:
@@ -439,6 +504,31 @@ def _format_text(value: object, kind: str) -> str:
     if kind == "float" and isinstance(value, float) and value == int(value):
         return str(int(value))
     return str(value)
+
+
+def identification_attributes(element: Element) -> dict[str, dict[str, str]]:
+    """Attributes on ``element``'s r:URN, r:Agency, r:ID and r:Version, by tag.
+
+    ``typeOfIdentifier`` on a URN is the usual one. Value wrappers that rebuild
+    their identification from text pair this with
+    :func:`restore_identification_attributes`.
+    """
+    found: dict[str, dict[str, str]] = {}
+    for local in ("URN", "Agency", "ID", "Version"):
+        child = element.find(qn(REUSABLE_NS, local))
+        if child is not None and child.attrib:
+            found[child.tag] = dict(child.attrib)
+    return found
+
+
+def restore_identification_attributes(
+    element: Element, attributes: dict[str, dict[str, str]]
+) -> None:
+    """Put back attributes captured by :func:`identification_attributes`."""
+    for tag, values in attributes.items():
+        child = element.find(tag)
+        if child is not None:
+            apply_other_attributes(child, values)
 
 
 def build_identification_elements(
@@ -492,6 +582,21 @@ class InternationalString:
     translation_source_language: str | None = None
     translation_date: str | None = None
     child_tag: str = "Content"
+    # Strings read from the same container element share a group token, and
+    # the container's own attributes (``maxLength`` on an ``r:Label``,
+    # ``context`` on a name) ride along, so a bilingual ``r:Label`` is written
+    # back as one element rather than one per language.
+    _group: int | None = field(default=None, repr=False, compare=False)
+    _container_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    # The string element's own attributes (isTranslatable, isPlainText, ...)
+    # and the container's other children (r:TypeOfLabel beside the
+    # r:Content of a label), each at its position in the container.
+    _attributes: dict[str, str] = field(default_factory=dict, repr=False, compare=False)
+    _container_extras: list[tuple[int, Element]] = field(
+        default_factory=list, repr=False, compare=False
+    )
 
     def __repr__(self) -> str:
         if self.lang is None:
@@ -502,40 +607,28 @@ class InternationalString:
     def from_container(cls, container: Element) -> list[InternationalString]:
         """Parse InternationalStrings from a container element."""
         results: list[InternationalString] = []
+        group = next_intl_group()
 
         if container.text and container.text.strip():
-            lang = container.get(qn(XML_NS, "lang"))
-            is_plain_text = None
-            is_plain_raw = container.get("isPlainText")
-            if is_plain_raw is not None:
-                is_plain_text = is_plain_raw.lower() == "true"
-            results.append(
-                cls(text=container.text.strip(), lang=lang, is_plain_text=is_plain_text)
-            )
+            results.append(cls._from_node(container, container.text.strip(), "Content"))
 
-        for child in _reusable_children(container, "Content"):
-            text = child.text or ""
-            lang = child.get(qn(XML_NS, "lang"))
-            is_translated = None
-            translated_attr = child.get("isTranslated")
-            if translated_attr is not None:
-                is_translated = translated_attr.lower() == "true"
-            results.append(
-                cls(
-                    text=text,
-                    lang=lang,
-                    is_translated=is_translated,
-                    translation_source_language=child.get("translationSourceLanguage"),
-                    translation_date=child.get("translationDate"),
-                    child_tag="Content",
-                )
-            )
+        # Any DDI release's reusable namespace: 3.1 and 3.2 documents are read
+        # too, as _reusable_children matches them.
+        extras: list[tuple[int, Element]] = []
+        for index, child in enumerate(container):
+            if _is_reusable(child, "Content"):
+                results.append(cls._from_node(child, child.text or "", "Content"))
+            elif _is_reusable(child, "String"):
+                results.append(cls._from_node(child, child.text or "", "String"))
+            elif isinstance(child.tag, str):
+                extras.append((index, clone_element(child)))
 
-        for child in _reusable_children(container, "String"):
-            text = child.text or ""
-            lang = child.get(qn(XML_NS, "lang"))
-            results.append(cls(text=text, lang=lang, child_tag="String"))
-
+        attributes = dict(container.attrib)
+        for result in results:
+            result._group = group
+            result._container_attributes = attributes
+        if results:
+            results[0]._container_extras = extras
         return results
 
     def to_child(self, child_tag: str | None = None) -> Element:
@@ -544,15 +637,74 @@ class InternationalString:
         element = create_element(qn(REUSABLE_NS, tag))
         element.text = self.text
 
+        self._write_attributes(element)
+        return element
+
+    # Attributes a public field stands for: a field set to None removes them,
+    # so they are never taken from the attributes read.
+    _MAPPED_ATTRIBUTES: ClassVar[frozenset[str]] = frozenset(
+        {
+            qn(XML_NS, "lang"),
+            "isTranslated",
+            "isPlainText",
+            "translationSourceLanguage",
+            "translationDate",
+        }
+    )
+
+    @classmethod
+    def _from_node(
+        cls, node: Element, text: str, child_tag: str
+    ) -> InternationalString:
+        def flag(name: str) -> bool | None:
+            raw = node.get(name)
+            # xs:boolean: "1" is as true as "true".
+            return None if raw is None else _parse_xs_boolean(raw)
+
+        return cls(
+            text=text,
+            lang=node.get(qn(XML_NS, "lang")),
+            is_translated=flag("isTranslated"),
+            is_plain_text=flag("isPlainText"),
+            translation_source_language=node.get("translationSourceLanguage"),
+            translation_date=node.get("translationDate"),
+            child_tag=child_tag,
+            _attributes=dict(node.attrib),
+        )
+
+    def _write_attributes(self, element: Element) -> None:
+        """Set the fields' attributes, then the others read, on ``element``."""
         if self.lang:
             element.set(qn(XML_NS, "lang"), self.lang)
-        if self.is_translated is not None:
-            element.set("isTranslated", "true" if self.is_translated else "false")
+        for name, value in (
+            ("isTranslated", self.is_translated),
+            ("isPlainText", self.is_plain_text),
+        ):
+            if value is None:
+                continue
+            # Keep the spelling read ("1") while it means the same value.
+            spelling = self._attributes.get(name)
+            if spelling is None or _parse_xs_boolean(spelling) != value:
+                spelling = "true" if value else "false"
+            element.set(name, spelling)
         if self.translation_source_language:
             element.set("translationSourceLanguage", self.translation_source_language)
         if self.translation_date:
             element.set("translationDate", self.translation_date)
+        for name, read in self._attributes.items():
+            if name not in self._MAPPED_ATTRIBUTES and element.get(name) is None:
+                element.set(name, read)
 
+    def to_text_element(self, tag: str) -> Element:
+        """Create ``tag`` holding this text directly, not in a child.
+
+        For elements whose type carries the text itself -- ``r:Keyword`` and
+        ``r:Subject`` (an ``InternationalCodeValueType``) -- rather than in
+        ``r:String``/``r:Content`` children.
+        """
+        element = create_element(tag)
+        element.text = self.text
+        self._write_attributes(element)
         return element
 
     def to_element(self, tag: str) -> Element:
@@ -560,6 +712,83 @@ class InternationalString:
         container = create_element(tag)
         container.append(self.to_child())
         return container
+
+
+def next_intl_group() -> int:
+    """A fresh token marking strings that share one container element."""
+    return next(_INTL_GROUPS)
+
+
+def _joins_group(group: list[InternationalString], item: InternationalString) -> bool:
+    """Whether ``item`` belongs in the same container as ``group``."""
+    first = group[0]
+    if item._group is not None or first._group is not None:
+        return item._group == first._group
+    # Built in code: one container per language set, so ``en`` and ``fr``
+    # versions of a label share an ``r:Label`` (as DDI intends and Colectica
+    # writes), while a second ``en`` string starts a new one.
+    return item.lang is not None and all(
+        other.lang is not None and other.lang != item.lang for other in group
+    )
+
+
+def group_intl_strings(
+    strings: Iterable[InternationalString],
+) -> list[list[InternationalString]]:
+    """Split ``strings`` into the containers they are written in."""
+    groups: list[list[InternationalString]] = []
+    for item in strings:
+        if groups and _joins_group(groups[-1], item):
+            groups[-1].append(item)
+        else:
+            groups.append([item])
+    return groups
+
+
+def append_intl_strings(
+    parent: Element,
+    tag: str,
+    strings: Iterable[InternationalString],
+    *,
+    child_tag: str | None = None,
+) -> None:
+    """Append one ``tag`` container per group of ``strings`` to ``parent``.
+
+    Args:
+        parent: Element receiving the containers.
+        tag: Clark-notation tag of the repeatable container (``r:Label``,
+            ``l:VariableName``, ...).
+        strings: The strings, in order.
+        child_tag: ``"String"`` or ``"Content"``; ``None`` keeps each string's
+            own ``child_tag``.
+    """
+    for group in group_intl_strings(strings):
+        parent.append(intl_container(tag, group, child_tag=child_tag))
+
+
+def intl_container(
+    tag: str,
+    strings: Iterable[InternationalString],
+    *,
+    child_tag: str | None = None,
+) -> Element:
+    """Build one ``tag`` container holding ``strings``.
+
+    The container gets back the attributes and the non-string children it was
+    read with (taken from its first string), the latter at their original
+    positions.
+    """
+    items = list(strings)
+    container = create_element(tag)
+    if items:
+        for name, value in items[0]._container_attributes.items():
+            container.set(name, value)
+    for item in items:
+        container.append(item.to_child(child_tag))
+    if items:
+        for index, extra in items[0]._container_extras:
+            container.insert(min(index, len(container)), clone_element(extra))
+    return container
 
 
 @dataclass
@@ -574,11 +803,17 @@ class CodeValue:
     other_value: str | None = None
     controlled_vocabulary_urn: str | None = None
     controlled_vocabulary_scheme_urn: str | None = None
+    # Every attribute as read: ``xml:lang`` and the translation attributes on
+    # an InternationalCodeValueType (r:Keyword, r:Subject) among them.
+    other_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
 
     @classmethod
     def from_xml(cls, element: Element) -> CodeValue:
         """Parse a CodeValue from XML."""
         return cls(
+            other_attributes=collect_other_attributes(element),
             text=element.text or "",
             controlled_vocabulary_id=element.get("controlledVocabularyID"),
             controlled_vocabulary_name=element.get("controlledVocabularyName"),
@@ -621,6 +856,7 @@ class CodeValue:
             element.set(
                 "controlledVocabularySchemeURN", self.controlled_vocabulary_scheme_urn
             )
+        apply_other_attributes(element, self.other_attributes)
 
         return element
 
@@ -635,6 +871,25 @@ class Reference:
     identifier: str | None = None
     version: str | None = None
     _auto_identifier: str | None = field(default=None, repr=False, compare=False)
+    # Content after r:TypeOfObject (r:MaintainableObject, r:UserAttributePair)
+    # and the reference's attributes (isExternal, lateBound, ...), kept
+    # verbatim so a reference read from a file is written back unchanged.
+    other_elements: list[Element] = field(
+        default_factory=list, repr=False, compare=False
+    )
+    other_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    # Where r:URN sat in the reference this one was parsed from: ``"absent"``,
+    # ``"first"`` or ``"last"``. ``None`` for a reference built in code, which
+    # gets a canonical URN synthesized from Agency/ID/Version. A parsed one is
+    # written back as it was read -- Colectica, for one, writes no r:URN in a
+    # reference, and adding one changes every reference in the file.
+    _urn_layout: str | None = field(default=None, repr=False, compare=False)
+    # Attributes on r:URN / r:Agency / r:ID / r:Version / r:TypeOfObject.
+    _identification_attributes: dict[str, dict[str, str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
 
     @staticmethod
     def _is_allowed_urn(urn: str) -> bool:
@@ -646,34 +901,77 @@ class Reference:
         return None
 
     @classmethod
-    def from_xml(cls, element: Element) -> Reference:
-        """Parse a Reference from XML."""
+    def from_xml(cls, element: Element, *, extras: bool = True) -> Reference:
+        """Parse a Reference from XML.
+
+        Args:
+            element: The reference element.
+            extras: Keep the children after ``r:TypeOfObject``, so the
+                reference is written back as read. A wrapper for a derived
+                reference type that handles those itself (``r:Alias`` on a
+                source reference, ``r:Binding`` on a processing-instruction
+                reference) passes ``False``, or they would be written twice.
+                Attributes are kept either way; a wrapper that writes one
+                itself sets it, which takes precedence.
+        """
+        urn_tag = qn(REUSABLE_NS, "URN")
+        identification = {
+            urn_tag,
+            qn(REUSABLE_NS, "Agency"),
+            qn(REUSABLE_NS, "ID"),
+            qn(REUSABLE_NS, "Version"),
+            qn(REUSABLE_NS, "TypeOfObject"),
+        }
+        tags = [child.tag for child in element]
+        if urn_tag not in tags:
+            urn_layout = "absent"
+        elif tags.index(urn_tag) == 0:
+            urn_layout = "first"
+        else:
+            urn_layout = "last"
         return cls(
-            urn=_get_text(element, qn(REUSABLE_NS, "URN")),
+            urn=_get_text(element, urn_tag),
             agency=_get_text(element, qn(REUSABLE_NS, "Agency")),
             identifier=_get_text(element, qn(REUSABLE_NS, "ID")),
             version=_get_text(element, qn(REUSABLE_NS, "Version")),
             type_of_object=_get_text(element, qn(REUSABLE_NS, "TypeOfObject")),
+            other_elements=[
+                clone_element(child)
+                for child in element
+                if extras
+                and isinstance(child.tag, str)
+                and child.tag not in identification
+            ],
+            other_attributes=collect_other_attributes(element),
+            _urn_layout=urn_layout,
+            _identification_attributes={
+                tag: dict(child.attrib)
+                for tag in identification
+                if (child := element.find(tag)) is not None and child.attrib
+            },
         )
+
+    def _urn_to_emit(self) -> str | None:
+        """Return the r:URN text to write, or ``None`` to write no r:URN."""
+        if self.urn and self._is_allowed_urn(self.urn):
+            return self.urn
+        if self._urn_layout is not None:
+            # Parsed: keep a URN-less reference URN-less, and never replace
+            # one that was read with a synthesized value.
+            return None
+        return self._canonical_urn()
 
     def to_xml(self, tag: str, *, namespace: str | None = None) -> Element:
         """Serialize to XML element."""
         element = create_element(qn(namespace or REUSABLE_NS, tag))
 
-        urn_value: str | None = None
-        canonical_urn = self._canonical_urn()
-        if canonical_urn:
-            if self.urn and self._is_allowed_urn(self.urn):
-                urn_value = self.urn
-            else:
-                urn_value = canonical_urn
-        elif self.urn and self._is_allowed_urn(self.urn):
-            urn_value = self.urn
-
+        urn_value = self._urn_to_emit()
+        urn_el: Element | None = None
         if urn_value:
             urn_el = create_element(qn(REUSABLE_NS, "URN"))
             urn_el.text = urn_value
-            element.append(urn_el)
+            if self._urn_layout != "last":
+                element.append(urn_el)
 
         for child in build_identification_elements(
             agency=self.agency,
@@ -682,10 +980,18 @@ class Reference:
         ):
             element.append(child)
 
+        if urn_el is not None and self._urn_layout == "last":
+            element.append(urn_el)
+
         if self.type_of_object:
             type_el = create_element(qn(REUSABLE_NS, "TypeOfObject"))
             type_el.text = self.type_of_object
             element.append(type_el)
+
+        restore_identification_attributes(element, self._identification_attributes)
+        for child in self.other_elements:
+            element.append(clone_element(child))
+        apply_other_attributes(element, self.other_attributes)
 
         return element
 
@@ -737,6 +1043,9 @@ class UserAttributePair:
     key: str | None = None
     value: str | None = None
     other_attributes: dict[str, str] = field(default_factory=dict)
+    # Controlled-vocabulary attributes on r:AttributeKey / r:AttributeValue.
+    key_attributes: dict[str, str] = field(default_factory=dict)
+    value_attributes: dict[str, str] = field(default_factory=dict)
 
     TAG: ClassVar[str] = qn(REUSABLE_NS, "UserAttributePair")
 
@@ -750,6 +1059,8 @@ class UserAttributePair:
             key=key_el.text if key_el is not None else None,
             value=value_el.text if value_el is not None else None,
             other_attributes=collect_other_attributes(element),
+            key_attributes=dict(key_el.attrib) if key_el is not None else {},
+            value_attributes=dict(value_el.attrib) if value_el is not None else {},
         )
 
     def to_xml(self) -> Element:
@@ -757,10 +1068,12 @@ class UserAttributePair:
         if self.key is not None:
             key_el = create_element(qn(REUSABLE_NS, "AttributeKey"))
             key_el.text = self.key
+            apply_other_attributes(key_el, self.key_attributes)
             element.append(key_el)
         if self.value is not None:
             value_el = create_element(qn(REUSABLE_NS, "AttributeValue"))
             value_el.text = self.value
+            apply_other_attributes(value_el, self.value_attributes)
             element.append(value_el)
         apply_other_attributes(element, self.other_attributes)
         return element
@@ -793,17 +1106,367 @@ class VersionRationale:
 
     def to_xml(self) -> Element:
         element = create_element(self.TAG)
-        for description in self.descriptions:
-            container = create_element(qn(REUSABLE_NS, "RationaleDescription"))
-            # RationaleDescription is an InternationalStringType in every
-            # supported schema, so its children are r:String, never the
-            # r:Content that InternationalString defaults to.
-            container.append(description.to_child("String"))
-            element.append(container)
+        # RationaleDescription is an InternationalStringType in every
+        # supported schema, so its children are r:String, never the
+        # r:Content that InternationalString defaults to.
+        append_intl_strings(
+            element,
+            qn(REUSABLE_NS, "RationaleDescription"),
+            self.descriptions,
+            child_tag="String",
+        )
         for child in self.other_elements:
             element.append(clone_element(child))
         apply_other_attributes(element, self.other_attributes)
         return element
+
+
+# Inherited identification metadata: (field on MaintainableBase, element tag).
+# Every DDI identifiable type carries these, in this order, ahead of its own
+# content.
+_INHERITED_METADATA_FIELDS: tuple[tuple[str, str], ...] = tuple(
+    (field_name, qn(REUSABLE_NS, local))
+    for field_name, local in (
+        ("user_ids", "UserID"),
+        ("user_attribute_pairs", "UserAttributePair"),
+        ("version_responsibility", "VersionResponsibility"),
+        ("version_responsibility_references", "VersionResponsibilityReference"),
+        ("version_rationales", "VersionRationale"),
+        ("based_on_object", "BasedOnObject"),
+        ("related_other_material_references", "RelatedOtherMaterialReference"),
+        ("notes", "Note"),
+        ("software_elements", "Software"),
+        ("metadata_quality_elements", "MetadataQuality"),
+    )
+)
+
+
+# Tag -> XSD child sequence, filled as the generated ``*Fields`` bases are
+# defined. Hand-written models that do not derive from their generated base
+# (``d:DataCollection``, ``d:Sequence``) look their order up here by tag.
+_SCHEMA_ELEMENT_ORDER: dict[str, list[str]] = {}
+
+
+def _load_generated_models() -> None:
+    import importlib
+    import pkgutil
+
+    from . import _generated
+
+    for module in pkgutil.iter_modules(_generated.__path__):
+        importlib.import_module(f"{_generated.__name__}.{module.name}")
+
+
+def _rank_of(tag: str, rank: dict[str, int]) -> int | None:
+    """Schema position of ``tag``, or of the substitution head it stands for."""
+    own = rank.get(tag)
+    if own is None and tag in SUBSTITUTION_HEADS:
+        return rank.get(SUBSTITUTION_HEADS[tag])
+    return own
+
+
+def _insert_by_rank(element: Element, child: Element, rank: dict[str, int]) -> None:
+    """Insert ``child`` before the first sibling ranked after it, else append."""
+    own_rank = _rank_of(child.tag, rank)
+    if own_rank is not None:
+        for index, sibling in enumerate(element):
+            sibling_rank = _rank_of(sibling.tag, rank)
+            if sibling_rank is not None and sibling_rank > own_rank:
+                element.insert(index, child)
+                return
+    element.append(child)
+
+
+@functools.cache
+def _child_ranks(tag: str) -> dict[str, int] | None:
+    """Rank of each child the schema allows in ``tag``, or ``None``."""
+    from ._generated.child_order import CHILD_RANKS, ELEMENT_TYPES
+
+    key = ELEMENT_TYPES.get(tag)
+    if key is None:
+        return None
+    return {
+        member: index
+        for index, members in enumerate(CHILD_RANKS[key])
+        for member in members
+    }
+
+
+def order_by_schema(element: Element) -> None:
+    """Put the children of ``element`` and its descendants in schema order.
+
+    Only an element whose children are out of order is touched, and the sort
+    is stable: children the schema lets interleave (a repeating choice) keep
+    their relative order, and a child the schema does not name stays after the
+    sibling it followed.
+    """
+    for node in list(element.iter()):
+        tag = node.tag
+        if not isinstance(tag, str):
+            continue
+        ranks = _child_ranks(tag)
+        if not ranks:
+            continue
+        children = list(node)
+        keys: list[int] = []
+        current = -1
+        disordered = False
+        for child in children:
+            child_rank = (
+                _rank_of(child.tag, ranks) if isinstance(child.tag, str) else None
+            )
+            if child_rank is None:
+                child_rank = current
+            elif child_rank < current:
+                disordered = True
+            current = max(current, child_rank)
+            keys.append(child_rank)
+        if not disordered:
+            continue
+        positions = range(len(keys))
+        ordered = [
+            child for _, _, child in sorted(zip(keys, positions, children, strict=True))
+        ]
+        for child in children:
+            node.remove(child)
+        for child in ordered:
+            node.append(child)
+
+
+_SLOT = "{urn:ddi-l:internal}slot"
+
+
+# (module class) -> scheme tag -> item tag -> whether the class writes such
+# items back into such a scheme. See MaintainableBase._managed_scheme_items.
+_MANAGED_SCHEME_ITEMS: dict[type, dict[str, dict[str, bool]]] = {}
+
+
+def _is_inline_scheme(child: Element, parent_tag: str) -> bool:
+    tag = child.tag
+    return (
+        isinstance(tag, str)
+        and tag.endswith("Scheme")
+        and tag != parent_tag
+        and (
+            child.find(qn(REUSABLE_NS, "ID")) is not None
+            or child.find(qn(REUSABLE_NS, "URN")) is not None
+        )
+    )
+
+
+def _scheme_shell(scheme: Element, managed: set[str]) -> Element:
+    """Copy ``scheme`` with each item the module writes back replaced by a slot."""
+    shell = create_element(scheme.tag)
+    shell.attrib.update(scheme.attrib)
+    for child in scheme:
+        if child.tag in managed:
+            slot = create_element(_SLOT)
+            slot.set("tag", child.tag)
+            shell.append(slot)
+        else:
+            shell.append(clone_element(child))
+    return shell
+
+
+def _restore_scheme_shells(element: Element, shells: list[Element]) -> None:
+    """Rebuild each inline scheme in ``element`` from the shell it was read with.
+
+    Schemes pair with shells by tag and position. The scheme's identification,
+    attributes and every child the module does not manage come from the shell;
+    the module's current items fill the slots in order, and any it has beyond
+    them follow. An item the module no longer has leaves its slot empty.
+    """
+    pending: dict[str, list[Element]] = {}
+    for shell in shells:
+        pending.setdefault(shell.tag, []).append(shell)
+    for index, emitted in enumerate(list(element)):
+        queue = pending.get(emitted.tag)
+        if not queue:
+            continue
+        shell = queue.pop(0)
+        rebuilt = create_element(emitted.tag)
+        rebuilt.attrib.update(shell.attrib)
+        for name, value in emitted.attrib.items():
+            if rebuilt.get(name) is None:
+                rebuilt.set(name, value)
+        managed = {slot.get("tag") for slot in shell if slot.tag == _SLOT}
+        items = [child for child in emitted if child.tag in managed]
+        shell_tags = {child.tag for child in shell}
+        for child in shell:
+            if child.tag == _SLOT:
+                if items:
+                    rebuilt.append(items.pop(0))
+            else:
+                rebuilt.append(clone_element(child))
+        for child in items:
+            rebuilt.append(child)
+        for child in emitted:
+            if child.tag not in managed and child.tag not in shell_tags:
+                rebuilt.append(child)
+        element.remove(emitted)
+        element.insert(index, rebuilt)
+
+
+def _canonical(element: Element) -> tuple[object, ...]:
+    return (
+        element.tag,
+        tuple(sorted(element.attrib.items())),
+        (element.text or "").strip(),
+        tuple(_canonical(child) for child in element if isinstance(child.tag, str)),
+    )
+
+
+def _passthrough_state(element: Element, tags: tuple[str, ...]) -> object:
+    """Canonical form of ``element``'s children with ``tags``, in order."""
+    return tuple(_canonical(child) for child in element if child.tag in tags)
+
+
+def _replace_with_sources(
+    element: Element, sources: list[Element], tags: tuple[str, ...]
+) -> None:
+    """Swap ``element``'s rebuilt ``tags`` children for the ones read."""
+    emitted = [child for child in element if child.tag in tags]
+    position = next(
+        (index for index, child in enumerate(element) if child.tag in tags),
+        len(element),
+    )
+    for child in emitted:
+        element.remove(child)
+    for offset, source in enumerate(sources):
+        element.insert(position + offset, clone_element(source))
+
+
+def _scalar_text_lexicals(element: Element, cls: type) -> dict[str, list[str]]:
+    """Text of ``element``'s children mapped to scalar fields, as written."""
+    field_map: dict[str, tuple[str, str, bool]] = getattr(cls, "_FIELD_XML_MAP", {})
+    tags = {
+        xml_tag
+        for xml_tag, kind, _is_list in field_map.values()
+        if kind in ("str", "bool", "int", "float")
+    }
+    found: dict[str, list[str]] = {}
+    for child in element:
+        if child.tag in tags and child.text is not None:
+            found.setdefault(child.tag, []).append(child.text)
+    return found
+
+
+def _is_empty(value: object) -> bool:
+    return value is None or (isinstance(value, (list, dict)) and not value)
+
+
+def _wrap_handwritten_serializers(cls: type[MaintainableBase]) -> None:
+    """Route a subclass's own ``from_xml``/``to_xml`` through the completion step.
+
+    Hand-written overrides predate several inherited fields, and each one
+    re-implements identification parsing; wrapping them here means a field
+    added to the base is read and written for every type, instead of for the
+    overrides someone remembered to update.
+    """
+    own_from_xml = cls.__dict__.get("from_xml")
+    if isinstance(own_from_xml, classmethod) and not getattr(
+        own_from_xml.__func__, "_ddi_completing", False
+    ):
+        parse = own_from_xml.__func__
+
+        @functools.wraps(parse)
+        def from_xml(
+            klass: type[MaintainableBase], element: Element, *args: Any, **kwargs: Any
+        ) -> Any:
+            obj = parse(klass, element, *args, **kwargs)
+            if isinstance(obj, MaintainableBase):
+                obj._complete_from_xml(element)
+            return obj
+
+        from_xml._ddi_completing = True  # type: ignore[attr-defined]
+        cls.from_xml = classmethod(from_xml)  # type: ignore[assignment]
+
+    own_to_xml = cls.__dict__.get("to_xml")
+    if callable(own_to_xml) and not getattr(own_to_xml, "_ddi_completing", False):
+        serialize = own_to_xml
+
+        @functools.wraps(serialize)
+        def to_xml(self: MaintainableBase, *args: Any, **kwargs: Any) -> Element:
+            element: Element = serialize(self, *args, **kwargs)
+            self._complete_to_xml(element)
+            return element
+
+        to_xml._ddi_completing = True  # type: ignore[attr-defined]
+        cls.to_xml = to_xml  # type: ignore[method-assign]
+
+
+def _value_state(value: object) -> object:
+    """A comparable snapshot of a value wrapper's public state."""
+    if isinstance(value, Element):
+        from .._etree import tostring
+
+        # Not pretty-printed: the stdlib backend indents the element in place.
+        return ("element", tostring(value, pretty_print=False))
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        return tuple(
+            (item.name, _value_state(getattr(value, item.name)))
+            for item in dataclasses.fields(value)
+            if not item.name.startswith("_")
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_value_state(item) for item in value)
+    if isinstance(value, dict):
+        return tuple(sorted((key, _value_state(item)) for key, item in value.items()))
+    return value
+
+
+def _without_indentation(element: Element) -> Element:
+    """Drop whitespace-only text around child elements (pretty-printing).
+
+    Text of a leaf is content and is kept, even when it is only spaces.
+    """
+    for node in element.iter():
+        if len(node) and node.text is not None and not node.text.strip():
+            node.text = None
+        if node is not element and node.tail is not None and not node.tail.strip():
+            node.tail = None
+    return element
+
+
+WrapperT = TypeVar("WrapperT", bound=type)
+
+
+def preserves_source(cls: WrapperT) -> WrapperT:
+    """Write a value wrapper back exactly as read while nothing in it changed.
+
+    For small wrappers whose fields cover the common case but not every
+    child and attribute the schema allows (an ``r:NumberRange`` with
+    ``r:LowDouble`` and a label, a representation's ``r:NumericTypeCode``
+    attributes): ``from_xml`` keeps the element and a snapshot of the public
+    fields, and ``to_xml`` returns that element unless a field has since been
+    edited, in which case it builds the element from the fields as before.
+    """
+    parse = cls.__dict__["from_xml"].__func__
+    serialize = cls.__dict__["to_xml"]
+
+    @functools.wraps(parse)
+    def from_xml(klass: type, element: Element, *args: Any, **kwargs: Any) -> Any:
+        obj = parse(klass, element, *args, **kwargs)
+        obj._source_element = _without_indentation(clone_element(element))
+        obj._source_state = _value_state(obj)
+        return obj
+
+    @functools.wraps(serialize)
+    def to_xml(self: Any, *args: Any, **kwargs: Any) -> Element:
+        source = getattr(self, "_source_element", None)
+        if source is not None and _value_state(self) == self._source_state:
+            # A wrapper that takes the tag to write (``to_xml("InstructionReference")``)
+            # still gets the source when asked for the tag it was read as.
+            requested = args[0] if args else kwargs.get("tag")
+            local = source.tag.rsplit("}", 1)[-1]
+            if requested is None or requested in (source.tag, local):
+                return clone_element(source)
+        result: Element = serialize(self, *args, **kwargs)
+        return result
+
+    cls.from_xml = classmethod(from_xml)  # type: ignore[attr-defined]
+    cls.to_xml = to_xml  # type: ignore[attr-defined]
+    return cls
 
 
 # ============================================================================
@@ -834,6 +1497,10 @@ class MaintainableInitData(TypedDict, total=False):
     other_attributes: dict[str, str]
     scheme_labels: dict[str, list[InternationalString]]
     _nsmap_override: dict[str | None, str] | None
+    _identification_attributes: dict[str, dict[str, str]]
+    _from_xml: bool
+    _attribute_lexicals: dict[str, str]
+    _text_lexicals: dict[str, list[str]]
 
 
 # ============================================================================
@@ -908,6 +1575,30 @@ class MaintainableBase:
     _nsmap_override: dict[str | None, str] | None = field(
         default=None, repr=False, compare=False
     )
+    # Attributes on r:URN / r:Agency / r:ID / r:Version (``typeOfIdentifier``
+    # on a URN, for one), keyed by tag.
+    _identification_attributes: dict[str, dict[str, str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    # True for an object parsed from XML: its identification is the file's and
+    # is never rewritten (see DataCollection's identifier normalization).
+    _from_xml: bool = field(default=False, repr=False, compare=False)
+    # Mapped attributes as spelled in the file (``isPublished="1"``), written
+    # back that way while the value is unchanged.
+    _attribute_lexicals: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    # Text of scalar children (bool/int/float/str fields) as written, by tag.
+    _text_lexicals: dict[str, list[str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    _scheme_shells: list[Element] = field(
+        default_factory=list, repr=False, compare=False
+    )
+    _passthrough_sources: list[Element] = field(
+        default_factory=list, repr=False, compare=False
+    )
+    _passthrough_baseline: object = field(default=None, repr=False, compare=False)
     _auto_identifier: str | None = field(default=None, repr=False, compare=False)
     _inherited_identifier_suffixes: tuple[str, ...] = field(
         default=(), repr=False, compare=False
@@ -919,6 +1610,15 @@ class MaintainableBase:
     ALLOW_LABELS: ClassVar[bool] = True
     VALIDATE_ON_SERIALIZE: ClassVar[bool] = True
     AUTO_GENERATE_URN: ClassVar[bool] = True
+    # Modules that flatten their inline schemes into item lists (a
+    # ConceptualComponent's ConceptScheme into ``concepts``) set this, so the
+    # scheme as read -- its ID, label, notes, groups -- is kept and the
+    # module's current items are put back into it on output.
+    KEEPS_SCHEME_SHELLS: ClassVar[bool] = False
+    # Direct children this class rebuilds in its own arrangement (a StudyUnit
+    # writes one p:PhysicalDataProduct per physical structure). While the
+    # items inside are unchanged, the children are written back as read.
+    PASSTHROUGH_WHEN_UNCHANGED: ClassVar[tuple[str, ...]] = ()
 
     def __init_subclass__(cls, **kwargs: object) -> None:
         """Register subclass in the maintainable registry."""
@@ -931,7 +1631,12 @@ class MaintainableBase:
         # definitions and should never be instantiated directly by the
         # registry.  Hand-written subclasses will register themselves.
         if "._generated." in cls.__module__:
+            tag = getattr(cls, "TAG", None)
+            order = cls.__dict__.get("_ELEMENT_ORDER")
+            if isinstance(tag, str) and order:
+                _SCHEMA_ELEMENT_ORDER.setdefault(tag, list(order))
             return
+        _wrap_handwritten_serializers(cls)
         tag = getattr(cls, "TAG", None)
         if isinstance(tag, str):
             MaintainableRegistry.register_class(tag, cls)
@@ -999,7 +1704,6 @@ class MaintainableBase:
             qn(REUSABLE_NS, "Note"),
             qn(REUSABLE_NS, "Software"),
             qn(REUSABLE_NS, "MetadataQuality"),
-            qn(REUSABLE_NS, "MaintainableObject"),
         }
 
         recognized: set[str] = set(_inherited_tags)
@@ -1045,6 +1749,10 @@ class MaintainableBase:
             "other_attributes": other_attributes,
             "scheme_labels": _collect_scheme_labels(element),
             "_nsmap_override": nsmap_override,
+            "_identification_attributes": identification_attributes(element),
+            "_from_xml": True,
+            "_attribute_lexicals": dict(element.attrib),
+            "_text_lexicals": _scalar_text_lexicals(element, cls),
         }
 
     @classmethod
@@ -1342,6 +2050,29 @@ class MaintainableBase:
 
     # ========== Version Management ==========
 
+    @property
+    def version_date(self) -> str | None:
+        """The ``versionDate`` attribute, whichever way this type stores it.
+
+        Types built on a generated base map it to a ``versionDate`` field; the
+        others keep it, like any attribute they do not map, in
+        ``other_attributes``. Colectica stamps it on every item.
+        """
+        mapped = getattr(self, "versionDate", None)
+        if isinstance(mapped, str):
+            return mapped
+        return self.other_attributes.get("versionDate")
+
+    @version_date.setter
+    def version_date(self, value: str | None) -> None:
+        if "versionDate" in getattr(self, "_ATTR_XML_MAP", {}):
+            self.versionDate = value
+            self.other_attributes.pop("versionDate", None)
+        elif value is None:
+            self.other_attributes.pop("versionDate", None)
+        else:
+            self.other_attributes["versionDate"] = value
+
     def _increment_version_component(self, component_index: int) -> None:
         """Increment a specific version component."""
         if not self.version:
@@ -1563,10 +2294,7 @@ class MaintainableBase:
 
         # Add labels
         if self.ALLOW_LABELS:
-            for label in self.labels:
-                label_el = create_element(qn(REUSABLE_NS, "Label"))
-                label_el.append(label.to_child())
-                element.append(label_el)
+            append_intl_strings(element, qn(REUSABLE_NS, "Label"), self.labels)
         elif self.labels:
             # This type's content model has no r:Label slot: warn instead of
             # dropping the caller's labels without notice.
@@ -1581,10 +2309,9 @@ class MaintainableBase:
 
         # Add descriptions (grouped into a single container)
         if self.descriptions:
-            desc_el = create_element(qn(REUSABLE_NS, "Description"))
-            for desc in self.descriptions:
-                desc_el.append(desc.to_child())
-            element.append(desc_el)
+            element.append(
+                intl_container(qn(REUSABLE_NS, "Description"), self.descriptions)
+            )
 
         # Re-apply preserved unrecognized attributes (mapped attributes are set
         # by the caller afterwards; _set_other_attributes never clobbers them).
@@ -1639,6 +2366,175 @@ class MaintainableBase:
         for mq in self.metadata_quality_elements:
             element.append(clone_element(mq))
 
+    def _complete_from_xml(self, element: Element) -> None:
+        """Fill what a hand-written ``from_xml`` left out of ``element``.
+
+        The generic engine reads every mapped attribute and the identification
+        metadata every DDI type inherits (``r:VersionResponsibility``,
+        ``r:BasedOnObject``, ...). A hand-written override reads what it was
+        written for; anything else -- ``versionDate`` on an ``l:Variable``, the
+        ``r:BasedOnObject`` lineage on an ``l:CodeList`` -- was silently
+        dropped, because ``_collect_common`` treats those tags as handled and
+        so does not keep them in ``other_elements`` either. Only empty fields
+        are filled, so the override's own parsing always wins.
+        """
+        attr_map: dict[str, tuple[str, str]] = getattr(self, "_ATTR_XML_MAP", {})
+        for field_name, (attr_name, attr_kind) in attr_map.items():
+            raw = element.get(attr_name)
+            if raw is not None and getattr(self, field_name, None) is None:
+                setattr(self, field_name, _convert_text(raw, attr_kind))
+
+        if self.KEEPS_SCHEME_SHELLS:
+            schemes = [child for child in element if _is_inline_scheme(child, self.TAG)]
+            if schemes:
+                managed = self._managed_scheme_items(schemes)
+                self._scheme_shells = [
+                    _scheme_shell(scheme, managed.get(scheme.tag, set()))
+                    for scheme in schemes
+                ]
+
+        if self.PASSTHROUGH_WHEN_UNCHANGED:
+            self._passthrough_sources = [
+                clone_element(child)
+                for child in element
+                if child.tag in self.PASSTHROUGH_WHEN_UNCHANGED
+            ]
+            if self._passthrough_sources:
+                self._passthrough_baseline = self._rebuilt_passthrough_state()
+
+        kept = {child.tag for child in self.other_elements}
+        inherited: dict[str, object] | None = None
+        for field_name, tag in _INHERITED_METADATA_FIELDS:
+            if not _is_empty(getattr(self, field_name, None)) or tag in kept:
+                continue
+            if element.find(tag) is None:
+                continue
+            if inherited is None:
+                inherited = type(self)._parse_inherited_metadata(element)
+            setattr(self, field_name, inherited[field_name])
+
+    def _managed_scheme_items(self, schemes: list[Element]) -> dict[str, set[str]]:
+        """Which item tags this class writes back into each inline scheme.
+
+        A property of the class, so it is learned once per (class, scheme,
+        item) and cached: a probe serialization right after parsing shows
+        which of the items read are emitted again. ``LogicalProduct`` writes
+        its variables back but not a ``VariableScheme``'s variable groups, so
+        only the variables get slots and the groups stay as read.
+        """
+        cache = _MANAGED_SCHEME_ITEMS.setdefault(type(self), {})
+        unknown = {
+            (scheme.tag, child.tag)
+            for scheme in schemes
+            for child in scheme
+            if isinstance(child.tag, str)
+            and MaintainableRegistry.get(child.tag) is not None
+            and child.tag not in cache.get(scheme.tag, {})
+        }
+        if unknown:
+            import warnings as _warnings
+
+            with suppress_serialize_validation(), _warnings.catch_warnings():
+                _warnings.simplefilter("ignore")
+                probe = self.to_xml()
+            emitted: dict[str, set[str]] = {}
+            for scheme in probe:
+                if isinstance(scheme.tag, str):
+                    emitted.setdefault(scheme.tag, set()).update(
+                        child.tag for child in scheme if isinstance(child.tag, str)
+                    )
+            for scheme_tag, item_tag in unknown:
+                cache.setdefault(scheme_tag, {})[item_tag] = item_tag in emitted.get(
+                    scheme_tag, set()
+                )
+        return {
+            scheme_tag: {tag for tag, managed in items.items() if managed}
+            for scheme_tag, items in cache.items()
+        }
+
+    def _rebuilt_passthrough_state(self) -> object:
+        """Canonical form of the passthrough children as this class rebuilds them.
+
+        Recorded right after parsing, it is what an unedited object rebuilds.
+        Any later edit to what the class keeps changes it, which is how
+        ``_complete_to_xml`` knows the children read can no longer stand in.
+        """
+        import warnings as _warnings
+
+        sources, self._passthrough_sources = self._passthrough_sources, []
+        try:
+            with suppress_serialize_validation(), _warnings.catch_warnings():
+                _warnings.simplefilter("ignore")
+                rebuilt = self.to_xml()
+        finally:
+            self._passthrough_sources = sources
+        return _passthrough_state(rebuilt, self.PASSTHROUGH_WHEN_UNCHANGED)
+
+    def _complete_to_xml(self, element: Element) -> None:
+        """Write what a hand-written ``to_xml`` left out, in schema order."""
+        attr_map: dict[str, tuple[str, str]] = getattr(self, "_ATTR_XML_MAP", {})
+        for field_name, (attr_name, attr_kind) in attr_map.items():
+            value = getattr(self, field_name, None)
+            if value is not None and element.get(attr_name) is None:
+                element.set(attr_name, _format_text(value, attr_kind))
+
+        restore_identification_attributes(element, self._identification_attributes)
+        attribute_kinds = dict(attr_map.values())
+        for attr_name, lexical in self._attribute_lexicals.items():
+            written = element.get(attr_name)
+            # An attribute no map covers is written by hand-written code
+            # (isUniversallyUnique, isOrdered): only an xs:boolean may be
+            # respelled, as nothing else there is written in two spellings.
+            kind = attribute_kinds.get(attr_name, "bool")
+            if written is not None and _same_meaning(lexical, written, kind):
+                element.set(attr_name, lexical)
+        field_map: dict[str, tuple[str, str, bool]] = getattr(
+            self, "_FIELD_XML_MAP", {}
+        )
+        text_kinds = {xml_tag: kind for xml_tag, kind, _is_list in field_map.values()}
+        for tag, lexicals in self._text_lexicals.items():
+            kind = text_kinds.get(tag, "str")
+            for child, lexical in zip(element.findall(tag), lexicals, strict=False):
+                if child.text is not None and _same_meaning(lexical, child.text, kind):
+                    child.text = lexical
+
+        rank = {tag: index for index, tag in enumerate(self._schema_element_order())}
+
+        present = {child.tag for child in element}
+        for field_name, tag in _INHERITED_METADATA_FIELDS:
+            if tag in present or _is_empty(getattr(self, field_name, None)):
+                continue
+            holder = create_element(self.TAG)
+            self._emit_inherited_tag(holder, tag)
+            for child in list(holder):
+                holder.remove(child)
+                _insert_by_rank(element, child, rank)
+
+        if self._scheme_shells:
+            _restore_scheme_shells(element, self._scheme_shells)
+        if self._passthrough_sources and (
+            _passthrough_state(element, self.PASSTHROUGH_WHEN_UNCHANGED)
+            == self._passthrough_baseline
+        ):
+            _replace_with_sources(
+                element, self._passthrough_sources, self.PASSTHROUGH_WHEN_UNCHANGED
+            )
+
+        # Content a model keeps without mapping (``other_elements``) is
+        # appended last -- after d:ConstructSequence, say, for an
+        # r:OutParameter, which the schema rejects -- at the item and in the
+        # value wrappers inside it. Put it back in schema order everywhere.
+        order_by_schema(element)
+
+    def _schema_element_order(self) -> list[str]:
+        """The XSD child sequence for this type, own table or generated one."""
+        own: list[str] = getattr(self, "_ELEMENT_ORDER", [])
+        if own:
+            return own
+        if not _SCHEMA_ELEMENT_ORDER:
+            _load_generated_models()
+        return _SCHEMA_ELEMENT_ORDER.get(self.TAG, [])
+
     def _append_other_elements(self, element: Element) -> None:
         """Append preserved unrecognized elements."""
         for child in self.other_elements:
@@ -1682,16 +2578,10 @@ class MaintainableBase:
             pass
         elif tag == label_tag:
             if self.ALLOW_LABELS:
-                for label in self.labels:
-                    label_el = create_element(label_tag)
-                    label_el.append(label.to_child())
-                    element.append(label_el)
+                append_intl_strings(element, label_tag, self.labels)
         elif tag == desc_tag:
             if self.descriptions:
-                desc_el = create_element(desc_tag)
-                for desc in self.descriptions:
-                    desc_el.append(desc.to_child())
-                element.append(desc_el)
+                element.append(intl_container(desc_tag, self.descriptions))
         elif tag == qn(REUSABLE_NS, "UserID"):
             for uid in self.user_ids:
                 element.append(_emit_typed_or_raw(uid))
@@ -1801,6 +2691,7 @@ class MaintainableBase:
 
             self._set_other_attributes(element)
             self._append_other_elements(element)
+            self._complete_to_xml(element)
             return element
 
         # Models without _ELEMENT_ORDER: emit identification, version metadata,
@@ -1826,16 +2717,12 @@ class MaintainableBase:
         self._emit_version_metadata(element)
 
         if self.ALLOW_LABELS:
-            for label in self.labels:
-                label_el = create_element(qn(REUSABLE_NS, "Label"))
-                label_el.append(label.to_child())
-                element.append(label_el)
+            append_intl_strings(element, qn(REUSABLE_NS, "Label"), self.labels)
 
         if self.descriptions:
-            desc_el = create_element(qn(REUSABLE_NS, "Description"))
-            for desc in self.descriptions:
-                desc_el.append(desc.to_child())
-            element.append(desc_el)
+            element.append(
+                intl_container(qn(REUSABLE_NS, "Description"), self.descriptions)
+            )
 
         for field_name, (xml_tag, kind, is_list) in field_map.items():
             value = getattr(self, field_name, None)
@@ -1855,6 +2742,7 @@ class MaintainableBase:
 
         self._set_other_attributes(element)
         self._append_other_elements(element)
+        self._complete_to_xml(element)
         return element
 
     # ========== Utility Methods ==========

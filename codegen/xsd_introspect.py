@@ -63,7 +63,7 @@ class ChildElement:
     type_namespace: str | None
     min_occurs: int
     max_occurs: int | None  # None = unbounded
-    is_reference: bool  # element name ends with "Reference"
+    is_reference: bool  # type is r:ReferenceType or derives from it
     documentation: str = ""
 
 
@@ -147,6 +147,25 @@ def _resolve_type_name(xsd_type: XsdType | None) -> tuple[str | None, str | None
 _NOT_SET = object()  # Sentinel for "no parent cardinality override"
 
 
+_REFERENCE_TYPE = "{ddi:reusable:3_3}ReferenceType"
+
+
+def _is_reference_type(xsd_type: XsdType | None) -> bool:
+    """Whether ``xsd_type`` is ``r:ReferenceType`` or derives from it.
+
+    The name is not enough: ``r:ExternalURLReference`` is an ``xs:anyURI`` and
+    ``r:ExternalURNReference`` an ``xs:string``, and reading either as a DDI
+    reference emptied them.
+    """
+    seen: set[int] = set()
+    while xsd_type is not None and id(xsd_type) not in seen:
+        seen.add(id(xsd_type))
+        if getattr(xsd_type, "name", None) == _REFERENCE_TYPE:
+            return True
+        xsd_type = getattr(xsd_type, "base_type", None)
+    return False
+
+
 def _walk_group_elements(
     group: XsdGroup,
     *,
@@ -188,7 +207,7 @@ def _walk_group_elements(
                     type_namespace=type_ns,
                     min_occurs=elem_min,
                     max_occurs=elem_max,
-                    is_reference=local.endswith("Reference"),
+                    is_reference=_is_reference_type(resolved.type),
                     documentation=doc[:200] if doc else "",
                 )
             )
@@ -323,6 +342,178 @@ def collect_label_slot_tags(entry: Path = ENTRY_SCHEMA) -> list[str]:
                 tags.add(f"{{{namespace}}}{element_name}")
 
     return sorted(tags)
+
+
+def collect_element_layout(
+    entry: Path = ENTRY_SCHEMA,
+) -> tuple[list[str], dict[str, list[str]]]:
+    """Return what a writer needs to lay elements out as the schema declares.
+
+    Colectica (and any serializer generated from the XSDs) writes attributes in
+    declaration order, base type first, and spells an empty element by its
+    type: ``<r:UserID typeOfUserID="x"></r:UserID>`` for one with text
+    content, ``<r:ResponseCardinality ... />`` for one that only carries
+    attributes. A parsed tree keeps neither fact, so both come from here.
+
+    Returns:
+        ``(text_tags, attribute_order)``: the sorted tags of elements whose type
+        is simple, has simple content or is mixed, and, for every element
+        declaring two or more attributes, their names in declaration order.
+    """
+    schemas = _collect_all_schemas(entry)
+    text_tags: set[str] = set()
+    attribute_order: dict[str, list[str]] = {}
+
+    for namespace, schema in schemas.items():
+        if namespace not in DDI_NS_PREFIXES:
+            continue
+        for component in schema.iter_components():
+            if not isinstance(component, XsdElement):
+                continue
+            tag = component.name
+            if not tag or not tag.startswith("{"):
+                continue
+            element_type = component.type
+            if (
+                element_type.is_simple()
+                or element_type.has_simple_content()
+                or getattr(element_type, "mixed", False)
+            ):
+                text_tags.add(tag)
+            names = [
+                name
+                for name in (getattr(element_type, "attributes", None) or {})
+                if name
+            ]
+            if len(names) > 1:
+                attribute_order.setdefault(tag, names)
+
+    return sorted(text_tags), dict(sorted(attribute_order.items()))
+
+
+def collect_child_ranks(
+    entry: Path = ENTRY_SCHEMA,
+) -> tuple[dict[str, list[list[str]]], dict[str, str]]:
+    """Return the order each content model gives its children.
+
+    Every DDI complex type with element content maps to its child tags grouped
+    by rank: tags in one group may appear in any order relative to each other,
+    and groups must appear in list order. Members of a repeating group
+    (``xs:choice maxOccurs="unbounded"``, a repeating ``xs:sequence``) share a
+    group, because interleaving them is valid and must survive -- the
+    identification choice in ``r:ReferenceType`` (``maxOccurs="2"``) is one.
+
+    Returns:
+        ``(ranks_by_type, type_by_element)``: rank groups per type key, and
+        the type key of every element declaration whose type has element
+        content. An anonymous type is keyed by its element.
+    """
+    schemas = _collect_all_schemas(entry)
+    ranks_by_type: dict[str, list[list[str]]] = {}
+    type_by_element: dict[str, str] = {}
+
+    def walk(group: XsdGroup, groups: list[list[str]], shared: int | None) -> None:
+        for particle in group:
+            if isinstance(particle, XsdGroup):
+                repeating = particle.max_occurs is None or particle.max_occurs > 1
+                if shared is None and repeating:
+                    groups.append([])
+                    walk(particle, groups, len(groups) - 1)
+                else:
+                    walk(particle, groups, shared)
+            elif isinstance(particle, XsdElement) and particle.name:
+                if any(particle.name in members for members in groups):
+                    continue
+                if shared is None:
+                    groups.append([particle.name])
+                else:
+                    groups[shared].append(particle.name)
+
+    for namespace, schema in schemas.items():
+        if namespace not in DDI_NS_PREFIXES:
+            continue
+        for component in schema.iter_components():
+            if not isinstance(component, XsdElement) or not component.name:
+                continue
+            element_type = component.type
+            if not isinstance(element_type, XsdComplexType):
+                continue
+            if not isinstance(element_type.content, XsdGroup):
+                continue
+            key = element_type.name or component.name
+            type_by_element.setdefault(component.name, key)
+            if key not in ranks_by_type:
+                groups: list[list[str]] = []
+                walk(element_type.content, groups, None)
+                ranks_by_type[key] = [members for members in groups if members]
+
+    return (
+        dict(sorted(ranks_by_type.items())),
+        dict(sorted(type_by_element.items())),
+    )
+
+
+def collect_substitution_heads(entry: Path = ENTRY_SCHEMA) -> dict[str, str]:
+    """Return ``{member tag: head tag}`` for every substitution group.
+
+    A content model names the head (``d:ResponseDomain``,
+    ``l:BaseLogicalProduct``) while documents carry a member
+    (``d:CodeDomain``, ``l:LogicalProduct``). Ordering children by the
+    content model needs the member to sit where its head is declared.
+    Chains are resolved to the head a content model can name.
+    """
+    schema = xmlschema.XMLSchema(str(entry))
+    direct: dict[str, str] = {}
+    for head_name, members in schema.maps.substitution_groups.items():
+        for member in members:
+            if member.name and member.name != head_name:
+                direct[member.name] = head_name
+    resolved: dict[str, str] = {}
+    for member_name, head in direct.items():
+        seen = {member_name}
+        while head in direct and head not in seen:
+            seen.add(head)
+            head = direct[head]
+        resolved[member_name] = head
+    return dict(sorted(resolved.items()))
+
+
+def collect_fragment_items(
+    entry: Path = ENTRY_SCHEMA,
+) -> dict[str, tuple[str, str]]:
+    """Return every element a ``ddi:Fragment`` may carry, with its XSD type.
+
+    These are the item types a repository such as Colectica exchanges one per
+    fragment. Each maps to ``(module, type name)`` -- the generated module and
+    the complex type -- because several elements share a type (``CategoryMap``
+    and ``UniverseMap`` are both a ``MapType``), so the element name alone does
+    not name its generated base.
+
+    Returns:
+        ``{element tag: (module, XSD type local name)}``, sorted by tag.
+    """
+    schemas = _collect_all_schemas(entry)
+    instance = schemas["ddi:instance:3_3"]
+    fragment_type = instance.types["FragmentType"]
+    if not isinstance(fragment_type, XsdComplexType) or not isinstance(
+        fragment_type.content, XsdGroup
+    ):
+        raise TypeError("ddi:FragmentType is expected to have element content.")
+    items: dict[str, tuple[str, str]] = {}
+    for element in fragment_type.content.iter_elements():
+        tag = element.name
+        element_type = element.type
+        if not tag or not isinstance(element_type, XsdComplexType):
+            continue
+        type_name = element_type.name
+        if not type_name or not type_name.startswith("{"):
+            continue
+        namespace, _, local = type_name[1:].partition("}")
+        module = DDI_NS_PREFIXES.get(namespace)
+        if module is None:
+            continue
+        items[tag] = (module, local)
+    return dict(sorted(items.items()))
 
 
 def collect_fixed_attributes_by_element(

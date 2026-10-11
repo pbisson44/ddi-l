@@ -10,14 +10,12 @@
   <l:TerminationDate>2026-12-31</l:TerminationDate>
   <l:IsCurrent>true</l:IsCurrent>
   <l:MaintenanceUnitReference>
-    <r:URN>urn:ddi:ca.statcan:00f3a850-e6ac-5063-99de-394e43e1cc35:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>00f3a850-e6ac-5063-99de-394e43e1cc35</r:ID>
     <r:Version>1</r:Version>
     <r:TypeOfObject>Organization</r:TypeOfObject>
   </l:MaintenanceUnitReference>
   <l:ContactPersonReference>
-    <r:URN>urn:ddi:ca.statcan:930cdbf4-a599-549a-adb4-3a6d898c2a58:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>930cdbf4-a599-549a-adb4-3a6d898c2a58</r:ID>
     <r:Version>1</r:Version>
@@ -68,14 +66,12 @@
   <l:IsUpdate>false</l:IsUpdate>
   <l:IsFloating>false</l:IsFloating>
   <l:PredecessorReference>
-    <r:URN>urn:ddi:ca.statcan:5557eb8f-aa86-5a18-9990-f9785ad6e026:0.9</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>5557eb8f-aa86-5a18-9990-f9785ad6e026</r:ID>
     <r:Version>0.9</r:Version>
     <r:TypeOfObject>StatisticalClassification</r:TypeOfObject>
   </l:PredecessorReference>
   <l:DerivedFromReference>
-    <r:URN>urn:ddi:demo.partner:4f3edbaf-b4ae-5388-ac42-5a8c6fac2e4c:2</r:URN>
     <r:Agency>demo.partner</r:Agency>
     <r:ID>4f3edbaf-b4ae-5388-ac42-5a8c6fac2e4c</r:ID>
     <r:Version>2</r:Version>
@@ -92,7 +88,6 @@
     <r:Content xml:lang="en">Minor clarifications released in 2025-Q1.</r:Content>
   </l:Updates>
   <l:VariantOfReference>
-    <r:URN>urn:ddi:ca.statcan:94738d4e-0297-559b-ae55-eb03ff8a6ebe:1</r:URN>
     <r:Agency>ca.statcan</r:Agency>
     <r:ID>94738d4e-0297-559b-ae55-eb03ff8a6ebe</r:ID>
     <r:Version>1</r:Version>
