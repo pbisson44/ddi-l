@@ -122,6 +122,19 @@ description: >-
 
 ### Documentation
 
+- **One colour scheme that works in every mode.** The site uses one brand
+  blue for the header, links and buttons, with orange only for the keyboard
+  focus ring, and every text colour meets WCAG AA in light, dark and high
+  contrast. Dark mode now uses the site's own colours rather than Material's
+  defaults, and its buttons are readable: the outline buttons were 2.3:1, and
+  a download button in a page was 1.1:1, navy on black. High contrast has a
+  black header, visible navigation tabs and readable code, and its notes and
+  tips are dark like the page instead of white boxes whose tables were white
+  on white. The
+  logo follows the header colour instead of drawing in black, and the palette
+  menu sits in the header beside the light/dark toggle instead of overlapping
+  the search icon on phones. The three colour-vision palettes are gone: the
+  blue-and-orange scheme already suits those readers.
 - **Links without a version no longer 404.** The README and issue template
   link through `/latest/`, and the site root now serves a `404.html` that
   sends any unversioned path (`/ddi-l/server/`) to the same page under

@@ -71,14 +71,17 @@ theme:
   name: material
   custom_dir: docs/overrides
   language: en
-  logo: assets/logo.svg
-  # Separate from logo.svg, which draws in `currentColor`; a favicon needs its
-  # own background.
+  # A favicon needs its own background, so it is a separate file from the
+  # header logo below, which draws in `currentColor`.
   favicon: assets/favicon.svg
   font:
     text: "Inter"
     code: "JetBrains Mono"
   icon:
+    # Inlined from docs/overrides/.icons/ddi/logo.svg so the mark takes the
+    # header colour. `logo:` would load it as an <img>, where its
+    # `currentColor` falls back to black.
+    logo: ddi/logo
     repo: fontawesome/brands/github
   features:
     - content.action.edit
@@ -102,26 +105,34 @@ theme:
     - search.share
     - search.suggest
     - toc.follow
-  # Only the light and dark palettes are on the header toggle; the
-  # accessibility palettes are chosen from the menu in docs/overrides/main.html.
-  # `media:` follows the OS colour preference on a first visit.
+  # Light and dark are on the header toggle; high contrast is chosen from the
+  # palette menu in docs/overrides/partials/palette.html, which lists all
+  # three. `media:` follows the OS colour preference on a first visit.
+  #
+  # Every entry declares `primary: custom` and `accent: custom`. Without them
+  # Material tags the page with its default indigo palette, whose rules are
+  # more specific than docs/assets/stylesheets/palette.css and override its
+  # dark-mode link and header colours.
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
-    # Accessibility palettes (indices 2-5): off the toggle cycle, selected via
-    # Material's own radio inputs so Material persists the choice.
+    # Off the toggle cycle, selected from the palette menu through Material's
+    # own radio input so Material persists the choice.
     - scheme: high-contrast
-    - scheme: deuteranopia
-    - scheme: protanopia
-    - scheme: tritanopia
+      primary: custom
+      accent: custom
 plugins:
   - search:
       lang:
@@ -214,14 +225,17 @@ plugins:
             primary_nav_aria_label: Primary navigation
             secondary_nav_aria_label: On this page
             main_aria_label: Documentation content
-            palette_menu_label: Accessibility palettes
+            palette_menu_label: Colour palette
+            # Announced to screen readers when the palette changes.
             palette_labels:
               default: Light mode enabled
               slate: Dark mode enabled
+              high-contrast: High contrast enabled
+            # The entries of the palette menu.
+            palette_names:
+              default: Light
+              slate: Dark
               high-contrast: High contrast
-              deuteranopia: Deuteranopia-friendly
-              protanopia: Protanopia-friendly
-              tritanopia: Tritanopia-friendly
             outdated_message: "You're viewing documentation for an <strong>older version</strong>."
             outdated_link_label: View the latest version
         - locale: fr
@@ -285,14 +299,15 @@ plugins:
             primary_nav_aria_label: Navigation principale
             secondary_nav_aria_label: Sur cette page
             main_aria_label: Contenu de la documentation
-            "palette_menu_label": "Palettes d'accessibilit\xE9"
+            "palette_menu_label": "Palette de couleurs"
             palette_labels:
               "default": "Mode clair activ\xE9"
               "slate": "Mode sombre activ\xE9"
+              "high-contrast": "Contraste \xE9lev\xE9 activ\xE9"
+            palette_names:
+              "default": "Clair"
+              "slate": "Sombre"
               "high-contrast": "Contraste \xE9lev\xE9"
-              "deuteranopia": "Adapt\xE9e \xE0 la deut\xE9ranopie"
-              "protanopia": "Adapt\xE9e \xE0 la protanopie"
-              "tritanopia": "Adapt\xE9e \xE0 la tritanopie"
             "outdated_message": "Vous consultez la documentation d'une <strong>version ant\xE9rieure</strong>."
             "outdated_link_label": "Voir la derni\xE8re version"
 markdown_extensions:
@@ -340,13 +355,16 @@ extra:
       name: ddi-l on GitHub
   generator: false
   # Fallbacks for a build without the i18n plugin's per-locale `extra`.
-  palette_menu_label: Accessibility palettes
+  palette_menu_label: Colour palette
+  # Announced to screen readers when the palette changes.
   palette_labels:
     default: Light mode enabled
     slate: Dark mode enabled
+    high-contrast: High contrast enabled
+  # The entries of the palette menu.
+  palette_names:
+    default: Light
+    slate: Dark
     high-contrast: High contrast
-    deuteranopia: Deuteranopia-friendly
-    protanopia: Protanopia-friendly
-    tritanopia: Tritanopia-friendly
   outdated_message: "You're viewing documentation for an <strong>older version</strong>."
   outdated_link_label: View the latest version

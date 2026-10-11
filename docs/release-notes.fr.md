@@ -131,6 +131,21 @@ description: >-
 
 ### Documentation
 
+- **Un seul jeu de couleurs, lisible dans chaque mode.** Le site emploie un
+  seul bleu de marque pour l'en-tête, les liens et les boutons, l'orange ne
+  marquant que l'anneau de focus du clavier, et chaque couleur de texte
+  respecte le niveau AA des WCAG en mode clair, sombre et contraste élevé. Le
+  mode sombre utilise désormais les couleurs du site plutôt que celles de
+  Material par défaut, et ses boutons sont lisibles : les boutons à contour
+  étaient à 2,3:1, et un bouton de téléchargement dans une page à 1,1:1, bleu
+  marine sur noir. Le contraste élevé a un en-tête noir, des onglets de
+  navigation visibles et du code lisible, et ses notes et astuces sont sombres
+  comme la page au lieu d'être des encadrés blancs dont les tableaux étaient
+  blanc sur blanc. Le logo suit la couleur de l'en-tête au lieu de
+  s'afficher en noir, et le menu des palettes se trouve dans l'en-tête, à côté
+  du bouton clair/sombre, au lieu de recouvrir l'icône de recherche sur
+  téléphone. Les trois palettes adaptées à la vision des couleurs sont
+  retirées : le bleu et l'orange conviennent déjà à ces lecteurs.
 - **Les liens sans version ne renvoient plus d'erreur 404.** Le README et le
   modèle de ticket passent par `/latest/`, et la racine du site sert désormais
   un `404.html` qui redirige tout chemin sans version (`/ddi-l/server/`) vers
