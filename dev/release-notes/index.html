@@ -73,6 +73,43 @@
     
   
   <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {"accent": "custom", "primary": "custom", "scheme": "default"},
+        {"accent": "custom", "primary": "custom", "scheme": "slate"},
+        {"accent": "custom", "primary": "custom", "scheme": "high-contrast"}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
     // Driven by Material's `document$` observable rather than DOMContentLoaded.
     // `document$` emits on the initial load and again after every page swap, so
     // this keeps working if `navigation.instant` is ever enabled -- it is off
@@ -89,7 +126,7 @@
     // Both run from the DOM-ready signal rather than at parse time: this block
     // lands in <head>, where document.body does not exist yet.
     (function () {
-      var paletteLabels = {"default": "Light mode enabled", "deuteranopia": "Deuteranopia-friendly", "high-contrast": "High contrast", "protanopia": "Protanopia-friendly", "slate": "Dark mode enabled", "tritanopia": "Tritanopia-friendly"};
+      var paletteLabels = {"default": "Light mode enabled", "high-contrast": "High contrast enabled", "slate": "Dark mode enabled"};
       var initialised = false;
 
       function enhance() {
@@ -136,6 +173,19 @@
         }, 50);
       }
 
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
       function setupOnce() {
         if (initialised) {
           return;
@@ -157,23 +207,25 @@
             if (scheme && scheme !== lastScheme) {
               lastScheme = scheme;
               announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
             }
           });
         }).observe(document.body, { attributes: true });
 
-        // -- Accessibility palette menu -------------------------------------
+        // -- Palette menu ----------------------------------------------------
         //
-        // The four accessibility palettes are entries 2-5 of theme.palette and
-        // carry no `toggle:`, so they stay off the header cycle (see the
-        // override in partials/palette.html) while Material still renders a
-        // radio input for each. Clicking that input is the supported way in:
-        // Material's own subscription applies the colours and persists the
-        // choice under `<scope>.__palette`. Writing localStorage directly here
-        // is what the previous version did, against a key Material never reads.
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
         //
         // Delegated from the menu container, which lives in the header and so
         // survives instant navigation.
         var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
         if (menu) {
           menu.addEventListener("click", function (event) {
             var button = event.target.closest("[data-ddi-palette-index]");
@@ -247,7 +299,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -284,7 +336,6 @@
       </div>
     
     
-  
       
 
   
@@ -293,7 +344,34 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -330,18 +408,12 @@
 
   
 
-  
-
-  
-
-  
-
 <form class="md-header__option" data-md-component="palette">
   
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
       </label>
@@ -350,7 +422,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
       </label>
@@ -359,28 +431,50 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
     
   
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="deuteranopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_3">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="protanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_4">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="tritanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_5">
-    
-  
-</form>
+</form><div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="Colour palette" aria-label="Colour palette">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="0"
+                  data-ddi-palette-scheme="default">
+            Light
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="1"
+                  data-ddi-palette-scheme="slate">
+            Dark
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="2"
+                  data-ddi-palette-scheme="high-contrast">
+            High contrast
+          </button>
+        </li>
+      
+    </ul>
+  </details>
+</div>
       
     
     
@@ -601,71 +695,6 @@
   
 </header>
     
-  <!--
-    Rendered after the header so the palette radio inputs Material writes in
-    `partials/palette.html` already exist in the document.
-  -->
-  <div class="ddi-palette-menu" data-ddi-palette-menu>
-    <details class="ddi-palette-menu__details">
-      <summary class="ddi-palette-menu__summary"
-               title="Accessibility palettes">
-        <span class="sr-only">Accessibility palettes</span>
-        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
-      </summary>
-      <ul class="ddi-palette-menu__list">
-        
-          
-        
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="2">
-                High contrast
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="3">
-                Deuteranopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="4">
-                Protanopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="5">
-                Tritanopia-friendly
-              </button>
-            </li>
-          
-        
-      </ul>
-    </details>
-  </div>
-
     <div class="md-container" data-md-component="container">
       
       
@@ -689,7 +718,34 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     ddi-l: DDI Lifecycle
@@ -1484,6 +1540,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1656,6 +1718,90 @@
     
   
     Reuse fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load DDI from spreadsheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spreadsheet templates
   
 
     
@@ -2145,6 +2291,50 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-ddi-from-spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load DDI from spreadsheets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2239,7 +2429,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#http-api" class="md-nav__link">
+  <a href="#http-api_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         HTTP API
@@ -2512,6 +2702,50 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-ddi-from-spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load DDI from spreadsheets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2606,7 +2840,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#http-api" class="md-nav__link">
+  <a href="#http-api_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         HTTP API
@@ -2718,8 +2952,132 @@
 
 <h1 id="release-notes">Release notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h1>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="colectica-exports">Colectica exports<a class="headerlink" href="#colectica-exports" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Read, edit and write Colectica <code>FragmentInstance</code> exports.</strong>
+  <code>ddi.open_fragment()</code> opens one; <code>DDIFragment.items()</code>, <code>get()</code>,
+  <code>top_level_item()</code>, <code>put()</code> and <code>remove()</code> work with its items as typed
+  models; <code>DDIFragment.save()</code> writes Colectica Designer's exact layout (UTF-8
+  with a byte-order mark, one item per <code>&lt;Fragment&gt;</code>, each item declaring its
+  module as the default namespace, attributes in schema order), so an export
+  opened and saved comes back byte for byte. <code>DDIFragment.from_items()</code> builds
+  a new export with what Colectica writes on every item. Also
+  <code>write_ddi(..., layout="colectica")</code>, <code>ddi roundtrip --layout colectica</code> and
+  the <code>ddi_l.colectica</code> module. See <em>Work with Colectica exports</em>.</li>
+<li><strong>A typed model for every fragment item type.</strong> All 161 item types a DDI 3.3
+  fragment can carry now parse with <code>MaintainableBase.from_xml</code>; the 91 without
+  a hand-written class get one from <code>ddi_l.models.items</code>. A test builds a
+  schema-valid sample of each from the XSDs and checks it round-trips
+  exactly.</li>
+<li><strong><code>version_date</code></strong> reads and sets <code>versionDate</code> on any item.</li>
+</ul>
+<h3 id="load-ddi-from-spreadsheets">Load DDI from spreadsheets<a class="headerlink" href="#load-ddi-from-spreadsheets" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Bulk-load a study's metadata from CSV files, a zip of them, or an Excel
+  workbook.</strong> One
+  table per kind of item, rows linked by <code>id</code>, covering what most
+  organizations document:</li>
+<li>the study, its groups, organizations and people (<code>studies</code>, <code>groups</code>,
+    <code>organizations</code>, <code>individuals</code>);</li>
+<li>concepts, universes, unit types and the variable cascade
+    (<code>conceptual_variables</code>, <code>represented_variables</code>, <code>variables</code>);</li>
+<li>code lists, including hierarchical classifications (<code>codes.parent</code>);</li>
+<li>questions with instructions, grids, blocks and question groups, worded
+    per language and per audience (<code>question_texts</code>);</li>
+<li>questionnaires and their flow (<code>instruments</code>, <code>flow</code>): sequences,
+    statements, if-then-else and loops;</li>
+<li>variable groups, data files (<code>datasets</code>) and n-cubes;</li>
+<li>methodology, processing events, quality statements and comparison maps.</li>
+</ul>
+<p>Text goes in one column per language (<code>label@en</code>, <code>label@fr</code>) and
+  <code>custom:&lt;name&gt;</code> columns are stored as <code>r:UserAttributePair</code>.
+  <code>ddi_l.tables.load_tables()</code> returns typed models; <code>to_fragment()</code> writes a
+  Colectica <code>FragmentInstance</code> holding every item, valid against the DDI 3.3
+  schema, and <code>to_study()</code> a DDI study for tables a study document can hold.
+  The items the rows imply are written too: a data collection per study,
+  sequences for the flow, a data relationship per data file. Identifiers are
+  derived from the agency and your ids, so loading again gives the same
+  items. Every problem is reported at once with its file, row and column.
+  Also <code>ddi tables template</code> and <code>ddi tables import</code>, and
+  <code>Document.attach()</code> to place an item built elsewhere into a study. Excel
+  workbooks are read and written with the standard library: no new
+  dependency. See <em>Load DDI from spreadsheets</em> and <em>Spreadsheet templates</em>,
+  which has blank and example templates to download.</p>
+<h3 id="http-api">HTTP API<a class="headerlink" href="#http-api" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Colectica exports round-trip byte for byte.</strong> <code>POST
+  /v1/roundtrip?layout=colectica</code> writes a <code>FragmentInstance</code> as Colectica
+  Designer does, so an unchanged export comes back identical and a diff shows
+  only what a parse lost. Without it, every Colectica file looked changed.</li>
+<li><strong>Load metadata tables over HTTP.</strong> <code>POST /v1/tables/import</code> takes an
+  <code>.xlsx</code> workbook or a <code>.zip</code> of CSV files and answers with a Colectica
+  <code>FragmentInstance</code> (or, with <code>?study=</code>, a study). Tables with problems are a
+  <code>422</code> whose <code>extra</code> lists every problem with its file, row and column.
+  <code>GET /v1/tables/template</code> downloads the blank or example tables, and
+  <code>GET /v1/tables</code> describes every table and column as JSON. Uploads are read
+  in memory, within limits on their size, number of files, and rows and
+  columns.</li>
+<li><strong><code>load_tables()</code> also reads a zip of CSV files, or the bytes of a workbook
+  or a zip.</strong> So does <code>ddi tables import</code>.</li>
+</ul>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>A study in a fragment no longer warns about its references.</strong>
+  <code>DDIFragment.from_items()</code> and <code>put()</code> reported every reference of a
+  <code>StudyUnit</code> as unresolved, since in a fragment the items it references sit
+  in fragments of their own.</li>
+<li><strong>The typed models no longer lose content.</strong> Reading an item and writing it
+  back used to drop <code>versionDate</code>, <code>r:VersionResponsibility</code> and the
+  <code>r:BasedOnObject</code> lineage on hand-written models (Variable, CodeList,
+  RepresentedVariable, DataRelationship, StudyUnit and others); split a
+  bilingual <code>r:Label</code> or name into one element per language; drop
+  <code>audienceLanguage</code> and <code>d:ConditionalText</code> from question text, user
+  attribute pairs and attributes inside references, attributes on
+  <code>r:URN</code>/<code>r:ID</code>, controlled-vocabulary attributes, and the scheme-level
+  metadata of inline schemes; and wrote some content out of schema order
+  (QuestionItem, Sequence), which the schema rejects.</li>
+<li><strong><code>DDIFragment.from_items()</code> drops every restated reference URN.</strong> It
+  skipped the reference after each one it removed, so an item with several
+  references kept some <code>r:URN</code>s Colectica does not write.</li>
+<li><strong>References are written as read.</strong> A reference read without an <code>r:URN</code>
+  no longer gains one; a reference built in code still does.</li>
+<li><strong><code>xs:boolean</code> <code>"1"</code> is true.</strong> Several wrappers read it as false and wrote
+  <code>"false"</code>. Values keep their original spelling while unchanged.</li>
+<li><strong>Identifiers read from a file are kept.</strong> <code>DataCollection</code> rewrote
+  non-UUID <code>r:ID</code>s (its own and those of everything inside it) into generated
+  UUIDs, breaking references from other items; it now does so only for
+  objects built in code.</li>
+<li><strong>Validation of fragments no longer forgives real errors.</strong> An error inside
+  a fragment's <code>StudyUnit</code> (and a few other real DDI items) was passed over,
+  and validation stopped there, hiding any error after it. Only the library's
+  own extension types are exempt now, and every error is checked.</li>
+<li><code>ConceptualComponent</code> always writes concepts, universes, conceptual
+  variables and unit types inside their schemes; written bare they were
+  invalid.</li>
+<li><code>d:Methodology</code> writes <code>d:MethodologyName</code> in the DDI 3.3 namespace.</li>
+<li><code>r:ExternalURLReference</code>, <code>r:ExternalURNReference</code> and a few other
+  elements named <code>*Reference</code> are no longer read as DDI references (which
+  emptied them).</li>
+<li>A schema-valid value that does not parse as its declared number type no
+  longer stops an item from loading.</li>
+<li>Building a fragment is linear in its size (it was quadratic: 53 s for a
+  4,478-item export, now under 3 s).</li>
+</ul>
 <h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
 <ul>
+<li><strong>One colour scheme that works in every mode.</strong> The site uses one brand
+  blue for the header, links and buttons, with orange only for the keyboard
+  focus ring, and every text colour meets WCAG AA in light, dark and high
+  contrast. Dark mode now uses the site's own colours rather than Material's
+  defaults, and its buttons are readable: the outline buttons were 2.3:1, and
+  a download button in a page was 1.1:1, navy on black. High contrast has a
+  black header, visible navigation tabs and readable code, and its notes and
+  tips are dark like the page instead of white boxes whose tables were white
+  on white. The
+  logo follows the header colour instead of drawing in black, and the palette
+  menu sits in the header beside the light/dark toggle instead of overlapping
+  the search icon on phones. The three colour-vision palettes are gone: the
+  blue-and-orange scheme already suits those readers.</li>
 <li><strong>Links without a version no longer 404.</strong> The README and issue template
   link through <code>/latest/</code>, and the site root now serves a <code>404.html</code> that
   sends any unversioned path (<code>/ddi-l/server/</code>) to the same page under
@@ -2894,7 +3252,7 @@ XML documents, with a simple CRUD API over an XSD-generated model layer.</p>
   documents and yield fully populated objects.</li>
 <li>See <a href="../performance/">Performance</a> for measured timings.</li>
 </ul>
-<h3 id="http-api">HTTP API<a class="headerlink" href="#http-api" title="Permanent link">&para;</a></h3>
+<h3 id="http-api_1">HTTP API<a class="headerlink" href="#http-api_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Optional Litestar service</strong>: <code>pip install 'ddi-l[server]'</code> then
   <code>ddi serve</code> exposes validate, lint and convert over HTTP, with OpenAPI docs at

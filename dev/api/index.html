@@ -73,6 +73,43 @@
     
   
   <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {"accent": "custom", "primary": "custom", "scheme": "default"},
+        {"accent": "custom", "primary": "custom", "scheme": "slate"},
+        {"accent": "custom", "primary": "custom", "scheme": "high-contrast"}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
     // Driven by Material's `document$` observable rather than DOMContentLoaded.
     // `document$` emits on the initial load and again after every page swap, so
     // this keeps working if `navigation.instant` is ever enabled -- it is off
@@ -89,7 +126,7 @@
     // Both run from the DOM-ready signal rather than at parse time: this block
     // lands in <head>, where document.body does not exist yet.
     (function () {
-      var paletteLabels = {"default": "Light mode enabled", "deuteranopia": "Deuteranopia-friendly", "high-contrast": "High contrast", "protanopia": "Protanopia-friendly", "slate": "Dark mode enabled", "tritanopia": "Tritanopia-friendly"};
+      var paletteLabels = {"default": "Light mode enabled", "high-contrast": "High contrast enabled", "slate": "Dark mode enabled"};
       var initialised = false;
 
       function enhance() {
@@ -136,6 +173,19 @@
         }, 50);
       }
 
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
       function setupOnce() {
         if (initialised) {
           return;
@@ -157,23 +207,25 @@
             if (scheme && scheme !== lastScheme) {
               lastScheme = scheme;
               announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
             }
           });
         }).observe(document.body, { attributes: true });
 
-        // -- Accessibility palette menu -------------------------------------
+        // -- Palette menu ----------------------------------------------------
         //
-        // The four accessibility palettes are entries 2-5 of theme.palette and
-        // carry no `toggle:`, so they stay off the header cycle (see the
-        // override in partials/palette.html) while Material still renders a
-        // radio input for each. Clicking that input is the supported way in:
-        // Material's own subscription applies the colours and persists the
-        // choice under `<scope>.__palette`. Writing localStorage directly here
-        // is what the previous version did, against a key Material never reads.
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
         //
         // Delegated from the menu container, which lives in the header and so
         // survives instant navigation.
         var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
         if (menu) {
           menu.addEventListener("click", function (event) {
             var button = event.target.closest("[data-ddi-palette-index]");
@@ -247,7 +299,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -284,7 +336,6 @@
       </div>
     
     
-  
       
 
   
@@ -293,7 +344,34 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -330,18 +408,12 @@
 
   
 
-  
-
-  
-
-  
-
 <form class="md-header__option" data-md-component="palette">
   
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
       </label>
@@ -350,7 +422,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
       </label>
@@ -359,28 +431,50 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
     
   
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="deuteranopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_3">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="protanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_4">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="tritanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_5">
-    
-  
-</form>
+</form><div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="Colour palette" aria-label="Colour palette">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="0"
+                  data-ddi-palette-scheme="default">
+            Light
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="1"
+                  data-ddi-palette-scheme="slate">
+            Dark
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="2"
+                  data-ddi-palette-scheme="high-contrast">
+            High contrast
+          </button>
+        </li>
+      
+    </ul>
+  </details>
+</div>
       
     
     
@@ -601,71 +695,6 @@
   
 </header>
     
-  <!--
-    Rendered after the header so the palette radio inputs Material writes in
-    `partials/palette.html` already exist in the document.
-  -->
-  <div class="ddi-palette-menu" data-ddi-palette-menu>
-    <details class="ddi-palette-menu__details">
-      <summary class="ddi-palette-menu__summary"
-               title="Accessibility palettes">
-        <span class="sr-only">Accessibility palettes</span>
-        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
-      </summary>
-      <ul class="ddi-palette-menu__list">
-        
-          
-        
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="2">
-                High contrast
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="3">
-                Deuteranopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="4">
-                Protanopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="5">
-                Tritanopia-friendly
-              </button>
-            </li>
-          
-        
-      </ul>
-    </details>
-  </div>
-
     <div class="md-container" data-md-component="container">
       
       
@@ -689,7 +718,34 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     ddi-l: DDI Lifecycle
@@ -1484,6 +1540,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1656,6 +1718,90 @@
     
   
     Reuse fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load DDI from spreadsheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spreadsheet templates
   
 
     
@@ -1985,6 +2131,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ddi_l.document.open_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open_fragment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#document" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2251,6 +2408,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ddi_l.document.Document.attach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        attach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ddi_l.document.Document.add_record_layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2464,6 +2632,526 @@
     <span class="md-ellipsis">
       
         lint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ddifragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DDIFragment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DDIFragment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DDIFragment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DDIFragment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        root
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.from_xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.set_top_level_reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_top_level_reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.get_top_level_reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_top_level_reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.add_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_fragment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.iter_fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iter_fragments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.iter_fragment_payloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iter_fragment_payloads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.top_level_item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_level_item
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        put
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.from_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_colectica_bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_colectica_bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.save" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_etree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_etree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colectica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="colectica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.apply_colectica_conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_colectica_conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.colectica_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colectica_timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.to_colectica_bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_colectica_bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spreadsheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spreadsheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableImport
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TableImport">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.code_lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        code_lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        concepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.universes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        universes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.to_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_fragment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.to_study" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_study
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImportError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableImportError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableProblem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableProblem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.load_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.write_table_templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        write_table_templates
       
     </span>
   </a>
@@ -3824,6 +4512,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ddi_l.document.open_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        open_fragment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#document" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4090,6 +4789,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ddi_l.document.Document.attach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        attach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ddi_l.document.Document.add_record_layout" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4303,6 +5013,526 @@
     <span class="md-ellipsis">
       
         lint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ddifragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DDIFragment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DDIFragment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DDIFragment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DDIFragment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.root" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        root
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.from_xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.set_top_level_reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        set_top_level_reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.get_top_level_reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_top_level_reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.add_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_fragment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.iter_fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iter_fragments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.iter_fragment_payloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iter_fragment_payloads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.top_level_item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        top_level_item
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.put" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        put
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.remove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.from_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_colectica_bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_colectica_bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.save" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.to_etree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_etree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.document.DDIFragment.validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colectica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="colectica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.apply_colectica_conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_colectica_conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.colectica_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        colectica_timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.colectica.to_colectica_bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_colectica_bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spreadsheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spreadsheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableImport
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TableImport">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        categories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.code_lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        code_lists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        concepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        questions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.universes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        universes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.to_fragment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_fragment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImport.to_study" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_study
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableImportError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableImportError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.TableProblem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TableProblem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.load_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        load_tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddi_l.tables.write_table_templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        write_table_templates
       
     </span>
   </a>
@@ -5549,6 +6779,133 @@ doc = ddi.new_study(title="My Survey", agency="example.org")</p>
 <blockquote>
 <p>import ddi_l as ddi
 doc = ddi.open_ddi("study.xml")</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</details>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="ddi_l.document.open_fragment"></a>
+    <div class="doc doc-contents first">
+
+        <p>Open a DDI <code>FragmentInstance</code> file, such as a Colectica export.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Filesystem path to read.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>validate</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to validate against the DDI schema on load.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>DDIFragment</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The fragment. Read items with :meth:<code>DDIFragment.items</code></p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td><code>or</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>meth:<code>DDIFragment.get</code>, write them back with</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>meth:<code>DDIFragment.put</code>, and save with :meth:<code>DDIFragment.save</code>, which</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>writes Colectica's layout byte for byte.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <blockquote>
+<blockquote>
+<blockquote>
+<p>import ddi_l as ddi
+fragment = ddi.open_fragment("export.ddi33.xml")
+variables = fragment.items(ddi.Variable)</p>
 </blockquote>
 </blockquote>
 </blockquote>
@@ -7052,6 +8409,52 @@ constructor.</p>
 <div class="doc doc-object doc-function">
 
 
+<h4 id="ddi_l.document.Document.attach" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">attach</span>
+
+
+<a href="#ddi_l.document.Document.attach" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">attach</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Put an item built elsewhere into the study, where its type belongs.</p>
+<p>Unlike :meth:<code>add_item</code>, the item keeps its own agency, identifier
+and version: a <code>Concept</code> goes into the conceptual component, a
+<code>Variable</code> into the logical product, and so on.</p>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="TypeError">TypeError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the item's type is not in the item registry.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h4 id="ddi_l.document.Document.add_record_layout" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">add_record_layout</span>
 
@@ -8354,6 +9757,2326 @@ the document does not contain.</p>
 
     </div>
 
+</div><h2 id="ddifragment">DDIFragment<a class="headerlink" href="#ddifragment" title="Permanent link">&para;</a></h2>
+<p>A <code>FragmentInstance</code>, such as a Colectica export. See
+<a href="../colectica/">Work with Colectica exports</a>.</p>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="ddi_l.document.DDIFragment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">DDIFragment</span>
+
+
+<a href="#ddi_l.document.DDIFragment" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">DDIFragment</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>A convenience wrapper around a DDI fragment instance XML tree.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="ddi_l.document.DDIFragment.root" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">root</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.document.DDIFragment.root" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">root</span><span class="p">:</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Element: Direct access to the fragment instance tree.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.create" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">create</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#ddi_l.document.DDIFragment.create" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">create</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">top_level</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.Reference">Reference</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Construct a new fragment wrapper with an optional top-level reference.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.from_xml" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">from_xml</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#ddi_l.document.DDIFragment.from_xml" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_xml</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">source</span><span class="p">:</span> <span class="n"><span title="ddi_l.document.SourceType">SourceType</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Parse XML content into a fragment wrapper.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>source</code>
+            </td>
+            <td>
+                  <code><span title="ddi_l.document.SourceType">SourceType</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raw XML text, bytes, a filesystem path, or an
+:class:<code>Element</code> instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>validate</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to validate the parsed XML against the DDI XML
+schema. When <code>True</code> invalid XML raises
+:class:<code>schema_loader.SchemaValidationError</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>DDIFragment</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The parsed fragment wrapper.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="TypeError">TypeError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>source</code> cannot be converted into XML.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ddi_l.schema_loader.SchemaValidationError">SchemaValidationError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Raised when <code>validate</code> is
+<code>True</code> and the XML is not schema compliant.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.to_xml" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_xml</span>
+
+
+<a href="#ddi_l.document.DDIFragment.to_xml" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_xml</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">pretty_print</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Serialise the fragment into an XML string.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>pretty_print</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>When <code>True</code> the output is formatted for readability.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>str</code></td>            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>UTF-8 encoded XML representation of the fragment.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.to_dict" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_dict</span>
+
+
+<a href="#ddi_l.document.DDIFragment.to_dict" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="object">object</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert the fragment XML tree into a nested mapping representation.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="object">object</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>dict[str, object]: Mapping suitable for JSON serialisation or further</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="object">object</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>manipulation.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.set_top_level_reference" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">set_top_level_reference</span>
+
+
+<a href="#ddi_l.document.DDIFragment.set_top_level_reference" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_top_level_reference</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">reference</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.Reference">Reference</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Set (or clear) the <code>&lt;TopLevelReference&gt;</code> on the fragment root.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.get_top_level_reference" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">get_top_level_reference</span>
+
+
+<a href="#ddi_l.document.DDIFragment.get_top_level_reference" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_top_level_reference</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l.models.base.Reference">Reference</span></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the fragment's top-level reference (if present).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.add_fragment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">add_fragment</span>
+
+
+<a href="#ddi_l.document.DDIFragment.add_fragment" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">add_fragment</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">payload</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span> <span class="o">|</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Append a <code>&lt;Fragment&gt;</code> node wrapping <code>payload</code> to the instance.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.iter_fragments" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">iter_fragments</span>
+
+
+<a href="#ddi_l.document.DDIFragment.iter_fragments" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">iter_fragments</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Yield the raw <code>&lt;Fragment&gt;</code> container elements from the instance.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.iter_fragment_payloads" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">iter_fragment_payloads</span>
+
+
+<a href="#ddi_l.document.DDIFragment.iter_fragment_payloads" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">iter_fragment_payloads</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Yield the payload elements contained within each <code>&lt;Fragment&gt;</code> node.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.items" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">items</span>
+
+
+<a href="#ddi_l.document.DDIFragment.items" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">items</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">item_type</span><span class="p">:</span> <span class="n"><span title="type">type</span></span><span class="p">[</span><span class="n"><span title="ddi_l._document_maintainables.MaintainableT">MaintainableT</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Parse every item in the fragment into its typed model.</p>
+<p>Each <code>&lt;Fragment&gt;</code> payload becomes an instance of the model registered
+for its tag; every item type a DDI 3.3 fragment can carry has one. The
+models are copies: change one and :meth:<code>put</code> it back.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>item_type</code>
+            </td>
+            <td>
+                  <code><span title="type">type</span>[<span title="ddi_l._document_maintainables.MaintainableT">MaintainableT</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Only return items of this model class (or a subclass),
+e.g. :class:<code>~ddi_l.models.Variable</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The items in document order. Payloads that are not items (an</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>r:Note</code> beside the item in a fragment) are skipped.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIModelError&lt;/span&gt; (&lt;code&gt;ddi_l.exceptions.DDIModelError&lt;/code&gt;)" href="#ddi_l.exceptions.DDIModelError">DDIModelError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the fragment is not DDI 3.3.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.get" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">get</span>
+
+
+<a href="#ddi_l.document.DDIFragment.get" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">agency</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the item with <code>identifier</code>, as its typed model.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>identifier</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The item's <code>r:ID</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>version</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A specific <code>r:Version</code>; by default the highest one in
+the fragment (a Colectica export can carry several).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>agency</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Restrict the match to this <code>r:Agency</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The item, or <code>None</code> when the fragment does not contain it.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.top_level_item" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">top_level_item</span>
+
+
+<a href="#ddi_l.document.DDIFragment.top_level_item" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">top_level_item</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the item the <code>TopLevelReference</code> names, if present.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.put" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">put</span>
+
+
+<a href="#ddi_l.document.DDIFragment.put" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">put</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Write <code>item</code> into the fragment, replacing the item it supersedes.</p>
+<p>The item replaces the payload with the same agency, ID and version; if
+there is none, the single payload with the same agency and ID (the
+previous version, after :meth:<code>MaintainableBase.increment_minor_version</code>
+or similar); otherwise it is added in a new <code>&lt;Fragment&gt;</code>.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ddi_l._etree.Element">Element</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The element written.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.remove" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">remove</span>
+
+
+<a href="#ddi_l.document.DDIFragment.remove" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">remove</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">agency</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Remove matching items, and any <code>&lt;Fragment&gt;</code> left empty.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The number of items removed.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.from_items" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">from_items</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#ddi_l.document.DDIFragment.from_items" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_items</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">items</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">top_level</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.Reference">Reference</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">colectica</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">version_date</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Build a fragment holding one item per <code>&lt;Fragment&gt;</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>items</code>
+            </td>
+            <td>
+                  <code><span title="collections.abc.Iterable">Iterable</span>[<span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span> | <span title="ddi_l._etree.Element">Element</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Typed items (or their elements), in the order to write.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>top_level</code>
+            </td>
+            <td>
+                  <code><span title="ddi_l.models.base.Reference">Reference</span> | <span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The <code>TopLevelReference</code>; by default the first item.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>colectica</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Give each item what Colectica writes on every item
+(<code>isUniversallyUnique</code>, <code>versionDate</code>, <code>r:URN</code>) where it
+is missing, and identify references by Agency/ID/Version
+alone. Items read from a Colectica export already conform and
+are left untouched. See
+:func:<code>ddi_l.colectica.apply_colectica_conventions</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>version_date</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>versionDate</code> for items that have none (default:
+now, in Colectica's format).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The fragment. Write it with :meth:<code>save</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.to_colectica_bytes" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_colectica_bytes</span>
+
+
+<a href="#ddi_l.document.DDIFragment.to_colectica_bytes" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_colectica_bytes</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="bytes">bytes</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Serialize in Colectica Designer's exact layout (UTF-8 with BOM).</p>
+<p>A fragment read from a Colectica export comes back byte for byte.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.save" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">save</span>
+
+
+<a href="#ddi_l.document.DDIFragment.save" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">save</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">destination</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">layout</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"colectica"</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="bytes">bytes</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Write the fragment to <code>destination</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>destination</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>File path.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>layout</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"colectica"</code> (default) writes Colectica's layout, so an
+export read and saved again is unchanged; <code>"default"</code> writes
+this library's usual pretty-printed layout.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;colectica&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bytes">bytes</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The bytes written.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.to_etree" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_etree</span>
+
+
+<a href="#ddi_l.document.DDIFragment.to_etree" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_etree</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the fragment root element for downstream XML operations.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>Element</code></td>            <td>
+                  <code><span title="ddi_l._etree.Element">Element</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The underlying XML element managed by this fragment.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.document.DDIFragment.validate" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">validate</span>
+
+
+<a href="#ddi_l.document.DDIFragment.validate" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">validate</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.schema_loader.SchemaValidationIssue">SchemaValidationIssue</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Validate the fragment and return structured error details when invalid.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>raise_error</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>When <code>True</code> a validation failure raises
+:class:<code>schema_loader.SchemaValidationError</code> instead of
+returning issues.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="ddi_l.schema_loader.SchemaValidationIssue">SchemaValidationIssue</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list[schema_loader.SchemaValidationIssue]: Collected schema</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="ddi_l.schema_loader.SchemaValidationIssue">SchemaValidationIssue</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>validation issues, empty when the fragment is valid.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="ddi_l.colectica" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">colectica</span>
+
+
+<a href="#ddi_l.colectica" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents first">
+
+        <p>Write a <code>FragmentInstance</code> exactly as Colectica Designer writes one.</p>
+<p>Colectica exports items as a DDI <code>FragmentInstance</code>: one <code>&lt;Fragment&gt;</code> per
+item, each item declaring its module's namespace as the default, the reusable
+namespace bound to <code>r:</code>, two-space indentation, and a UTF-8 byte-order mark.
+A general-purpose serializer produces the same information laid out
+differently -- prefixes on every element, namespaces hoisted to the root,
+attributes in parse order -- so a file read from Colectica and saved back is a
+different file, and a diff against the original is all noise.</p>
+<p>:func:<code>to_colectica_bytes</code> writes the layout byte for byte. Reading a
+Colectica export and writing it back yields the identical file; items built
+or edited with the typed models come out as Colectica would have written them.</p>
+<p>The conventions, all taken from Colectica's output:</p>
+<ul>
+<li><code>\ufeff&lt;?xml version="1.0" encoding="utf-8"?&gt;</code>, then <code>\n</code> line ends
+  and no newline after the closing root tag.</li>
+<li><code>&lt;ddi:FragmentInstance xmlns:r=... xmlns:ddi=...&gt;</code> and
+  <code>&lt;ddi:TopLevelReference&gt;</code> use the <code>ddi:</code> prefix; each <code>&lt;Fragment&gt;</code> sits
+  at column 0 and declares <code>xmlns:r</code> and the instance namespace as default.</li>
+<li>An element outside the namespace in force declares its own as the default,
+  written after its other attributes.</li>
+<li>Attributes in schema declaration order, base type first.</li>
+<li>An empty element is <code>&lt;a&gt;&lt;/a&gt;</code> when its type holds text and <code>&lt;a ... /&gt;</code>
+  otherwise.</li>
+<li>Text escapes <code>&amp;</code>, <code>&lt;</code> and <code>&gt;</code>; attribute values also escape <code>"</code> and
+  write tab, newline and carriage return as character references.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.colectica.apply_colectica_conventions" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">apply_colectica_conventions</span>
+
+
+<a href="#ddi_l.colectica.apply_colectica_conventions" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">apply_colectica_conventions</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">items</span><span class="p">:</span> <span class="n"><span title="collections.abc.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">reusable_ns</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">version_date</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Give items built in code what Colectica writes on every item.</p>
+<p>Only what is missing is added; an item read from a Colectica export
+already has all of it and comes through unchanged.</p>
+<ul>
+<li><code>isUniversallyUnique="true"</code> and a <code>versionDate</code> (<code>version_date</code>,
+  or now) on the item.</li>
+<li>An <code>r:URN</code> built from its Agency, ID and Version, as its first child.</li>
+<li>References lose an <code>r:URN</code> that only restates their Agency, ID and
+  Version: Colectica identifies a reference by those three alone.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>items</code>
+            </td>
+            <td>
+                  <code><span title="collections.abc.Iterable">Iterable</span>[<span title="ddi_l._etree.Element">Element</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The item elements (the <code>&lt;Fragment&gt;</code> payloads).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>reusable_ns</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The reusable namespace of the items' DDI version.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>version_date</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>versionDate</code> for items that have none.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.colectica.colectica_timestamp" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">colectica_timestamp</span>
+
+
+<a href="#ddi_l.colectica.colectica_timestamp" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">colectica_timestamp</span><span class="p">(</span><span class="n">moment</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Format <code>moment</code> (default: now) as Colectica writes <code>versionDate</code>.</p>
+<p>.NET's round-trip format: UTC, seven fractional digits, a <code>Z</code> suffix,
+e.g. <code>2025-09-23T18:27:42.3184877Z</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.colectica.to_colectica_bytes" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_colectica_bytes</span>
+
+
+<a href="#ddi_l.colectica.to_colectica_bytes" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_colectica_bytes</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n"><span title="ddi_l._etree.Element">Element</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="bytes">bytes</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Serialize a <code>FragmentInstance</code> in Colectica's exact layout.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>root</code>
+            </td>
+            <td>
+                  <code><span title="ddi_l._etree.Element">Element</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A <code>FragmentInstance</code> element (DDI 3.1, 3.2 or 3.3).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bytes">bytes</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The UTF-8 document, byte-order mark included.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>root</code> is not a <code>FragmentInstance</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="spreadsheets">Spreadsheets<a class="headerlink" href="#spreadsheets" title="Permanent link">&para;</a></h2>
+<p>Load a study's metadata (concepts, questions and the questionnaire flow, code
+lists, variables, data files and more) from CSV files or an Excel workbook. See <a href="../spreadsheet-import/">Load DDI from spreadsheets</a>.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="ddi_l.tables" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">tables</span>
+
+
+<a href="#ddi_l.tables" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents first">
+
+        <p>Bulk-load DDI items from spreadsheets: a folder of CSV files or one workbook.</p>
+<p>Each table (<code>studies</code>, <code>concepts</code>, <code>questions</code>, <code>flow</code>,
+<code>variables</code>, <code>datasets</code> and the others in :data:<code>TABLES</code>, plus
+<code>settings</code>) is one CSV file, or one sheet of an <code>.xlsx</code> workbook. Rows
+point at each other by <code>id</code>: a variable's <code>question</code> column holds a
+question's <code>id</code>. Text in several languages goes in one column per language
+(<code>label@en</code>, <code>label@fr</code>); properties of your own go in <code>custom:&lt;name&gt;</code>
+columns.</p>
+<p>::</p>
+<div class="language-text highlight"><pre><span></span><code>from ddi_l.tables import load_tables, write_table_templates
+
+write_table_templates("my-survey", example=True)   # start from the example
+tables = load_tables("my-survey")
+tables.to_fragment().save("my-survey.xml")         # for Colectica
+</code></pre></div>
+<p>The guide, with every column, is the "Load DDI from spreadsheets" page of the
+documentation; the templates are on the "Spreadsheet templates" page.</p>
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="ddi_l.tables.TableImport" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">TableImport</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TableImport</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">agency</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">language</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">tables</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">_keys</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>The DDI items a set of tables describes.</p>
+<p>Every item is a typed model (<code>Concept</code>, <code>Variable</code>, ...) that can be
+edited before it is written.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.categories" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">categories</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.categories" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">categories</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.logicalproduct.Category">Category</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The categories of <code>codes</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.code_lists" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">code_lists</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.code_lists" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">code_lists</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.logicalproduct.CodeList">CodeList</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items of <code>code_lists</code>, holding their codes.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.concepts" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">concepts</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.concepts" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">concepts</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.concept.Concept">Concept</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items of <code>concepts</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.items" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">items</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.items" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">items</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Every item, in the order of the tables.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.questions" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">questions</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.questions" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">questions</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.datacollection.QuestionItem">QuestionItem</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items of <code>questions</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.tables" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">tables</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.tables" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">tables</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span><span class="p">]]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="dict">dict</span></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items by the table they come from, in row order. Items a table implies
+are listed under it: the categories of <code>codes</code>, the data collection of
+<code>studies</code>, the sequences of <code>flow</code>, the data relationships of
+<code>datasets</code>, the processing event schemes of <code>processing_events</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.universes" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">universes</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.universes" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">universes</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.concept.Universe">Universe</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items of <code>universes</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="ddi_l.tables.TableImport.variables" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">variables</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableImport.variables" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">variables</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="ddi_l.models.logicalproduct.Variable">Variable</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Items of <code>variables</code>.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="ddi_l.tables.TableImport.get" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">get</span>
+
+
+<a href="#ddi_l.tables.TableImport.get" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get</span><span class="p">(</span><span class="n">table</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The item built from the row of <code>table</code> whose <code>id</code> is <code>key</code>.</p>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="KeyError">KeyError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>table</code> has no row with that <code>id</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="ddi_l.tables.TableImport.to_fragment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_fragment</span>
+
+
+<a href="#ddi_l.tables.TableImport.to_fragment" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_fragment</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">top_level</span><span class="p">:</span> <span class="n"><span title="ddi_l.models.base.MaintainableBase">MaintainableBase</span></span> <span class="o">|</span> <span class="n"><span title="ddi_l.models.base.Reference">Reference</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">version_date</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIFragment&lt;/span&gt; (&lt;code&gt;ddi_l.document.DDIFragment&lt;/code&gt;)" href="#ddi_l.document.DDIFragment">DDIFragment</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The items as a <code>FragmentInstance</code>, one item per fragment.</p>
+<p>Written the way Colectica Designer writes an export, so the file
+imports into a Colectica repository. Without <code>top_level</code> the
+fragment names the only study, or the only group, as its top-level
+item, and otherwise none.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="ddi_l.tables.TableImport.to_study" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_study</span>
+
+
+<a href="#ddi_l.tables.TableImport.to_study" class="headerlink" title="Permanent link">&para;</a></h5>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_study</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">title</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">lang</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Document&lt;/span&gt; (&lt;code&gt;ddi_l.document.Document&lt;/code&gt;)" href="#ddi_l.document.Document">Document</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The items inside a new study, as a <code>DDIInstance</code> document.</p>
+<p>A study document has one study, so the tables that describe studies
+themselves, their groups, people, variable groups, processing,
+quality or comparisons do not fit in it: load those with
+:meth:<code>to_fragment</code>.</p>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;TableImportError&lt;/span&gt; (&lt;code&gt;ddi_l.tables._read.TableImportError&lt;/code&gt;)" href="#ddi_l.tables.TableImportError">TableImportError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If such a table has rows.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="ddi_l.tables.TableImportError" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">TableImportError</span>
+
+
+<a href="#ddi_l.tables.TableImportError" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TableImportError</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">problems</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;TableProblem&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;ddi_l.tables._read.TableProblem&lt;/code&gt;)" href="#ddi_l.tables.TableProblem">TableProblem</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n"><span title="object">object</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;DDIError&lt;/span&gt; (&lt;code&gt;ddi_l.exceptions.DDIError&lt;/code&gt;)" href="#ddi_l.exceptions.DDIError">DDIError</a></code></p>
+
+
+
+        <p>Raised when tables cannot be loaded; lists every problem found.</p>
+<p>Loading collects problems rather than stopping at the first, so one run
+reports everything to fix: <code>error.problems</code> holds them, each with the
+file (or sheet), row and column.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="ddi_l.tables.TableProblem" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">TableProblem</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#ddi_l.tables.TableProblem" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TableProblem</span><span class="p">(</span><span class="n">where</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>One thing wrong in the tables, and where.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.tables.load_tables" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">load_tables</span>
+
+
+<a href="#ddi_l.tables.load_tables" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">load_tables</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">source</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n"><span title="bytes">bytes</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">agency</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">version</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">language</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;TableImport&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;ddi_l.tables.TableImport&lt;/code&gt;)" href="#ddi_l.tables.TableImport">TableImport</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Load the metadata tables in <code>source</code> as DDI items.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>source</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | <span title="bytes">bytes</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A folder of CSV files (<code>concepts.csv</code>, <code>variables.csv</code>,
+...), a <code>.zip</code> of them (at its top or in one folder), or an
+<code>.xlsx</code> workbook with one sheet per table. Tables you do not
+need can be left out. The bytes of a workbook or a zip are read
+in memory, and problems name them <code>workbook.xlsx</code> or
+<code>tables.zip</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>agency</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The agency of every item; overrides <code>settings</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>version</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The version of items without their own; overrides
+<code>settings</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>language</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The language of names; overrides <code>settings</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;TableImport&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;ddi_l.tables.TableImport&lt;/code&gt;)" href="#ddi_l.tables.TableImport">TableImport</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The items, as typed models.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;TableImportError&lt;/span&gt; (&lt;code&gt;ddi_l.tables._read.TableImportError&lt;/code&gt;)" href="#ddi_l.tables.TableImportError">TableImportError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Listing every problem found, each with its file,
+row and column.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="ddi_l.tables.write_table_templates" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">write_table_templates</span>
+
+
+<a href="#ddi_l.tables.write_table_templates" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">write_table_templates</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">destination</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">example</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">languages</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="ddi_l.tables._example.EXAMPLE_LANGUAGES">EXAMPLE_LANGUAGES</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">layout</span><span class="p">:</span> <span class="n"><span title="ddi_l.tables._templates.Layout">Layout</span></span> <span class="o">=</span> <span class="s2">"csv"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="pathlib.Path">Path</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Write the metadata tables to fill in, blank or with an example.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>destination</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A folder for <code>layout="csv"</code>; a file for <code>"zip"</code> (the
+CSV files zipped) and <code>"xlsx"</code> (one sheet per table).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>example</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fill the tables with a small bilingual survey instead of
+leaving them empty. The example is in English and French.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>languages</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="str">str</span>, ...]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The languages to give columns such as <code>label@en</code> for.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="ddi_l.tables._example.EXAMPLE_LANGUAGES">EXAMPLE_LANGUAGES</span></code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>layout</code>
+            </td>
+            <td>
+                  <code><span title="ddi_l.tables._templates.Layout">Layout</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"csv"</code>, <code>"zip"</code> or <code>"xlsx"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;csv&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The folder or file written.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
 </div><h2 id="studycursor">StudyCursor<a class="headerlink" href="#studycursor" title="Permanent link">&para;</a></h2>
 
 
@@ -9058,6 +12781,27 @@ release is supported when specified.</p>
             </td>
             <td>
                   <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>layout</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"default"</code>, or <code>"colectica"</code> to write a
+<code>FragmentInstance</code> exactly as Colectica Designer does (UTF-8 with
+a byte-order mark, one item per <code>&lt;Fragment&gt;</code> with its module as
+the default namespace). <code>pretty_print</code>, <code>xml_declaration</code> and
+<code>encoding</code> do not apply to that layout. See
+:mod:<code>ddi_l.colectica</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;default&#39;</code>
             </td>
           </tr>
       </tbody>

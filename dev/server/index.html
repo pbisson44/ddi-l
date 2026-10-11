@@ -73,6 +73,43 @@
     
   
   <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {"accent": "custom", "primary": "custom", "scheme": "default"},
+        {"accent": "custom", "primary": "custom", "scheme": "slate"},
+        {"accent": "custom", "primary": "custom", "scheme": "high-contrast"}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
     // Driven by Material's `document$` observable rather than DOMContentLoaded.
     // `document$` emits on the initial load and again after every page swap, so
     // this keeps working if `navigation.instant` is ever enabled -- it is off
@@ -89,7 +126,7 @@
     // Both run from the DOM-ready signal rather than at parse time: this block
     // lands in <head>, where document.body does not exist yet.
     (function () {
-      var paletteLabels = {"default": "Light mode enabled", "deuteranopia": "Deuteranopia-friendly", "high-contrast": "High contrast", "protanopia": "Protanopia-friendly", "slate": "Dark mode enabled", "tritanopia": "Tritanopia-friendly"};
+      var paletteLabels = {"default": "Light mode enabled", "high-contrast": "High contrast enabled", "slate": "Dark mode enabled"};
       var initialised = false;
 
       function enhance() {
@@ -136,6 +173,19 @@
         }, 50);
       }
 
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
       function setupOnce() {
         if (initialised) {
           return;
@@ -157,23 +207,25 @@
             if (scheme && scheme !== lastScheme) {
               lastScheme = scheme;
               announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
             }
           });
         }).observe(document.body, { attributes: true });
 
-        // -- Accessibility palette menu -------------------------------------
+        // -- Palette menu ----------------------------------------------------
         //
-        // The four accessibility palettes are entries 2-5 of theme.palette and
-        // carry no `toggle:`, so they stay off the header cycle (see the
-        // override in partials/palette.html) while Material still renders a
-        // radio input for each. Clicking that input is the supported way in:
-        // Material's own subscription applies the colours and persists the
-        // choice under `<scope>.__palette`. Writing localStorage directly here
-        // is what the previous version did, against a key Material never reads.
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
         //
         // Delegated from the menu container, which lives in the header and so
         // survives instant navigation.
         var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
         if (menu) {
           menu.addEventListener("click", function (event) {
             var button = event.target.closest("[data-ddi-palette-index]");
@@ -247,7 +299,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -284,7 +336,6 @@
       </div>
     
     
-  
       
 
   
@@ -293,7 +344,34 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -330,18 +408,12 @@
 
   
 
-  
-
-  
-
-  
-
 <form class="md-header__option" data-md-component="palette">
   
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
     <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
       </label>
@@ -350,7 +422,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
       </label>
@@ -359,28 +431,50 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
     
   
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="deuteranopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_3">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="protanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_4">
-    
-  
-    
-    
-    
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="tritanopia" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_5">
-    
-  
-</form>
+</form><div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="Colour palette" aria-label="Colour palette">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="0"
+                  data-ddi-palette-scheme="default">
+            Light
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="1"
+                  data-ddi-palette-scheme="slate">
+            Dark
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="2"
+                  data-ddi-palette-scheme="high-contrast">
+            High contrast
+          </button>
+        </li>
+      
+    </ul>
+  </details>
+</div>
       
     
     
@@ -601,71 +695,6 @@
   
 </header>
     
-  <!--
-    Rendered after the header so the palette radio inputs Material writes in
-    `partials/palette.html` already exist in the document.
-  -->
-  <div class="ddi-palette-menu" data-ddi-palette-menu>
-    <details class="ddi-palette-menu__details">
-      <summary class="ddi-palette-menu__summary"
-               title="Accessibility palettes">
-        <span class="sr-only">Accessibility palettes</span>
-        <span class="ddi-palette-menu__icon" aria-hidden="true">&#9673;</span>
-      </summary>
-      <ul class="ddi-palette-menu__list">
-        
-          
-        
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="2">
-                High contrast
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="3">
-                Deuteranopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="4">
-                Protanopia-friendly
-              </button>
-            </li>
-          
-        
-          
-            <li>
-              
-              <button type="button"
-                      class="ddi-palette-menu__option"
-                      data-ddi-palette-index="5">
-                Tritanopia-friendly
-              </button>
-            </li>
-          
-        
-      </ul>
-    </details>
-  </div>
-
     <div class="md-container" data-md-component="container">
       
       
@@ -689,7 +718,34 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
       
-  <img src="../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
 
     </a>
     ddi-l: DDI Lifecycle
@@ -1486,6 +1542,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1661,6 +1723,90 @@
     
   
     Reuse fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load DDI from spreadsheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spreadsheet templates
   
 
     
@@ -1857,6 +2003,28 @@
     <span class="md-ellipsis">
       
         JSON-LD (linked data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-metadata-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load metadata tables
       
     </span>
   </a>
@@ -2569,6 +2737,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-metadata-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load metadata tables
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2812,11 +3002,28 @@ entry, and that every French entry still matches its English source.</p>
 <td><code>/v1/roundtrip</code></td>
 <td>Re-serialize a document through the model layer.</td>
 </tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/v1/tables</code></td>
+<td>The metadata tables and their columns, as JSON.</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/v1/tables/template</code></td>
+<td>The tables to fill in: a workbook, or a zip of CSV files.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/v1/tables/import</code></td>
+<td>Metadata tables → DDI XML.</td>
+</tr>
 </tbody>
 </table>
-<p><code>POST</code> endpoints take the document as the raw request body. All accept
+<p>The document endpoints take the document as the raw request body: a
+<code>DDIInstance</code>, or a Colectica <code>FragmentInstance</code>. They accept
 <code>?version=3.1|3.2|3.3</code> to pin the schema release instead of using the one the
-document declares.</p>
+document declares. <code>/v1/tables/import</code> takes a workbook or a zip instead; see
+<a href="#load-metadata-tables">Load metadata tables</a>.</p>
 <h3 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>--data-binary<span class="w"> </span>@my-study.xml<span class="w"> </span>http://localhost:8000/v1/validate
 </span></code></pre></div>
@@ -2877,7 +3084,76 @@ rather than approximated. Its specification is explicit that the reverse
 transformation "is not intended", so there is no JSON-LD → XML endpoint.</p>
 <p>Use <code>/v1/convert/json</code> when the payload has to come back as XML. That format
 is an exact transcription and round-trips through <code>/v1/convert/xml</code>.</p>
+<p>A Colectica <code>FragmentInstance</code> has no study to describe, so this endpoint
+answers <code>400</code> for one.</p>
 </div>
+<h3 id="colectica-exports">Colectica exports<a class="headerlink" href="#colectica-exports" title="Permanent link">&para;</a></h3>
+<p>Validate, lint and the JSON conversion take a Colectica <code>FragmentInstance</code> as
+they take a <code>DDIInstance</code>. To check that an export survives a parse, round-trip
+it in Colectica's own layout, so an unchanged export comes back byte for byte:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>--data-binary<span class="w"> </span>@export.xml<span class="w"> </span><span class="s1">'http://localhost:8000/v1/roundtrip?layout=colectica'</span><span class="w"> </span>&gt;<span class="w"> </span>back.xml
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cmp<span class="w"> </span>export.xml<span class="w"> </span>back.xml<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>unchanged
+</span></code></pre></div>
+<p>Without <code>?layout=colectica</code>, the response is written in this library's layout
+(no byte-order mark, its own namespace prefixes), so it differs from the export
+even when nothing was lost. See <a href="../colectica/">Work with Colectica exports</a>.</p>
+<h3 id="load-metadata-tables">Load metadata tables<a class="headerlink" href="#load-metadata-tables" title="Permanent link">&para;</a></h3>
+<p><code>/v1/tables/import</code> loads metadata kept in spreadsheets, laid out as in
+<a href="../spreadsheet-import/">Load DDI from spreadsheets</a>: an <code>.xlsx</code> workbook with
+one sheet per table, or a <code>.zip</code> of CSV files. It answers with a Colectica
+<code>FragmentInstance</code> holding every item:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>--data-binary<span class="w"> </span>@my-survey.xlsx<span class="w"> </span>http://localhost:8000/v1/tables/import<span class="w"> </span>&gt;<span class="w"> </span>my-survey.xml
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>--data-binary<span class="w"> </span>@my-survey.zip<span class="w">  </span>http://localhost:8000/v1/tables/import<span class="w"> </span>&gt;<span class="w"> </span>my-survey.xml
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Query parameter</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agency</code></td>
+<td>the agency of every item; overrides <code>settings</code></td>
+</tr>
+<tr>
+<td><code>item_version</code></td>
+<td>the version of items without their own; overrides <code>settings</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>the language of names; overrides <code>settings</code></td>
+</tr>
+<tr>
+<td><code>study</code></td>
+<td>a title: answer with a <code>DDIInstance</code> study instead of a fragment</td>
+</tr>
+</tbody>
+</table>
+<p>Tables that were read but have problems are a <code>422</code>. Every problem is listed
+at once, each with its file (or sheet), row and column:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">"status_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">422</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The tables have 1 problem; `extra` lists them."</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">"extra"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">      </span><span class="nt">"where"</span><span class="p">:</span><span class="w"> </span><span class="s2">"variables.csv, row 2, column question"</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">      </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no row in questions has id 'Q_AGE'"</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>A body that is not a workbook or a zip at all is a <code>400</code>, like any other
+malformed body.</p>
+<p>The tables to fill in come from <code>/v1/tables/template</code>, as an attachment:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-OJ<span class="w"> </span>http://localhost:8000/v1/tables/template<span class="w">                          </span><span class="c1"># blank workbook</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-OJ<span class="w"> </span><span class="s1">'http://localhost:8000/v1/tables/template?format=zip&amp;example=true'</span><span class="w"> </span><span class="c1"># the example, as CSV files</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>curl<span class="w"> </span>-OJ<span class="w"> </span><span class="s1">'http://localhost:8000/v1/tables/template?lang=en&amp;lang=iu'</span><span class="w">         </span><span class="c1"># columns for English and Inuktitut</span>
+</span></code></pre></div>
+<p><code>/v1/tables</code> describes every table and column as JSON (what goes in it,
+whether it is required, whether it takes one column per language, which table
+it points to), for building a form or checking a file before sending it.</p>
 <h2 id="running-it-safely">Running it safely<a class="headerlink" href="#running-it-safely" title="Permanent link">&para;</a></h2>
 <p>A library parses what its caller chose to open. A service parses whatever
 reaches the port, so the defaults are deliberately conservative.</p>
@@ -2898,7 +3174,11 @@ reaches the port, so the defaults are deliberately conservative.</p>
   at once (default: the number of CPUs); further requests get <code>503</code> with
   <code>Retry-After</code>. The default schema is loaded at startup, so the first request
   does not pay for it.</li>
-<li><strong>Nothing is written to disk.</strong> Documents are parsed from memory.</li>
+<li><strong>Nothing is written to disk.</strong> Documents and tables are read from memory.</li>
+<li><strong>Workbooks and zips are read within limits.</strong> Their files may expand to
+  256 MiB in all, there may be 10,000 of them, and a workbook cell past
+  Excel's last row or column is refused, so a small upload cannot make the
+  reader allocate without end.</li>
 <li><strong>CORS is off.</strong> Enable named origins with <code>--cors-allow-origin</code>; there is
   deliberately no wildcard flag.</li>
 <li><strong><code>/schema</code> can be turned off</strong> with <code>--no-openapi</code> for an internet-facing
@@ -2914,17 +3194,17 @@ one.</p>
 <h2 id="embedding-it">Embedding it<a class="headerlink" href="#embedding-it" title="Permanent link">&para;</a></h2>
 <p><code>ddi serve</code> is a convenience. For a real deployment, build the app yourself and
 run it under any ASGI server:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerConfig</span><span class="p">,</span> <span class="n">create_app</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">ServerConfig</span><span class="p">(</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="n">max_body_bytes</span><span class="o">=</span><span class="mi">8</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="n">cors_allow_origins</span><span class="o">=</span><span class="p">(</span><span class="s2">"https://metadata.example.org"</span><span class="p">,),</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">enable_openapi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="p">)</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerConfig</span><span class="p">,</span> <span class="n">create_app</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">ServerConfig</span><span class="p">(</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="n">max_body_bytes</span><span class="o">=</span><span class="mi">8</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>        <span class="n">cors_allow_origins</span><span class="o">=</span><span class="p">(</span><span class="s2">"https://metadata.example.org"</span><span class="p">,),</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>        <span class="n">enable_openapi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="p">)</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uvicorn<span class="w"> </span>myapp:app<span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>uvicorn<span class="w"> </span>myapp:app<span class="w"> </span>--workers<span class="w"> </span><span class="m">4</span>
 </span></code></pre></div>
 
 
