@@ -1,0 +1,41 @@
+RespondentID,Country,Age,Sex,HeightCm,WeightKg,SmokingStatus,ExerciseFrequency,AlcoholDrinksPerWeek,SelfRatedHealth,ChronicCondition,DoctorVisitsLastYear,HasHealthInsurance,SleepHours,Wellbeing
+H001,Kenya,18,Homme,195,88,Quotidien,Mensuel,2,Excellente,Non,7,Non,7.0,3
+H002,Canada,75,Femme,167,105,Jamais,Hebdomadaire,10,Mauvaise,Non,1,Non,8.6,7
+H003,Japon,78,Homme,191,74,Quotidien,Hebdomadaire,14,Excellente,Oui,3,Non,5.7,2
+H004,France,19,Femme,167,51,Jamais,Hebdomadaire,2,Très bonne,Oui,8,Non,8.1,2
+H005,Canada,50,Homme,155,81,Occasionnel,Mensuel,1,Bonne,Non,12,Oui,8.2,9
+H006,Japon,73,Homme,189,96,Ancien fumeur,Jamais,10,Très bonne,Non,4,Oui,6.8,3
+H007,Kenya,74,Femme,159,61,Occasionnel,Jamais,9,Excellente,Non,1,Oui,5.9,1
+H008,France,77,Femme,194,60,Ancien fumeur,Quotidien,13,Passable,Oui,12,Non,8.0,6
+H009,Japon,52,Femme,165,71,Ancien fumeur,Mensuel,7,Excellente,Oui,4,Non,7.7,3
+H010,Brésil,69,Femme,174,72,Quotidien,Jamais,11,Bonne,Non,9,Oui,6.3,10
+H011,Kenya,28,Homme,181,55,Ancien fumeur,Mensuel,8,Très bonne,Non,1,Non,6.9,9
+H012,Japon,70,Homme,181,68,Occasionnel,Mensuel,13,Très bonne,Oui,9,Non,5.1,7
+H013,Japon,64,Femme,169,95,Ancien fumeur,Hebdomadaire,3,Très bonne,Non,10,Non,6.4,1
+H014,Brésil,84,Homme,171,108,Jamais,Mensuel,11,Passable,Oui,10,Non,6.8,8
+H015,Canada,36,Homme,191,83,Quotidien,Hebdomadaire,4,Mauvaise,Non,12,Oui,5.6,1
+H016,Japon,22,Homme,193,61,Ancien fumeur,Mensuel,1,Bonne,Non,2,Non,6.2,5
+H017,Kenya,80,Femme,178,63,Quotidien,Quotidien,1,Mauvaise,Oui,0,Non,6.1,10
+H018,France,23,Femme,187,56,Ancien fumeur,Jamais,13,Très bonne,Oui,1,Non,5.1,1
+H019,Japon,47,Homme,162,78,Ancien fumeur,Jamais,4,Bonne,Non,12,Non,5.1,8
+H020,Brésil,65,Homme,176,109,Ancien fumeur,Quotidien,2,Excellente,Non,11,Oui,8.5,10
+H021,France,64,Femme,175,58,Occasionnel,Mensuel,2,Passable,Oui,2,Oui,8.4,0
+H022,Kenya,32,Femme,181,69,Quotidien,Mensuel,0,Excellente,Non,3,Non,6.8,3
+H023,Canada,47,Femme,184,63,Quotidien,Hebdomadaire,12,Passable,Oui,10,Non,5.2,0
+H024,Brésil,70,Homme,177,73,Jamais,Jamais,2,Bonne,Non,12,Oui,8.3,9
+H025,Canada,65,Homme,164,49,Quotidien,Mensuel,10,Passable,Non,2,Oui,6.5,2
+H026,Kenya,28,Femme,165,90,Occasionnel,Mensuel,4,Excellente,Non,5,Non,6.7,9
+H027,Canada,19,Homme,152,79,Jamais,Mensuel,8,Très bonne,Oui,8,Non,5.7,8
+H028,Canada,27,Femme,151,55,Quotidien,Jamais,12,Mauvaise,Non,12,Non,8.2,9
+H029,Japon,25,Femme,184,55,Ancien fumeur,Quotidien,1,Excellente,Oui,5,Oui,5.4,6
+H030,Kenya,28,Femme,186,100,Quotidien,Jamais,14,Passable,Non,7,Oui,6.5,8
+H031,France,42,Homme,161,79,Ancien fumeur,Mensuel,14,Très bonne,Oui,4,Non,6.6,0
+H032,Brésil,64,Femme,186,86,Quotidien,Jamais,13,Excellente,Non,5,Oui,6.5,7
+H033,Canada,34,Homme,194,109,Ancien fumeur,Quotidien,4,Très bonne,Non,3,Oui,6.9,10
+H034,Canada,18,Femme,175,86,Jamais,Jamais,13,Passable,Oui,2,Non,6.7,7
+H035,Brésil,50,Femme,194,76,Jamais,Mensuel,9,Mauvaise,Non,5,Oui,7.0,6
+H036,France,41,Femme,175,68,Jamais,Hebdomadaire,11,Mauvaise,Non,6,Non,6.6,10
+H037,Japon,31,Homme,180,52,Occasionnel,Quotidien,7,Excellente,Non,12,Non,6.4,0
+H038,Canada,22,Homme,189,71,Quotidien,Mensuel,0,Excellente,Oui,1,Oui,6.4,10
+H039,Kenya,84,Femme,156,50,Jamais,Jamais,11,Excellente,Oui,12,Non,5.1,0
+H040,France,53,Homme,150,95,Quotidien,Quotidien,14,Excellente,Non,7,Non,7.9,5
