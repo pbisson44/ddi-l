@@ -6,7 +6,7 @@ description: >-
 
 # Notes de version
 
-## Non publié
+## 0.1.1
 
 ### Exports Colectica
 
