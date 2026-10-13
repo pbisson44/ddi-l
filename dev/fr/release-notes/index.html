@@ -2281,6 +2281,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2692,6 +2720,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2953,6 +3009,19 @@
 
 
 <h1 id="notes-de-version">Notes de version<a class="headerlink" href="#notes-de-version" title="Permanent link">&para;</a></h1>
+<h2 id="012">0.1.2<a class="headerlink" href="#012" title="Permanent link">&para;</a></h2>
+<h3 id="correction">Correction<a class="headerlink" href="#correction" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Deux types d'éléments ne peuvent plus partager en silence un même ID
+  généré.</strong> Un <code>DataCollection</code> donne à chaque élément construit avec un
+  identifiant qui n'est pas un UUID l'ID <code>uuid5(agence:identifiant)</code> : un
+  <code>DataCollection</code> et un <code>CollectionEvent</code> tous deux nommés <code>main</code> sortaient
+  donc avec le même <code>r:ID</code>, tout comme un <code>CollectionEvent</code> nommé <code>main</code>
+  ajouté à ce <code>DataCollection</code> après l'avoir relu. La sérialisation lève
+  maintenant <code>ModelValidationError</code> en nommant les deux types. Les versions
+  d'un même élément partagent toujours leur ID, et les identifiants qu'un
+  élément a déjà sont écrits tels quels.</li>
+</ul>
 <h2 id="011">0.1.1<a class="headerlink" href="#011" title="Permanent link">&para;</a></h2>
 <h3 id="exports-colectica">Exports Colectica<a class="headerlink" href="#exports-colectica" title="Permanent link">&para;</a></h3>
 <ul>

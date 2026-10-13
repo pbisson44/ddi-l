@@ -2279,6 +2279,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2324,7 +2352,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2690,6 +2718,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2735,7 +2791,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -2951,6 +3007,18 @@
 
 
 <h1 id="release-notes">Release notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h1>
+<h2 id="012">0.1.2<a class="headerlink" href="#012" title="Permanent link">&para;</a></h2>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Two item types can no longer silently share one generated ID.</strong> A
+  <code>DataCollection</code> gives each item built with a non-UUID identifier the ID
+  <code>uuid5(agency:identifier)</code>, so a <code>DataCollection</code> and a <code>CollectionEvent</code>
+  both called <code>main</code> came out with the same <code>r:ID</code>, as did a <code>CollectionEvent</code>
+  called <code>main</code> added to that <code>DataCollection</code> after reading it back.
+  Serializing now raises <code>ModelValidationError</code> naming both types. Versions
+  of one item still share their ID, and identifiers an item already has are
+  written as given.</li>
+</ul>
 <h2 id="011">0.1.1<a class="headerlink" href="#011" title="Permanent link">&para;</a></h2>
 <h3 id="colectica-exports">Colectica exports<a class="headerlink" href="#colectica-exports" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3020,7 +3088,7 @@
 <li><strong><code>load_tables()</code> also reads a zip of CSV files, or the bytes of a workbook
   or a zip.</strong> So does <code>ddi tables import</code>.</li>
 </ul>
-<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>A study in a fragment no longer warns about its references.</strong>
   <code>DDIFragment.from_items()</code> and <code>put()</code> reported every reference of a
