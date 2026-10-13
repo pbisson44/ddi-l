@@ -246,7 +246,7 @@ class HealthResponse:
     status: Annotated[
         str, _field("Always `ok`; a failing service does not answer.", "ok")
     ]
-    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.0")]
+    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.2")]
 
 
 @dataclass
@@ -254,7 +254,7 @@ class IndexResponse:
     """What `GET /` returns to a non-browser client."""
 
     service: Annotated[str, _field("Distribution name.", "ddi-l")]
-    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.0")]
+    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.2")]
     endpoints: Annotated[
         dict[str, str], _field("Every route this service exposes, keyed by short name.")
     ]
@@ -522,7 +522,7 @@ EXAMPLE_VERSIONS = Example(
 )
 
 EXAMPLE_HEALTH = Example(
-    summary="Service is up", value={"status": "ok", "version": "0.1.0"}
+    summary="Service is up", value={"status": "ok", "version": "0.1.2"}
 )
 
 #: Every route, as `GET /` lists them.
@@ -544,7 +544,7 @@ EXAMPLE_INDEX = Example(
     summary="Service index",
     value={
         "service": "ddi-l",
-        "version": "0.1.0",
+        "version": "0.1.2",
         "endpoints": ENDPOINTS,
         "documentation": "/schema",
     },
