@@ -6,6 +6,20 @@ description: >-
 
 # Notes de version
 
+## 0.1.2
+
+### Correction
+
+- **Deux types d'éléments ne peuvent plus partager en silence un même ID
+  généré.** Un `DataCollection` donne à chaque élément construit avec un
+  identifiant qui n'est pas un UUID l'ID `uuid5(agence:identifiant)` : un
+  `DataCollection` et un `CollectionEvent` tous deux nommés `main` sortaient
+  donc avec le même `r:ID`, tout comme un `CollectionEvent` nommé `main`
+  ajouté à ce `DataCollection` après l'avoir relu. La sérialisation lève
+  maintenant `ModelValidationError` en nommant les deux types. Les versions
+  d'un même élément partagent toujours leur ID, et les identifiants qu'un
+  élément a déjà sont écrits tels quels.
+
 ## 0.1.1
 
 ### Exports Colectica

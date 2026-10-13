@@ -156,6 +156,41 @@ def _maybe_generate_reference_urn(reference: Reference) -> str | None:
     return generated_identifier
 
 
+def _claim_identifier(
+    claimed_by: dict[str, tuple[str, str | None]],
+    identifier: str,
+    model_type: type,
+    *,
+    seed: str | None,
+) -> None:
+    """Record that ``model_type`` uses ``identifier``.
+
+    ``seed`` is the ``agency:identifier`` a generated identifier was derived
+    from, or ``None`` for an identifier the item already had. Two item types
+    sharing an identifier is an error only when one of the two was generated;
+    identifiers that were all read or set by the caller are written as given.
+    """
+    type_name = model_type.__name__
+    claim = claimed_by.get(identifier)
+    if claim is None:
+        claimed_by[identifier] = (type_name, seed)
+        return
+    claimant, claimant_seed = claim
+    if claimant == type_name:
+        if claimant_seed is None and seed is not None:
+            claimed_by[identifier] = (type_name, seed)
+        return
+    shared_seed = seed or claimant_seed
+    if shared_seed is None:
+        return
+    raise ModelValidationError(
+        f"{claimant} and {type_name} would both have the ID {identifier}, "
+        f"which is generated from the identifier '{shared_seed}'. Give each "
+        "item type its own identifier.",
+        model_type=model_type,
+    )
+
+
 def _normalize_reference_collections(
     value: object,
     seen: set[int] | None = None,
@@ -163,8 +198,16 @@ def _normalize_reference_collections(
     | None = None,
     pending: list[tuple[str | None, str | None, str | None, MaintainableBase]]
     | None = None,
+    claimed_by: dict[str, tuple[str, str | None]] | None = None,
 ) -> None:
-    """Recursively normalise URNs for :class:`Reference` instances."""
+    """Recursively normalise URNs for :class:`Reference` instances.
+
+    Raises:
+        ModelValidationError: When a maintainable would be given a generated
+            identifier that a maintainable of another type already has, or is
+            also given, because the generated UUID is derived from
+            ``agency:identifier`` alone.
+    """
     if value is None:
         return
     if seen is None:
@@ -176,6 +219,8 @@ def _normalize_reference_collections(
         generated_identifiers = {}
     if pending is None:
         pending = []
+    if claimed_by is None:
+        claimed_by = {}
     obj_id = id(value)
     if obj_id in seen:
         return
@@ -195,12 +240,16 @@ def _normalize_reference_collections(
         for item in value:
             if isinstance(item, Element):
                 continue
-            _normalize_reference_collections(item, seen, generated_identifiers, pending)
+            _normalize_reference_collections(
+                item, seen, generated_identifiers, pending, claimed_by
+            )
         return
 
     if isinstance(value, dict):
         for item in value.values():
-            _normalize_reference_collections(item, seen, generated_identifiers, pending)
+            _normalize_reference_collections(
+                item, seen, generated_identifiers, pending, claimed_by
+            )
         return
 
     # ``InterviewerInstructionReference`` and similar wrappers expose a ``reference``
@@ -227,7 +276,9 @@ def _normalize_reference_collections(
         for item in vars(value).values():
             if isinstance(item, Element):
                 continue
-            _normalize_reference_collections(item, seen, generated_identifiers, pending)
+            _normalize_reference_collections(
+                item, seen, generated_identifiers, pending, claimed_by
+            )
         if isinstance(value, MaintainableBase):
             identifier_attr = getattr(value, "identifier", None)
             agency_attr = getattr(value, "agency", None)
@@ -257,6 +308,23 @@ def _normalize_reference_collections(
                 generated_identifiers[(agency_attr, identifier_attr, None)] = (
                     generated_identifier
                 )
+                _claim_identifier(
+                    claimed_by,
+                    generated_identifier,
+                    type(value),
+                    seed=f"{agency_attr}:{identifier_attr}",
+                )
+            elif (
+                agency_attr
+                and identifier_attr
+                and type_name not in _INLINE_FRAGMENT_TYPES
+            ):
+                kept_identifier = (
+                    str(UUID(identifier_attr))
+                    if _is_uuid_like(identifier_attr)
+                    else identifier_attr
+                )
+                _claim_identifier(claimed_by, kept_identifier, type(value), seed=None)
             value._auto_identifier = generated_identifier
         else:
             identifier_attr = getattr(value, "identifier", None)

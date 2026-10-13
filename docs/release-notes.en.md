@@ -6,6 +6,19 @@ description: >-
 
 # Release notes
 
+## 0.1.2
+
+### Fixed
+
+- **Two item types can no longer silently share one generated ID.** A
+  `DataCollection` gives each item built with a non-UUID identifier the ID
+  `uuid5(agency:identifier)`, so a `DataCollection` and a `CollectionEvent`
+  both called `main` came out with the same `r:ID`, as did a `CollectionEvent`
+  called `main` added to that `DataCollection` after reading it back.
+  Serializing now raises `ModelValidationError` naming both types. Versions
+  of one item still share their ID, and identifiers an item already has are
+  written as given.
+
 ## 0.1.1
 
 ### Colectica exports
