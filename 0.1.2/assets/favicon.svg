@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img"
+     aria-labelledby="ddi-favicon-title">
+  <title id="ddi-favicon-title">ddi-l</title>
+  <!--
+    A browser tab renders this at 16-32px against the browser's own chrome, not
+    the site's, so unlike logo.svg it cannot use `currentColor` -- there is no
+    inherited colour to take, and an unresolved `currentColor` falls back to
+    black, which disappears in a dark tab strip. The rounded tile gives the mark
+    its own ground in both light and dark browser themes.
+
+    It is also a simplified draw: the lifecycle arc of the full logo turns to
+    mud below about 24px, so only the stacked records survive.
+  -->
+  <rect width="48" height="48" rx="10" fill="#1a237e" />
+  <g stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"
+     stroke-linejoin="round" fill="none">
+    <ellipse cx="24" cy="16.5" rx="10" ry="3.8" />
+    <path d="M14 16.5v7c0 2.1 4.5 3.8 10 3.8s10-1.7 10-3.8v-7" />
+    <path d="M14 23.5v7c0 2.1 4.5 3.8 10 3.8s10-1.7 10-3.8v-7" />
+  </g>
+</svg>

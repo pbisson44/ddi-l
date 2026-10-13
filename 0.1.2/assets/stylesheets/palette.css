@@ -1,0 +1,194 @@
+/* ---------------------------------------------------------------------------
+   Colour palettes for the ddi-l documentation: light, dark and high contrast.
+
+   One brand colour, blue: a deep blue for the header, the same family for
+   links and buttons. Orange has one job, the keyboard focus ring, so a link
+   never reads as a warning. Every pairing below meets WCAG AA (4.5:1) for
+   text; most meet AAA (7:1).
+
+   These variables only win because every palette entry in mkdocs.yml declares
+   `primary: custom` and `accent: custom`. Without that, Material tags <body>
+   with its default indigo palette, whose rules are more specific than these
+   and replace the link and header colours in dark mode.
+   --------------------------------------------------------------------------- */
+
+:root,
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #1e40af;          /* header: white text 8.7:1 */
+  --md-primary-fg-color--light: #1d4ed8;
+  --md-primary-fg-color--dark: #172554;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: rgba(255, 255, 255, 0.7);
+  /* Material colours every hover with the accent; keep hovers in the brand
+     blue rather than turning links orange under the pointer. */
+  --md-accent-fg-color: #1e3a8a;
+  --md-accent-fg-color--transparent: rgba(29, 78, 216, 0.1);
+  --md-accent-bg-color: #ffffff;
+  --md-typeset-a-color: #1d4ed8;           /* links: 6.7:1 on white */
+  --md-code-bg-color: #f6f8fa;
+  --ddi-brand: #1d4ed8;                    /* buttons, admonition accents */
+  --ddi-heading-color: #1e293b;            /* H1: 14.6:1 */
+  --ddi-card-text: #475569;                /* card body: 7.6:1 */
+  --ddi-focus-color: #c2410c;
+}
+
+[data-md-color-scheme="slate"] {
+  /* A navy header blends with the dark page so the content leads. */
+  --md-primary-fg-color: #172554;          /* header: white text 14.7:1 */
+  --md-primary-fg-color--light: #1e3a8a;
+  --md-primary-fg-color--dark: #0f172a;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: rgba(255, 255, 255, 0.7);
+  --md-accent-fg-color: #aecbfa;
+  --md-accent-fg-color--transparent: rgba(138, 180, 248, 0.1);
+  --md-accent-bg-color: #0f172a;
+  --md-typeset-a-color: #8ab4f8;           /* links: 7.6:1 */
+  /* A shade below Material's #272a35, where its number and builtin syntax
+     colours fall just short of 4.5:1. */
+  --md-code-bg-color: #24272f;
+  --ddi-brand: #1d4ed8;                    /* primary button keeps white text */
+  --ddi-brand-text: #8ab4f8;               /* outline buttons, admonitions */
+  --ddi-heading-color: var(--md-default-fg-color);
+  --ddi-card-text: var(--md-default-fg-color);
+  --ddi-focus-color: #f97316;
+}
+
+[data-md-color-scheme="high-contrast"] {
+  color-scheme: dark;
+  --md-hue: 0;
+  --md-default-bg-color: #000000;
+  --md-default-bg-color--light: #141414;
+  --md-default-bg-color--lighter: #1f1f1f;
+  --md-default-bg-color--lightest: #2b2b2b;
+  --md-default-fg-color: #ffffff;
+  --md-default-fg-color--light: #f2f2f2;
+  --md-default-fg-color--lighter: #d9d9d9;
+  --md-default-fg-color--lightest: rgba(255, 255, 255, 0.2);
+  /* A black header with white text, separated from the page by a rule. */
+  --md-primary-fg-color: #000000;
+  --md-primary-fg-color--light: #141414;
+  --md-primary-fg-color--dark: #000000;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #f2f2f2;
+  --md-accent-fg-color: #ffde59;
+  --md-accent-fg-color--transparent: rgba(255, 222, 89, 0.15);
+  --md-accent-bg-color: #000000;
+  --md-typeset-color: #ffffff;
+  --md-typeset-a-color: #5ad1ff;           /* links: 12.6:1 */
+  --md-code-bg-color: #111111;
+  --md-code-fg-color: #f6f6f6;
+  /* Syntax colours of its own: the light theme's are dark grey on black. */
+  --md-code-hl-number-color: #ffab70;
+  --md-code-hl-special-color: #ff9bd2;
+  --md-code-hl-function-color: #d2a8ff;
+  --md-code-hl-constant-color: #79c0ff;
+  --md-code-hl-keyword-color: #ff8f87;
+  --md-code-hl-string-color: #a5d6ff;
+  --md-code-hl-name-color: #ffffff;
+  --md-code-hl-operator-color: #ffffff;
+  --md-code-hl-punctuation-color: #e6e6e6;
+  --md-code-hl-comment-color: #c9c9c9;
+  --md-code-hl-generic-color: #e6e6e6;
+  --md-code-hl-variable-color: #ffc380;
+  --md-shadow-z1: none;
+  --md-shadow-z2: none;
+  /* Material declares these on :root in terms of the light colours, and a
+     custom property is resolved where it is declared, so redefining the
+     colours above does not reach them: notes and tips stayed white boxes.
+     Material's own dark scheme restates them the same way. */
+  --md-admonition-fg-color: var(--md-default-fg-color);
+  --md-admonition-bg-color: var(--md-default-bg-color);
+  --md-typeset-kbd-color: #1f1f1f;
+  --md-typeset-kbd-accent-color: #2b2b2b;
+  --md-typeset-kbd-border-color: #ffffff;
+  --md-typeset-mark-color: rgba(255, 222, 89, 0.35);
+  --md-typeset-table-color: rgba(255, 255, 255, 0.35);
+  --md-typeset-table-color--light: rgba(255, 255, 255, 0.06);
+  --md-footer-bg-color: #000000;
+  --md-footer-bg-color--dark: #141414;
+  --ddi-brand: #ffde59;
+  --ddi-brand-text: #5ad1ff;
+  --ddi-heading-color: #ffffff;
+  --ddi-card-text: #ffffff;
+  --ddi-focus-color: #ffde59;
+}
+
+[data-md-color-scheme="high-contrast"] .md-header,
+[data-md-color-scheme="high-contrast"] .md-tabs {
+  border-bottom: 1px solid var(--md-default-fg-color);
+}
+
+/* ---------------------------------------------------------------------------
+   Shared rules
+   --------------------------------------------------------------------------- */
+
+.md-typeset h1 {
+  color: var(--ddi-heading-color);
+  font-weight: 600;
+}
+
+.md-typeset a:hover,
+.md-typeset a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Neutral code: a light fill and no border; the syntax colours mark code. */
+.md-typeset code,
+.md-typeset kbd {
+  border: none;
+}
+
+.md-typeset .md-button--primary {
+  background-color: var(--ddi-brand);
+  border-color: var(--ddi-brand);
+  color: #ffffff;
+}
+
+/* A plain button (a download link in a page) is an outline in the link
+   colour. Material draws it in the header colour, which in dark mode is a
+   navy that vanishes on the page. Its hover keeps Material's accent fill,
+   with the text colour that reads on it. The landing page's secondary
+   buttons have rules of their own. */
+.md-typeset .md-button:not(.md-button--primary, .md-button--secondary) {
+  border-color: var(--md-typeset-a-color);
+  color: var(--md-typeset-a-color);
+}
+
+.md-typeset
+  .md-button:not(.md-button--primary, .md-button--secondary):is(:hover, :focus) {
+  background-color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color);
+}
+
+[data-md-color-scheme="high-contrast"] .md-typeset .md-button,
+[data-md-color-scheme="high-contrast"] .md-typeset .md-button--primary {
+  background-color: var(--ddi-brand);
+  border-color: var(--ddi-brand);
+  color: #000000;
+}
+
+[data-md-color-scheme="high-contrast"] .md-typeset .md-button:hover,
+[data-md-color-scheme="high-contrast"] .md-typeset .md-button:focus {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+}
+
+/* Note and info boxes in the brand blue rather than Material's blue and cyan,
+   so admonitions add no colours of their own. */
+.md-typeset :is(.admonition, details):is(.note, .info) {
+  border-color: var(--ddi-brand-text, var(--ddi-brand));
+}
+
+.md-typeset :is(.note, .info) > :is(.admonition-title, summary) {
+  background-color: color-mix(
+    in srgb,
+    var(--ddi-brand-text, var(--ddi-brand)) 10%,
+    transparent
+  );
+}
+
+.md-typeset :is(.note, .info) > :is(.admonition-title, summary)::before {
+  background-color: var(--ddi-brand-text, var(--ddi-brand));
+}
