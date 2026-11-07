@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1216,6 +1218,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -1574,14 +1587,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1719,6 +1760,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1779,6 +1826,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1919,6 +1994,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2740,6 +2871,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2815,19 +2957,26 @@
 
 <h1 id="module-3-create-your-first-ddi-study">Module 3: Create your first DDI study<a class="headerlink" href="#module-3-create-your-first-ddi-study" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Create a new DDI study using <code>ddi.new_study()</code>.</li>
-<li>Add survey questions using <code>doc.add_question()</code>.</li>
-<li>List questions with <code>doc.questions</code>.</li>
-<li>Save the study to an XML file using <code>doc.save()</code>.</li>
-<li>Check your work with <code>doc.validate()</code> and <code>doc.lint()</code>.</li>
+<li><strong>O1.</strong> Write a script that creates a study with <code>ddi.new_study()</code> and
+  adds three questions with <code>doc.add_question()</code>.</li>
+<li><strong>O2.</strong> Count the questions in a study with <code>len(doc.questions)</code> and
+  print each question's identifier.</li>
+<li><strong>O3.</strong> Save the study to an XML file with <code>doc.save()</code> and find a
+  question's text in the saved file.</li>
+<li><strong>O4.</strong> Add a French version of an existing question's text and label,
+  so that one question holds both languages.</li>
+<li><strong>O5.</strong> Check a study with <code>doc.validate()</code> and <code>doc.lint()</code>, and fix
+  the lint warnings until both report nothing.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> <a href="../module-02-setup/">Module 2: Set up your Python environment</a></p>
+<p><strong>Prerequisites:</strong> <a href="../module-02-setup/">Module 2</a></p>
 <p><strong>Time:</strong> 30 min self-paced / 45 min instructor-led.</p>
-<p><strong>API taught:</strong> <code>ddi.new_study()</code>, <code>doc.add_question()</code>, <code>doc.questions</code>,
-<code>doc.save()</code>, <code>doc.validate()</code>, <code>doc.lint()</code></p>
+<p><strong>New in this module:</strong> <code>ddi.new_study()</code>, <code>doc.add_question()</code>,
+<code>doc.questions</code>, <code>doc.save()</code>, <code>InternationalString</code>, <code>doc.validate()</code>,
+<code>doc.lint()</code></p>
 <hr />
 <h2 id="1-what-is-a-study-in-ddi">1. What is a "study" in DDI?<a class="headerlink" href="#1-what-is-a-study-in-ddi" title="Permanent link">&para;</a></h2>
 <p>A <strong>study</strong> is a container that holds all the information about one survey or
@@ -2853,20 +3002,27 @@ and variables) to it.</p>
 <li><code>ddi.new_study()</code> creates a new DDI document. It returns a <strong>Document</strong>
   object, which we store in the variable called <code>doc</code>.</li>
 <li><code>title=</code> sets the name of the study.</li>
-<li><code>agency=</code> sets the organization responsible for the study.</li>
+<li><code>agency=</code> sets the organization responsible for the study. It is required:
+  without it, <code>ddi.new_study()</code> raises a <code>TypeError</code>.</li>
 </ul>
 <hr />
 <h2 id="3-what-is-an-agency">3. What is an "agency"?<a class="headerlink" href="#3-what-is-an-agency" title="Permanent link">&para;</a></h2>
 <p>An <strong>agency</strong> is the organization responsible for the study. It could be a
 university, a government department, a research institute, or any group that
-runs the survey. Examples:</p>
+runs the survey. Its <strong>agency ID</strong> goes into every item it creates, beside the
+item's own identifier and version, so that together they name the item.</p>
 <ul>
-<li><code>"university.edu"</code>: a university</li>
-<li><code>"statistics.gc.ca"</code>: Statistics Canada</li>
-<li><code>"worldbank.org"</code>: The World Bank</li>
+<li><strong>Registered.</strong> So that no two organizations share an agency ID, each
+  registers its own with the
+  <a href="https://ddialliance.org/ddi-agency-id-registry">DDI Agency ID Registry</a>.
+  It can then add sub-agencies after a dot, for example one per division.</li>
+<li><strong>Format.</strong> Letters, digits and hyphens, in parts joined by dots, each part
+  at most 63 characters. <code>doc.validate()</code> checks the format, not whether the
+  ID is registered.</li>
+<li><strong>In this course.</strong> IDs such as <code>"university.edu"</code> and
+  <code>"stats.example.org"</code> are made up. In a real document, use the ID your
+  organization registered.</li>
 </ul>
-<p>The agency value is usually written as a domain name. It helps identify who
-created the document.</p>
 <hr />
 <h2 id="4-add-questions">4. Add questions<a class="headerlink" href="#4-add-questions" title="Permanent link">&para;</a></h2>
 <p>A survey asks questions. In DDI, each question is stored as a separate item.
@@ -2893,8 +3049,10 @@ question's <code>question_texts</code> list:</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">q1</span><span class="o">.</span><span class="n">question_texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Quel est votre âge ?"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"fr"</span><span class="p">))</span>
 </span></code></pre></div>
-<p>Now <code>q1</code> contains the question text in both English and French. When someone
-opens the DDI file, they can see both versions.</p>
+<p>An <code>InternationalString</code> is a piece of text together with its language code
+(<code>"en"</code>, <code>"fr"</code>, and so on). Now <code>q1</code> contains the question text in both
+English and French. When someone opens the DDI file, they can see both
+versions.</p>
 <p>The <code>lang=</code> argument works on all <code>add_*</code> methods: <code>add_variable()</code>,
 <code>add_concept()</code>, <code>add_universe()</code>, and <code>add_code_list()</code>. You can also append
 translations to their <code>names</code> list the same way. Module 8 shows a complete
@@ -2975,9 +3133,13 @@ full question text. Add a label to each question and check again:</p>
 <p>Expected output:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Lint findings: 0
 </span></code></pre></div>
+<p>A label can have more than one language, just like the question text. Append
+a French label to the same <code>labels</code> list:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">q1</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Âge"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"fr"</span><span class="p">))</span>
+</span></code></pre></div>
 <p>When you add a new item, you can give it a label straight away. Every <code>add_*</code>
 method accepts <code>label=</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Do you exercise every week?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Weekly exercise"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Do you exercise every week?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Weekly exercise"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Warnings do not make a document invalid; schema errors do. Check your work
 like this at the end of every module. <a href="../module-07-cli-validation/">Module 7</a>
@@ -2990,133 +3152,222 @@ runs the same checks from the command line.</p>
 Student Well-Being Survey with three questions about age, health, and
 sleep. You will use <code>ddi-l</code> to create the documentation.</p>
 </div>
-<p><strong>Exercise 1.</strong> Create a study titled <code>"Student Well-Being Survey"</code> with
-agency <code>"university.edu"</code>. Add three questions:</p>
+<p><strong>Exercise 1 (O1, O2).</strong> Create a study titled <code>"Student Well-Being Survey"</code>
+with agency <code>"university.edu"</code>. Add three questions:</p>
 <ol>
 <li><code>"What is your age?"</code></li>
 <li><code>"How would you rate your health?"</code></li>
 <li><code>"How many hours do you sleep per night?"</code></li>
 </ol>
-<p>Save the study as <code>well-being.xml</code>. Print the question count.</p>
-<p>Expected output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Questions: 3
+<p>Print the question count, then the identifier of each question. Save the
+study as <code>well-being.xml</code>.</p>
+<p>Expected output: <code>Questions: 3</code>, then three identifiers, one per line (yours
+will differ).</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Questions: 3
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>4f0c9a5e-...
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>9b1d2e7c-...
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>c3a8f610-...
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Student Well-Being Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"university.edu"</span><span class="p">)</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">)</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">)</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Student Well-Being Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"university.edu"</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">)</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 3</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">:</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
-<p><strong>Exercise 2.</strong> Open <code>well-being.xml</code> in a text editor. Can you find the text
-of your first question inside the XML? Write down the XML tag that wraps the
-question text.</p>
+<p><strong>Exercise 2 (O3).</strong> Open <code>well-being.xml</code>, the file you saved in
+Exercise 1, in a text editor. Find the text of your first question inside the
+XML. Write down the XML tag that wraps the question text.</p>
+<p>Expected output: the name of one XML tag.</p>
 <details class="success">
 <summary>Answer</summary>
 <p>The question text sits in a <code>&lt;d:Text&gt;</code> element, inside <code>&lt;d:LiteralText&gt;</code>
 inside <code>&lt;d:QuestionText&gt;</code>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">&lt;d:Text</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="w"> </span><span class="na">isPlainText=</span><span class="s">"true"</span><span class="nt">&gt;</span>What<span class="w"> </span>is<span class="w"> </span>your<span class="w"> </span>age?<span class="nt">&lt;/d:Text&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nt">&lt;d:Text</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="w"> </span><span class="na">isPlainText=</span><span class="s">"true"</span><span class="nt">&gt;</span>What<span class="w"> </span>is<span class="w"> </span>your<span class="w"> </span>age?<span class="nt">&lt;/d:Text&gt;</span>
 </span></code></pre></div>
 </details>
-<p><strong>Exercise 3.</strong> Add a French translation to the first question. Then save
-the file again and check the XML for both languages.</p>
+<p><strong>Exercise 3 (O5).</strong> Continue from Exercise 1. Check the study with
+<code>doc.validate()</code> and <code>doc.lint()</code>, and print how many problems each reports.
+Then give each question an English label (<code>"Age"</code>, <code>"Self-rated health"</code>,
+<code>"Hours of sleep"</code>), check again, and save.</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Schema problems: 0
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Lint findings: 3
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Lint findings: 0
+</span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">InternationalString</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">q1</span><span class="o">.</span><span class="n">question_texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Quel est votre âge ?"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"fr"</span><span class="p">))</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">InternationalString</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Schema problems: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Schema problems: 0</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lint findings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">lint</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Lint findings: 3</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="n">q1</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"en"</span><span class="p">))</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">q2</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Self-rated health"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"en"</span><span class="p">))</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="n">q3</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Hours of sleep"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"en"</span><span class="p">))</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lint findings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">lint</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Lint findings: 0</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Open the XML. You should see both <code>xml:lang="en"</code> and <code>xml:lang="fr"</code> entries
-for the first question.</p>
+<p>The three warnings were "Maintainable element is missing a label.", one
+per question. A label fixes each one.</p>
+</details>
+<p><strong>Exercise 4 (O4).</strong> Add French to the first question: the text
+<code>"Quel est votre âge ?"</code> and the label <code>"Âge"</code>. Do not create a new question.
+Print the question count and the lint count, save the file again, and check
+the XML for both languages.</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Questions: 3
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Lint findings: 0
+</span></code></pre></div>
+<p>In the XML, the first question has <code>xml:lang="en"</code> and <code>xml:lang="fr"</code>
+entries for both its label and its text.</p>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">q1</span><span class="o">.</span><span class="n">question_texts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Quel est votre âge ?"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"fr"</span><span class="p">))</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">q1</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Âge"</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">"fr"</span><span class="p">))</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 3</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Lint findings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">lint</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Lint findings: 0</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The count stays at 3 because both translations belong to <code>q1</code>. In the
+XML, the first question now reads:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">&lt;r:Label&gt;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&lt;r:Content</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>Age<span class="nt">&lt;/r:Content&gt;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&lt;r:Content</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"fr"</span><span class="nt">&gt;</span>Âge<span class="nt">&lt;/r:Content&gt;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">&lt;/r:Label&gt;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nt">&lt;d:QuestionText&gt;</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span><span class="nt">&lt;d:LiteralText&gt;</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="nt">&lt;d:Text</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="w"> </span><span class="na">isPlainText=</span><span class="s">"true"</span><span class="nt">&gt;</span>What<span class="w"> </span>is<span class="w"> </span>your<span class="w"> </span>age?<span class="nt">&lt;/d:Text&gt;</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nt">&lt;/d:LiteralText&gt;</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span><span class="nt">&lt;d:LiteralText&gt;</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">    </span><span class="nt">&lt;d:Text</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"fr"</span><span class="nt">&gt;</span>Quel<span class="w"> </span>est<span class="w"> </span>votre<span class="w"> </span>âge<span class="w"> </span>?<span class="nt">&lt;/d:Text&gt;</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="nt">&lt;/d:LiteralText&gt;</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="nt">&lt;/d:QuestionText&gt;</span>
+</span></code></pre></div>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1: What does ddi.new_study() return?</summary>
-<p><strong>A.</strong> A string of XML text.</p>
-<p><strong>B.</strong> A Document object that represents the study.</p>
-<p><strong>C.</strong> A list of questions.</p>
-<p><strong>D.</strong> A CSV file.</p>
+<summary>Question 1 (O1): You run <code>doc = ddi.new_study(title='Sleep Survey')</code> and get a TypeError. Why?</summary>
+<p><strong>A.</strong> The title is too short.</p>
+<p><strong>B.</strong> <code>agency=</code> is missing. Every study needs the organization
+responsible for it.</p>
+<p><strong>C.</strong> You must import <code>InternationalString</code> first.</p>
+<p><strong>D.</strong> <code>new_study()</code> takes no arguments.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>ddi.new_study()</code> returns a Document object. You use this
-object to add questions, variables, and other items to the study.</p>
+<p><strong>B.</strong> <code>ddi.new_study()</code> requires both <code>title=</code> and <code>agency=</code>. The
+error message says so: "missing 1 required keyword-only argument:
+'agency'".</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2: What does doc.add_question() do?</summary>
-<p><strong>A.</strong> It sends a question to survey respondents.</p>
-<p><strong>B.</strong> It adds a question to the study and returns a question object.</p>
-<p><strong>C.</strong> It prints a question on the screen.</p>
-<p><strong>D.</strong> It deletes a question from the study.</p>
+<summary>Question 2 (O1): After <code>q1 = doc.add_question(text='What is your age?')</code>, what is <code>q1</code>?</summary>
+<p><strong>A.</strong> The string <code>"What is your age?"</code>.</p>
+<p><strong>B.</strong> The number of questions in the study.</p>
+<p><strong>C.</strong> A question object stored in the study, which you can use later,
+for example to translate it or to link a variable to it.</p>
+<p><strong>D.</strong> The XML text of the question.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>doc.add_question()</code> adds a new question item to the DDI
-study. It returns the question object so you can use it later.</p>
+<p><strong>C.</strong> <code>doc.add_question()</code> adds a question item to the study and
+returns that question object. Keeping it in a variable lets you work
+with it later.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3: What does doc.save() do?</summary>
-<p><strong>A.</strong> It uploads the file to the internet.</p>
-<p><strong>B.</strong> It prints the document on paper.</p>
-<p><strong>C.</strong> It writes the study to an XML file on your computer.</p>
-<p><strong>D.</strong> It validates the document.</p>
+<summary>Question 3 (O2): A study has three questions. You add a fourth with <code>doc.add_question()</code>, then run <code>print(len(doc.questions))</code>. What is printed?</summary>
+<p><strong>A.</strong> <code>4</code></p>
+<p><strong>B.</strong> <code>3</code></p>
+<p><strong>C.</strong> <code>1</code></p>
+<p><strong>D.</strong> An error, because <code>doc.questions</code> is not a list.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> <code>doc.save("filename.xml")</code> writes the DDI document to an XML
-file in your current folder.</p>
+<p><strong>A.</strong> <code>doc.questions</code> is the list of every question in the study,
+and <code>len()</code> counts them: three plus the new one.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 4: How do you add a French translation to a question?</summary>
-<p><strong>A.</strong> <code>doc.add_question(text="...", lang="fr")</code>. This creates a new,
-separate question in French.</p>
-<p><strong>B.</strong> Append an <code>InternationalString</code> with <code>lang="fr"</code> to the question's
-<code>question_texts</code> list.</p>
-<p><strong>C.</strong> Change the question's language with <code>q.lang = "fr"</code>.</p>
-<p><strong>D.</strong> You cannot store more than one language in DDI.</p>
+<summary>Question 4 (O3): You open the file written by <code>doc.save('well-being.xml')</code>. Where do you find the text of your first question?</summary>
+<p><strong>A.</strong> In a <code>&lt;d:Text&gt;</code> element inside <code>&lt;d:QuestionText&gt;</code>.</p>
+<p><strong>B.</strong> Only in the file name.</p>
+<p><strong>C.</strong> In the <code>&lt;r:Agency&gt;</code> element.</p>
+<p><strong>D.</strong> Nowhere: <code>save()</code> writes only the study title.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> To add a translation, append an <code>InternationalString</code> with the
-new language to the question's <code>question_texts</code> list. Both language
-versions are stored in the same question item. Option A would create
-a brand-new question, not a translation of an existing one.</p>
+<p><strong>A.</strong> <code>doc.save()</code> writes the whole study, and each question's text
+sits in <code>&lt;d:Text&gt;</code>, inside <code>&lt;d:LiteralText&gt;</code>, inside
+<code>&lt;d:QuestionText&gt;</code>.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 5: How do you count the questions in a study?</summary>
-<p><strong>A.</strong> <code>doc.count_questions()</code></p>
-<p><strong>B.</strong> <code>len(doc.questions)</code></p>
-<p><strong>C.</strong> <code>doc.questions.size()</code></p>
-<p><strong>D.</strong> <code>print(doc)</code></p>
+<summary>Question 5 (O4): You want the first question, <code>q1</code>, in both English and French. Which line does it?</summary>
+<p><strong>A.</strong> <code>doc.add_question(text="Quel est votre âge ?", lang="fr")</code></p>
+<p><strong>B.</strong> <code>q1.lang = "fr"</code></p>
+<p><strong>C.</strong> <code>q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))</code></p>
+<p><strong>D.</strong> None: DDI cannot store more than one language in one question.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>doc.questions</code> gives you the list of questions, and <code>len()</code>
-counts how many items are in that list.</p>
+<p><strong>C.</strong> Appending an <code>InternationalString</code> with the new language
+stores both versions in the same question item. Option A creates a
+brand-new, separate question, not a translation of <code>q1</code>.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 6: doc.validate() returns an empty list, but doc.lint() reports warnings. Is the document valid DDI?</summary>
+<summary>Question 6 (O5): <code>doc.validate()</code> returns an empty list, but <code>doc.lint()</code> reports warnings. Is the document valid DDI?</summary>
 <p><strong>A.</strong> No. Any finding makes a document invalid.</p>
-<p><strong>B.</strong> Yes. Validation checks the schema; lint warnings point to quality
+<p><strong>B.</strong> Only after you save it.</p>
+<p><strong>C.</strong> It depends on the language of the questions.</p>
+<p><strong>D.</strong> Yes. Validation checks the schema; lint warnings point to quality
 problems, such as a missing label, that the schema allows.</p>
-<p><strong>C.</strong> Only after you save it.</p>
-<p><strong>D.</strong> It depends on the language of the questions.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> An empty list from <code>doc.validate()</code> means the document follows
+<p><strong>D.</strong> An empty list from <code>doc.validate()</code> means the document follows
 the DDI schema. Lint warnings are worth fixing, but they do not make
 the document invalid.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 7 (O5): <code>doc.lint()</code> reports 'Maintainable element is missing a label.' once for each of your three questions. Which change clears the warnings?</summary>
+<p><strong>A.</strong> Save the document again with <code>doc.save()</code>.</p>
+<p><strong>B.</strong> Give each question a label, for example
+<code>q1.labels.append(InternationalString(text="Age", lang="en"))</code>, or pass
+<code>label=</code> when you call <code>doc.add_question()</code>.</p>
+<p><strong>C.</strong> Delete the questions and add them again with the same code.</p>
+<p><strong>D.</strong> Call <code>doc.validate()</code> before <code>doc.lint()</code>.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>B.</strong> The warning names the problem: the questions have no label.
+Saving or validating does not change the document, and adding the
+questions again with the same code brings the same warnings back.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write a script that creates a study with <code>ddi.new_study()</code> and
+  adds three questions with <code>doc.add_question()</code>. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can count the questions with <code>len(doc.questions)</code> and print each
+  question's identifier. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can save the study with <code>doc.save()</code> and find a question's text in
+  the XML file. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can add a French version of an existing question's text and label
+  without creating a new question. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can check a study with <code>doc.validate()</code> and <code>doc.lint()</code> and fix the
+  lint warnings until both report nothing. (O5)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Instructor notes</p>
@@ -3128,11 +3379,16 @@ the document invalid.</p>
 <li><strong>Common mistake:</strong> Learners often forget the quotes around strings.
   For example, they type <code>text=What is your age?</code> instead of
   <code>text="What is your age?"</code>. Watch for this during exercises.</li>
+<li><strong>Common mistake:</strong> In Exercise 4, some learners call
+  <code>doc.add_question(..., lang="fr")</code>. Ask them to print
+  <code>len(doc.questions)</code>: a count of 4 shows they created a second
+  question instead of translating the first.</li>
 <li><strong>Explore the XML together:</strong> Open the saved file on screen and scroll
   through it. Point out the question text inside the tags. Emphasize that
   learners did not need to write any of this XML by hand.</li>
 <li><strong>Extension activity:</strong> Ask fast finishers to add two more questions of
-  their own and save the file again.</li>
+  their own, each with a <code>label=</code>, then check with <code>doc.lint()</code> and save
+  the file again.</li>
 </ul>
 </div>
 
@@ -3213,6 +3469,10 @@ the document invalid.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

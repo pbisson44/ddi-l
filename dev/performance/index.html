@@ -920,6 +920,8 @@
       
         
       
+        
+      
     
     
     
@@ -1401,14 +1403,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-16-capstone/" class="md-nav__link">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1546,6 +1576,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1606,6 +1642,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1746,6 +1810,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2381,6 +2501,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-xml-backends-on-a-large-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The XML backends on a large export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-to-expect" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2396,6 +2527,17 @@
     <span class="md-ellipsis">
       
         Large documents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lint-and-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lint and conformance
       
     </span>
   </a>
@@ -2570,6 +2712,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-xml-backends-on-a-large-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The XML backends on a large export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-to-expect" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2585,6 +2738,17 @@
     <span class="md-ellipsis">
       
         Large documents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lint-and-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lint and conformance
       
     </span>
   </a>
@@ -2766,8 +2930,80 @@ which confirms a valid document in milliseconds. Only when that check fails
 does <a href="https://pypi.org/project/xmlschema/">xmlschema</a> run, to produce the
 detailed issues, so the reported errors are the same on both backends. Without
 lxml every validation runs on xmlschema, which is pure Python and dominates
-the timings above. <code>schema_loader.set_validation_backend("python")</code> turns the
-libxml2 check off.</p>
+the timings above. <code>schema_loader.validate(..., backend="python")</code> turns the
+libxml2 check off for one call, and
+<code>schema_loader.set_validation_backend("python")</code> for the whole application.</p>
+<h2 id="the-xml-backends-on-a-large-export">The XML backends on a large export<a class="headerlink" href="#the-xml-backends-on-a-large-export" title="Permanent link">&para;</a></h2>
+<p>A 9 MB Colectica export (112,000 elements), Python 3.13, best of five runs on
+one machine. <code>benchmarks/backends_bench.py</code> measures the same steps on any
+file, on the backend <code>DDI_L_XML_BACKEND</code> names.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>native</th>
+<th>lxml</th>
+<th>stdlib</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parse</td>
+<td>0.05 s (185 MB/s)</td>
+<td>0.07 s (124 MB/s)</td>
+<td>0.22 s (41 MB/s)</td>
+</tr>
+<tr>
+<td><code>read_ddi</code></td>
+<td>0.13 s</td>
+<td>0.33 s</td>
+<td>0.29 s</td>
+</tr>
+<tr>
+<td>First <code>write_ddi</code> (builds the source index)</td>
+<td>0.23 s</td>
+<td>1.4 s</td>
+<td>1.7 s</td>
+</tr>
+<tr>
+<td><code>write_ddi</code> again, unchanged</td>
+<td>0.01 s</td>
+<td>0.28 s</td>
+<td>0.23 s</td>
+</tr>
+<tr>
+<td><code>write_ddi</code> after changing one attribute</td>
+<td>0.04 s</td>
+<td>0.31 s</td>
+<td>0.28 s</td>
+</tr>
+<tr>
+<td><code>write_ddi(layout="default")</code></td>
+<td>0.80 s</td>
+<td>0.26 s</td>
+<td>0.76 s</td>
+</tr>
+<tr>
+<td><code>colectica-questionnaire</code> profile</td>
+<td>0.67 s</td>
+<td>1.74 s</td>
+<td>0.62 s</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Parsing is not bound by memory bandwidth.</strong> Copying the same bytes takes
+  1 ms (6.5 GB/s); most of the native parse is making the tree's 112,000
+  nodes. Text that needed no decoding stays a range of the source bytes.</li>
+<li><strong>Writing back costs what changed.</strong> The native tree keeps each element's
+  digest and clears it only on the path from a change to the root, so an
+  unchanged document is written as its bytes, and an edited one hashes only
+  that path.</li>
+<li><strong>A full layout is Python code</strong> on the native and standard library
+  backends (the indentation, the namespace clean-up and ElementTree's
+  writer), so a new document, or one written with an explicit <code>layout</code>, is
+  written about three times faster by lxml.</li>
+</ul>
 <h2 id="what-to-expect">What to expect<a class="headerlink" href="#what-to-expect" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Schemas load once per version.</strong> libxml2 compiles a version's XSDs in
@@ -2795,6 +3031,36 @@ turned into an object, so memory stays close to the size of one item (about
 190 KiB peak for the 5,000-variable study above). <code>iterparse_ddi</code> streams any
 maintainable type; request only the types you need, because an element is kept
 until the outermost requested element around it has been built.</p>
+<h2 id="lint-and-conformance">Lint and conformance<a class="headerlink" href="#lint-and-conformance" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>One run builds each index once.</strong> The rules of one <code>run_lint</code> or
+  <code>run_profile</code> call, and the checks of one <code>conform</code> call, share what they
+  build from the document: its items and their versions, the reference
+  resolutions, the bindings and the parsed conditions. The
+  <code>colectica-questionnaire</code> profile on a 9 MB Colectica export (4,478 items)
+  takes 2.0 s; it took 6.1 s when each rule built its own.</li>
+<li><strong>A later run reads only what changed</strong> (native backend). Each item's
+  facts and per-item findings are kept under its content digest, so linting
+  the same document again after an edit reads only the edited items. On
+  that export the profile takes 0.8 s on a first run and 0.13 s after an
+  edit. The rules that follow the whole flow still walk it, which is most of
+  what is left.</li>
+<li><strong>Paths are counted, not walked.</strong> A flow whose pages rejoin after each of
+  n gates has 2^n paths from the instrument. <code>colectica.flow.read-before-computed</code>
+  and <code>conform</code> reach each construct once per state that can change what they
+  report, so 20 chained gates (a million paths) take milliseconds; 16 took
+  9.1 s in <code>conform</code>. A flow that loops back on itself is still walked path
+  by path.</li>
+<li><strong>Which constructs a respondent reaches is solved once per flow.</strong>
+  <code>colectica.flow.unreachable</code> gives the solver one variable per construct,
+  however many paths lead to it, settles what it can without it, and marks
+  every construct each respondent it finds reaches. 40 chained gates
+  (2^40 paths) take 0.16 s; a random flow of 300 constructs, 0.17 s.</li>
+<li><strong>Exact gate comparison costs about 5 ms a pair.</strong> With the <code>logic</code> extra,
+  <code>conform</code> decides a pair of gates only when their normal forms differ, and
+  each pair once, so the Pet fixture compares in about 8 ms with the solver or
+  without it. Twenty chained gates take 33 ms with it and 16 ms without.</li>
+</ul>
 <h2 id="http-api">HTTP API<a class="headerlink" href="#http-api" title="Permanent link">&para;</a></h2>
 <p><code>ddi serve</code> processes at most <code>--max-jobs</code> documents at once (default: the
 number of CPUs) and answers <code>503</code> with <code>Retry-After</code> beyond that. Validation
@@ -2804,6 +3070,8 @@ Scale out with more processes behind a load balancer.</p>
 <p>The <code>benchmarks/</code> directory in the repository contains reproducible scripts:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.iterparse_bench
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.validation_report_bench
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>benchmarks/colectica_profile_bench.py<span class="w"> </span>EXPORT.xml
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">DDI_L_XML_BACKEND</span><span class="o">=</span>native<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>benchmarks/backends_bench.py<span class="w"> </span>EXPORT.xml
 </span></code></pre></div>
 <ul>
 <li><a href="schema_conversion/">Schema conversion benchmark</a></li>
@@ -2886,6 +3154,10 @@ Scale out with more processes behind a load balancer.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

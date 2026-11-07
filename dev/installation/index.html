@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Install ddi-l from PyPI with pip, uv or Poetry, add the lxml and HTTP API extras, or set up a development checkout.">
+        <meta name="description" content="Install ddi-l from PyPI with pip, uv or Poetry, choose the extras you need, or set up a development checkout.">
       
       
       
@@ -918,10 +918,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
+  <a href="#what-pip-install-ddi-l-gives-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional dependencies
+        What pip install ddi-l gives you
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras-when-you-need-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extras: when you need one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xml-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XML backends
       
     </span>
   </a>
@@ -982,6 +1004,8 @@
       
         
           
+        
+      
         
       
         
@@ -1503,14 +1527,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-16-capstone/" class="md-nav__link">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1648,6 +1700,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1708,6 +1766,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1848,6 +1934,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2561,10 +2703,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
+  <a href="#what-pip-install-ddi-l-gives-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional dependencies
+        What pip install ddi-l gives you
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extras-when-you-need-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extras: when you need one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xml-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XML backends
       
     </span>
   </a>
@@ -2702,28 +2866,64 @@
   installed version.</li>
 </ul>
 </div>
-<h3 id="optional-dependencies">Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Permanent link">&para;</a></h3>
+<h3 id="what-pip-install-ddi-l-gives-you">What <code>pip install ddi-l</code> gives you<a class="headerlink" href="#what-pip-install-ddi-l-gives-you" title="Permanent link">&para;</a></h3>
+<p><code>pip install ddi-l</code> reads, writes, validates and lints DDI documents with
+nothing else installed. It brings the native XML core, the <code>ddi-l-native</code>
+package at the same version, wherever a compiled wheel exists: Linux (x86_64
+and aarch64), macOS and Windows (x64), on CPython 3.11 and later. Anywhere
+else pip installs a pure-Python stand-in with the same name, and <code>ddi-l</code>
+works the same, more slowly. pip never compiles anything.</p>
+<h3 id="extras-when-you-need-one">Extras: when you need one<a class="headerlink" href="#extras-when-you-need-one" title="Permanent link">&para;</a></h3>
+<p>An extra adds a feature or a backend most people do not need. Install one when
+your work matches its "Install it when" column; combine them as
+<code>pip install 'ddi-l[spec,logic]'</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Need</th>
-<th>Command</th>
-<th>What it unlocks</th>
+<th>Extra</th>
+<th>Install it when</th>
+<th>What it adds</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Accelerated XML parsing</td>
-<td><code>pip install 'ddi-l[full]'</code></td>
-<td>Enables the <code>lxml</code> backend: faster parsing, and near-instant validation of valid documents.</td>
+<td><code>spec</code></td>
+<td>You check questionnaires against a spec: <code>ddi spec</code>, <code>ddi conform</code>, or a YAML or JSON spec read in Python.</td>
+<td>PyYAML and jsonschema; see <a href="../spec-conformance/">Check a questionnaire against a spec</a>. Without it, <code>ddi spec</code> and <code>ddi conform</code> say what to install.</td>
 </tr>
 <tr>
-<td>HTTP API</td>
-<td><code>pip install 'ddi-l[server]'</code></td>
-<td>Adds the Litestar service behind <code>ddi serve</code>; see <a href="../server/">HTTP API</a>.</td>
+<td><code>logic</code></td>
+<td>You want gates compared exactly: <code>equivalent()</code> and <code>ddi conform</code> then decide whether two gates hold for the same respondents and name a respondent who tells them apart, and lint reports constructs no respondent reaches.</td>
+<td>The Z3 solver (MIT, about 57 MB installed); see <a href="../spec-conformance/">Check a questionnaire against a spec</a>. Without it, gates are compared as written.</td>
+</tr>
+<tr>
+<td><code>server</code></td>
+<td>You run the HTTP API, <code>ddi serve</code>.</td>
+<td>Litestar and uvicorn; see <a href="../server/">HTTP API</a>. Without it, <code>ddi serve</code> says what to install.</td>
+</tr>
+<tr>
+<td><code>full</code></td>
+<td>Your platform has no compiled native core (Alpine Linux, Windows on ARM, PyPy, free-threaded Python), or you mostly write new documents laid out from scratch (<code>layout="default"</code>), which lxml writes faster.</td>
+<td>lxml, used when the native core is not there; set <code>DDI_L_XML_BACKEND=lxml</code> to use it anyway.</td>
 </tr>
 </tbody>
 </table>
+<h3 id="xml-backends">XML backends<a class="headerlink" href="#xml-backends" title="Permanent link">&para;</a></h3>
+<p><code>ddi-l</code> reads and writes XML with the first of these that is installed:</p>
+<ol>
+<li><code>native</code>, from <code>ddi-l-native</code> where a compiled wheel exists;</li>
+<li><code>lxml</code>, from the <code>full</code> extra;</li>
+<li>the standard library, always there.</li>
+</ol>
+<p>Each gives the same documents, the same validation issues and the same lint
+findings. Set the <code>DDI_L_XML_BACKEND</code> environment variable to <code>native</code>,
+<code>lxml</code> or <code>stdlib</code> to choose one; it is read once, when <code>ddi_l</code> is
+imported. <code>ddi_l._etree.BACKEND</code> names the backend in use.</p>
+<p>The <code>native</code> backend also validates against the schema in one pass; see
+<a href="../validation/#how-schema-validation-runs">how schema validation runs</a>. A
+document laid out afresh (a new document, or <code>layout="default"</code>) is written
+by Python code on the <code>native</code> and standard library backends, and is slower
+to write there than with lxml.</p>
 <div class="admonition info">
 <p class="admonition-title">Schemas are already included</p>
 <p>The DDI 3.1, 3.2, and 3.3 XML Schemas ship inside the package, so
@@ -2734,29 +2934,39 @@ and no network access.</p>
 <p>Developers contributing to <code>ddi-l</code> should install from a local checkout:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/pbisson44/ddi-l.git
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>ddi-l
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>./native/fallback
 </span></code></pre></div>
+<p><code>./native/fallback</code> is <code>ddi-l-native</code>'s pure-Python stand-in. pip does not read
+<code>uv.lock</code>, and a version of <code>ddi-l</code> not released yet has no <code>ddi-l-native</code> on
+PyPI to install.</p>
 <p>Install the development toolchain. The project is managed with
 <a href="https://docs.astral.sh/uv/">uv</a>, and <code>uv.lock</code> pins every dependency version:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w">              </span><span class="c1"># Runtime + development dependencies</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>--extra<span class="w"> </span>full<span class="w"> </span><span class="c1"># ...plus the optional lxml backend</span>
 </span></code></pre></div>
 <p>Note that <code>full</code> is an <strong>extra</strong>, not a dependency group: <code>--group full</code>
-fails.</p>
+fails. In a checkout, <code>ddi-l-native</code> is its pure-Python stand-in
+(<code>native/fallback/</code>), so no one needs Rust. To use the native core, build it
+over the stand-in; this needs a Rust toolchain (<a href="https://rustup.rs/">rustup</a>)
+and, on Windows, Visual Studio Build Tools with the C++ workload. <code>uv sync</code> and
+<code>uv run</code> put the stand-in back, so run commands with <code>uv run --no-sync</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--reinstall-package<span class="w"> </span>ddi-l-native<span class="w"> </span>./native
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import ddi_l._etree as e; print(e.BACKEND)"</span><span class="w">  </span><span class="c1"># native</span>
+</span></code></pre></div>
 <p>With plain pip instead (pip 25.1 or later reads dependency groups):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">'.[full]'</span><span class="w"> </span>--group<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">'.[full]'</span><span class="w"> </span>./native/fallback<span class="w"> </span>--group<span class="w"> </span>dev
 </span></code></pre></div>
 <p>For documentation work (<code>docs</code> is a dependency group, not an extra):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># or</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>--group<span class="w"> </span>docs
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># or</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>./native/fallback<span class="w"> </span>--group<span class="w"> </span>docs
 </span></code></pre></div>
 <h2 id="verify-with-a-quick-smoke-test">Verify with a quick smoke test<a class="headerlink" href="#verify-with-a-quick-smoke-test" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"example.org"</span><span class="p">)</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Does it work?"</span><span class="p">)</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; 1</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"example.org"</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Does it work?"</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; 1</span>
 </span></code></pre></div>
 <p>For more details, see the <a href="../user-guide/">user guide</a> or the
 <a href="../DEVELOPMENT/">development guide</a>.</p>
@@ -2838,6 +3048,10 @@ fails.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

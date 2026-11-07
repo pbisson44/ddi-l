@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1522,17 +1524,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#11-resume-etendre-sans-casser" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        11. Résumé : étendre sans casser
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1548,6 +1539,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
       
     </span>
   </a>
@@ -1598,14 +1600,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16 : Projets de synthèse
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
   
 
     
@@ -1743,6 +1773,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1803,6 +1839,34 @@
     
   
     Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
   
 
     
@@ -1943,6 +2007,62 @@
     
   
     Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
   
 
     
@@ -2754,17 +2874,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#11-resume-etendre-sans-casser" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        11. Résumé : étendre sans casser
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2780,6 +2889,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
       
     </span>
   </a>
@@ -2861,28 +2981,30 @@
 
 <h1 id="module-14-champs-personnalises-etendre-la-norme-pour-votre-organisation">Module 14 : Champs personnalisés : étendre la norme pour votre organisation<a class="headerlink" href="#module-14-champs-personnalises-etendre-la-norme-pour-votre-organisation" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">Ce que vous apprendrez</p>
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
 <ul>
-<li>Comprendre pourquoi DDI est une <strong>norme ouverte et extensible</strong>, et
-  pourquoi c'est important.</li>
-<li>Ajouter des <strong>champs personnalisés propres à l'organisation</strong> pour lesquels
-  DDI n'a aucun élément intégré.</li>
-<li>Utiliser le point d'extension de la norme, <code>UserAttributePair</code>, pour que
-  vos champs personnalisés restent dans du <strong>XML DDI valide</strong>.</li>
-<li>Attacher des <strong>identifiants externes</strong> propres à l'organisation avec
-  <code>UserID</code>.</li>
-<li>Adosser un champ personnalisé à un <strong>vocabulaire contrôlé</strong> en référençant
-  une liste de codes.</li>
-<li>Concevoir un <strong>catalogue de champs personnalisés</strong> avec des conventions de
-  nommage que toute l'équipe suit.</li>
-<li><strong>Auditer</strong> un document pour signaler quels éléments portent vos champs
-  personnalisés.</li>
-<li>Confirmer que les champs personnalisés font un <strong>aller-retour</strong> : ils
-  survivent à l'enregistrement et à la réouverture.</li>
+<li><strong>O1.</strong> Ajouter des champs personnalisés préfixés (des clés comme
+  <code>myorg:retention_policy</code>) avec <code>set_property()</code> : sur l'étude pour des
+  faits sur l'ensemble du jeu de données, et sur une variable ou une
+  question pour des faits sur cet élément.</li>
+<li><strong>O2.</strong> Ajouter un identifiant externe avec <code>UserID</code>, et choisir entre
+  un <code>UserID</code> et une propriété personnalisée pour une valeur donnée.</li>
+<li><strong>O3.</strong> Adosser un champ personnalisé à un vocabulaire contrôlé :
+  construire une liste de codes et stocker son URN dans une propriété.</li>
+<li><strong>O4.</strong> Écrire un catalogue des clés autorisées et une fonction qui
+  refuse toute clé absente du catalogue.</li>
+<li><strong>O5.</strong> Écrire un audit qui compte les questions et les variables
+  portant un champ avec votre préfixe.</li>
+<li><strong>O6.</strong> Enregistrer et rouvrir un document, montrer que ses champs
+  personnalisés survivent, et trouver dans le XML le <code>UserAttributePair</code>
+  qui contient un champ.</li>
 </ul>
 </div>
-<p><strong>Prérequis :</strong> <a href="../module-13-properties-find-validate/">Module 13 : Propriétés personnalisées, recherche, suppression et validation</a>.</p>
+<p><strong>Prérequis :</strong> <a href="../module-13-properties-find-validate/">Module 13</a>.</p>
 <p><strong>Durée :</strong> 45 min en autonomie / 55 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>doc.study_unit</code>, <code>UserID</code>, <code>item.user_ids</code>,
+<code>CodeItem</code>, <code>r:UserAttributePair</code>.</p>
 <hr />
 <h2 id="1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises">1. Pourquoi les organisations ont besoin de champs personnalisés<a class="headerlink" href="#1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises" title="Permanent link">&para;</a></h2>
 <p>DDI décrit des centaines de choses : questions, variables, concepts, listes de
@@ -2906,7 +3028,7 @@ métadonnées locales pour lesquelles DDI n'a aucun élément intégré :</p>
 </tr>
 <tr>
 <td>Classification de sécurité</td>
-<td>« Protégé B »</td>
+<td>« Confidentiel »</td>
 <td>Sécurité de l'information</td>
 </tr>
 <tr>
@@ -2931,7 +3053,7 @@ métadonnées locales pour lesquelles DDI n'a aucun élément intégré :</p>
 </tr>
 <tr>
 <td>Code de projet / subvention</td>
-<td>« CRSH-435-2023 »</td>
+<td>« GRANT-2023-435 »</td>
 <td>Administration de la recherche</td>
 </tr>
 </tbody>
@@ -2966,38 +3088,48 @@ petit bloc standard de XML DDI :</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;r:AttributeValue&gt;</span>détruire<span class="w"> </span>après<span class="w"> </span>7<span class="w"> </span>ans<span class="nt">&lt;/r:AttributeValue&gt;</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&lt;/r:UserAttributePair&gt;</span>
 </span></code></pre></div>
-<p>C'est l'ouverture de la norme, rendue concrète.</p>
+<p>C'est l'ouverture de la norme, rendue concrète :</p>
+<pre class="mermaid"><code>flowchart TD
+    STD["Norme DDI\n(des centaines de champs intégrés)"]
+    EXT["Points d'extension de tout élément identifiable :\nUserAttributePair (AttributeKey, AttributeValue)\net UserID"]
+    ORG["Vos champs personnalisés\nmyorg:retention_policy, myorg:security_class\nen UserAttributePair ; CAT-000734 en UserID"]
+    FILE["Toujours un fichier DDI valide\n(il se valide contre le schéma DDI)"]
+
+    STD --&gt; EXT
+    EXT --&gt; ORG
+    ORG --&gt; FILE
+    STD --&gt; FILE</code></pre>
 <h2 id="3-ou-peuvent-vivre-les-champs-personnalises">3. Où peuvent vivre les champs personnalisés<a class="headerlink" href="#3-ou-peuvent-vivre-les-champs-personnalises" title="Permanent link">&para;</a></h2>
 <p>Un champ personnalisé peut être attaché à <strong>n'importe quel</strong> élément DDI : une
 étude, une question, une variable, une liste de codes, tout. Placez-le au niveau
 que le champ décrit :</p>
 <ul>
 <li><strong>Niveau étude</strong> : des faits sur l'ensemble du jeu de données (conservation,
-  classification de sécurité).</li>
+  classification de sécurité). <code>doc.study_unit</code> est l'étude elle-même.</li>
 <li><strong>Niveau élément</strong> : des faits sur une variable ou une question (système
   source, indicateur de qualité).</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.gc.ca"</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Champs personnalisés au niveau étude : ils décrivent tout le jeu de données</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Study-level custom fields describe the whole dataset</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Protected B"</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># -&gt; {'myorg:retention_policy': 'destroy after 7 years',</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#     'myorg:security_class': 'Protected B'}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#     'myorg:security_class': 'Confidential'}</span>
 </span></code></pre></div>
 <h2 id="4-ajouter-des-champs-propres-a-lorganisation">4. Ajouter des champs propres à l'organisation<a class="headerlink" href="#4-ajouter-des-champs-propres-a-lorganisation" title="Permanent link">&para;</a></h2>
 <p>Vous avez déjà rencontré <code>set_property</code> au
 <a href="../module-13-properties-find-validate/">Module 13</a>. Ici, nous l'utilisons
 délibérément, avec un <strong>préfixe d'espace de noms</strong> sur chaque clé afin que vos
 champs n'entrent jamais en collision avec ceux d'un autre :</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Champs personnalisés au niveau élément : ils décrivent une variable</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Item-level custom fields describe one variable</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
@@ -3007,7 +3139,7 @@ champs n'entrent jamais en collision avec ceux d'un autre :</p>
 <div class="admonition tip">
 <p class="admonition-title">Préfixez vos clés</p>
 <p>Préfixez chaque clé personnalisée d'une courte étiquette d'organisation,
-comme <code>myorg:</code> ou <code>statcan:</code>. C'est une convention, pas une exigence, mais
+comme <code>myorg:</code> ou <code>acme:</code>. C'est une convention, pas une exigence, mais
 elle garde <em>vos</em> champs distincts de ceux d'un partenaire si deux fichiers
 DDI sont un jour fusionnés.</p>
 </div>
@@ -3024,7 +3156,9 @@ perdus à l'enregistrement.</p>
 <p>Parce qu'ils vivent dans du DDI standard, une autre équipe utilisant un logiciel
 différent peut ouvrir votre fichier et voir encore <code>myorg:source_system</code>, même
 si son outil ignore ce que cela signifie. <strong>Rien n'est silencieusement
-supprimé.</strong> C'est l'interopérabilité.</p>
+supprimé.</strong> C'est l'interopérabilité. Ouvrez <code>household-survey.xml</code> dans un
+éditeur de texte et cherchez <code>UserAttributePair</code> pour voir chaque champ sous
+la forme du bloc XML de la section 2.</p>
 <div class="admonition tip">
 <p class="admonition-title">Continuer après un enregistrement</p>
 <p><code>income</code> et <code>q_income</code> restent attachés à <code>doc</code> après <code>doc.save()</code> : vous
@@ -3045,7 +3179,9 @@ d'extension exactement pour cela : <code>UserID</code>, qui porte une valeur <st
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
 </span></code></pre></div>
 <p>Utilisez <code>UserID</code> quand la valeur <strong>identifie</strong> l'élément dans un autre système,
-et une propriété personnalisée (<code>set_property</code>) quand la valeur le <strong>décrit</strong>.</p>
+et une propriété personnalisée (<code>set_property</code>) quand la valeur le <strong>décrit</strong>.
+Un test rapide : si un autre système pourrait retrouver l'élément par cette
+valeur, c'est un identifiant.</p>
 <h2 id="7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes">7. Un champ personnalisé adossé à un vocabulaire contrôlé (une liste de codes)<a class="headerlink" href="#7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes" title="Permanent link">&para;</a></h2>
 <p>Les valeurs en texte libre sont flexibles mais faciles à mal saisir
 (« validated », « Validated », « valid »). Pour un champ qui devrait prendre un
@@ -3064,27 +3200,27 @@ chaque code son propre URN fondé sur un UUID4, tout comme <code>add_code_list</
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1. Construire le vocabulaire contrôlé. Pour chaque valeur autorisée, créer la</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">#    Category (son sens) et un Code dans la liste qui la référence.</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1. Build the controlled vocabulary. For each allowed value, create the</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">#    Category (its meaning) and a Code in the list that references it.</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="n">CodeItem</span><span class="p">(</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>  <span class="c1"># UUID4 -&gt; l'id d'URN de ce code</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>  <span class="c1"># UUID4 → this code's URN id</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="p">)</span>
 </span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="p">)</span>
 </span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Codes autorisés : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; 3</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Allowed codes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; 3</span>
 </span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># 2. Un champ personnalisé contenant une valeur tirée de ce vocabulaire</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># 2. A custom field holding one value drawn from that vocabulary</span>
 </span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
 </span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 3. Un champ personnalisé qui référence la liste de codes définissant les valeurs</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 3. A custom field that references the code list defining the allowed values</span>
 </span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
 </span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
 </span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>  <span class="c1"># -&gt; validated</span>
@@ -3102,20 +3238,20 @@ l'intérieur du fichier DDI.</p>
 Si chaque analyste invente sa propre clé, les champs deviennent aussi
 désordonnés que le chiffrier que vous essayiez de remplacer. Convenez d'un petit
 <strong>catalogue</strong> et appliquez-le de manière cohérente.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Un catalogue documenté que toute votre équipe partage</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># A documented catalog your whole team shares</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">"myorg:retention_policy"</span><span class="p">:</span> <span class="s2">"Combien de temps conserver les donnees (calendrier)."</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"myorg:security_class"</span><span class="p">:</span> <span class="s2">"Classification de securite (p. ex. Protege B)."</span><span class="p">,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"Le systeme d'ou les donnees ont ete extraites."</span><span class="p">,</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Statut de qualite des donnees (voir Quality Flag Codes)."</span><span class="p">,</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"L'equipe responsable de l'element."</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">"myorg:retention_policy"</span><span class="p">:</span> <span class="s2">"How long to keep the data (records schedule)."</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"myorg:security_class"</span><span class="p">:</span> <span class="s2">"Security classification (e.g. Confidential)."</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
 </span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
 </span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># N'applique un champ que s'il est dans le catalogue (garde-fou contre les fautes)</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Apply a field only if it is in the catalog (a guard against typos)</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
 </span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
 </span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
@@ -3158,20 +3294,6 @@ gouvernance et l'assurance qualité.</p>
   valide, mais seul <em>votre</em> catalogue explique ce que <code>myorg:security_class</code>
   signifie.</li>
 </ul>
-<h2 id="11-resume-etendre-sans-casser">11. Résumé : étendre sans casser<a class="headerlink" href="#11-resume-etendre-sans-casser" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    STD["Norme DDI\n(des centaines de champs intégrés)"]
-    EXT["Point d'extension :\nUserAttributePair / UserID"]
-    ORG["Vos champs personnalisés\nmyorg:retention_policy\nmyorg:security_class\nCAT-000734"]
-    FILE["Toujours un fichier DDI valide\n(aller-retour dans tout outil DDI)"]
-
-    STD --&gt; EXT
-    EXT --&gt; ORG
-    ORG --&gt; FILE
-    STD --&gt; FILE</code></pre>
-<p>La norme vous donne un riche ensemble de champs intégrés <strong>et</strong> une porte
-ouverte pour ceux qu'elle n'a pas. Vous l'étendez pour les besoins de votre
-organisation sans forker le schéma et sans quitter le DDI valide.</p>
 <hr />
 <div class="admonition example">
 <p class="admonition-title">Scénario</p>
@@ -3188,126 +3310,102 @@ avec le fichier.</p>
 <h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Créez une étude avec une question et une variable <code>income</code>. Définissez deux
-   champs personnalisés au niveau étude : <code>myorg:retention_policy</code> =
-   <code>"destroy after 7 years"</code> et <code>myorg:security_class</code> = <code>"Protected B"</code>.
-   Affichez les propriétés de l'étude.</p>
+<p><strong>(O1)</strong> Créez une étude avec une question et une variable <code>income</code>.
+   Définissez deux champs personnalisés au niveau étude :
+   <code>myorg:retention_policy</code> = <code>"destroy after 7 years"</code> et
+   <code>myorg:security_class</code> = <code>"Confidential"</code>. Définissez un champ au niveau
+   élément sur la variable <code>income</code> : <code>myorg:source_system</code> = <code>"CRM-2024"</code>.
+   Affichez les propriétés de l'étude, puis le système source de la variable.</p>
 <p><strong>Résultat attendu :</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Protected B'}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Confidential'}
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>CRM-2024
 </span></code></pre></div>
 <details class="success">
 <summary>Réponse</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.gc.ca"</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Protected B"</span><span class="p">)</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
 </span></code></pre></div>
+<p>La politique de conservation et la classification décrivent tout le
+jeu de données : elles vont sur l'étude. Le système source décrit
+une seule variable.</p>
 </details>
 </li>
 <li>
-<p>Définissez <code>myorg:source_system</code> = <code>"CRM-2024"</code> sur la variable <code>income</code> et
-   <code>myorg:steward</code> = <code>"Survey Methods"</code> sur la question. Écrivez un audit qui
-   parcourt toutes les questions et variables et compte combien portent un champ
-   <code>myorg:</code>. Affichez le compteur.</p>
+<p><strong>(O2)</strong> Attachez un identifiant externe propre à l'organisation à la
+   variable <code>income</code> : un <code>UserID</code> de valeur <code>"CAT-000734"</code> et de type
+   <code>"InternalCatalogue"</code>. Affichez-le sous la forme <code>type: valeur</code>. Ensuite,
+   pour chaque valeur ci-dessous, dites si elle va dans un <code>UserID</code> ou dans
+   une propriété personnalisée : (a) <code>RM-2291</code>, le numéro de cette variable
+   dans le système de gestion documentaire ; (b) <code>"validated"</code>, son statut de
+   qualité ; (c) <code>"Data Governance Office"</code>, l'équipe qui en répond.</p>
 <p><strong>Résultat attendu :</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Items with custom fields: 2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>InternalCatalogue: CAT-000734
 </span></code></pre></div>
 <details class="success">
 <summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="k">return</span> <span class="n">count</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
 </span></code></pre></div>
+<p>(a) <code>UserID</code> : un autre système peut retrouver la variable par ce
+numéro, il identifie donc l'élément. (b) et (c) sont des propriétés
+personnalisées : elles décrivent l'élément.</p>
 </details>
 </li>
 <li>
-<p>Attachez un identifiant externe propre à l'organisation à la variable
-   <code>income</code> : un <code>UserID</code> de valeur <code>"CAT-000734"</code> et de type
-   <code>"InternalCatalogue"</code>. Affichez-le sous la forme <code>type: valeur</code>.</p>
-<p><strong>Résultat attendu :</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>InternalCatalogue: CAT-000734
-</span></code></pre></div>
-<details class="success">
-<summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span></code></pre></div>
-</details>
-</li>
-<li>
-<p>Enregistrez le document, rouvrez-le avec <code>ddi.open_ddi()</code>, et relisez
-   <code>myorg:source_system</code> depuis la variable rouverte pour prouver que le champ
-   personnalisé fait un aller-retour.</p>
-<p><strong>Résultat attendu :</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>CRM-2024
-</span></code></pre></div>
-<details class="success">
-<summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>
-</span></code></pre></div>
-</details>
-</li>
-<li>
-<p>(Bonus) Construisez une liste de codes <code>Quality Flag Codes</code> avec trois codes
-   (<code>validated</code>, <code>provisional</code>, <code>suppressed</code>), un vocabulaire contrôlé.
+<p><strong>(O3)</strong> Construisez une liste de codes <code>Quality Flag Codes</code> avec trois
+   codes (<code>validated</code>, <code>provisional</code>, <code>suppressed</code>), un vocabulaire contrôlé.
    Définissez <code>myorg:quality_flag</code> = <code>"validated"</code> sur la variable <code>income</code>, et
    définissez <code>myorg:quality_flag_codes</code> sur l'objet liste de codes pour que le
-   champ <strong>référence</strong> ce vocabulaire. Vérifiez que la référence stockée est un
-   URN (commence par <code>"urn:ddi:"</code>).</p>
+   champ <strong>référence</strong> ce vocabulaire. Affichez l'indicateur, et si la
+   référence stockée est un URN (commence par <code>"urn:ddi:"</code>).</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>validated
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>True
+</span></code></pre></div>
 <details class="success">
 <summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Construire le vocabulaire contrôlé. Chaque valeur autorisée a besoin d'une</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Category (son sens) ET d'un Code dans la liste qui la référence ; une Category</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># seule n'est dans aucune liste. Chaque Code reçoit son propre URN basé sur un UUID4.</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>        <span class="n">CodeItem</span><span class="p">(</span>
-</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
-</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
-</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
-</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
-</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>        <span class="p">)</span>
-</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>    <span class="p">)</span>
-</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
-</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1"># Un champ dont la valeur vient du vocabulaire, plus un champ qui référence</span>
-</span><span id="__span-16-22"><a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c1"># la liste de codes définissant les valeurs autorisées</span>
-</span><span id="__span-16-23"><a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
-</span><span id="__span-16-24"><a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
-</span><span id="__span-16-25"><a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>
-</span><span id="__span-16-26"><a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>
-</span><span id="__span-16-27"><a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Build the controlled vocabulary. Each allowed value needs a Category (its</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># meaning) AND a Code in the list that references it; a Category alone is not</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># in any list. Each Code gets its own UUID4-based URN.</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="n">CodeItem</span><span class="p">(</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        <span class="p">)</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="p">)</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># A field whose value is drawn from the vocabulary, plus a field that</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># references the code list defining the allowed values</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>  <span class="c1"># -&gt; validated</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Les objets restent attachés</p>
@@ -3316,75 +3414,194 @@ sérialise, avant comme après <code>save()</code>.</p>
 </div>
 </details>
 </li>
+<li>
+<p><strong>(O4)</strong> Écrivez un catalogue <code>CUSTOM_FIELDS</code> avec trois clés,
+   <code>myorg:source_system</code>, <code>myorg:quality_flag</code> et <code>myorg:steward</code>, chacune
+   avec une signification d'une ligne. Écrivez
+   <code>set_catalog_field(item, key, value)</code>, qui ne définit le champ que si la
+   clé est dans le catalogue et lève une <code>ValueError</code> sinon. Utilisez-la pour
+   définir <code>myorg:steward</code> = <code>"Survey Methods"</code> sur la variable <code>income</code> et
+   affichez la valeur. Essayez ensuite la clé mal orthographiée
+   <code>myorg:stewart</code>, attrapez l'erreur et affichez son message.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Survey Methods
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Refused: 'myorg:stewart' is not in the custom-field catalog
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">}</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">))</span>  <span class="c1"># -&gt; Survey Methods</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    <span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:stewart"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Refused: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># -&gt; Refused: 'myorg:stewart' is not in the custom-field catalog</span>
+</span></code></pre></div>
+<p>Sans le garde-fou, la faute de frappe créerait un second champ, mal
+orthographié, qu'aucun audit ni lecteur ne cherche.</p>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Définissez <code>myorg:steward</code> = <code>"Survey Methods"</code> sur la question du
+   revenu. Écrivez un audit qui parcourt toutes les questions et variables et
+   compte combien portent un champ <code>myorg:</code>. Affichez le compteur.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Items with custom fields: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="k">return</span> <span class="n">count</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># -&gt; Items with custom fields: 2</span>
+</span></code></pre></div>
+<p>L'audit compte des éléments, pas des champs : la variable <code>income</code>
+porte plusieurs champs <code>myorg:</code> et compte une fois.</p>
+</details>
+</li>
+<li>
+<p><strong>(O6)</strong> Enregistrez le document, rouvrez-le avec <code>ddi.open_ddi()</code>, et
+   relisez <code>myorg:source_system</code> depuis la variable rouverte pour prouver que
+   le champ personnalisé fait un aller-retour. Lisez ensuite le fichier
+   enregistré comme texte et vérifiez qu'il contient un élément
+   <code>r:AttributeKey</code> avec la clé <code>myorg:source_system</code>.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>CRM-2024
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>True
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="n">xml</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"&lt;r:AttributeKey&gt;myorg:source_system&lt;/r:AttributeKey&gt;"</span> <span class="ow">in</span> <span class="n">xml</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>La clé est dans un <code>r:AttributeKey</code>, à l'intérieur du
+<code>r:UserAttributePair</code> qui contient aussi son <code>r:AttributeValue</code>.</p>
+</details>
+</li>
 </ol>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1 : Pourquoi pouvez-vous ajouter des champs personnalisés à un document DDI ?</summary>
-<p><strong>A.</strong> Parce que DDI ignore tout élément qu'il ne reconnaît pas.</p>
-<p><strong>B.</strong> Parce que DDI est une norme ouverte et extensible avec un point d'extension intégré.</p>
-<p><strong>C.</strong> Parce que les champs personnalisés sont stockés dans un fichier séparé.</p>
-<p><strong>D.</strong> Vous ne pouvez pas : DDI n'autorise que ses champs intégrés.</p>
+<summary>Question 1 (O1) : Quel appel consigne que tout le jeu de données est classé Confidential ?</summary>
+<p><strong>A.</strong> <code>income.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>B.</strong> <code>doc.study_unit.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>C.</strong> <code>q_income.set_property("security_class", "Confidential")</code></p>
+<p><strong>D.</strong> <code>doc.add_variable(name="myorg:security_class")</code></p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> DDI est conçu pour être étendu. <code>UserAttributePair</code> est un point
-d'extension normalisé, de sorte que vos champs personnalisés restent dans
-du XML DDI valide.</p>
+<p><strong>B.</strong> Un fait sur tout le jeu de données va sur l'étude,
+<code>doc.study_unit</code>. A et C le placent sur un seul élément (et C perd le
+préfixe). D crée une variable, pas un champ.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2 : Quel élément DDI stocke un champ clé-valeur personnalisé ?</summary>
-<p><strong>A.</strong> <code>Variable</code></p>
-<p><strong>B.</strong> <code>UserAttributePair</code></p>
-<p><strong>C.</strong> <code>CodeList</code></p>
-<p><strong>D.</strong> <code>VersionRationale</code></p>
+<summary>Question 2 (O6) : Vous enregistrez un document et cherchez votre clé myorg:source_system dans le XML. Où la trouvez-vous ?</summary>
+<p><strong>A.</strong> Dans un élément <code>r:UserID</code>.</p>
+<p><strong>B.</strong> Dans le <code>r:Label</code> de la variable.</p>
+<p><strong>C.</strong> Dans un <code>r:AttributeKey</code>, à l'intérieur d'un <code>r:UserAttributePair</code>.</p>
+<p><strong>D.</strong> Nulle part : les champs personnalisés ne sont pas enregistrés.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> <code>set_property</code> écrit un <code>r:UserAttributePair</code> avec un
-<code>AttributeKey</code> et un <code>AttributeValue</code>, le point d'extension de la norme
-pour les champs personnalisés.</p>
+<p><strong>C.</strong> <code>set_property</code> écrit un <code>r:UserAttributePair</code> avec un
+<code>r:AttributeKey</code> et un <code>r:AttributeValue</code>, le point d'extension de la
+norme pour les champs personnalisés. C'est pourquoi le champ survit à
+l'enregistrement et à la réouverture.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3 : Qu'advient-il des champs personnalisés lors de l'enregistrement et de la réouverture d'un fichier ?</summary>
-<p><strong>A.</strong> Ils sont supprimés, car ils ne sont pas standard.</p>
-<p><strong>B.</strong> Ils survivent : ils sont écrits dans le XML DDI et relus directement.</p>
-<p><strong>C.</strong> Ils sont convertis en champs intégrés.</p>
-<p><strong>D.</strong> Ils sont déplacés dans un chiffrier séparé.</p>
+<summary>Question 3 (O2) : RM-2291 est le numéro d'une variable dans le système de gestion documentaire. Où le consignez-vous ?</summary>
+<p><strong>A.</strong> Dans un <code>UserID</code>, avec un type comme <code>"RecordsManagement"</code>.</p>
+<p><strong>B.</strong> Dans l'étiquette de la variable.</p>
+<p><strong>C.</strong> Dans une propriété personnalisée, puisque toute valeur en plus est une propriété.</p>
+<p><strong>D.</strong> Dans un chiffrier séparé.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> Parce qu'ils vivent dans du DDI standard, les champs personnalisés
-font un aller-retour. Tout outil compatible DDI les préserve, même un qui
-ne sait pas ce qu'ils signifient.</p>
+<p><strong>A.</strong> La valeur <strong>identifie</strong> la variable dans un autre système :
+c'est un <code>UserID</code>. Utilisez une propriété personnalisée quand la
+valeur <strong>décrit</strong> l'élément.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 4 : Quand utiliser <code>UserID</code> plutôt qu'une propriété personnalisée ?</summary>
-<p><strong>A.</strong> Quand la valeur <strong>identifie</strong> l'élément dans un autre système.</p>
-<p><strong>B.</strong> Quand la valeur fait plus de 10 caractères.</p>
-<p><strong>C.</strong> Jamais ; <code>UserID</code> est obsolète.</p>
-<p><strong>D.</strong> Seulement pour les questions, jamais pour les variables.</p>
+<summary>Question 4 (O3) : quality_codes est une liste de codes. Que retourne get_property après cet appel ?</summary>
+<p><code>income.set_property("myorg:quality_flag_codes", quality_codes)</code></p>
+<p><strong>A.</strong> L'objet <code>CodeList</code> lui-même.</p>
+<p><strong>B.</strong> La chaîne <code>"Quality Flag Codes"</code>.</p>
+<p><strong>C.</strong> La liste <code>['validated', 'provisional', 'suppressed']</code>.</p>
+<p><strong>D.</strong> L'URN de la liste de codes, une chaîne qui commence par <code>urn:ddi:</code>.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>A.</strong> Utilisez <code>UserID</code> (avec un <code>type_of_user_id</code>) quand la valeur est
-un identifiant provenant d'un autre système, comme un numéro de catalogue
-interne. Utilisez une propriété personnalisée quand la valeur <strong>décrit</strong>
-l'élément.</p>
+<p><strong>D.</strong> Passer un élément DDI comme valeur stocke son URN, un lien
+stable vers la liste de codes. Les propriétés contiennent toujours
+des chaînes.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 5 : Pourquoi préfixer les clés personnalisées comme <code>myorg:retention_policy</code> ?</summary>
-<p><strong>A.</strong> DDI exige un deux-points dans chaque clé.</p>
-<p><strong>B.</strong> Pour garder vos champs distincts afin qu'ils n'entrent jamais en collision avec ceux d'une autre organisation.</p>
-<p><strong>C.</strong> Pour réduire la taille du fichier.</p>
-<p><strong>D.</strong> Pour cacher le champ aux autres outils.</p>
+<summary>Question 5 (O4) : Avec le garde-fou de catalogue de la section 8, que fait set_catalog_field(income, 'myorg:stewart', 'X') ?</summary>
+<p><strong>A.</strong> Définit <code>myorg:stewart</code> sur <code>income</code>.</p>
+<p><strong>B.</strong> Corrige la clé en <code>myorg:steward</code> et la définit.</p>
+<p><strong>C.</strong> Ne fait rien et ne dit rien.</p>
+<p><strong>D.</strong> Lève une <code>ValueError</code> et ne définit rien.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> Un préfixe d'espace de noms est une convention qui garde les
-champs personnalisés de votre organisation distincts, ce qui compte si deux
-fichiers DDI sont un jour fusionnés.</p>
+<p><strong>D.</strong> La clé n'est pas dans <code>CUSTOM_FIELDS</code> : la fonction lève une
+erreur avant d'appeler <code>set_property</code>. La faute de frappe est
+attrapée au lieu de créer un champ mal orthographié.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 6 (O5) : Une question n'a aucune propriété ; la variable v1 a myorg:a et myorg:b ; la variable v2 a other:flag. Que retourne items_with_custom_fields(doc) ?</summary>
+<p><strong>A.</strong> 1</p>
+<p><strong>B.</strong> 2</p>
+<p><strong>C.</strong> 3</p>
+<p><strong>D.</strong> 0</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> Seule <code>v1</code> a une clé qui commence par <code>myorg:</code>. L'audit
+compte des éléments, pas des champs : ses deux champs comptent une
+fois, et <code>other:flag</code> ne correspond pas au préfixe.</p>
+</details>
+</details>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter des champs personnalisés préfixés au niveau étude et au niveau élément, en choisissant le niveau que chaque champ décrit. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter un <code>UserID</code> et choisir entre un <code>UserID</code> et une propriété personnalisée pour une valeur. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux adosser un champ personnalisé à une liste de codes en stockant l'URN de la liste dans une propriété. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un catalogue des clés autorisées et une fonction qui refuse toute autre clé. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un audit qui compte les éléments portant mon préfixe. (O5)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux montrer que les champs personnalisés survivent à l'enregistrement et à la réouverture, et trouver leur <code>UserAttributePair</code> dans le XML. (O6)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Notes pour l'instructeur</p>
@@ -3396,7 +3613,7 @@ fichiers DDI sont un jour fusionnés.</p>
 <li>Faites le point d'ouverture explicitement : DDI vous donne une façon
   <em>normalisée</em> de l'étendre. Montrez le XML <code>UserAttributePair</code> à l'écran pour
   que les apprenants voient que le champ personnalisé est toujours du DDI
-  valide, pas un bricolage.</li>
+  valide, pas un bricolage. L'exercice 6 le leur fait trouver eux-mêmes.</li>
 <li>Tracez la ligne entre le Module 13 et ce module : le Module 13 enseignait la
   <em>mécanique</em> de <code>set_property</code> ; ce module porte sur la <em>gouvernance</em> des
   extensions pour une organisation : catalogues, espaces de noms, valeurs
@@ -3404,10 +3621,11 @@ fichiers DDI sont un jour fusionnés.</p>
 <li>La distinction <code>UserID</code> vs propriété personnalisée (identifier vs décrire)
   est une source de confusion courante. Donnez deux exemples rapides de
   chaque.</li>
-<li>Pour le personnel des INS et des archives : reliez à la gouvernance réelle :
-  calendriers de conservation, classifications de sécurité, affectation de
-  gestionnaires de données. Ce sont des choses auditées en pratique, et la
-  boucle d'audit de la section 9 est la façon d'en faire rapport.</li>
+<li>Pour le personnel des instituts de statistique et des archives : reliez à
+  la gouvernance réelle : calendriers de conservation, classifications de
+  sécurité, affectation de gestionnaires de données. Ce sont des choses
+  auditées en pratique, et la boucle d'audit de la section 9 est la façon
+  d'en faire rapport.</li>
 <li>Insistez sur la mise en garde : ne réinventez pas le DDI intégré. Les champs
   personnalisés sont pour de véritables lacunes, pas pour refaire les
   concepts, les univers ou le versionnage.</li>
@@ -3493,6 +3711,10 @@ fichiers DDI sont un jour fusionnés.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
   
   
 </div>

@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1406,14 +1408,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1995,6 +2025,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -2055,6 +2091,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -2195,6 +2259,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -3634,7 +3754,7 @@ element in DDI).</p>
 </span></code></pre></div>
 <p>Omit the positions for a delimited (comma/tab) file.</p>
 <p>To update many variables from a new data file, and version each change, see
-<a href="../module-15-update-and-version/#8-update-many-variables-from-a-new-data-file">Module 15, section 8</a>.</p>
+<a href="../module-15-update-and-version/#update-many-variables-from-a-new-data-file">Module 15, "Going further"</a>.</p>
 <hr />
 <h2 id="logical-records-and-cubes">Logical records and cubes<a class="headerlink" href="#logical-records-and-cubes" title="Permanent link">&para;</a></h2>
 <!-- docs-test: skip -- fragment: year/region come from the reader's own document -->
@@ -3857,6 +3977,14 @@ linkage. See <a href="../module-12-data-linkage/">Module 12</a>.</p>
 <tr>
 <td><code>ddi versions file.xml</code></td>
 <td>Show version info from the file</td>
+</tr>
+<tr>
+<td><code>ddi spec validate spec.yaml</code></td>
+<td>Check a questionnaire spec (<a href="../module-16-advanced-questionnaire-spec/">Module 16</a>)</td>
+</tr>
+<tr>
+<td><code>ddi conform file.xml --spec spec.yaml</code></td>
+<td>Compare an instrument with its spec</td>
 </tr>
 </tbody>
 </table>
@@ -4324,7 +4452,7 @@ need it</strong> column tells you what task the import is for.</p>
 </span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Email"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
 </span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>
 </span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
-</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="n">study</span><span class="o">.</span><span class="n">increment_minor_version</span><span class="p">()</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="n">study</span><span class="o">.</span><span class="n">increment_minor_version</span><span class="p">(</span><span class="n">allow_dotted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="n">study</span><span class="o">.</span><span class="n">version_rationales</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
 </span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>    <span class="n">VersionRationale</span><span class="p">(</span>
 </span><span id="__span-30-13"><a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>        <span class="n">descriptions</span><span class="o">=</span><span class="p">[</span><span class="n">InternationalString</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Added email question for wave 2"</span><span class="p">)]</span>
@@ -4428,6 +4556,10 @@ need it</strong> column tells you what task the import is for.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1312,6 +1314,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1552,14 +1565,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1697,6 +1738,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1757,6 +1804,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1897,6 +1972,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2696,6 +2827,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2771,18 +2913,19 @@
 
 <h1 id="module-7-validate-from-the-command-line">Module 7: Validate from the command line<a class="headerlink" href="#module-7-validate-from-the-command-line" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Run <code>ddi validate</code> to check a DDI file for errors.</li>
-<li>Read and understand the validation output.</li>
-<li>Use <code>ddi lint</code> to check quality rules beyond the schema.</li>
-<li>Export a DDI file to JSON with <code>ddi to-json</code>.</li>
-<li>Normalize a file with <code>ddi roundtrip</code>.</li>
-<li>Understand exit codes and why they matter for scripts.</li>
+<li><strong>O1.</strong> Run <code>ddi validate</code> on a DDI file and state from its output whether the file is valid.</li>
+<li><strong>O2.</strong> Interpret a <code>ddi validate</code> error: say what is wrong and where, using the message and the path after <code>at</code>, then fix the file so it validates.</li>
+<li><strong>O3.</strong> Run <code>ddi lint</code> on a file and name one finding by its severity, rule and message.</li>
+<li><strong>O4.</strong> Convert a DDI file to JSON with <code>ddi to-json</code> and write a normalized copy with <code>ddi roundtrip</code>.</li>
+<li><strong>O5.</strong> Check the exit code of a command after a valid and an invalid file, and predict the code (0 or 1) a script will get.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> <a href="../module-06-open-modify/">Module 6: Open, modify, and re-save existing DDI files</a>.</p>
+<p><strong>Prerequisites:</strong> <a href="../module-06-open-modify/">Module 6</a>.</p>
 <p><strong>Time:</strong> 30 min self-paced / 40 min instructor-led.</p>
+<p><strong>New in this module:</strong> <code>ddi validate</code>, <code>ddi validate --format json</code>, <code>ddi lint</code>, <code>ddi lint --format table</code>, <code>ddi to-json</code>, <code>ddi roundtrip</code>, <code>echo $?</code> (and <code>echo %ERRORLEVEL%</code> or <code>$LASTEXITCODE</code> on Windows).</p>
 <hr />
 <h2 id="1-why-use-the-command-line">1. Why use the command line?<a class="headerlink" href="#1-why-use-the-command-line" title="Permanent link">&para;</a></h2>
 <p>So far you have written Python scripts to work with DDI files. But sometimes
@@ -2798,7 +2941,10 @@ line</strong> (also called a terminal or shell) lets you do that.</p>
   early.</li>
 </ul>
 <p><code>ddi-l</code> includes a command-line tool called <code>ddi</code>. You installed it when
-you installed the <code>ddi-l</code> package (see Module 2).</p>
+you installed the <code>ddi-l</code> package (see <a href="../module-02-setup/">Module 2</a>).</p>
+<p>The exercises use <code>census-2024.xml</code>, the file you saved in Exercise 1 of
+<a href="../module-06-open-modify/">Module 6</a>. Run the commands from the folder that
+holds it.</p>
 <hr />
 <h2 id="2-validate-a-file">2. Validate a file<a class="headerlink" href="#2-validate-a-file" title="Permanent link">&para;</a></h2>
 <p>The <code>ddi validate</code> command checks whether a DDI XML file follows the DDI
@@ -2809,46 +2955,59 @@ allowed, what order they must appear in, and which ones are required.</p>
 <p>If the file is valid, you see:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Document is valid.
 </span></code></pre></div>
-<p>If the file has errors, you see one entry per problem. For example:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>error: Element 'BadElement': This element is not expected. (line 42, column 12)
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    at /DDIInstance/s:StudyUnit
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>1 issue found.
+<p>If the file has errors, you see one entry per problem. For example, here is
+the output for a file in which someone misspelled <code>&lt;r:Abstract&gt;</code> as
+<code>&lt;r:Abstrct&gt;</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>error: Unexpected child with tag '{ddi:reusable:3_3}Abstrct' at position 5.
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    at /{ddi:instance:3_3}DDIInstance/{ddi:studyunit:3_3}StudyUnit
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    context: &lt;s:StudyUnit&gt;
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>1 issue found.
 </span></code></pre></div>
 <p>Each error tells you:</p>
 <ul>
-<li><strong>what went wrong</strong>: the message after <code>error:</code>.</li>
-<li><strong>where</strong>: the line and column in the XML file, and the XPath after <code>at</code>.</li>
+<li><strong>what went wrong</strong>: the message after <code>error:</code>. Here, an element called
+  <code>Abstrct</code> appears where the schema does not allow it.</li>
+<li><strong>where</strong>: the path after <code>at</code>. Read it from left to right, from the root of
+  the file down to the element that holds the problem: <code>DDIInstance</code>, then
+  <code>StudyUnit</code>. You can ignore the parts in curly braces, such as
+  <code>{ddi:reusable:3_3}</code>: they name the DDI namespace each element belongs to.
+  A number in square brackets, such as <code>QuestionItem[2]</code>, means "the second
+  <code>QuestionItem</code>".</li>
+<li><strong>what was found</strong>: the <code>context:</code> line shows the element (and its value,
+  when it has one).</li>
 </ul>
-<p>You can use this information to find and fix the error. For scripts, add
-<code>--format json</code> to get the same information as a JSON list (an empty list <code>[]</code>
-when the file is valid).</p>
+<p>The last line counts the problems. For scripts, add <code>--format json</code> to get the
+same information as a JSON list (an empty list <code>[]</code> when the file is valid).</p>
 <hr />
 <h2 id="3-reading-the-output">3. Reading the output<a class="headerlink" href="#3-reading-the-output" title="Permanent link">&para;</a></h2>
 <p>When you see <code>"Document is valid."</code>, it means the file follows all the DDI
 schema rules. No action is needed.</p>
-<p>When you see errors, read each message carefully. The most common errors are:</p>
+<p>When you see errors, read each message carefully. The most common messages
+are:</p>
 <table>
 <thead>
 <tr>
-<th>Error type</th>
+<th>The message says</th>
 <th>What it means</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Element not expected</td>
-<td>An XML element is in the wrong place.</td>
+<td><code>Unexpected child with tag '...'</code></td>
+<td>An element is in the wrong place, is misspelled, or a required element before it is missing.</td>
 </tr>
 <tr>
-<td>Missing child element</td>
-<td>A required element is missing.</td>
+<td><code>value doesn't match any pattern of ...</code></td>
+<td>A text value breaks a rule, such as a version number that is not made of digits.</td>
 </tr>
 <tr>
-<td>Invalid value</td>
-<td>A text value does not match the rules.</td>
+<td><code>Error: mismatched tag: line N, column M</code></td>
+<td>The file is not well-formed XML: a tag is not closed. The line and column say where.</td>
 </tr>
 </tbody>
 </table>
+<p>The last kind of error stops <code>ddi</code> before the schema check: it cannot read
+the file at all.</p>
 <p>Fix the errors in your Python script (or in the XML file directly), then run
 <code>ddi validate</code> again.</p>
 <hr />
@@ -2860,22 +3019,37 @@ runs the same rules as <code>doc.lint()</code>, which you used in
 schema but are usually mistakes or bad practice.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ddi<span class="w"> </span>lint<span class="w"> </span>my-study.xml
 </span></code></pre></div>
-<p>For example, a lint rule might warn you that a variable has no linked question,
-or that a concept has no description. The file is still valid XML, but the
-metadata is incomplete.</p>
-<p>The output is a list of findings, each with a severity level (like "warning"
-or "info") and a short message.</p>
+<p>For example, a lint rule might warn you that an item has no label, or that a
+reference points to an item that is not in the file. The file can still be
+valid XML, but the metadata is incomplete.</p>
+<p>By default the output is JSON, for scripts. Add <code>--format table</code> for a table
+that is easier to read:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ddi<span class="w"> </span>lint<span class="w"> </span>my-study.xml<span class="w"> </span>--format<span class="w"> </span>table
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>severity  rule                     message
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>--------  -----------------------  ----------------------------------------
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span></code></pre></div>
+<p>Each row is one <strong>finding</strong>, with three columns:</p>
+<ul>
+<li><strong>severity</strong>: how serious it is: <code>error</code>, <code>warning</code> or <code>info</code>.</li>
+<li><strong>rule</strong>: the name of the rule that found it, such as
+  <code>ddi.maintainable.labels</code>. The <a href="../../lint-rules/">lint rules</a> page explains
+  each rule.</li>
+<li><strong>message</strong>: what the rule found. Here, two items have no label.</li>
+</ul>
 <hr />
 <h2 id="5-export-to-json">5. Export to JSON<a class="headerlink" href="#5-export-to-json" title="Permanent link">&para;</a></h2>
 <p>The <code>ddi to-json</code> command converts a DDI XML file into JSON format. <strong>JSON</strong>
 (JavaScript Object Notation) is a text format that many tools and programming
 languages can read. It is easier for some people to read than XML.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>my-study.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>my-study.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span>
 </span></code></pre></div>
 <p>The <code>--indent 2</code> option adds spaces to make the output easier to read. Without
 it, the JSON is printed on one long line.</p>
 <p>You can save the output to a file by using the <code>&gt;</code> symbol:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>my-study.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>my-study.json
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>my-study.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>my-study.json
 </span></code></pre></div>
 <p>This creates a new file called <code>my-study.json</code> with the JSON content.</p>
 <hr />
@@ -2883,7 +3057,7 @@ it, the JSON is printed on one long line.</p>
 <p>The <code>ddi roundtrip</code> command reads a DDI XML file and writes it back out. This
 is called a <strong>round-trip</strong> because the data travels in a circle: file to
 memory and back to file.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ddi<span class="w"> </span>roundtrip<span class="w"> </span>input.xml<span class="w"> </span>--output<span class="w"> </span>output.xml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ddi<span class="w"> </span>roundtrip<span class="w"> </span>input.xml<span class="w"> </span>--output<span class="w"> </span>output.xml
 </span></code></pre></div>
 <p>Why is this useful?</p>
 <ul>
@@ -2914,99 +3088,265 @@ code is a number that tells you whether the command succeeded or failed.</p>
 </tr>
 </tbody>
 </table>
+<p><code>ddi validate</code> returns 1 when the file has at least one schema error.
+<code>ddi lint</code> returns 1 only when a finding has the severity <code>error</code>: warnings
+alone return 0. (Add <code>--fail-severity warning</code> to make warnings fail too.)</p>
 <p>Why does this matter? Because scripts and pipelines can check the exit code
 to decide what to do next. For example:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>my-study.xml<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"All good!"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Fix the errors."</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>my-study.xml<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"All good!"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Fix the errors."</span>
 </span></code></pre></div>
 <p>This line says: "Run <code>ddi validate</code>. If it succeeds (exit code 0), print
 'All good!'. If it fails (exit code 1), print 'Fix the errors.'"</p>
-<p>You can also check the exit code of the last command with <code>$?</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>my-study.xml
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+<p>You can also print the exit code of the last command. On macOS and Linux, use
+<code>$?</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>my-study.xml
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
 </span></code></pre></div>
+<p>On Windows, use <code>echo %ERRORLEVEL%</code> in the Command Prompt, or
+<code>$LASTEXITCODE</code> in PowerShell.</p>
 <p>If the file is valid, <code>echo $?</code> prints <code>0</code>. If not, it prints <code>1</code>.</p>
 <hr />
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
 <div class="admonition example">
 <p class="admonition-title">Scenario</p>
 <p>A national statistics office has 20 DDI XML files from different survey
-teams. They need to validate them all, export one to JSON, and produce a
-normalized copy.</p>
+teams. They need to validate them all, check their quality, export one to
+JSON, and produce a normalized copy.</p>
 </div>
-<p><strong>Exercise 1.</strong> Validate <code>census-2024-updated.xml</code> from the Module 6 exercises
-(or any file from an earlier module) using <code>ddi validate</code>.
-Copy the output.</p>
-<p>Expected output (if valid):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Document is valid.
+<p><strong>Exercise 1 (O1).</strong> Validate <code>census-2024.xml</code> from the Module 6 exercises
+(or any file from an earlier module) using <code>ddi validate</code>. Is the file valid?</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Document is valid.
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>census-2024-updated.xml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>census-2024.xml
 </span></code></pre></div>
+<p>The output says <code>Document is valid.</code>, so the file follows all the DDI
+schema rules.</p>
 </details>
-<p><strong>Exercise 2.</strong> Export the file to JSON with <code>ddi to-json</code>. Count how many
-lines the JSON has.</p>
+<p><strong>Exercise 2 (O2).</strong> Break a file on purpose and read the error.</p>
+<ol>
+<li>Make a copy of <code>census-2024.xml</code> called <code>broken.xml</code>
+   (<code>cp census-2024.xml broken.xml</code> on macOS and Linux,
+   <code>copy census-2024.xml broken.xml</code> on Windows).</li>
+<li>Open <code>broken.xml</code> in a text editor. On line 5, change
+   <code>&lt;r:Version&gt;1&lt;/r:Version&gt;</code> to <code>&lt;r:Version&gt;one&lt;/r:Version&gt;</code>. Save the file.</li>
+<li>Run <code>ddi validate broken.xml</code>.</li>
+<li>Write down what is wrong and where.</li>
+</ol>
+<p>Keep <code>broken.xml</code> as it is: you fix it in Exercise 6.</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>error: value doesn't match any pattern of ['[0-9]+(\\.[0-9]+)*']
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    at /{ddi:instance:3_3}DDIInstance/{ddi:reusable:3_3}Version
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    context: &lt;r:Version&gt; one
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>1 issue found.
+</span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>census-2024-updated.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>census-2024-updated.json
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>wc<span class="w"> </span>-l<span class="w"> </span>census-2024-updated.json
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cp<span class="w"> </span>census-2024.xml<span class="w"> </span>broken.xml
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># edit line 5 of broken.xml, then:</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ddi<span class="w"> </span>validate<span class="w"> </span>broken.xml
 </span></code></pre></div>
-<p>The <code>wc -l</code> command counts the number of lines in a file. Your number will
-depend on how much content the file has.</p>
+<ul>
+<li><strong>What:</strong> the value <code>one</code> does not match the pattern for versions.
+  <code>[0-9]+(\.[0-9]+)*</code> means digits, optionally followed by more groups of
+  a dot and digits, such as <code>1</code> or <code>1.0.0</code>.</li>
+<li><strong>Where:</strong> the path after <code>at</code> ends with <code>DDIInstance</code>, then <code>Version</code>:
+  the <code>Version</code> element directly under the root, which is the one on
+  line 5. The <code>context:</code> line confirms the value found: <code>one</code>.</li>
+</ul>
 </details>
-<p><strong>Exercise 3.</strong> Round-trip the file. Compare the input and output sizes.</p>
+<p><strong>Exercise 3 (O3).</strong> Run <code>ddi lint</code> on <code>census-2024.xml</code> with
+<code>--format table</code>. Pick one finding and name its severity, its rule and its
+message. What would you change to make it go away?</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>severity  rule                     message
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>--------  -----------------------  ----------------------------------------
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>warning   ddi.maintainable.labels  Maintainable element is missing a label.
+</span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ddi<span class="w"> </span>roundtrip<span class="w"> </span>census-2024-updated.xml<span class="w"> </span>--output<span class="w"> </span>census-2024-roundtrip.xml
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ls<span class="w"> </span>-l<span class="w"> </span>census-2024-updated.xml<span class="w"> </span>census-2024-roundtrip.xml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ddi<span class="w"> </span>lint<span class="w"> </span>census-2024.xml<span class="w"> </span>--format<span class="w"> </span>table
 </span></code></pre></div>
-<p>The <code>ls -l</code> command shows the file sizes. The two files should be close in
-size. Small differences in whitespace are normal.</p>
+<p>One finding: severity <code>warning</code>, rule <code>ddi.maintainable.labels</code>, message
+"Maintainable element is missing a label." The file has four of them:
+its two questions and two variables have no label. To fix them, pass
+<code>label=</code> when you add each item, as in Section 9 of Module 3. The file is
+still valid: warnings point to quality, not to schema errors.</p>
+</details>
+<p><strong>Exercise 4 (O4).</strong> Export <code>census-2024.xml</code> to JSON with <code>ddi to-json</code>. Count
+how many lines the JSON has.</p>
+<p>Expected output: about 200 lines (<code>wc -l</code> prints the count followed by the
+filename).</p>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ddi<span class="w"> </span>to-json<span class="w"> </span>census-2024.xml<span class="w"> </span>--indent<span class="w"> </span><span class="m">2</span><span class="w"> </span>&gt;<span class="w"> </span>census-2024.json
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>wc<span class="w"> </span>-l<span class="w"> </span>census-2024.json
+</span></code></pre></div>
+<p>The <code>wc -l</code> command counts the number of lines in a file (on Windows
+PowerShell, use <code>(Get-Content census-2024.json).Count</code>). A file with two
+questions and two variables gives about 200 lines; more content gives
+more lines.</p>
+</details>
+<p><strong>Exercise 5 (O4).</strong> Round-trip <code>census-2024.xml</code>. Compare the input and output
+sizes.</p>
+<p>Expected output: two files of the same size, about 4 KB each.</p>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ddi<span class="w"> </span>roundtrip<span class="w"> </span>census-2024.xml<span class="w"> </span>--output<span class="w"> </span>census-2024-roundtrip.xml
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ls<span class="w"> </span>-l<span class="w"> </span>census-2024.xml<span class="w"> </span>census-2024-roundtrip.xml
+</span></code></pre></div>
+<p>The <code>ls -l</code> command shows the file sizes (use <code>dir</code> on Windows). A file
+that <code>ddi-l</code> wrote itself comes back with exactly the same size. A file
+from another tool may differ a little, because of spacing; that is the
+normalization at work.</p>
+</details>
+<p><strong>Exercise 6 (O5, O2).</strong> Check the exit codes.</p>
+<ol>
+<li>Run <code>ddi validate census-2024.xml</code>, then print the exit code
+   (<code>echo $?</code> on macOS and Linux, <code>echo %ERRORLEVEL%</code> in the Windows Command
+   Prompt, <code>$LASTEXITCODE</code> in PowerShell).</li>
+<li>Do the same with <code>broken.xml</code> from Exercise 2.</li>
+<li>Fix <code>broken.xml</code> (change <code>one</code> back to <code>1</code>), validate it again, and print
+   the exit code once more.</li>
+</ol>
+<p>Expected output (the exit codes, in order):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>0
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>1
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>0
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>census-2024.xml
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ddi<span class="w"> </span>validate<span class="w"> </span>broken.xml
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="c1"># edit line 5 of broken.xml back to &lt;r:Version&gt;1&lt;/r:Version&gt;, then:</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>ddi<span class="w"> </span>validate<span class="w"> </span>broken.xml
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+</span></code></pre></div>
+<p>A valid file gives exit code 0. A file with a schema error gives 1, and
+the fixed file gives 0 again, with <code>Document is valid.</code> above it. A
+script that runs <code>ddi validate</code> can use these codes to stop before it
+publishes a broken file.</p>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1: What does the ddi validate command do?</summary>
-<p><strong>A.</strong> It creates a new DDI file from scratch.</p>
-<p><strong>B.</strong> It checks whether a DDI XML file follows the DDI schema rules.</p>
-<p><strong>C.</strong> It converts a DDI file to a spreadsheet.</p>
-<p><strong>D.</strong> It uploads a DDI file to a server.</p>
+<summary>Question 1 (O1): What does this output tell you?</summary>
+<p>You run <code>ddi validate study.xml</code> and see <code>Document is valid.</code></p>
+<p><strong>A.</strong> The file follows all the DDI schema rules; no action is needed.</p>
+<p><strong>B.</strong> The file has no lint findings either.</p>
+<p><strong>C.</strong> The file was converted to JSON.</p>
+<p><strong>D.</strong> The file was saved in a new, normalized format.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>ddi validate</code> checks the file against the DDI schema. If the
-file follows all the rules, it prints "Document is valid." If not, it
-prints a list of errors in JSON format.</p>
+<p><strong>A.</strong> <code>ddi validate</code> checks the schema only. Lint findings are a
+separate check (<code>ddi lint</code>), so option B does not follow.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2: What does exit code 0 mean?</summary>
-<p><strong>A.</strong> The command found 0 questions in the file.</p>
-<p><strong>B.</strong> The command failed and produced 0 output.</p>
-<p><strong>C.</strong> The command succeeded: everything is fine.</p>
-<p><strong>D.</strong> The file has 0 bytes.</p>
+<summary>Question 2 (O2): Where is the problem in this output?</summary>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>error: Unexpected child with tag '{ddi:datacollection:3_3}QuestionTxt' at position 4.
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>    at /{ddi:instance:3_3}DDIInstance/{ddi:studyunit:3_3}StudyUnit/{ddi:datacollection:3_3}DataCollection/{ddi:datacollection:3_3}QuestionScheme/{ddi:datacollection:3_3}QuestionItem[1]
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    context: &lt;d:QuestionItem&gt;
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>1 issue found.
+</span></code></pre></div>
+<p><strong>A.</strong> In the title of the study.</p>
+<p><strong>B.</strong> The file is not well-formed XML.</p>
+<p><strong>C.</strong> Inside the first <code>QuestionItem</code>: it holds an element called
+<code>QuestionTxt</code>, which the schema does not allow there (it looks like a
+misspelled <code>QuestionText</code>).</p>
+<p><strong>D.</strong> On line 1 of the file.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> Exit code 0 means success. The command finished without errors.
-Scripts and pipelines use exit codes to decide what to do next.</p>
+<p><strong>C.</strong> The path after <code>at</code> ends with <code>QuestionItem[1]</code>, the first
+question item, which holds the problem; the message names the
+unexpected element. A file that is not well-formed gives a
+<code>mismatched tag</code> error instead.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3: What does ddi to-json produce?</summary>
-<p><strong>A.</strong> A Python script.</p>
-<p><strong>B.</strong> A JSON file that contains the same data as the DDI XML file.</p>
-<p><strong>C.</strong> A CSV spreadsheet.</p>
-<p><strong>D.</strong> A PDF report.</p>
+<summary>Question 3 (O3): What do these two results tell you about the file?</summary>
+<p><code>ddi validate data.xml</code> prints <code>Document is valid.</code>, and
+<code>ddi lint data.xml --format table</code> prints one row:
+<code>warning  ddi.maintainable.labels  Maintainable element is missing a label.</code></p>
+<p><strong>A.</strong> The file breaks a schema rule.</p>
+<p><strong>B.</strong> The file is valid, but lint found a quality problem: an item has
+no label.</p>
+<p><strong>C.</strong> <code>ddi lint</code> and <code>ddi validate</code> check the same rules, so one of them
+is wrong.</p>
+<p><strong>D.</strong> The warning makes <code>ddi lint</code> return exit code 1.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>ddi to-json</code> converts a DDI XML file into JSON format. JSON is
-a text format that many tools and programming languages can read.</p>
+<p><strong>B.</strong> Validation checks the schema; lint checks quality rules beyond
+it. A warning alone does not fail <code>ddi lint</code>: it returns 0 unless you
+pass <code>--fail-severity warning</code>.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 4 (O4): Which command writes a JSON copy of my-study.xml to my-study.json?</summary>
+<p><strong>A.</strong> <code>ddi roundtrip my-study.xml --output my-study.json</code></p>
+<p><strong>B.</strong> <code>ddi validate my-study.xml &gt; my-study.json</code></p>
+<p><strong>C.</strong> <code>ddi lint my-study.json</code></p>
+<p><strong>D.</strong> <code>ddi to-json my-study.xml --indent 2 &gt; my-study.json</code></p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>D.</strong> <code>ddi to-json</code> converts DDI XML to JSON, and <code>&gt;</code> saves the output
+in a file. <code>ddi roundtrip</code> writes XML, and the <code>ddi validate</code> command
+in option B saves the validation report, not the document.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O4): Why would you run ddi roundtrip on a file from another tool?</summary>
+<p><strong>A.</strong> To delete the elements that <code>ddi-l</code> does not model.</p>
+<p><strong>B.</strong> To write a copy with clean, consistent formatting, and to check
+that nothing is lost on the way.</p>
+<p><strong>C.</strong> To validate the file against the schema.</p>
+<p><strong>D.</strong> To convert the file to JSON.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>B.</strong> A round-trip reads the file and writes it back out in a
+normalized format. <code>ddi-l</code> keeps the elements it does not model, so
+nothing is deleted.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 6 (O5): What does this script print?</summary>
+<p><code>broken.xml</code> has three schema errors. A script runs:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ddi<span class="w"> </span>validate<span class="w"> </span>broken.xml
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+</span></code></pre></div>
+<p><strong>A.</strong> <code>0</code></p>
+<p><strong>B.</strong> <code>3</code></p>
+<p><strong>C.</strong> <code>1</code> (after the list of errors)</p>
+<p><strong>D.</strong> <code>-1</code></p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>C.</strong> <code>ddi validate</code> returns 1 when the file has any schema error,
+however many there are. The exit code says "failed", not how many
+problems were found.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can run <code>ddi validate</code> on a file and say from the output whether it is valid. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can read a <code>ddi validate</code> error, say what is wrong and where, and fix the file so it validates. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can run <code>ddi lint</code> and name one finding by its severity, rule and message. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can convert a file to JSON with <code>ddi to-json</code> and write a normalized copy with <code>ddi roundtrip</code>. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can check the exit code after a valid and an invalid file, and predict what a script will get. (O5)</li>
+</ul>
 <hr />
 <p><strong>See also:</strong></p>
 <ul>
 <li><a href="../../cli-recipes/">CLI recipes</a></li>
 <li><a href="../../tutorials/automation-playbook/">Automation playbook</a></li>
+<li><a href="../../lint-rules/">Lint rules</a></li>
 </ul>
 <hr />
 <div class="admonition tip">
@@ -3015,14 +3355,20 @@ a text format that many tools and programming languages can read.</p>
 <li><strong>Live demo.</strong> Run <code>ddi validate</code>, <code>ddi lint</code>, <code>ddi to-json</code>, and
   <code>ddi roundtrip</code> on a projector so learners can see the output in real
   time. Use files from previous modules.</li>
-<li><strong>Break a file on purpose.</strong> Open a valid XML file in a text editor.
-  Delete a closing tag or add an unknown element. Then run
-  <code>ddi validate</code> to show what an error looks like. Fix it and re-validate.</li>
+<li><strong>Break a file on purpose.</strong> Exercise 2 changes a version number to a
+  word, which gives a schema error. Also show a different break: delete a
+  closing tag in a text editor and run <code>ddi validate</code> again. That gives
+  <code>Error: mismatched tag: line N, column M</code>, because the file is no longer
+  well-formed XML. Fix it and re-validate.</li>
 <li><strong>Batch validation.</strong> Show how to validate many files at once:
   <code>for f in *.xml; do echo "--- $f ---"; ddi validate "$f"; done</code></li>
 <li><strong>Exit codes in practice.</strong> Write a short bash script that validates a
   file and prints a message based on the exit code. This prepares learners
-  for CI/CD integration.</li>
+  for CI/CD integration. Windows users print the code with
+  <code>echo %ERRORLEVEL%</code> (Command Prompt) or <code>$LASTEXITCODE</code> (PowerShell).</li>
+<li><strong>Lint is not validation.</strong> Learners often expect lint warnings to make
+  a file invalid. Use Exercise 3 and Question 3 to separate the two
+  checks.</li>
 <li><strong>JSON as a bridge.</strong> Explain that JSON output can be loaded by other
   tools (R, JavaScript, data catalogs). This is useful for teams that do
   not use Python.</li>
@@ -3109,6 +3455,10 @@ a text format that many tools and programming languages can read.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

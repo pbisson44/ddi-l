@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1155,6 +1157,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -1569,14 +1582,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1714,6 +1755,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1774,6 +1821,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1914,6 +1989,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2730,6 +2861,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2805,18 +2947,23 @@
 
 <h1 id="module-1-what-is-metadata-and-why-does-it-matter">Module 1: What is metadata and why does it matter?<a class="headerlink" href="#module-1-what-is-metadata-and-why-does-it-matter" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Define metadata in your own words.</li>
-<li>Explain why data without documentation is hard to use.</li>
-<li>Describe what DDI is and who uses it.</li>
-<li>Explain how DDI helps make data FAIR (Findable, Accessible,
-  Interoperable, Re-usable).</li>
-<li>Describe what <code>ddi-l</code> does.</li>
+<li><strong>O1.</strong> Define metadata in one sentence and point to two pieces of
+  metadata that describe a given table.</li>
+<li><strong>O2.</strong> List three questions a reader must answer before using an
+  undocumented table.</li>
+<li><strong>O3.</strong> Describe what DDI is in two sentences and name two kinds of
+  organizations that use it.</li>
+<li><strong>O4.</strong> Match each FAIR principle to one way DDI metadata supports it.</li>
+<li><strong>O5.</strong> State what <code>ddi-l</code> does and one thing it does not do.</li>
 </ul>
 </div>
 <p><strong>Prerequisites:</strong> None.</p>
 <p><strong>Time:</strong> 30 min self-paced / 45 min instructor-led.</p>
+<p><strong>New in this module:</strong> no functions or commands yet. This module sets out
+the ideas the rest of the course builds on.</p>
 <hr />
 <h2 id="1-what-is-metadata">1. What is metadata?<a class="headerlink" href="#1-what-is-metadata" title="Permanent link">&para;</a></h2>
 <p>Metadata is <strong>information about your data</strong>. Think of a library card catalog.
@@ -3007,6 +3154,14 @@ Python, and <code>ddi-l</code> handles the XML for you.</p>
 <li><strong>Update</strong> a DDI document by adding or removing items.</li>
 <li><strong>Validate</strong> a document to make sure it follows the DDI rules.</li>
 </ul>
+<p>What <code>ddi-l</code> does not do:</p>
+<ul>
+<li>It does not <strong>collect</strong> answers. You still run your survey with your own
+  survey tool; <code>ddi-l</code> describes the survey and its data.</li>
+<li>It does not <strong>analyze</strong> your data. It does not compute averages or
+  tables from the values in your data file. It records what those values
+  mean.</li>
+</ul>
 <hr />
 <h2 id="6-the-big-picture">6. The big picture<a class="headerlink" href="#6-the-big-picture" title="Permanent link">&para;</a></h2>
 <p>Here is the typical workflow when you use <code>ddi-l</code>:</p>
@@ -3048,7 +3203,7 @@ data.</p>
 the columns are labeled A, B, and C. The values look like numbers and
 short words.</p>
 </div>
-<p><strong>Exercise 1.</strong> Look at the table below.</p>
+<p><strong>Exercise 1 (O2).</strong> Look at the table below.</p>
 <table>
 <thead>
 <tr>
@@ -3085,80 +3240,226 @@ short words.</p>
 </tr>
 </tbody>
 </table>
-<p>Write down <strong>3 things</strong> a new person would need to know before they could use
-this data. For example: What does column A measure?</p>
+<p>Write down <strong>3 questions</strong> a new person would need answered before they could
+use this data. For example: What does column A measure?</p>
+<p>Expected output: a list of three questions.</p>
 <details class="success">
 <summary>Answer</summary>
 <p>Any three of these, or similar:</p>
 <ol>
-<li>What each column means (is A an age? In years or months?)</li>
-<li>Who was surveyed (students? adults? everyone?)</li>
-<li>When the data was collected</li>
+<li>What does each column mean? (Is A an age? In years or months?)</li>
+<li>What unit is column C in? (Dollars? Euros? Per year or per month?)</li>
+<li>Who was surveyed? (Students? Adults? Everyone?)</li>
+<li>When was the data collected?</li>
 </ol>
 </details>
-<p><strong>Exercise 2.</strong> Visit <a href="https://ddialliance.org">https://ddialliance.org</a> and find one sentence on the
-site that describes what DDI does. Write that sentence down.</p>
+<p><strong>Exercise 2 (O1).</strong> The same researcher now sends a documented version of
+another file:</p>
+<blockquote>
+<p><strong>Campus Sleep Study 2025.</strong> Collected in September 2025 from first-year
+students. <code>sleep_hrs</code> is the hours of sleep on a typical school night.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">sleep_hrs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Write a one-sentence definition of metadata.</li>
+<li>Name <strong>two pieces of metadata</strong> in this file, and <strong>one piece of data</strong>.</li>
+</ol>
+<p>Expected output: one sentence, then three short items.</p>
 <details class="success">
 <summary>Answer</summary>
-<p>For example: "The Data Documentation Initiative (DDI) is an international
-standard for describing data from the social, behavioral, economic, and health
-sciences."</p>
+<ol>
+<li>Metadata is information that describes data: what it means, where it
+   came from, and how it was collected.</li>
+<li>Metadata: any two of the title "Campus Sleep Study 2025", the
+   collection date (September 2025), the population (first-year
+   students), the column name <code>sleep_hrs</code>, or its meaning (hours of sleep
+   on a typical school night). Data: any of the values 7, 6, or 8.</li>
+</ol>
+</details>
+<p><strong>Exercise 3 (O4).</strong> Match each FAIR principle (1 to 4) with the DDI feature
+(a to d) that supports it.</p>
+<table>
+<thead>
+<tr>
+<th>FAIR principle</th>
+<th>DDI feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Findable</td>
+<td>a. The DDI file records who was surveyed, when, and what each variable means.</td>
+</tr>
+<tr>
+<td>2. Accessible</td>
+<td>b. Two surveys use the same DDI code list for employment status.</td>
+</tr>
+<tr>
+<td>3. Interoperable</td>
+<td>c. A data catalog indexes the title, agency, and concepts stored in the DDI file.</td>
+</tr>
+<tr>
+<td>4. Re-usable</td>
+<td>d. The DDI file is plain XML, published next to the data, that any XML tool can open.</td>
+</tr>
+</tbody>
+</table>
+<p>Expected output: four pairs, such as <code>1-?</code>.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><code>1-c</code>, <code>2-d</code>, <code>3-b</code>, <code>4-a</code>.</p>
+<ul>
+<li><strong>Findable (c):</strong> the catalog can only find what is described in
+  structured fields.</li>
+<li><strong>Accessible (d):</strong> a standard, open format needs no special software.</li>
+<li><strong>Interoperable (b):</strong> a shared code list means the same code has the
+  same meaning in both surveys, so the data can be combined.</li>
+<li><strong>Re-usable (a):</strong> a new user knows exactly what the data contains.</li>
+</ul>
+</details>
+<p><strong>Exercise 4 (O3).</strong> A new colleague asks you: "What is DDI?" Write a
+<strong>two-sentence</strong> answer. Name <strong>two kinds of organizations</strong> that use it.</p>
+<p>Expected output: two sentences.</p>
+<details class="success">
+<summary>Answer</summary>
+<p>For example: "DDI, the Data Documentation Initiative, is an international
+standard for describing surveys, censuses, and datasets in XML. National
+statistics offices, data archives, universities, and research teams use it
+so that others can find, understand, and reuse their data."</p>
+<p>Any two of these kinds of organizations are correct: national statistics
+offices, data archives or national libraries, universities and their
+research repositories, research teams.</p>
+</details>
+<p><strong>Exercise 5 (O5).</strong> For each task below, write <strong>does</strong> if <code>ddi-l</code> does it,
+or <strong>does not</strong> if it does not.</p>
+<ol>
+<li>Write a DDI XML file from a short Python script.</li>
+<li>Send a questionnaire to respondents and collect their answers.</li>
+<li>Check a DDI document against the DDI rules.</li>
+<li>Calculate the average income from the values in a CSV file.</li>
+<li>Open an existing DDI file and list its questions.</li>
+</ol>
+<p>Then write one sentence that says what <code>ddi-l</code> does and one thing it does not
+do.</p>
+<p>Expected output: five answers, then one sentence.</p>
+<details class="success">
+<summary>Answer</summary>
+<p>Does: 1, 3, and 5. Does not: 2 and 4.</p>
+<p>For example: "<code>ddi-l</code> creates, reads, updates, and validates DDI metadata
+from Python, but it does not collect survey answers."</p>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1: What is metadata?</summary>
-<p><strong>A.</strong> The raw data in a spreadsheet.</p>
-<p><strong>B.</strong> Information about data, like a label or description that tells you
-what the data means.</p>
-<p><strong>C.</strong> A type of programming language.</p>
-<p><strong>D.</strong> A file format used only by governments.</p>
+<summary>Question 1 (O1): A spreadsheet has a column headed <code>Age (years)</code> with the values 34, 28, and 45. Which of these is metadata?</summary>
+<p><strong>A.</strong> The value 34.</p>
+<p><strong>B.</strong> The header <code>Age (years)</code>, which says what the values mean and
+their unit.</p>
+<p><strong>C.</strong> The sum of the three values.</p>
+<p><strong>D.</strong> The second row.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> Metadata is information about data. It describes what the data
-means, where it came from, and how it was collected.</p>
+<p><strong>B.</strong> Metadata is information about data. The header tells you what
+the numbers mean and how they are measured. The values themselves,
+and anything computed from them, are data.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2: Why does documentation matter?</summary>
-<p><strong>A.</strong> It makes the data file smaller.</p>
-<p><strong>B.</strong> It is required by Python.</p>
-<p><strong>C.</strong> Without it, people cannot understand what the data means or how to
-use it correctly.</p>
-<p><strong>D.</strong> It changes the values in the dataset.</p>
+<summary>Question 2 (O2): A colleague sends a table with columns A, B, and C and no notes. Column C holds values like 52000. You want to report the average income. Which question must you answer first?</summary>
+<p><strong>A.</strong> Which font was used to type the table?</p>
+<p><strong>B.</strong> How many rows does the file have?</p>
+<p><strong>C.</strong> What is the name of the file?</p>
+<p><strong>D.</strong> What does column C measure, and in which currency and period?</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> Without documentation, data is just numbers and labels with no
-context. People may misinterpret or misuse the data.</p>
+<p><strong>D.</strong> Without knowing that C is income, and whether it is in dollars
+or euros, per year or per month, any average you report could be
+wrong. The other questions do not change what the numbers mean.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3: What does FAIR stand for?</summary>
-<p><strong>A.</strong> Fast, Automated, Indexed, Reliable.</p>
-<p><strong>B.</strong> Findable, Accessible, Interoperable, Re-usable.</p>
-<p><strong>C.</strong> File, Archive, Import, Report.</p>
-<p><strong>D.</strong> Format, Align, Inspect, Review.</p>
+<summary>Question 3 (O3): Which sentence best describes DDI?</summary>
+<p><strong>A.</strong> An international standard for describing surveys, censuses, and
+datasets, used by national statistics offices, data archives, and
+universities.</p>
+<p><strong>B.</strong> A survey tool that sends questionnaires to respondents.</p>
+<p><strong>C.</strong> A Python package that computes statistics from data files.</p>
+<p><strong>D.</strong> A database that stores survey answers.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> FAIR stands for Findable, Accessible, Interoperable, and
-Re-usable. These four principles guide how data should be shared so
-that others can discover, understand, and reuse it. DDI metadata
-helps you meet all four.</p>
+<p><strong>A.</strong> DDI is a standard: a set of agreed rules for documentation.
+Option C confuses DDI with tools; <code>ddi-l</code> is a Python package that
+works with DDI, and it does not compute statistics.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 4: What does ddi-l do?</summary>
-<p><strong>A.</strong> It collects survey responses from people.</p>
-<p><strong>B.</strong> It is a Python tool that creates, reads, updates, and validates DDI
-documents.</p>
-<p><strong>C.</strong> It converts Python code into Excel files.</p>
-<p><strong>D.</strong> It replaces Microsoft Word for writing reports.</p>
+<summary>Question 4 (O4): Your survey and a survey in France use the same DDI code list for gender, so the two datasets can be merged. Which FAIR principle does this support most directly?</summary>
+<p><strong>A.</strong> Findable</p>
+<p><strong>B.</strong> Accessible</p>
+<p><strong>C.</strong> Interoperable</p>
+<p><strong>D.</strong> Re-usable</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>ddi-l</code> is a Python package for working with DDI metadata
-documents. It handles the XML so you can focus on your data.</p>
+<p><strong>C.</strong> Interoperable means data works with other data. A shared code
+list gives each code the same meaning in both datasets, so they can
+be combined and compared.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 5 (O4): A data catalog reads the title, agency, and concepts in your DDI file, so a search for 'mental health survey' lists your dataset. Which FAIR principle does this support?</summary>
+<p><strong>A.</strong> Findable</p>
+<p><strong>B.</strong> Accessible</p>
+<p><strong>C.</strong> Interoperable</p>
+<p><strong>D.</strong> Re-usable</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>A.</strong> Findable means people can discover the data. Structured DDI
+fields give catalogs something reliable to index and search.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 6 (O5): Which of these tasks does ddi-l NOT do?</summary>
+<p><strong>A.</strong> Create a DDI study from a Python script.</p>
+<p><strong>B.</strong> Collect answers from survey respondents.</p>
+<p><strong>C.</strong> Validate a DDI document against the DDI rules.</p>
+<p><strong>D.</strong> Open an existing DDI file and inspect its contents.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>B.</strong> <code>ddi-l</code> works with metadata: it creates, reads, updates, and
+validates DDI documents. Collecting answers is the job of a survey
+tool.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can define metadata in one sentence and point to two pieces of
+  metadata that describe a table. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can list three questions a reader must answer before using an
+  undocumented table. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can describe DDI in two sentences and name two kinds of
+  organizations that use it. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can match each FAIR principle to one way DDI metadata supports it.
+  (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can state what <code>ddi-l</code> does and one thing it does not do. (O5)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Instructor notes</p>
@@ -3166,10 +3467,16 @@ documents. It handles the XML so you can focus on your data.</p>
 <li><strong>Opening activity:</strong> Start with the "messy table" exercise (Exercise 1).
   Give learners the unlabeled table and ask them to guess what the data
   means. This builds motivation for the rest of the module.</li>
-<li><strong>Audience adaptation:</strong> Use the census example for NSO audiences. Use the
-  thesis example for university students.</li>
+<li><strong>Audience adaptation:</strong> For the messy table, you can show a few rows
+  of the course's sample datasets with the headers removed:
+  <a href="../census-data.csv"><code>census-data.csv</code></a> for NSO audiences and
+  <a href="../thesis-data.csv"><code>thesis-data.csv</code></a> for university students. Both
+  come back in the Module 17 capstone.</li>
 <li><strong>Discussion prompt:</strong> Ask learners to share a time they received a file
   with no documentation. What questions did they have?</li>
+<li><strong>FAIR matching (Exercise 3):</strong> Ask which FAIR letter is hardest to
+  achieve without a standard like DDI. Most will say Interoperable or
+  Findable.</li>
 <li><strong>Closing:</strong> Reinforce that <code>ddi-l</code> makes documentation easy: you
   write Python, and the tool creates the standard XML for you.</li>
 </ul>
@@ -3252,6 +3559,10 @@ documents. It handles the XML so you can focus on your data.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

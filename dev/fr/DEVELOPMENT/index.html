@@ -920,6 +920,8 @@
       
         
       
+        
+      
     
     
     
@@ -1401,14 +1403,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-16-capstone/" class="md-nav__link">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16 : Projets de synthèse
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
   
 
     
@@ -1546,6 +1576,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1606,6 +1642,34 @@
     
   
     Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
   
 
     
@@ -1746,6 +1810,62 @@
     
   
     Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
   
 
     
@@ -2660,15 +2780,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#les-deux-backends-xml" class="md-nav__link">
+  <a href="#les-backends-xml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Les deux backends XML
+        Les backends XML
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Les deux backends XML">
+    <nav class="md-nav" aria-label="Les backends XML">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3063,15 +3183,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#les-deux-backends-xml" class="md-nav__link">
+  <a href="#les-backends-xml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Les deux backends XML
+        Les backends XML
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Les deux backends XML">
+    <nav class="md-nav" aria-label="Les backends XML">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3304,7 +3424,7 @@ contribution :</p>
   sur GitHub, est la version courte : préparer l'environnement, lancer les
   contrôles, ouvrir une pull request. Commencez par là.</li>
 <li>Ce guide est la référence détaillée qui le complète : l'architecture, le
-  générateur de code à partir des XSD, l'ajout d'une version de DDI, les deux
+  générateur de code à partir des XSD, l'ajout d'une version de DDI, les
   moteurs XML, la chaîne de documentation et le processus de publication.</li>
 </ul>
 <h2 id="preparer-votre-environnement">Préparer votre environnement<a class="headerlink" href="#preparer-votre-environnement" title="Permanent link">&para;</a></h2>
@@ -3316,6 +3436,11 @@ avec <code>--locked</code>.</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>--extra<span class="w"> </span>full<span class="w"> </span><span class="c1"># ...plus le backend optionnel lxml</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs<span class="w">             </span><span class="c1"># Chaîne de production de la documentation</span>
 </span></code></pre></div>
+<p><code>uv.lock</code> installe <code>ddi-l-native</code> sous la forme de son remplaçant en Python
+pur (<code>native/fallback/</code>) : aucune de ces commandes ne demande Rust, et les
+tests tournent avec lxml ou la bibliothèque standard.
+<a href="#les-backends-xml">Les backends XML</a> disent comment construire et tester le
+noyau natif.</p>
 <p>Préfixez les commandes avec <code>uv run</code> (<code>uv run pytest</code>), ou activez
 l'environnement avec <code>source .venv/bin/activate</code>.</p>
 <div class="admonition note">
@@ -3326,7 +3451,7 @@ l'environnement avec <code>source .venv/bin/activate</code>.</p>
 </div>
 <p>Si vous préférez pip :</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">'.[full]'</span><span class="w"> </span>--group<span class="w"> </span>dev<span class="w">   </span><span class="c1"># pip 25.1+ reads dependency groups</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">'.[full]'</span><span class="w"> </span>./native/fallback<span class="w"> </span>--group<span class="w"> </span>dev<span class="w">   </span><span class="c1"># pip 25.1+ reads groups</span>
 </span></code></pre></div>
 <h2 id="controles-qualite">Contrôles qualité<a class="headerlink" href="#controles-qualite" title="Permanent link">&para;</a></h2>
 <p>Exécutez-les avant d'ouvrir une pull request :</p>
@@ -3337,6 +3462,8 @@ l'environnement avec <code>source .venv/bin/activate</code>.</p>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uvx<span class="w"> </span>pip-audit<span class="w"> </span>--strict<span class="w">         </span><span class="c1"># Scan de vulnérabilités</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>git<span class="w"> </span>diff<span class="w"> </span>--exit-code<span class="w">           </span><span class="c1"># Un run de tests ne doit modifier aucun fichier suivi</span>
 </span></code></pre></div>
+<p><code>pytest</code> tourne sur tous les cœurs (<code>-n auto</code>, pytest-xdist) ; passez <code>-n 0</code>
+pour un seul processus, comme le demande <code>--pdb</code>.</p>
 <p><code>ruff</code> et <code>mypy</code> sont épinglés à des versions exactes dans le groupe <code>dev</code>.
 Une nouvelle version de l'un ou l'autre peut changer ce qui constitue une
 violation : l'épinglage est ce qui rend la CI reproductible. Mettez-le à jour
@@ -3352,35 +3479,52 @@ fichiers d'exemple, vérifie que <code>ddi_l</code> est le <em>seul</em> paquet 
 dans la roue, puis installe la roue dans un environnement virtuel vierge et y
 valide un document.</p>
 <h3 id="tests-de-mutation">Tests de mutation<a class="headerlink" href="#tests-de-mutation" title="Permanent link">&para;</a></h3>
-<p>La couverture indique qu'une ligne a été exécutée. Elle ne dit pas si un test
-s'apercevrait que cette ligne est fausse, et l'écart compte surtout dans les
-petits prédicats qui décident si une étiquette de langue correspond ou si un
-espace de noms est utilisé. <code>mutmut</code> répond à la seconde question : il modifie
-le code et vérifie si la suite proteste.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>run<span class="w">                       </span><span class="c1"># tout ce qui est dans le périmètre</span>
+<p>La couverture dit qu'une ligne a été exécutée. Elle ne dit pas qu'un test
+remarquerait une erreur dans cette ligne. <code>mutmut</code> le vérifie : il apporte de
+petites modifications au code (des « mutants »), lance les tests et signale
+chaque modification qu'aucun test n'a remarquée (un « survivant »).</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>make<span class="w"> </span>mutation<span class="w">                           </span><span class="c1"># mutmut run, puis la vérification</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>results<span class="w">                   </span><span class="c1"># ce qui a survécu</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>show<span class="w"> </span>&lt;nom-du-mutant&gt;<span class="w">      </span><span class="c1"># le diff d'un survivant</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>run<span class="w"> </span>&lt;nom-du-mutant&gt;<span class="w">       </span><span class="c1"># recontrôler après avoir ajoute un test</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>uv<span class="w"> </span>run<span class="w"> </span>mutmut<span class="w"> </span>run<span class="w"> </span>&lt;nom-du-mutant&gt;<span class="w">       </span><span class="c1"># revérifier après avoir ajouté un test</span>
 </span></code></pre></div>
-<p>Le périmètre est défini dans <code>[tool.mutmut]</code> du <code>pyproject.toml</code> et reste
-volontairement étroit : quatre modules de logique de décision écrite à la main,
-ni les dataclasses générées ni la plomberie XML, dont les mutants sont pour
-l'essentiel équivalents. Élargissez-le quand vous ajoutez un module comportant
-de vraies ramifications.</p>
-<p><strong>Ce n'est pas un contrôle bloquant sur les pull requests</strong>, et
-<code>.github/workflows/mutation.yml</code> explique longuement pourquoi : un passage
-cible représente environ 2 200 mutants et des dizaines de minutes, les
-survivants demandent un jugement qu'un seuil ne peut pas fournir, et les
-résultats différent entre les deux moteurs XML. Le travail s'exécute chaque
-semaine et à la demande ; le rapport se lit, il ne se satisfait pas.</p>
-<p>Lire les survivants est le savoir-faire. Certains sont réels :
-<code>test_tree_uses_namespace_looks_at_tags_and_attributes</code> existe parce que forcer
-cet utilitaire à toujours répondre « non » laissait toute la suite au vert,
-donc rien ne vérifiait qu'un document <em>utilisant</em> <code>xsi:schemaLocation</code> conserve
-sa déclaration. D'autres ne peuvent pas être tus et ne doivent pas l'être :
-<code>getattr(node, "nsmap", )</code> se comporte exactement comme <code>getattr(node, "nsmap",
-None)</code> quand tous les noeuds possèdent l'attribut. Corrigez les premiers en
-écrivant le test manquant ; laissez les seconds tranquilles.</p>
+<p><strong>Portée.</strong> <code>[tool.mutmut]</code> dans <code>pyproject.toml</code> liste dix-sept modules qui
+contiennent de vrais embranchements : le lint, la base de faits que ses
+règles partagent et ce que le lint incrémental garde, les règles Colectica,
+la lecture et l'édition des conditions, le langage de spécification avec son
+évaluateur et son encodage pour le solveur, la conformité avec son index du
+questionnaire, ce qu'un répondant atteint dans un flux, la validation, les
+entrées-sorties et la conversion. Pas les modèles générés, dont presque tous
+les mutants sont équivalents.</p>
+<p><strong>La barrière.</strong> <code>tests/mutation_baseline.txt</code> liste les survivants connus.
+<code>scripts/check_mutation.py</code> échoue quand survit un mutant que la liste ne
+nomme pas, et quand un mutant listé ne survit plus : la liste ne peut que
+raccourcir. <code>.github/workflows/mutation.yml</code> lance les deux chaque mois
+(le 1er) et sur demande ; une exécution complète dure des heures, elle ne
+tourne donc pas sur chaque PR.</p>
+<p><strong>Exemples.</strong> Sous mutmut, chaque test de propriété tire au plus 30
+exemples, les mêmes à chaque exécution (<code>tests/helpers/examples.py</code>) : il
+tourne une fois par mutant qu'il couvre, et un mutant doit être attrapé à
+chaque exécution ou jamais. La suite elle-même en tire 300.</p>
+<p><strong>Quand la vérification échoue sur un nouveau survivant</strong>, lancez
+<code>mutmut show &lt;nom&gt;</code> et décidez :</p>
+<ul>
+<li><strong>Un vrai manque</strong> : un test attraperait une erreur comme celle-ci. Écrivez
+  ce test.</li>
+<li><strong>Équivalent</strong> : aucun test ne peut distinguer le mutant de l'original, par
+  exemple <code>getattr(node, "nsmap", )</code> au lieu de <code>getattr(node, "nsmap", None)</code>.
+  Ajoutez le nom à la liste avec <code># equivalent:</code> et la raison.</li>
+<li><strong>Moteur stdlib seulement</strong> : l'exécution utilise lxml, donc une modification
+  du code que seul le moteur de la bibliothèque standard exécute survit.
+  Ajoutez <code># stdlib backend only:</code> et la raison.</li>
+<li><strong>Moteur natif seulement</strong> : de même pour le code que seul le moteur natif
+  exécute, comme ce que garde le lint incrémental (<code>ddi_l/_incremental.py</code>) ;
+  ses tests tournent sur le moteur natif. Ajoutez <code># native backend only:</code> et
+  la raison.</li>
+</ul>
+<p>Modifier une fonction renumérote ses mutants. Après une telle modification,
+lancez <code>uv run python scripts/check_mutation.py --update</code>, qui garde les
+raisons des entrées toujours présentes, et relisez le diff de la liste.</p>
 <h2 id="normes-de-codage">Normes de codage<a class="headerlink" href="#normes-de-codage" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Longueur de ligne</strong> : 88 caractères.</li>
@@ -3524,7 +3668,7 @@ validation, et rien d'autre.</p>
    version. Ce n'est ni automatique ni gratuit : régénérer contre un nouveau XSD
    modifie <code>_FIELD_XML_MAP</code>, <code>_ATTR_XML_MAP</code> et <code>_ELEMENT_ORDER</code>, donc la sortie
    sérialisée, donc l'ensemble des fixtures de référence sous
-   <code>src/ddi_l/examples/tests/fixtures/</code>. Traitez cela comme un changement
+   <code>tests/fixtures/</code>. Traitez cela comme un changement
    cassant.</li>
 </ol>
 <h3 id="voie-b-ddi-40">Voie B : DDI 4.0<a class="headerlink" href="#voie-b-ddi-40" title="Permanent link">&para;</a></h3>
@@ -3671,49 +3815,84 @@ vers le même URI. La détection de version n'utilise que l'espace de noms
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>src/ddi_l/
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  __init__.py                # API publique : new_study, open_ddi, Document
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  document.py                # Document, DDIDocument, DDIFragment, StudyCursor
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  _document_mixins.py        # Comportement de Document decoupe par sujet
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  _document_maintainables.py # Helpers de recherche / rattachement
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  _document_namespaces.py    # Gestion des espaces de noms pour Document
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  models/
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    base.py                  # InternationalString, Reference, MaintainableBase
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>                             # et le moteur generique from_xml / to_xml
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    _generated/              # Bases generees (champs uniquement, ne pas editer)
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    datacollection/          # Types DataCollection (seul sous-paquet de modeles)
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    logicalproduct.py        # Variables, listes de codes, categories, NCubes
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    conceptualcomponent.py   # Concepts, univers, variables conceptuelles
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    reusable.py, study.py, archive.py, group.py, physical.py, process.py,
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    quality.py, comparison.py, methodology.py, classification.py, ...
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  schema_loader/             # Resolution des schemas, validation, conversion JSON
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  schemas/                   # XSD DDI 3.1 / 3.2 / 3.3 integres (CC-BY-4.0)
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  examples/                  # Instances et fixtures d'exemple empaquetees
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  validation.py              # Validation de haut niveau
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  lint.py                    # Moteur lint et regles
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  cli.py                     # Point d'entree CLI (`ddi`)
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  io.py                      # Lecture/ecriture bas niveau et streaming
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  index.py                   # Index d'identifiants pour find() / references
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  registry/                  # Registre des types maintainable
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>  schema_sync.py             # Rafraichit le lot de schemas integre
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  _document_maintainables.py # Helpers de recherche / rattachement
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  _document_namespaces.py    # Gestion des espaces de noms pour Document
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  models/
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    base.py                  # InternationalString, Reference, MaintainableBase
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>                             # et le moteur generique from_xml / to_xml
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    _generated/              # Bases generees (champs uniquement, ne pas editer)
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    datacollection/          # Types DataCollection (seul sous-paquet de modeles)
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    logicalproduct.py        # Variables, listes de codes, categories, NCubes
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    conceptualcomponent.py   # Concepts, univers, variables conceptuelles
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    reusable.py, study.py, archive.py, group.py, physical.py, process.py,
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    quality.py, comparison.py, methodology.py, classification.py, ...
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>  schema_loader/             # Resolution des schemas, validation, conversion JSON
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  schemas/                   # XSD DDI 3.1 / 3.2 / 3.3 integres (CC-BY-4.0)
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>  examples/                  # Instances et fixtures d'exemple empaquetees
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  validation.py              # Validation de haut niveau
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  lint.py                    # Moteur lint et regles
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  cli.py                     # Point d'entree CLI (`ddi`)
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>  io.py                      # Lecture/ecriture bas niveau et streaming
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>  index.py                   # Index d'identifiants pour find() / references
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  registry/                  # Registre des types maintainable
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  schema_sync.py             # Rafraichit le lot de schemas integre
 </span></code></pre></div>
 <p>Répertoires de support hors du paquet : <code>codegen/</code> (générateurs à la
 construction), <code>tests/</code>, <code>benchmarks/</code>, <code>demo/</code> et <code>docs/</code>. Aucun n'est
 empaqueté : rien de ce qu'ils contiennent ne peut servir de point d'entrée
 console ni être importe à l'exécution.</p>
-<h2 id="les-deux-backends-xml">Les deux backends XML<a class="headerlink" href="#les-deux-backends-xml" title="Permanent link">&para;</a></h2>
-<p><code>lxml</code> est un accélérateur optionnel installé avec <code>ddi-l[full]</code>. Sa présence
-ne doit pas changer ce que <code>ddi-l</code> entend par un document, et la différence de
-résolution des préfixes entre les deux mérite d'être comprise avant de toucher
-à la sérialisation :</p>
+<h2 id="les-backends-xml">Les backends XML<a class="headerlink" href="#les-backends-xml" title="Permanent link">&para;</a></h2>
+<p><code>lxml</code> est un accélérateur optionnel installé avec <code>ddi-l[full]</code>, et le noyau
+natif (<code>native/</code>, la wheel <code>ddi-l-native</code> dont dépend <code>ddi-l</code>) en est un autre.
+Leur présence ne doit pas changer ce que <code>ddi-l</code> entend par un document.
+<code>DDI_L_XML_BACKEND=native|lxml|stdlib</code> choisit le backend d'une exécution des
+tests.</p>
+<p><code>ddi-l-native</code> est publié deux fois à chaque version : des wheels compilées
+pour les plateformes de <code>.github/workflows/publish.yml</code>, et un remplaçant en
+Python pur (<code>native/fallback/</code>) que pip prend partout ailleurs. Importer le
+remplaçant lève <code>ModuleNotFoundError</code> : <code>ddi-l</code> se rabat sur lxml ou la
+bibliothèque standard, et l'installer ne compile jamais Rust. <code>uv.lock</code>
+installe le remplaçant ; construisez le vrai noyau par-dessus (Rust et, sous
+Windows, les Build Tools de Visual Studio avec la charge de travail C++), puis
+lancez avec <code>--no-sync</code>, puisque <code>uv sync</code> et <code>uv run</code> remettent le
+remplaçant :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">DDI_L_XML_BACKEND</span><span class="o">=</span>lxml<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>pytest
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--reinstall-package<span class="w"> </span>ddi-l-native<span class="w"> </span>./native
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">DDI_L_XML_BACKEND</span><span class="o">=</span>native<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>pytest<span class="w"> </span>--no-cov
+</span></code></pre></div>
+<p>Les éléments natifs se comportent comme ceux de la bibliothèque standard : le
+backend natif partage les fonctions du backend stdlib dans
+<code>ddi_l/_etree.py</code> et n'en diffère que par l'analyse. Le code en Python pur est
+la référence : <code>tests/test_native.py</code> compare l'analyseur à celui de la
+bibliothèque standard (et le teste au hasard), et les empreintes et l'index de
+la source natifs à <code>ddi_l/_lossless.py</code>.</p>
+<p>Le code Rust est dans <code>native/</code>. Après une modification, reconstruisez
+l'extension et lancez ses vérifications :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--reinstall-package<span class="w"> </span>ddi-l-native<span class="w"> </span>./native
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">cd</span><span class="w"> </span>native<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cargo<span class="w"> </span>fmt<span class="w"> </span>--check<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cargo<span class="w"> </span>clippy<span class="w"> </span>--all-targets<span class="w"> </span>--<span class="w"> </span>-D<span class="w"> </span>warnings
+</span></code></pre></div>
+<p>Sur le moteur natif, ce que le lint et <code>revise</code> lisent d'un élément est gardé
+sous l'empreinte de son contenu (<code>ddi_l/_incremental.py</code>) : un appel suivant
+ne relit que ce qui a changé. Un lecteur passé à <code>per_element</code> ou à
+<code>per_chunk</code> ne doit dépendre que de l'élément. Une règle de <code>_PER_ITEM</code>
+(<code>ddi_l/colectica_lint.py</code>) doit signaler un élément à partir de cet élément
+seul, par <code>_Context.finding</code>. <code>tests/test_incremental.py</code> vérifie, après des
+modifications au hasard, que chaque passe signale ce que signale une passe
+qui relit tout.</p>
+<p>La différence de résolution des préfixes entre stdlib et lxml mérite d'être
+comprise avant de toucher à la sérialisation :</p>
 <ul>
 <li><strong><code>ElementTree</code> (bibliothèque standard)</strong> résout les préfixes au moment de la
-  <em>sérialisation</em>, depuis un registre global au processus. Un préfixe
-  enregistré en écrivant un document affecte tous les suivants dans le même
-  processus.</li>
+  <em>sérialisation</em>, depuis un registre. ddi-l tient ce registre lui-même, par
+  fil ou par tâche (il n'écrit jamais celui d'ElementTree, commun à tout le
+  processus) : un préfixe enregistré en construisant un document affecte tous
+  les suivants dans le même fil.</li>
 <li><strong><code>lxml</code></strong> résout depuis le <code>nsmap</code> de chaque élément, <strong>figé à la création
   de l'élément</strong>. Il ne peut pas être redéfini sur place, d'où le fait que
   <code>apply_namespace_map()</code> renvoie une racine au lieu d'en muter une.</li>
 </ul>
 <p>Cette asymétrie est la source la plus fréquente de comportements propres à un
-backend : lancez la suite sur les deux backends quand vous touchez à la
+backend : lancez la suite sur chaque backend quand vous touchez à la
 sérialisation.</p>
 <h3 id="ce-qui-est-garanti">Ce qui est garanti<a class="headerlink" href="#ce-qui-est-garanti" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3750,8 +3929,8 @@ doivent rester dans la distribution.</p>
 <p>Le site utilise MkDocs avec le thème Material et un support bilingue (EN/FR).
 Les pages vont par paires <code>.en.md</code> / <code>.fr.md</code> : <strong>mettez à jour les deux</strong>
 lorsque vous modifiez du contenu destiné aux utilisateurs.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>make<span class="w"> </span>docs-serve<span class="w">    </span><span class="c1"># Prévisualisation en direct</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>make<span class="w"> </span>docs-build<span class="w">    </span><span class="c1"># Construction et validation</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>make<span class="w"> </span>docs-serve<span class="w">    </span><span class="c1"># Prévisualisation en direct</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>make<span class="w"> </span>docs-build<span class="w">    </span><span class="c1"># Construction et validation</span>
 </span></code></pre></div>
 <p>Le logo, le favicon et leurs règles d'usage sont décrits dans les
 <a href="../assets/">ressources de marque</a>.</p>
@@ -3814,26 +3993,39 @@ de la <a href="https://docs.pypi.org/trusted-publishers/">publication de confian
 <ol>
 <li>Sur <a href="https://pypi.org/manage/account/publishing/">PyPI</a> et
    <a href="https://test.pypi.org/manage/account/publishing/">TestPyPI</a>, ajoutez un
-   éditeur de confiance en attente pour le projet <code>ddi-l</code> : propriétaire
-   <code>pbisson44</code>, dépôt <code>ddi</code>, workflow <code>publish.yml</code>, environnement <code>pypi</code>
-   (TestPyPI : <code>testpypi</code>).</li>
+   éditeur de confiance en attente pour chacun des projets <code>ddi-l</code> et
+   <code>ddi-l-native</code> : propriétaire <code>pbisson44</code>, dépôt <code>ddi</code>, workflow
+   <code>publish.yml</code>, environnement <code>pypi</code> (TestPyPI : <code>testpypi</code>).</li>
 <li>Dans les paramètres du dépôt GitHub, créez les environnements <code>pypi</code> et
    <code>testpypi</code>. Protégez <code>pypi</code> par des relecteurs obligatoires.</li>
 </ol>
 <h3 id="a-chaque-version">À chaque version<a class="headerlink" href="#a-chaque-version" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Fixez la version dans <code>pyproject.toml</code> et <code>CITATION.cff</code>, et réglez
-   <code>date-released</code> dans <code>CITATION.cff</code> sur la date de publication.
-   <code>tests/test_release_metadata.py</code> vérifie leur concordance.</li>
-<li>Datez le titre dans <code>docs/release-notes.en.md</code> et <code>docs/release-notes.fr.md</code>.</li>
-<li>Lancez les contrôles locaux : <code>uv run make release-check</code> et la suite de
-   tests complète.</li>
 <li>
-<p>Essai à blanc : déclenchez <strong>Publish to PyPI</strong> depuis l'onglet Actions avec
+<p>Fixez la version et la date de publication en une commande :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>scripts/set_version.py<span class="w"> </span><span class="m">0</span>.3.0<span class="w"> </span>--date<span class="w"> </span><span class="m">2027</span>-01-15
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># ou : patch, minor, major au lieu de la version ; --date vaut aujourd'hui par défaut</span>
+</span></code></pre></div>
+<p>ddi-l et ddi-l-native partagent une version. Le script l'écrit dans
+<code>pyproject.toml</code> (avec la dépendance <code>ddi-l-native==X.Y.Z</code>),
+<code>native/pyproject.toml</code>, <code>native/Cargo.toml</code>, <code>native/Cargo.lock</code>,
+<code>native/fallback/pyproject.toml</code>, <code>CITATION.cff</code>, les citations du
+README et de la page d'accueil, et le titre « (non publiée) » des notes
+de version ; il règle <code>date-released</code> et l'année des citations, puis
+lance <code>uv lock</code>. Il n'écrit rien tant que chaque fichier ne correspond
+pas. Quand il ouvre une nouvelle série, ajoutez-la au tableau de
+<code>SECURITY.md</code> ; le script le signale. <code>tests/test_release_metadata.py</code>
+et le workflow de publication refusent une version où elles diffèrent,
+et <code>tests/test_set_version.py</code> échoue quand un autre fichier se met à
+indiquer la version.
+2. Datez le titre dans <code>docs/release-notes.en.md</code> et <code>docs/release-notes.fr.md</code>.
+3. Lancez les contrôles locaux : <code>uv run make release-check</code> et la suite de
+   tests complète.
+4. Essai à blanc : déclenchez <strong>Publish to PyPI</strong> depuis l'onglet Actions avec
    la cible <code>testpypi</code>, puis installez depuis TestPyPI dans un environnement
    propre :</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>--extra-index-url<span class="w"> </span>https://pypi.org/simple/<span class="w"> </span>ddi-l
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--index-url<span class="w"> </span>https://test.pypi.org/simple/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span>--extra-index-url<span class="w"> </span>https://pypi.org/simple/<span class="w"> </span>ddi-l
 </span></code></pre></div>
 </li>
 <li>
@@ -3914,6 +4106,10 @@ de la <a href="https://docs.pypi.org/trusted-publishers/">publication de confian
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
   
   
 </div>

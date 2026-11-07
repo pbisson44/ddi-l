@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1247,6 +1249,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1543,14 +1556,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16 : Projets de synthèse
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
   
 
     
@@ -1688,6 +1729,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1748,6 +1795,34 @@
     
   
     Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
   
 
     
@@ -1888,6 +1963,62 @@
     
   
     Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
   
 
     
@@ -2676,6 +2807,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2751,17 +2893,18 @@
 
 <h1 id="module-5-organiser-avec-les-concepts-et-les-univers">Module 5 : Organiser avec les concepts et les univers<a class="headerlink" href="#module-5-organiser-avec-les-concepts-et-les-univers" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">Ce que vous apprendrez</p>
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
 <ul>
-<li>Comprendre ce qu'est un <strong>concept</strong> et pourquoi il est important.</li>
-<li>Comprendre ce qu'est un <strong>univers</strong> et pourquoi il est important.</li>
-<li>Ajouter des concepts et des univers à un document DDI.</li>
-<li>Lier une variable à un concept.</li>
-<li>Lister tous les concepts et univers d'un document.</li>
+<li><strong>O1.</strong> Expliquer, en une phrase chacun, ce que décrivent un <strong>concept</strong> et un <strong>univers</strong>, et classer des exemples de phrases en concepts et en univers.</li>
+<li><strong>O2.</strong> Ajouter des concepts et un univers à un document avec <code>doc.add_concept()</code> et <code>doc.add_universe()</code>.</li>
+<li><strong>O3.</strong> Lier chaque variable au concept qu'elle mesure en passant <code>concept=</code> à <code>doc.add_variable()</code>, et vérifier le lien.</li>
+<li><strong>O4.</strong> Afficher les noms de tous les concepts et univers d'un document, avec <code>doc.concepts</code> et <code>doc.universes</code>.</li>
 </ul>
 </div>
-<p><strong>Prérequis :</strong> Module 4.</p>
+<p><strong>Prérequis :</strong> <a href="../module-04-variables/">Module 4</a>.</p>
 <p><strong>Durée :</strong> 30 min en autonomie / 40 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>doc.add_concept()</code>, <code>doc.add_universe()</code>, l'argument <code>concept=</code> de <code>doc.add_variable()</code>, <code>doc.concepts</code>, <code>doc.universes</code>, <code>concept_references</code>, <code>names[0].text</code>.</p>
 <hr />
 <h2 id="1-quest-ce-quun-concept">1. Qu'est-ce qu'un concept ?<a class="headerlink" href="#1-quest-ce-quun-concept" title="Permanent link">&para;</a></h2>
 <p>Un <strong>concept</strong> est une idée abstraite que mesure une variable.
@@ -2775,6 +2918,14 @@ Quand quelqu'un lit vos métadonnées, il peut rapidement voir quelles variables
 Il répond à la question : « Qui cette enquête couvre-t-elle ? »</p>
 <p>Par exemple : « Adultes de 18 ans et plus au Canada. »</p>
 <p>Une enquête a généralement un seul univers, mais certaines enquêtes étudient plus d'un groupe.</p>
+<div class="admonition tip">
+<p class="admonition-title">Concept ou univers ? Un test rapide</p>
+<p>Posez deux questions sur une phrase :</p>
+<ul>
+<li>Dit-elle <strong>ce qui</strong> est mesuré ? C'est alors un concept (« Nutrition », « Qualité du sommeil »).</li>
+<li>Dit-elle <strong>qui ou quoi</strong> est mesuré ? C'est alors un univers (« Adultes de 18 ans et plus au Canada », « Écoles publiques de l'Ontario »).</li>
+</ul>
+</div>
 <h2 id="3-ajouter-des-concepts">3. Ajouter des concepts<a class="headerlink" href="#3-ajouter-des-concepts" title="Permanent link">&para;</a></h2>
 <p>Utilisez <code>doc.add_concept(name=)</code> pour ajouter un concept à votre document.
 La méthode retourne un objet concept que vous pouvez utiliser plus tard.</p>
@@ -2812,14 +2963,31 @@ Cela lie la variable à ce concept dans les métadonnées DDI.</p>
 </span></code></pre></div>
 <p>Maintenant, chaque variable est connectée à son concept.
 Toute personne qui lit le fichier DDI peut voir que « Age » appartient à « Demographics ».</p>
+<p>Pour vérifier un lien, regardez la liste <code>concept_references</code> de la variable.
+Chaque entrée est une <strong>référence</strong> : un pointeur qui contient l'identifiant
+du concept. Si l'identifiant correspond à celui du concept, le lien est bon :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">age</span><span class="o">.</span><span class="n">concept_references</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">demo</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>Une variable ajoutée sans <code>concept=</code> a une liste <code>concept_references</code> vide.</p>
 <h2 id="6-lister-les-concepts-et-les-univers">6. Lister les concepts et les univers<a class="headerlink" href="#6-lister-les-concepts-et-les-univers" title="Permanent link">&para;</a></h2>
 <p>Utilisez <code>doc.concepts</code> et <code>doc.universes</code> pour voir tous les éléments du document.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Concepts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Concepts: 3</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Universes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Universes: 1</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Concepts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Concepts: 3</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Universes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Universes: 1</span>
 </span></code></pre></div>
-<p>Ces propriétés retournent des listes.
-Vous pouvez les parcourir pour afficher les noms ou faire d'autres opérations.</p>
+<p>Ces propriétés retournent des listes : vous pouvez donc les parcourir.
+Chaque élément garde son nom dans une liste appelée <code>names</code>, avec une entrée par langue.
+<code>names[0].text</code> est le texte du premier nom :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">concept</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Résultat attendu :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Demographics
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Physical Activity
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Nutrition
+</span></code></pre></div>
 <hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
 <div class="admonition example">
 <p class="admonition-title">Scénario</p>
 <p>Une autorité nationale de santé interroge des adultes sur leur alimentation et leur activité physique.
@@ -2827,13 +2995,58 @@ Elle a besoin de trois concepts : <strong>Nutrition</strong>, <strong>Physical A
 L'univers est <strong>Adultes de 18 ans et plus au Canada</strong>.
 Votre travail est de construire cette structure en code.</p>
 </div>
-<hr />
-<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
-<p><strong>Exercice 1.</strong> Documentez une enquête nationale sur la santé.</p>
+<p><strong>Exercice 1 (O1).</strong> Pour chaque phrase ci-dessous, écrivez « concept » ou
+« univers ». Écrivez ensuite une phrase qui explique ce que décrit un concept
+et une phrase qui explique ce que décrit un univers.</p>
+<ul>
+<li>Nutrition</li>
+<li>Adultes de 18 ans et plus au Canada</li>
+<li>Qualité du sommeil</li>
+<li>Écoles publiques de l'Ontario</li>
+<li>Emploi</li>
+<li>Enfants de 6 à 11 ans vivant dans des ménages privés</li>
+</ul>
+<details class="success">
+<summary>Réponse</summary>
+<ul>
+<li>Nutrition : concept.</li>
+<li>Adultes de 18 ans et plus au Canada : univers.</li>
+<li>Qualité du sommeil : concept.</li>
+<li>Écoles publiques de l'Ontario : univers.</li>
+<li>Emploi : concept.</li>
+<li>Enfants de 6 à 11 ans vivant dans des ménages privés : univers.</li>
+</ul>
+<p>Un concept est l'idée que mesure une variable, comme « Nutrition ».
+Un univers est le groupe de personnes ou de choses que couvre une étude,
+comme « Adultes de 18 ans et plus au Canada ».</p>
+</details>
+<p><strong>Exercice 2 (O2).</strong> Créez un document avec le titre « National Health
+Survey » et l'agence « health.gc.ca ». Ajoutez trois concepts (Demographics,
+Physical Activity, Nutrition) et un univers (Adults aged 18+ in Canada).
+Gardez chaque concept dans une variable Python : vous les lierez à
+l'exercice 3. Affichez les compteurs.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Concepts: 3
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Universes: 1
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"National Health Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">demo</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Demographics"</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">activity</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Physical Activity"</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">nutrition</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Nutrition"</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_universe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Adults aged 18+ in Canada"</span><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Concepts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Concepts: 3</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Universes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Universes: 1</span>
+</span></code></pre></div>
+</details>
+<p><strong>Exercice 3 (O3).</strong> Continuez avec le même document.</p>
 <ol>
-<li>
-<p>Créez un document d'enquête de santé avec le titre « National Health Survey » et l'agence « health.gc.ca ».</p>
-</li>
 <li>
 <p>Ajoutez quatre questions :</p>
 <ul>
@@ -2844,109 +3057,157 @@ Votre travail est de construire cette structure en code.</p>
 </ul>
 </li>
 <li>
-<p>Ajoutez trois concepts : Demographics, Physical Activity, Nutrition.</p>
-</li>
-<li>
-<p>Ajoutez un univers : Adults aged 18+ in Canada.</p>
-</li>
-<li>
 <p>Ajoutez quatre variables. Liez chacune à son concept correspondant :</p>
 <ul>
 <li>Age -&gt; Demographics</li>
 <li>Weight -&gt; Demographics</li>
-<li>Exercise Frequency -&gt; Physical Activity</li>
-<li>Fruit Servings -&gt; Nutrition</li>
+<li>ExerciseFrequency -&gt; Physical Activity</li>
+<li>FruitServings -&gt; Nutrition</li>
 </ul>
 </li>
 <li>
-<p>Affichez les compteurs :</p>
+<p>Vérifiez que Weight est liée à Demographics, puis vérifiez le document
+   par rapport au schéma avec <code>doc.validate()</code>.</p>
 </li>
 </ol>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Concepts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Universes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span></code></pre></div>
 <p><strong>Résultat attendu :</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Questions: 4
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Variables: 4
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Concepts: 3
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Universes: 1
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Questions: 4
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Variables: 4
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Weight is linked to Demographics: True
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>Schema problems: 0
 </span></code></pre></div>
-<p>Vérifiez ensuite votre travail : <code>doc.validate()</code> doit renvoyer une liste vide.</p>
 <details class="success">
 <summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"National Health Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"health.gc.ca"</span><span class="p">)</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How old are you?"</span><span class="p">)</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your weight in kg?"</span><span class="p">)</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many days per week do you exercise?"</span><span class="p">)</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many servings of fruit do you eat per day?"</span><span class="p">)</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">demo</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Demographics"</span><span class="p">)</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">activity</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Physical Activity"</span><span class="p">)</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">nutrition</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Nutrition"</span><span class="p">)</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_universe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Adults aged 18+ in Canada"</span><span class="p">)</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">demo</span><span class="p">)</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Weight"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">demo</span><span class="p">)</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ExerciseFrequency"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"FruitServings"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q4</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">nutrition</span><span class="p">)</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Concepts: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Universes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Schema problems: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How old are you?"</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your weight in kg?"</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many days per week do you exercise?"</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many servings of fruit do you eat per day?"</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">demo</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">weight</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Weight"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">demo</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"ExerciseFrequency"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"FruitServings"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q4</span><span class="p">,</span> <span class="n">concept</span><span class="o">=</span><span class="n">nutrition</span><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">linked</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">concept_references</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">demo</span><span class="o">.</span><span class="n">identifier</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 4</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Variables: 4</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Weight is linked to Demographics: </span><span class="si">{</span><span class="n">linked</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Schema problems: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Schema problems: 0</span>
+</span></code></pre></div>
+</details>
+<p><strong>Exercice 4 (O4).</strong> Affichez le nom de chaque concept et de chaque univers
+du document, sous un titre pour chaque type.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Concepts:
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  Demographics
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  Physical Activity
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  Nutrition
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Universes:
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  Adults aged 18+ in Canada
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Concepts:"</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">:</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">concept</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Universes:"</span><span class="p">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">for</span> <span class="n">universe</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">:</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">universe</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1 : Qu'est-ce qu'un concept ?</summary>
-<p><strong>A.</strong> Un format de fichier pour les enquêtes.</p>
-<p><strong>B.</strong> Une idée abstraite que mesure une variable.</p>
-<p><strong>C.</strong> Une liste de réponses autorisées.</p>
-<p><strong>D.</strong> Le groupe de personnes étudiées.</p>
+<summary>Question 1 (O1) : Quelle phrase est l'univers de cette étude ?</summary>
+<p>Un rapport dit : « Nous avons interrogé des adultes de 18 ans et plus au
+Canada sur la qualité de leur sommeil et leur stress. »</p>
+<p><strong>A.</strong> Adultes de 18 ans et plus au Canada</p>
+<p><strong>B.</strong> Qualité du sommeil</p>
+<p><strong>C.</strong> Stress</p>
+<p><strong>D.</strong> La question « Combien d'heures dormez-vous ? »</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> Un concept est une idée abstraite, comme « Demographics »
-ou « Nutrition ». Les variables mesurent des concepts.</p>
+<p><strong>A.</strong> L'univers dit qui est étudié. « Qualité du sommeil » et
+« Stress » disent ce qui est mesuré : ce sont des concepts. Une
+question n'est ni l'un ni l'autre.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2 : Qu'est-ce qu'un univers ?</summary>
-<p><strong>A.</strong> Le logiciel qui exécute l'enquête.</p>
-<p><strong>B.</strong> Un type de variable.</p>
-<p><strong>C.</strong> Le groupe de personnes ou de choses étudiées.</p>
-<p><strong>D.</strong> Une liste de questions.</p>
+<summary>Question 2 (O1) : Quelle phrase explique correctement un concept ?</summary>
+<p><strong>A.</strong> Un concept est le groupe de personnes que couvre une étude.</p>
+<p><strong>B.</strong> Un concept est une liste de réponses autorisées.</p>
+<p><strong>C.</strong> Un concept est l'idée que mesure une variable, comme
+« Nutrition » ; plusieurs variables peuvent partager un même concept.</p>
+<p><strong>D.</strong> Un concept est un format de fichier pour les enquêtes.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>C.</strong> L'univers indique qui l'enquête couvre, par exemple,
-« Adultes de 18 ans et plus au Canada ».</p>
+<p><strong>C.</strong> Un concept est une idée abstraite que mesurent des variables.
+L'option A décrit un univers et l'option B, une liste de codes.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3 : Comment liez-vous une variable à un concept ?</summary>
-<p><strong>A.</strong> <code>doc.add_concept(variable=v)</code></p>
-<p><strong>B.</strong> <code>doc.add_variable(name="Age", concept=age_concept)</code></p>
-<p><strong>C.</strong> <code>doc.link(variable, concept)</code></p>
-<p><strong>D.</strong> <code>variable.set_concept(concept)</code></p>
+<summary>Question 3 (O2) : Qu'affiche ce code ?</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Sleep Study"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"example.org"</span><span class="p">)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Sleep quality"</span><span class="p">)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Stress"</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_universe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Adults aged 18+ in Canada"</span><span class="p">)</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">concepts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">universes</span><span class="p">))</span>
+</span></code></pre></div>
+<p><strong>A.</strong> <code>3 0</code></p>
+<p><strong>B.</strong> <code>1 2</code></p>
+<p><strong>C.</strong> <code>0 0</code></p>
+<p><strong>D.</strong> <code>2 1</code></p>
 <details class="success">
 <summary>Réponse</summary>
-<p><strong>B.</strong> Passez l'argument <code>concept=</code> quand vous appelez
-<code>doc.add_variable()</code>.</p>
+<p><strong>D.</strong> Deux appels à <code>doc.add_concept()</code> ajoutent deux concepts, et
+un appel à <code>doc.add_universe()</code> ajoute un univers.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 4 (O3) : La variable Age n'est pas liée à son concept. Quel appel corrige le problème ?</summary>
+<p>Après <code>age = doc.add_variable(name="Age", question=q1)</code>,
+<code>age.concept_references</code> est une liste vide.</p>
+<p><strong>A.</strong> <code>doc.add_variable(name="Age", question=q1, universe=demo)</code></p>
+<p><strong>B.</strong> <code>doc.add_variable(name="Age", question=q1, concept=demo)</code></p>
+<p><strong>C.</strong> <code>doc.add_concept(name="Age", variable=q1)</code></p>
+<p><strong>D.</strong> <code>doc.link(q1, demo)</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Passez le concept avec <code>concept=</code> quand vous appelez
+<code>doc.add_variable()</code>. Les autres appels n'existent pas.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O4) : Quelle boucle affiche le nom de chaque univers ?</summary>
+<p><strong>A.</strong> <code>for u in doc.universes: print(u)</code></p>
+<p><strong>B.</strong> <code>print(doc.universes.names)</code></p>
+<p><strong>C.</strong> <code>for u in doc.universes: print(u.names[0].text)</code></p>
+<p><strong>D.</strong> <code>for u in doc.concepts: print(u.names[0].text)</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> Chaque univers garde son nom dans <code>names</code> ; <code>names[0].text</code>
+en est le texte. L'option A affiche l'objet entier, l'option B échoue
+parce qu'une liste n'a pas de <code>names</code>, et l'option D parcourt les
+concepts.</p>
+</details>
+</details>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux expliquer, en une phrase chacun, ce que décrivent un concept et un univers, et classer des phrases dans l'un ou l'autre. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter des concepts et un univers avec <code>doc.add_concept()</code> et <code>doc.add_universe()</code>. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux lier une variable à son concept avec <code>concept=</code> et vérifier le lien. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux afficher les noms de tous les concepts et univers d'un document. (O4)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Notes pour l'instructeur</p>
 <ul>
 <li>Dessinez un diagramme au tableau : le concept en haut, avec des flèches pointant vers ses variables. Cela aide les apprenants visuels.</li>
 <li>Demandez à la classe : « Si vous aviez une enquête sur les écoles, quel serait votre univers ? » (par ex., « Toutes les écoles publiques de l'Ontario ».)</li>
+<li>Faites de l'exercice 1 un sondage rapide en classe avant que quiconque écrive du code. Le test « quoi ou qui » de la section 2 règle la plupart des désaccords.</li>
 <li>Erreur fréquente : les étudiants oublient de garder l'objet concept dans une variable. Rappelez-leur que <code>doc.add_concept()</code> retourne quelque chose qu'ils doivent conserver.</li>
 <li>Insistez sur le fait que les concepts et les univers servent à <strong>décrire</strong> les données ; ils ne changent pas les données elles-mêmes.</li>
 </ul>
@@ -3031,6 +3292,10 @@ ou « Nutrition ». Les variables mesurent des concepts.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
   
   
 </div>

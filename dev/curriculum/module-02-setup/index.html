@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1146,17 +1148,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-more-installation-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. More installation options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercises" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1172,6 +1163,28 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#going-further-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Going further (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -1558,14 +1571,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1703,6 +1744,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1763,6 +1810,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1903,6 +1978,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2676,17 +2807,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-more-installation-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. More installation options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercises" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2702,6 +2822,28 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#going-further-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Going further (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -2783,16 +2925,25 @@
 
 <h1 id="module-2-set-up-your-python-environment">Module 2: Set up your Python environment<a class="headerlink" href="#module-2-set-up-your-python-environment" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Install Python and verify the version.</li>
-<li>Install <code>ddi-l</code> and helper packages.</li>
-<li>Confirm everything works by running a quick test.</li>
-<li>Choose a workspace for writing Python code.</li>
+<li><strong>O1.</strong> Run <code>python --version</code> and decide whether your Python is new
+  enough for <code>ddi-l</code> (3.11 or newer).</li>
+<li><strong>O2.</strong> Install <code>ddi-l</code>, <code>pandas</code>, and <code>openpyxl</code> with <code>pip</code> and read
+  the last line of the output to confirm the install.</li>
+<li><strong>O3.</strong> Run a two-line Python test that prints the installed <code>ddi-l</code>
+  version.</li>
+<li><strong>O4.</strong> Run <code>ddi --help</code> and find the command that does a given task,
+  such as validating a file.</li>
+<li><strong>O5.</strong> Choose a workspace (Python REPL, script file, or notebook) for
+  a given task and give a one-sentence reason.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> <a href="../module-01-what-is-metadata/">Module 1: What is metadata and why does it matter?</a></p>
+<p><strong>Prerequisites:</strong> <a href="../module-01-what-is-metadata/">Module 1</a></p>
 <p><strong>Time:</strong> 20 min self-paced / 30 min instructor-led.</p>
+<p><strong>New in this module:</strong> <code>python --version</code>, <code>pip install</code>, <code>ddi --help</code>,
+<code>import ddi_l as ddi</code>, <code>ddi.__version__</code></p>
 <hr />
 <h2 id="1-what-you-need-python-311-or-newer">1. What you need: Python 3.11 or newer<a class="headerlink" href="#1-what-you-need-python-311-or-newer" title="Permanent link">&para;</a></h2>
 <p>Python is a programming language. <code>ddi-l</code> runs inside Python, so you must
@@ -2803,8 +2954,10 @@ have Python installed on your computer.</p>
 <p>You should see something like:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Python 3.12.3
 </span></code></pre></div>
-<p>The version number must be <strong>3.11 or higher</strong>. If your version is older, visit
-<a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> and install a newer version.</p>
+<p>The version number must be <strong>3.11 or higher</strong>. Read the first two numbers:
+<code>3.12</code> is newer than <code>3.11</code>, so it works; <code>3.10</code> or <code>3.9</code> is too old. If your
+version is older, visit <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> and install a newer
+version.</p>
 <div class="admonition warning">
 <p class="admonition-title">Common issue</p>
 <p>On some systems the command is <code>python3</code> instead of <code>python</code>. If
@@ -2828,6 +2981,16 @@ tools to your Python setup.</p>
 <p>You can install everything in one line if you prefer:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ddi-l<span class="w"> </span>pandas<span class="w"> </span>openpyxl
 </span></code></pre></div>
+<p>The last line of the output tells you how it went:</p>
+<ul>
+<li><code>Successfully installed</code> followed by package names means pip installed
+  them.</li>
+<li><code>Requirement already satisfied</code> means a package was already there, so pip
+  had nothing to do.</li>
+<li>A line starting with <code>ERROR</code> means the install failed. Read the message,
+  fix the cause (often the Python version or a network problem), and run the
+  command again.</li>
+</ul>
 <hr />
 <h2 id="3-check-it-works">3. Check it works<a class="headerlink" href="#3-check-it-works" title="Permanent link">&para;</a></h2>
 <h3 id="3a-test-the-command-line-tool">3a. Test the command-line tool<a class="headerlink" href="#3a-test-the-command-line-tool" title="Permanent link">&para;</a></h3>
@@ -2835,15 +2998,29 @@ tools to your Python setup.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ddi<span class="w"> </span>--help
 </span></code></pre></div>
 <p>You should see a list of available commands. This confirms the tool is
-installed and ready to use.</p>
+installed and ready to use. Each command has a one-line description. The
+start of the list looks like this:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>positional arguments:
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    validate            Validate an XML document against the DDI schema.
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    to-json             Convert a DDI instance document to JSON.
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    ...
+</span></code></pre></div>
+<p>To find the command for a task, read the descriptions, not just the names.
+For example, the command that checks a file against the DDI rules is the one
+whose description says "Validate". You will use these commands in
+<a href="../module-07-cli-validation/">Module 7</a>.</p>
 <h3 id="3b-test-in-python">3b. Test in Python<a class="headerlink" href="#3b-test-in-python" title="Permanent link">&para;</a></h3>
 <p>Open a Python session by typing <code>python</code> in your terminal. Then type:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ddi</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ddi</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </span></code></pre></div>
-<p>You should see a version number printed, such as <code>0.1.0</code>. This confirms that
-Python can find and load the <code>ddi-l</code> package.</p>
+<p>You should see a version number printed, such as <code>0.1.0</code> or later. This
+confirms that Python can find and load the <code>ddi-l</code> package.</p>
+<p>If you see <code>ModuleNotFoundError: No module named 'ddi_l'</code> instead, <code>ddi-l</code> is
+not installed in the Python you are running. Run <code>pip install ddi-l</code> again,
+using the same <code>python</code> or <code>python3</code> command you used above (for example,
+<code>python3 -m pip install ddi-l</code>).</p>
 <p>Type <code>exit()</code> to leave the Python session.</p>
 <hr />
 <h2 id="4-choose-your-workspace">4. Choose your workspace<a class="headerlink" href="#4-choose-your-workspace" title="Permanent link">&para;</a></h2>
@@ -2881,14 +3058,19 @@ comfortable:</p>
 <li>A <strong>script file</strong> is a plain text file ending in <code>.py</code> that you run all at
   once.</li>
 <li>A <strong>Jupyter Notebook</strong> is a tool that lets you mix text, code, and output in
-  one document.</li>
+  one document. It is not installed with <code>ddi-l</code>: run <code>pip install notebook</code>
+  first if you want to use one.</li>
+</ul>
+<p>How to choose:</p>
+<ul>
+<li>Use the <strong>REPL</strong> for a one-off check you do not need to keep, such as
+  printing the version.</li>
+<li>Use a <strong>script file</strong> when you want to keep your code and run it again
+  from the top with one command, such as <code>python my_script.py</code>.</li>
+<li>Use a <strong>notebook</strong> when you want to see notes, code, and output together,
+  step by step, for example to walk a colleague through your work.</li>
 </ul>
 <p>For this curriculum, any of the three options will work.</p>
-<hr />
-<h2 id="5-more-installation-options">5. More installation options<a class="headerlink" href="#5-more-installation-options" title="Permanent link">&para;</a></h2>
-<p>For advanced setups (such as installing from source code, using Poetry, or
-adding the optional <code>lxml</code> backend), see the full
-<a href="../../installation/">Installation guide</a>.</p>
 <hr />
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
 <div class="admonition example">
@@ -2896,71 +3078,165 @@ adding the optional <code>lxml</code> backend), see the full
 <p>You are setting up a new laptop for a training workshop. You need to make
 sure Python and <code>ddi-l</code> are ready to go before the workshop starts.</p>
 </div>
-<p><strong>Exercise 1.</strong> Run the following command in your terminal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ddi-l<span class="w"> </span>pandas<span class="w"> </span>openpyxl
+<p><strong>Exercise 1 (O1).</strong> Run <code>python --version</code> (or <code>python3 --version</code>) in your
+terminal. Write down the version, and say whether it is new enough for
+<code>ddi-l</code>.</p>
+<p>Expected output: one line such as <code>Python 3.12.3</code>, and a yes or no.</p>
+<details class="success">
+<summary>Answer</summary>
+<p>For example, <code>Python 3.12.3</code>: yes, because 3.12 is 3.11 or newer. If you
+see <code>Python 3.10.12</code> or older, the answer is no: install a newer Python
+from <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> before you continue.</p>
+</details>
+<p><strong>Exercise 2 (O2).</strong> Run the following command in your terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ddi-l<span class="w"> </span>pandas<span class="w"> </span>openpyxl
 </span></code></pre></div>
-<p>Paste the <strong>last line</strong> of the output. It usually says something like
-<code>Successfully installed ...</code>.</p>
+<p>Paste the <strong>last line</strong> of the output, and say what it means.</p>
+<p>Expected output: a line that starts with <code>Successfully installed</code> or
+<code>Requirement already satisfied</code>.</p>
 <details class="success">
 <summary>Answer</summary>
 <p>The last line starts with <code>Successfully installed</code> and lists <code>ddi-l-...</code> among
 the packages (the version may vary). If the packages were already installed,
-pip says <code>Requirement already satisfied</code> instead.</p>
+pip says <code>Requirement already satisfied</code> instead. Both mean you are ready. A
+line starting with <code>ERROR</code> means the install failed.</p>
 </details>
-<p><strong>Exercise 2.</strong> Open a Python session and run:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ddi</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<p><strong>Exercise 3 (O3).</strong> Open a Python session and run:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ddi</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Write down the version number you see.</p>
+<p>Expected output: one version number, such as <code>0.1.0</code>.</p>
 <details class="success">
 <summary>Answer</summary>
-<p>The installed version, such as <code>0.1.0</code> or later.</p>
+<p>The installed version, such as <code>0.1.0</code> or later. If you see
+<code>ModuleNotFoundError</code> instead, <code>ddi-l</code> is not installed in this Python:
+go back to Exercise 2.</p>
 </details>
-<p><strong>Exercise 3.</strong> Run <code>ddi --help</code> in your terminal. <strong>How many commands</strong> are
-listed in the output?</p>
+<p><strong>Exercise 4 (O4).</strong> Run <code>ddi --help</code> in your terminal. Read the
+descriptions and write down the command you would use for each task:</p>
+<ol>
+<li>Check a DDI file against the DDI schema.</li>
+<li>Report quality problems in a DDI file, such as missing labels.</li>
+<li>List the DDI schema releases that <code>ddi-l</code> supports.</li>
+</ol>
+<p>Expected output: three command names.</p>
 <details class="success">
 <summary>Answer</summary>
-<p>Eight in <code>ddi-l</code> 0.1.0: <code>validate</code>, <code>to-json</code>, <code>from-json</code>, <code>roundtrip</code>,
-<code>lint</code>, <code>versions</code>, <code>to-jsonld</code> and <code>serve</code>. Later versions may add more.</p>
+<ol>
+<li><code>validate</code> ("Validate an XML document against the DDI schema.")</li>
+<li><code>lint</code> ("Lint a DDI document and report findings as JSON.")</li>
+<li><code>versions</code> ("List supported DDI schema releases.")</li>
+</ol>
+</details>
+<p><strong>Exercise 5 (O5).</strong> Choose a workspace for each task, and give a
+one-sentence reason:</p>
+<ol>
+<li>Check once that <code>import ddi_l</code> works on the new laptop.</li>
+<li>Write the study you will build in Module 3, so you can run it again
+   next week after you change it.</li>
+<li>Show a colleague, step by step, how the study is built, with notes
+   between the pieces of code.</li>
+</ol>
+<p>Expected output: three workspaces, each with a reason.</p>
+<details class="success">
+<summary>Answer</summary>
+<ol>
+<li><strong>Python REPL:</strong> it is the quickest way to run one line you do not
+   need to keep.</li>
+<li><strong>Script file:</strong> it saves your code, and <code>python my_script.py</code> runs
+   it again from the top.</li>
+<li><strong>Notebook:</strong> it shows notes, code, and output together, step by
+   step.</li>
+</ol>
+<p>Other choices are fine if your reason holds up; for example, a notebook
+also saves your code for task 2.</p>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1: What is the minimum Python version for ddi-l?</summary>
-<p><strong>A.</strong> Python 2.7</p>
-<p><strong>B.</strong> Python 3.8</p>
-<p><strong>C.</strong> Python 3.11</p>
-<p><strong>D.</strong> Python 3.14</p>
+<summary>Question 1 (O1): <code>python --version</code> prints <code>Python 3.10.12</code>. What should you do before you install ddi-l?</summary>
+<p><strong>A.</strong> Nothing. Any Python 3 version works.</p>
+<p><strong>B.</strong> Install Python 3.11 or newer.</p>
+<p><strong>C.</strong> Run <code>pip install ddi-l</code> twice.</p>
+<p><strong>D.</strong> Switch to Python 2.7.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> <code>ddi-l</code> requires Python 3.11 or newer.</p>
+<p><strong>B.</strong> <code>ddi-l</code> requires Python 3.11 or newer, and 3.10 is older.
+Install a newer Python, then install <code>ddi-l</code> with it.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2: Which command shows the ddi-l CLI help?</summary>
-<p><strong>A.</strong> <code>python --help</code></p>
-<p><strong>B.</strong> <code>pip --help</code></p>
-<p><strong>C.</strong> <code>ddi --help</code></p>
-<p><strong>D.</strong> <code>ddi-l --help</code></p>
+<summary>Question 2 (O2): The last line of <code>pip install ddi-l pandas openpyxl</code> reads <code>Requirement already satisfied</code>. What does this mean?</summary>
+<p><strong>A.</strong> The install failed and must be run again.</p>
+<p><strong>B.</strong> pip needs administrator rights.</p>
+<p><strong>C.</strong> The packages must be removed first.</p>
+<p><strong>D.</strong> The package was already installed, so pip had nothing to do.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> The command <code>ddi --help</code> shows the list of commands available
-in the <code>ddi-l</code> command-line tool.</p>
+<p><strong>D.</strong> <code>Requirement already satisfied</code> means the package is already
+there. A failed install ends with a line that starts with <code>ERROR</code>.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3: What does pip install do?</summary>
-<p><strong>A.</strong> It deletes old Python files.</p>
-<p><strong>B.</strong> It downloads and installs a Python package from the internet.</p>
-<p><strong>C.</strong> It opens a web browser.</p>
-<p><strong>D.</strong> It creates a new Python script.</p>
+<summary>Question 3 (O3): You run <code>import ddi_l as ddi</code> and get <code>ModuleNotFoundError: No module named 'ddi_l'</code>. What is the most likely cause?</summary>
+<p><strong>A.</strong> <code>ddi-l</code> is not installed in the Python you are running.</p>
+<p><strong>B.</strong> The import must be written <code>import ddi-l</code>.</p>
+<p><strong>C.</strong> You must call <code>ddi.__version__</code> before the import.</p>
+<p><strong>D.</strong> The package only works in a notebook.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>pip install</code> downloads a package from PyPI (the Python
-Package Index) and installs it on your computer so you can use it.</p>
+<p><strong>A.</strong> Python cannot find the package, so it is not installed for
+this Python. Run <code>pip install ddi-l</code> again, or
+<code>python3 -m pip install ddi-l</code> if you start Python with <code>python3</code>.
+Option B is not valid Python: a hyphen cannot appear in an import
+name, which is why the module is called <code>ddi_l</code>.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 4 (O4): You want to check a file against the DDI schema from the terminal. Which command from the <code>ddi --help</code> list do you use?</summary>
+<p><strong>A.</strong> <code>roundtrip</code></p>
+<p><strong>B.</strong> <code>to-json</code></p>
+<p><strong>C.</strong> <code>validate</code></p>
+<p><strong>D.</strong> <code>serve</code></p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>C.</strong> Its description reads "Validate an XML document against the
+DDI schema." <code>roundtrip</code> re-writes a file, <code>to-json</code> converts it,
+and <code>serve</code> runs the HTTP API.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O5): You will build a study over several days and want to run the whole thing again from the top with one command after each change. Which workspace fits best?</summary>
+<p><strong>A.</strong> The Python REPL, typing each line again.</p>
+<p><strong>B.</strong> A script file, such as <code>build_study.py</code>, run with
+<code>python build_study.py</code>.</p>
+<p><strong>C.</strong> A text document that you copy and paste into the REPL.</p>
+<p><strong>D.</strong> The terminal, running <code>ddi --help</code>.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>B.</strong> A script file keeps your code, and one command runs all of it
+again. The REPL forgets what you typed when you close it.</p>
+</details>
+</details>
+<hr />
+<h2 id="going-further-optional">Going further (optional)<a class="headerlink" href="#going-further-optional" title="Permanent link">&para;</a></h2>
+<p>For advanced setups (such as installing with uv or Poetry, or adding the
+optional <code>lxml</code> backend for faster parsing), see the full
+<a href="../../installation/">Installation guide</a>.</p>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can run <code>python --version</code> and decide whether my Python is new
+  enough for <code>ddi-l</code>. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can install <code>ddi-l</code>, <code>pandas</code>, and <code>openpyxl</code> with <code>pip</code> and read
+  the last line of the output. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can run a two-line Python test that prints the <code>ddi-l</code> version. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can run <code>ddi --help</code> and find the command for a given task. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can choose a workspace for a task and give a one-sentence reason.
+  (O5)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Instructor notes</p>
@@ -2972,6 +3248,9 @@ Package Index) and installs it on your computer so you can use it.</p>
 <li><strong>Why install pandas now?</strong> Installing it here avoids disruption in
   Module 8, where learners will load CSV and Excel files. Getting the
   install out of the way early keeps later modules focused on DDI.</li>
+<li><strong>Exercise 4:</strong> The number of commands grows from one release to the
+  next, so ask learners to find commands by their description rather
+  than count them.</li>
 <li><strong>Pair up</strong> learners who finish early with those who need help. Setup
   problems are easier to solve with a partner.</li>
 </ul>
@@ -3054,6 +3333,10 @@ Package Index) and installs it on your computer so you can use it.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

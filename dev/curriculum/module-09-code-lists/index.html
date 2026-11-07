@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1379,6 +1381,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1563,14 +1576,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1708,6 +1749,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1768,6 +1815,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1908,6 +1983,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2718,6 +2849,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2793,19 +2935,18 @@
 
 <h1 id="module-9-build-code-lists-and-controlled-vocabularies">Module 9: Build code lists and controlled vocabularies<a class="headerlink" href="#module-9-build-code-lists-and-controlled-vocabularies" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Understand what a <strong>code list</strong> is and why it matters.</li>
-<li>Create code lists with <code>doc.add_code_list()</code>.</li>
-<li>Add categories with <code>doc.add_item(Category, name=)</code>.</li>
-<li>Query all categories with <code>doc.items(Category)</code>.</li>
-<li>Import <code>Category</code> from <code>ddi_l.models.logicalproduct</code>.</li>
-<li>Import <code>Instrument</code> from <code>ddi_l.models.datacollection</code>.</li>
-<li>Build code lists from CSV column values.</li>
+<li><strong>O1.</strong> Explain in two sentences what a code list and a category are, and why two surveys that share a code list can be compared.</li>
+<li><strong>O2.</strong> Write a script that creates code lists with <code>doc.add_code_list()</code> and adds their categories with <code>doc.add_item(Category, name=...)</code>.</li>
+<li><strong>O3.</strong> Write a loop over <code>doc.items(Category)</code> that prints the name of every category, and predict the counts that <code>len(doc.code_lists)</code> and <code>len(doc.items(Category))</code> return.</li>
+<li><strong>O4.</strong> Write a script that reads the distinct values of a CSV column and creates one category for each value.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> Module 8.</p>
+<p><strong>Prerequisites:</strong> <a href="../module-08-csv-to-ddi/">Module 8</a>.</p>
 <p><strong>Time:</strong> 40 min self-paced / 50 min instructor-led.</p>
+<p><strong>New in this module:</strong> <code>doc.add_code_list()</code>, <code>doc.code_lists</code>, <code>Category</code>, <code>doc.add_item()</code>, <code>doc.items()</code>, <code>item.names[0].text</code>.</p>
 <hr />
 <h2 id="1-what-is-a-code-list">1. What is a code list?<a class="headerlink" href="#1-what-is-a-code-list" title="Permanent link">&para;</a></h2>
 <p>A <strong>code list</strong> is a set of allowed answers for a question.
@@ -2863,6 +3004,14 @@ To add categories, use <code>doc.add_item()</code> with the <code>Category</code
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Categories: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Categories: 10</span>
 </span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Categories and codes</p>
+<p><code>doc.add_item(Category, ...)</code> adds the category to the study. It does not
+yet place it inside one particular code list. In this module you build the
+code lists and their categories side by side.
+<a href="../module-14-custom-fields/">Module 14</a> shows how to put each category into
+its list as a <strong>code</strong> (a value such as <code>1</code> that points to the category).</p>
+</div>
 <h2 id="5-the-add_item-method">5. The add_item() method<a class="headerlink" href="#5-the-add_item-method" title="Permanent link">&para;</a></h2>
 <p>The <code>add_item()</code> method is a general tool.
 It works for any DDI item type, not just categories.</p>
@@ -2875,11 +3024,15 @@ This is how you add items that do not have their own convenience method like <co
 <h2 id="6-query-items-by-type">6. Query items by type<a class="headerlink" href="#6-query-items-by-type" title="Permanent link">&para;</a></h2>
 <p>Use <code>doc.items(Category)</code> to get a list of all categories in the document.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">all_categories</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total categories: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_categories</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total categories: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_categories</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Total categories: 10</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">all_categories</span><span class="p">:</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">cat</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">cat</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
+<p>Each item keeps its names in a list called <code>names</code>, because an item can have a
+name in more than one language. <code>names[0]</code> is the first name, and <code>.text</code> is its
+text. The loop prints <code>Male</code>, <code>Female</code>, <code>Other</code>, and so on, in the order you
+added them.</p>
 <p>This works for any registered type.
 Pass the type you want, and you get back a list of all items of that type.</p>
 <h2 id="7-build-code-lists-from-csv-column-values">7. Build code lists from CSV column values<a class="headerlink" href="#7-build-code-lists-from-csv-column-values" title="Permanent link">&para;</a></h2>
@@ -2906,6 +3059,8 @@ The examples use the Module 8 sample file:</p>
 </span></code></pre></div>
 <p>The <code>dropna()</code> call removes missing values.
 The <code>unique()</code> call returns only distinct values, with no duplicates.</p>
+<p>Without pandas, Python's built-in <code>csv</code> module and a <code>set</code> do the same job:
+a set keeps one copy of each value. Exercise 5 uses that approach.</p>
 <h2 id="8-real-world-example">8. Real-world example<a class="headerlink" href="#8-real-world-example" title="Permanent link">&para;</a></h2>
 <p>National statistical offices use standard code lists for employment classification.
 For example, the International Standard Classification of Occupations (ISCO) defines hundreds of job categories.</p>
@@ -2918,14 +3073,25 @@ This is the power of controlled vocabularies: they make data interoperable.</p>
 <p>You are building metadata for a national census.
 You need code lists for <strong>Gender</strong> (Male, Female, Other),
 <strong>Employment Status</strong> (Employed, Unemployed, Retired, Student),
-and <strong>Housing Type</strong> (House, Apartment, Other).
-You also need to add an Instrument item to represent the questionnaire.</p>
+and <strong>Housing Type</strong> (House, Apartment, Other).</p>
 </div>
 <hr />
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Create a census study with the title "National Census" and agency "census.gc.ca". Add 3 code lists (Gender Codes, Employment Status Codes, Housing Type Codes) and their categories (10 total). Print the counts.</p>
+<p><strong>(O1)</strong> A colleague asks why the census should reuse the employment status code list from last year's labour survey instead of letting interviewers type each answer. Write your answer in two sentences.</p>
+<details class="success">
+<summary>Answer</summary>
+<p>A sample answer: "A code list is the fixed set of allowed answers to a
+question, and each allowed answer (such as Employed or Retired) is a
+category. If the census uses the same code list as the labour survey,
+every answer falls into the same categories in both, so we can count and
+compare them directly instead of cleaning free text such as 'M',
+'emp.' or 'working'."</p>
+</details>
+</li>
+<li>
+<p><strong>(O2)</strong> Create a census study with the title "National Census" and agency "census.gc.ca". Add 3 code lists (Gender Codes, Employment Status Codes, Housing Type Codes) and their categories (10 total). Print the counts.</p>
 <p><strong>Expected output:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Code lists: 3
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Categories: 10
@@ -2959,104 +3125,171 @@ You also need to add an Instrument item to represent the questionnaire.</p>
 </details>
 </li>
 <li>
-<p>List all category names. Loop over <code>doc.items(Category)</code> and print each one's identifier.</p>
-<details class="success">
-<summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">):</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
-</span></code></pre></div>
-<p>You should see 10 identifiers, one per category.</p>
-</details>
-</li>
-<li>
-<p>Add an Instrument item to represent the census questionnaire.</p>
+<p><strong>(O3)</strong> List all category names. Loop over <code>doc.items(Category)</code> and print each category's name.</p>
 <p><strong>Expected output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Instruments: 1
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Male
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Female
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Other
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Employed
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Unemployed
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Retired
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Student
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>House
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>Apartment
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Other Housing
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Instrument</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Instrument</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Census Questionnaire"</span><span class="p">)</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Instruments: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Instrument</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">):</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </span></code></pre></div>
+<p>The categories come back in the order you added them.</p>
 </details>
 </li>
 <li>
-<p>(Bonus) Auto-generate categories from a CSV column's unique values. Read <a download="survey_sample.csv" href="../survey_sample.csv"><code>survey_sample.csv</code></a>, get the unique values from the <code>education_level</code> column, and create a category for each one.</p>
+<p><strong>(O2, O3)</strong> The census also asks about marital status. Add a code list "Marital Status Codes" with four categories: Single, Married, Separated, Widowed. <strong>Before you run your script</strong>, write down the two counts it will print. Then run it and check your prediction.</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Code lists: 4
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Categories: 14
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Marital Status Codes"</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"Single"</span><span class="p">,</span> <span class="s2">"Married"</span><span class="p">,</span> <span class="s2">"Separated"</span><span class="p">,</span> <span class="s2">"Widowed"</span><span class="p">):</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Code lists: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">code_lists</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Categories: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>One new code list makes 3 + 1 = 4. Four new categories make
+10 + 4 = 14. The counts cover the whole document, not just the list you
+added last.</p>
+</details>
+</li>
+<li>
+<p><strong>(O4)</strong> Generate categories from a CSV column's unique values. Read <a download="survey_sample.csv" href="../survey_sample.csv"><code>survey_sample.csv</code></a>, get the unique values from the <code>education_level</code> column, and create a category for each one.</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Education levels: 4
+</span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
 <p>Python's built-in <code>csv</code> module is enough; a <code>set</code> keeps one copy of each
 value:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"survey_sample.csv"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">row</span><span class="p">[</span><span class="s2">"education_level"</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education Level Codes"</span><span class="p">)</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Education levels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"survey_sample.csv"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">row</span><span class="p">[</span><span class="s2">"education_level"</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education Level Codes"</span><span class="p">)</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Education levels: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
-<p>With pandas, <code>df["education_level"].dropna().unique()</code> gives the same values,
-as in Section 7.</p>
+<p>The file has five rows but only four distinct levels, because
+"Bachelor" appears twice. With pandas,
+<code>df["education_level"].dropna().unique()</code> gives the same values, as in
+Section 7.</p>
 </details>
 </li>
 </ol>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Q1: What is a code list?</summary>
-<p><strong>A.</strong> A Python script.</p>
-<p><strong>B.</strong> A set of allowed answers for a question.</p>
-<p><strong>C.</strong> A list of column names.</p>
-<p><strong>D.</strong> A type of CSV file.</p>
+<summary>Question 1 (O1): Why is Survey 2 easier to compare?</summary>
+<p>Survey 1 lets interviewers type employment status as free text. Survey 2
+uses the code list Employed / Unemployed / Retired / Student. Why is
+Survey 2 easier to compare with other surveys?</p>
+<p><strong>A.</strong> Its data file is smaller.</p>
+<p><strong>B.</strong> Python needs a code list before it can save a variable.</p>
+<p><strong>C.</strong> DDI cannot store free-text answers.</p>
+<p><strong>D.</strong> Every answer is one of a fixed set of categories, so another survey that uses the same code list counts exactly the same answers.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> A code list defines the allowed answers for a question.
-For example, "Male / Female / Other" for gender.</p>
+<p><strong>D.</strong> A code list fixes the allowed answers. Two surveys that share it
+put every answer into the same categories, so their counts line up.
+Free text such as "M", "emp." or "working" has to be cleaned first.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q2: How do you add a category to a document?</summary>
-<p><strong>A.</strong> <code>doc.add_category(name="Male")</code></p>
-<p><strong>B.</strong> <code>doc.add_item(Category, name="Male")</code></p>
-<p><strong>C.</strong> <code>doc.add_code_list(category="Male")</code></p>
-<p><strong>D.</strong> <code>Category.add("Male")</code></p>
+<summary>Question 2 (O2): Which fix makes this script run?</summary>
+<p>A script calls <code>doc.add_item(Category, name="Male")</code> and stops with
+<code>NameError: name 'Category' is not defined</code>. Which fix makes it run?</p>
+<p><strong>A.</strong> Add <code>from ddi_l.models.logicalproduct import Category</code> at the top of the script.</p>
+<p><strong>B.</strong> Replace the call with <code>doc.add_category(name="Male")</code>.</p>
+<p><strong>C.</strong> Call <code>doc.add_code_list(name="Male")</code> instead.</p>
+<p><strong>D.</strong> Put the type in quotes: <code>doc.add_item("Category", name="Male")</code>.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> Use <code>doc.add_item(Category, name="Male")</code>. You must
-import <code>Category</code> from <code>ddi_l.models.logicalproduct</code> first.</p>
+<p><strong>A.</strong> <code>Category</code> is a class that you import before you use it.
+<code>doc.add_category()</code> does not exist, <code>add_code_list()</code> would create a
+code list called "Male", and <code>add_item()</code> needs the class itself, not
+its name as a string.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q3: How do you get all categories in a document?</summary>
-<p><strong>A.</strong> <code>doc.categories</code></p>
-<p><strong>B.</strong> <code>doc.get_categories()</code></p>
-<p><strong>C.</strong> <code>doc.items(Category)</code></p>
-<p><strong>D.</strong> <code>doc.code_lists</code></p>
+<summary>Question 3 (O3): What does this script print?</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">census</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Census"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"example.org"</span><span class="p">)</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">census</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Yes/No"</span><span class="p">)</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">census</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Yes"</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">census</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"No"</span><span class="p">)</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">census</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Tenure"</span><span class="p">)</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="n">census</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Owner"</span><span class="p">)</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="n">census</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Renter"</span><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="n">census</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Other"</span><span class="p">)</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">census</span><span class="o">.</span><span class="n">code_lists</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">census</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Category</span><span class="p">)))</span>
+</span></code></pre></div>
+<p><strong>A.</strong> <code>2 2</code></p>
+<p><strong>B.</strong> <code>5 5</code></p>
+<p><strong>C.</strong> <code>2 5</code></p>
+<p><strong>D.</strong> <code>7 0</code></p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> Use <code>doc.items(Category)</code> to get a list of all Category
-items. This works for any registered DDI type.</p>
+<p><strong>C.</strong> The script creates two code lists and five categories.
+<code>items(Category)</code> counts every category in the document, whichever list
+you meant it for.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q4: Why do code lists matter?</summary>
-<p><strong>A.</strong> They make the file smaller.</p>
-<p><strong>B.</strong> They are required by Python.</p>
-<p><strong>C.</strong> They keep data consistent and make surveys comparable.</p>
-<p><strong>D.</strong> They speed up the computer.</p>
+<summary>Question 4 (O3): Which loop prints the name of every category in <code>doc</code>?</summary>
+<p><strong>A.</strong> <code>for cat in doc.code_lists: print(cat.names[0].text)</code></p>
+<p><strong>B.</strong> <code>for cat in doc.items(Category): print(cat.names[0].text)</code></p>
+<p><strong>C.</strong> <code>for cat in doc.categories: print(cat)</code></p>
+<p><strong>D.</strong> <code>for cat in doc.items("Category"): print(cat.identifier)</code></p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> Code lists prevent messy, inconsistent answers. They also
-let different surveys share the same set of allowed values,
-making data comparable.</p>
+<p><strong>B.</strong> <code>doc.items(Category)</code> returns every category, and
+<code>names[0].text</code> is the first name of each one. Option A prints the code
+list names, <code>doc.categories</code> does not exist, and <code>items()</code> takes the
+class, not a string.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 5 (O4): How many categories does a CSV column give?</summary>
+<p>A CSV <code>gender</code> column holds Female, Male, Female, (blank), Other, Male. You
+keep one copy of each value, skip the blank, and add one category per value.
+How many categories do you add?</p>
+<p><strong>A.</strong> 3</p>
+<p><strong>B.</strong> 4</p>
+<p><strong>C.</strong> 5</p>
+<p><strong>D.</strong> 6</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>A.</strong> The distinct non-blank values are Female, Male and Other. With
+pandas, <code>df["gender"].dropna().unique()</code> returns exactly those three.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can explain in two sentences what a code list and a category are, and why a shared code list makes surveys comparable. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write a script that creates code lists with <code>doc.add_code_list()</code> and adds categories with <code>doc.add_item(Category, name=...)</code>. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write a loop over <code>doc.items(Category)</code> that prints every category's name, and predict what <code>len(doc.code_lists)</code> and <code>len(doc.items(Category))</code> return. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write a script that turns the distinct values of a CSV column into categories. (O4)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Instructor notes</p>
@@ -3064,8 +3297,9 @@ making data comparable.</p>
 <li>Start by asking: "Have you ever seen a survey with a dropdown menu? That dropdown is a code list."</li>
 <li>Show a real example: the gender dropdown on a government form. Point out that the choices are fixed. That is a controlled vocabulary.</li>
 <li>The <code>add_item()</code> pattern can feel abstract. Remind learners: "You are telling Python what type to create and what to name it."</li>
-<li>Exercise 4 (bonus) connects Module 8 (CSV) to Module 9 (code lists). It is a great stretch goal for faster learners.</li>
-<li>If learners ask about linking categories to code lists at the DDI XML level: that is an advanced topic. For now, they just need to know how to create both.</li>
+<li>Exercise 4 asks learners to predict before they run. Collect a few predictions first. A common wrong prediction is <code>Categories: 4</code>, from learners who think the count covers only the new list.</li>
+<li>Exercise 5 connects Module 8 (CSV) to Module 9 (code lists). Faster learners can repeat it for the <code>gender</code> column.</li>
+<li>If learners ask how a category gets inside a particular code list in the DDI XML: each list holds <strong>codes</strong>, and each code points to a category. <a href="../module-14-custom-fields/">Module 14</a> builds them. For now, learners create the lists and the categories side by side.</li>
 </ul>
 </div>
 <hr />
@@ -3148,6 +3382,10 @@ making data comparable.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

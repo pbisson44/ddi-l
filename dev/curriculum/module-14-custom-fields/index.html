@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1520,17 +1522,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#11-summary-extend-without-breaking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        11. Summary: extend without breaking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercises" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1546,6 +1537,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -1596,14 +1598,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1741,6 +1771,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1801,6 +1837,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1941,6 +2005,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2752,17 +2872,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#11-summary-extend-without-breaking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        11. Summary: extend without breaking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#exercises" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2778,6 +2887,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
       
     </span>
   </a>
@@ -2859,24 +2979,29 @@
 
 <h1 id="module-14-custom-fields-extend-the-standard-for-your-organization">Module 14: Custom fields: extend the standard for your organization<a class="headerlink" href="#module-14-custom-fields-extend-the-standard-for-your-organization" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Understand why DDI is an <strong>open, extensible standard</strong>, and why that
-  matters.</li>
-<li>Add <strong>organization-specific custom fields</strong> that DDI has no built-in
-  element for.</li>
-<li>Use the standard's own extension point, <code>UserAttributePair</code>, so your
-  custom fields stay inside <strong>valid DDI XML</strong>.</li>
-<li>Attach organization-specific <strong>external identifiers</strong> with <code>UserID</code>.</li>
-<li>Back a custom field with a <strong>controlled vocabulary</strong> by referencing a code list.</li>
-<li>Design a <strong>custom-field catalog</strong> with naming conventions your whole team
-  follows.</li>
-<li><strong>Audit</strong> a document to report which items carry your custom fields.</li>
-<li>Confirm that custom fields <strong>round-trip</strong>: they survive save and reopen.</li>
+<li><strong>O1.</strong> Add namespaced custom fields (keys such as
+  <code>myorg:retention_policy</code>) with <code>set_property()</code>: on the study for facts
+  about the whole dataset, and on a variable or question for facts about
+  that item.</li>
+<li><strong>O2.</strong> Add an external identifier with <code>UserID</code>, and choose between a
+  <code>UserID</code> and a custom property for a given value.</li>
+<li><strong>O3.</strong> Back a custom field with a controlled vocabulary: build a code
+  list and store its URN in a property.</li>
+<li><strong>O4.</strong> Write a catalog of allowed keys and a function that refuses any
+  key that is not in it.</li>
+<li><strong>O5.</strong> Write an audit that counts the questions and variables carrying
+  a field with your prefix.</li>
+<li><strong>O6.</strong> Save and reopen a document, show that its custom fields survive,
+  and find the <code>UserAttributePair</code> that holds a field in the XML.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> <a href="../module-13-properties-find-validate/">Module 13: Custom properties, find, remove, and validate</a>.</p>
+<p><strong>Prerequisites:</strong> <a href="../module-13-properties-find-validate/">Module 13</a>.</p>
 <p><strong>Time:</strong> 45 min self-paced / 55 min instructor-led.</p>
+<p><strong>New in this module:</strong> <code>doc.study_unit</code>, <code>UserID</code>, <code>item.user_ids</code>,
+<code>CodeItem</code>, <code>r:UserAttributePair</code>.</p>
 <hr />
 <h2 id="1-why-organizations-need-custom-fields">1. Why organizations need custom fields<a class="headerlink" href="#1-why-organizations-need-custom-fields" title="Permanent link">&para;</a></h2>
 <p>DDI describes hundreds of things: questions, variables, concepts, code lists,
@@ -2900,7 +3025,7 @@ has no built-in element for:</p>
 </tr>
 <tr>
 <td>Security classification</td>
-<td>"Protected B"</td>
+<td>"Confidential"</td>
 <td>Information security</td>
 </tr>
 <tr>
@@ -2925,7 +3050,7 @@ has no built-in element for:</p>
 </tr>
 <tr>
 <td>Grant / project code</td>
-<td>"SSHRC-435-2023"</td>
+<td>"GRANT-2023-435"</td>
 <td>Research administration</td>
 </tr>
 </tbody>
@@ -2958,29 +3083,40 @@ of DDI XML:</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;r:AttributeValue&gt;</span>destroy<span class="w"> </span>after<span class="w"> </span>7<span class="w"> </span>years<span class="nt">&lt;/r:AttributeValue&gt;</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&lt;/r:UserAttributePair&gt;</span>
 </span></code></pre></div>
-<p>That is the openness of the standard, made concrete.</p>
+<p>That is the openness of the standard, made concrete:</p>
+<pre class="mermaid"><code>flowchart TD
+    STD["DDI standard\n(hundreds of built-in fields)"]
+    EXT["Extension points on every identifiable item:\nUserAttributePair (AttributeKey, AttributeValue)\nand UserID"]
+    ORG["Your custom fields\nmyorg:retention_policy, myorg:security_class\nas UserAttributePairs; CAT-000734 as a UserID"]
+    FILE["Still a valid DDI file\n(it validates against the DDI schema)"]
+
+    STD --&gt; EXT
+    EXT --&gt; ORG
+    ORG --&gt; FILE
+    STD --&gt; FILE</code></pre>
 <h2 id="3-where-custom-fields-can-live">3. Where custom fields can live<a class="headerlink" href="#3-where-custom-fields-can-live" title="Permanent link">&para;</a></h2>
 <p>A custom field can be attached to <strong>any</strong> DDI item: a study, a question, a
 variable, a code list, anything. Set it at the level the field describes:</p>
 <ul>
-<li><strong>Study level</strong>: facts about the whole dataset (retention, security class).</li>
+<li><strong>Study level</strong>: facts about the whole dataset (retention, security class).
+  <code>doc.study_unit</code> is the study itself.</li>
 <li><strong>Item level</strong>: facts about one variable or question (source system, quality
   flag).</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.gc.ca"</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Study-level custom fields describe the whole dataset</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Protected B"</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># -&gt; {'myorg:retention_policy': 'destroy after 7 years',</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#     'myorg:security_class': 'Protected B'}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#     'myorg:security_class': 'Confidential'}</span>
 </span></code></pre></div>
 <h2 id="4-add-organization-specific-fields">4. Add organization-specific fields<a class="headerlink" href="#4-add-organization-specific-fields" title="Permanent link">&para;</a></h2>
 <p>You already met <code>set_property</code> in <a href="../module-13-properties-find-validate/">Module 13</a>.
@@ -2996,7 +3132,7 @@ fields never collide with anyone else's:</p>
 <div class="admonition tip">
 <p class="admonition-title">Namespace your keys</p>
 <p>Prefix every custom key with a short organization tag, like <code>myorg:</code> or
-<code>statcan:</code>. This is a convention, not a requirement, but it keeps <em>your</em>
+<code>acme:</code>. This is a convention, not a requirement, but it keeps <em>your</em>
 fields distinct from a partner's fields if two DDI files are ever merged.</p>
 </div>
 <h2 id="5-custom-fields-round-trip-they-survive-save-and-reopen">5. Custom fields round-trip: they survive save and reopen<a class="headerlink" href="#5-custom-fields-round-trip-they-survive-save-and-reopen" title="Permanent link">&para;</a></h2>
@@ -3010,7 +3146,9 @@ written into the DDI XML and read straight back. They are not lost on save.</p>
 </span></code></pre></div>
 <p>Because they live inside standard DDI, another team using different software can
 open your file and still see <code>myorg:source_system</code>, even if their tool has no
-idea what it means. <strong>Nothing is silently dropped.</strong> That is interoperability.</p>
+idea what it means. <strong>Nothing is silently dropped.</strong> That is interoperability.
+Open <code>household-survey.xml</code> in a text editor and search for <code>UserAttributePair</code>
+to see each field as the XML block of section 2.</p>
 <div class="admonition tip">
 <p class="admonition-title">Keep editing after a save</p>
 <p><code>income</code> and <code>q_income</code> stay attached to <code>doc</code> after <code>doc.save()</code>, so you
@@ -3030,7 +3168,9 @@ value <strong>and</strong> a type.</p>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
 </span></code></pre></div>
 <p>Use <code>UserID</code> when the value <strong>identifies</strong> the item in another system, and a
-custom property (<code>set_property</code>) when the value <strong>describes</strong> it.</p>
+custom property (<code>set_property</code>) when the value <strong>describes</strong> it. A quick
+test: if another system could look the item up by this value, it is an
+identifier.</p>
 <h2 id="7-a-custom-field-backed-by-a-controlled-vocabulary-a-code-list">7. A custom field backed by a controlled vocabulary (a code list)<a class="headerlink" href="#7-a-custom-field-backed-by-a-controlled-vocabulary-a-code-list" title="Permanent link">&para;</a></h2>
 <p>Free-text values are flexible but easy to get wrong ("validated", "Validated",
 "valid"). For a field that should take a fixed set of values, back it with a
@@ -3087,7 +3227,7 @@ trying to replace. Agree on a small <strong>catalog</strong> and apply it consis
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># A documented catalog your whole team shares</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">"myorg:retention_policy"</span><span class="p">:</span> <span class="s2">"How long to keep the data (records schedule)."</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"myorg:security_class"</span><span class="p">:</span> <span class="s2">"Security classification (e.g. Protected B)."</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"myorg:security_class"</span><span class="p">:</span> <span class="s2">"Security classification (e.g. Confidential)."</span><span class="p">,</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
@@ -3097,7 +3237,7 @@ trying to replace. Agree on a small <strong>catalog</strong> and apply it consis
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Apply a field only if it is in the catalog (a guard against typos)</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
 </span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
 </span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
@@ -3137,20 +3277,6 @@ report on them, which is useful for governance reviews and quality assurance.</p
   as the definition that travels with it. Your file stays valid DDI, but only
   <em>your</em> catalog explains what <code>myorg:security_class</code> means.</li>
 </ul>
-<h2 id="11-summary-extend-without-breaking">11. Summary: extend without breaking<a class="headerlink" href="#11-summary-extend-without-breaking" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    STD["DDI standard\n(hundreds of built-in fields)"]
-    EXT["Extension point:\nUserAttributePair / UserID"]
-    ORG["Your custom fields\nmyorg:retention_policy\nmyorg:security_class\nCAT-000734"]
-    FILE["Still a valid DDI file\n(round-trips through any DDI tool)"]
-
-    STD --&gt; EXT
-    EXT --&gt; ORG
-    ORG --&gt; FILE
-    STD --&gt; FILE</code></pre>
-<p>The standard gives you a rich set of built-in fields <strong>and</strong> an open door for
-the ones it does not have. You extend it for your organization's needs without
-forking the schema and without leaving valid DDI.</p>
 <hr />
 <div class="admonition example">
 <p class="admonition-title">Scenario</p>
@@ -3165,125 +3291,102 @@ list, and confirm they survive a save/reopen so they travel with the file.</p>
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Create a study with an <code>income</code> question and variable. Set two study-level
-   custom fields: <code>myorg:retention_policy</code> = <code>"destroy after 7 years"</code> and
-   <code>myorg:security_class</code> = <code>"Protected B"</code>. Print the study's properties.</p>
+<p><strong>(O1)</strong> Create a study with an <code>income</code> question and variable. Set two
+   study-level custom fields: <code>myorg:retention_policy</code> =
+   <code>"destroy after 7 years"</code> and <code>myorg:security_class</code> = <code>"Confidential"</code>.
+   Set one item-level field on the <code>income</code> variable: <code>myorg:source_system</code> =
+   <code>"CRM-2024"</code>. Print the study's properties, then the variable's source
+   system.</p>
 <p><strong>Expected output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Protected B'}
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Confidential'}
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>CRM-2024
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.gc.ca"</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Protected B"</span><span class="p">)</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
 </span></code></pre></div>
+<p>The retention policy and the classification describe the whole
+dataset, so they go on the study. The source system describes one
+variable.</p>
 </details>
 </li>
 <li>
-<p>Set <code>myorg:source_system</code> = <code>"CRM-2024"</code> on the <code>income</code> variable and
-   <code>myorg:steward</code> = <code>"Survey Methods"</code> on the question. Write an audit that
-   scans all questions and variables and counts how many carry a <code>myorg:</code> field.
-   Print the count.</p>
+<p><strong>(O2)</strong> Attach an organization-specific external identifier to the
+   <code>income</code> variable: a <code>UserID</code> with value <code>"CAT-000734"</code> and type
+   <code>"InternalCatalogue"</code>. Print it as <code>type: value</code>. Then, for each value
+   below, say whether it belongs in a <code>UserID</code> or in a custom property:
+   (a) <code>RM-2291</code>, the records-management system's number for this variable;
+   (b) <code>"validated"</code>, its quality status; (c) <code>"Data Governance Office"</code>, the
+   team accountable for it.</p>
 <p><strong>Expected output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Items with custom fields: 2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>InternalCatalogue: CAT-000734
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="k">return</span> <span class="n">count</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
 </span></code></pre></div>
+<p>(a) <code>UserID</code>: another system can look the variable up by this
+number, so it identifies the item. (b) and (c) are custom
+properties: they describe the item.</p>
 </details>
 </li>
 <li>
-<p>Attach an organization-specific external identifier to the <code>income</code> variable:
-   a <code>UserID</code> with value <code>"CAT-000734"</code> and type <code>"InternalCatalogue"</code>. Print
-   it as <code>type: value</code>.</p>
-<p><strong>Expected output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>InternalCatalogue: CAT-000734
-</span></code></pre></div>
-<details class="success">
-<summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span></code></pre></div>
-</details>
-</li>
-<li>
-<p>Save the document, reopen it with <code>ddi.open_ddi()</code>, and read
-   <code>myorg:source_system</code> back from the reopened variable to prove the custom
-   field round-trips.</p>
-<p><strong>Expected output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>CRM-2024
-</span></code></pre></div>
-<details class="success">
-<summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>
-</span></code></pre></div>
-</details>
-</li>
-<li>
-<p>(Bonus) Build a <code>Quality Flag Codes</code> code list with three codes
+<p><strong>(O3)</strong> Build a <code>Quality Flag Codes</code> code list with three codes
    (<code>validated</code>, <code>provisional</code>, <code>suppressed</code>), a controlled vocabulary. Set
    <code>myorg:quality_flag</code> = <code>"validated"</code> on the <code>income</code> variable, and set
-   <code>myorg:quality_flag_codes</code> to the code list object so the field <strong>references</strong>
-   that vocabulary. Verify the stored reference is a URN (starts with
-   <code>"urn:ddi:"</code>).</p>
+   <code>myorg:quality_flag_codes</code> to the code list object so the field
+   <strong>references</strong> that vocabulary. Print the flag, and whether the stored
+   reference is a URN (starts with <code>"urn:ddi:"</code>).</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>validated
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>True
+</span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Build the controlled vocabulary. Each allowed value needs a Category (its</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># meaning) AND a Code in the list that references it; a Category alone is not</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># in any list. Each Code gets its own UUID4-based URN.</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>        <span class="n">CodeItem</span><span class="p">(</span>
-</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
-</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
-</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
-</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
-</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>        <span class="p">)</span>
-</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>    <span class="p">)</span>
-</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
-</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1"># A field whose value is drawn from the vocabulary, plus a field that</span>
-</span><span id="__span-16-22"><a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c1"># references the code list defining the allowed values</span>
-</span><span id="__span-16-23"><a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
-</span><span id="__span-16-24"><a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
-</span><span id="__span-16-25"><a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>
-</span><span id="__span-16-26"><a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>
-</span><span id="__span-16-27"><a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Build the controlled vocabulary. Each allowed value needs a Category (its</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># meaning) AND a Code in the list that references it; a Category alone is not</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># in any list. Each Code gets its own UUID4-based URN.</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="n">CodeItem</span><span class="p">(</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        <span class="p">)</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="p">)</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># A field whose value is drawn from the vocabulary, plus a field that</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># references the code list defining the allowed values</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>  <span class="c1"># -&gt; validated</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Objects stay attached</p>
@@ -3292,73 +3395,191 @@ and after <code>save()</code>.</p>
 </div>
 </details>
 </li>
+<li>
+<p><strong>(O4)</strong> Write a catalog <code>CUSTOM_FIELDS</code> with three keys,
+   <code>myorg:source_system</code>, <code>myorg:quality_flag</code> and <code>myorg:steward</code>, each with
+   a one-line meaning. Write <code>set_catalog_field(item, key, value)</code>, which sets
+   the field only if the key is in the catalog and raises a <code>ValueError</code>
+   otherwise. Use it to set <code>myorg:steward</code> = <code>"Survey Methods"</code> on the
+   <code>income</code> variable and print the value. Then try the misspelt key
+   <code>myorg:stewart</code>, catch the error, and print its message.</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Survey Methods
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Refused: 'myorg:stewart' is not in the custom-field catalog
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">}</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">))</span>  <span class="c1"># -&gt; Survey Methods</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    <span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:stewart"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Refused: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># -&gt; Refused: 'myorg:stewart' is not in the custom-field catalog</span>
+</span></code></pre></div>
+<p>Without the guard, the typo would create a second, misspelt field
+that no audit or reader looks for.</p>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Set <code>myorg:steward</code> = <code>"Survey Methods"</code> on the income question.
+   Write an audit that scans all questions and variables and counts how many
+   carry a <code>myorg:</code> field. Print the count.</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Items with custom fields: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="k">return</span> <span class="n">count</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># -&gt; Items with custom fields: 2</span>
+</span></code></pre></div>
+<p>The audit counts items, not fields: the <code>income</code> variable carries
+several <code>myorg:</code> fields and counts once.</p>
+</details>
+</li>
+<li>
+<p><strong>(O6)</strong> Save the document, reopen it with <code>ddi.open_ddi()</code>, and read
+   <code>myorg:source_system</code> back from the reopened variable to prove the custom
+   field round-trips. Then read the saved file as text and check that it holds
+   an <code>r:AttributeKey</code> element with the key <code>myorg:source_system</code>.</p>
+<p><strong>Expected output:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>CRM-2024
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>True
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="n">xml</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"&lt;r:AttributeKey&gt;myorg:source_system&lt;/r:AttributeKey&gt;"</span> <span class="ow">in</span> <span class="n">xml</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>The key sits in an <code>r:AttributeKey</code>, inside the <code>r:UserAttributePair</code>
+that also holds its <code>r:AttributeValue</code>.</p>
+</details>
+</li>
 </ol>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Q1: Why can you add custom fields to a DDI document?</summary>
-<p><strong>A.</strong> Because DDI ignores any element it does not recognize.</p>
-<p><strong>B.</strong> Because DDI is an open, extensible standard with a built-in extension point.</p>
-<p><strong>C.</strong> Because custom fields are stored in a separate file.</p>
-<p><strong>D.</strong> You cannot: DDI only allows its built-in fields.</p>
+<summary>Question 1 (O1): Which call records that the whole dataset is classified Confidential?</summary>
+<p><strong>A.</strong> <code>income.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>B.</strong> <code>doc.study_unit.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>C.</strong> <code>q_income.set_property("security_class", "Confidential")</code></p>
+<p><strong>D.</strong> <code>doc.add_variable(name="myorg:security_class")</code></p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> DDI is designed to be extended. <code>UserAttributePair</code> is a
-standardized extension point, so your custom fields stay inside valid
-DDI XML.</p>
+<p><strong>B.</strong> A fact about the whole dataset goes on the study,
+<code>doc.study_unit</code>. A and C put it on one item (and C drops the
+namespace prefix). D creates a variable, not a field.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q2: Which DDI element stores a custom key-value field?</summary>
-<p><strong>A.</strong> <code>Variable</code></p>
-<p><strong>B.</strong> <code>UserAttributePair</code></p>
-<p><strong>C.</strong> <code>CodeList</code></p>
-<p><strong>D.</strong> <code>VersionRationale</code></p>
+<summary>Question 2 (O6): You save a document and search the XML for your key myorg:source_system. Where do you find it?</summary>
+<p><strong>A.</strong> In an <code>r:UserID</code> element.</p>
+<p><strong>B.</strong> In the variable's <code>r:Label</code>.</p>
+<p><strong>C.</strong> In an <code>r:AttributeKey</code>, inside an <code>r:UserAttributePair</code>.</p>
+<p><strong>D.</strong> Nowhere: custom fields are not saved.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>set_property</code> writes an <code>r:UserAttributePair</code> with an
-<code>AttributeKey</code> and an <code>AttributeValue</code>, the standard's extension point
-for custom fields.</p>
+<p><strong>C.</strong> <code>set_property</code> writes an <code>r:UserAttributePair</code> with an
+<code>r:AttributeKey</code> and an <code>r:AttributeValue</code>, the standard's extension
+point for custom fields. That is why the field survives save and
+reopen.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q3: What happens to custom fields when you save and reopen a file?</summary>
-<p><strong>A.</strong> They are dropped, because they are not standard.</p>
-<p><strong>B.</strong> They survive: they are written to the DDI XML and read straight back.</p>
-<p><strong>C.</strong> They are converted into built-in fields.</p>
-<p><strong>D.</strong> They are moved to a separate spreadsheet.</p>
+<summary>Question 3 (O2): RM-2291 is the records-management system's number for a variable. Where do you record it?</summary>
+<p><strong>A.</strong> In a <code>UserID</code>, with a type such as <code>"RecordsManagement"</code>.</p>
+<p><strong>B.</strong> In the variable's label.</p>
+<p><strong>C.</strong> In a custom property, because every extra value is a property.</p>
+<p><strong>D.</strong> In a separate spreadsheet.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> Because they live inside standard DDI, custom fields round-trip.
-Any DDI-aware tool preserves them, even one that does not know what they
-mean.</p>
+<p><strong>A.</strong> The value <strong>identifies</strong> the variable in another system, so it
+is a <code>UserID</code>. Use a custom property when the value <strong>describes</strong> the
+item.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q4: When should you use <code>UserID</code> instead of a custom property?</summary>
-<p><strong>A.</strong> When the value <strong>identifies</strong> the item in another system.</p>
-<p><strong>B.</strong> When the value is longer than 10 characters.</p>
-<p><strong>C.</strong> Never; <code>UserID</code> is deprecated.</p>
-<p><strong>D.</strong> Only for questions, never for variables.</p>
+<summary>Question 4 (O3): quality_codes is a code list. What does get_property return after this call?</summary>
+<p><code>income.set_property("myorg:quality_flag_codes", quality_codes)</code></p>
+<p><strong>A.</strong> The <code>CodeList</code> object itself.</p>
+<p><strong>B.</strong> The string <code>"Quality Flag Codes"</code>.</p>
+<p><strong>C.</strong> The list <code>['validated', 'provisional', 'suppressed']</code>.</p>
+<p><strong>D.</strong> The code list's URN, a string that starts with <code>urn:ddi:</code>.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>A.</strong> Use <code>UserID</code> (with a <code>type_of_user_id</code>) when the value is an
-identifier from another system, such as an internal catalogue number.
-Use a custom property when the value <strong>describes</strong> the item.</p>
+<p><strong>D.</strong> Passing a DDI item as the value stores its URN, a stable link
+to the code list. Properties always hold strings.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Q5: Why namespace custom keys like <code>myorg:retention_policy</code>?</summary>
-<p><strong>A.</strong> DDI requires a colon in every key.</p>
-<p><strong>B.</strong> To keep your fields distinct so they never collide with another organization's fields.</p>
-<p><strong>C.</strong> To make the file smaller.</p>
-<p><strong>D.</strong> To hide the field from other tools.</p>
+<summary>Question 5 (O4): With the catalog guard of section 8, what does set_catalog_field(income, 'myorg:stewart', 'X') do?</summary>
+<p><strong>A.</strong> Sets <code>myorg:stewart</code> on <code>income</code>.</p>
+<p><strong>B.</strong> Corrects the key to <code>myorg:steward</code> and sets it.</p>
+<p><strong>C.</strong> Does nothing and says nothing.</p>
+<p><strong>D.</strong> Raises a <code>ValueError</code> and sets nothing.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> A namespace prefix is a convention that keeps your organization's
-custom fields distinct, which matters if two DDI files are ever merged.</p>
+<p><strong>D.</strong> The key is not in <code>CUSTOM_FIELDS</code>, so the function raises
+before it calls <code>set_property</code>. The typo is caught instead of
+creating a misspelt field.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 6 (O5): A question has no properties; variable v1 has myorg:a and myorg:b; variable v2 has other:flag. What does items_with_custom_fields(doc) return?</summary>
+<p><strong>A.</strong> 1</p>
+<p><strong>B.</strong> 2</p>
+<p><strong>C.</strong> 3</p>
+<p><strong>D.</strong> 0</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>A.</strong> Only <code>v1</code> has a key that starts with <code>myorg:</code>. The audit
+counts items, not fields, so its two fields count once, and
+<code>other:flag</code> does not match the prefix.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can add namespaced custom fields at the study level and at the item level, choosing the level each field describes. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can add a <code>UserID</code> and choose between a <code>UserID</code> and a custom property for a value. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can back a custom field with a code list by storing the list's URN in a property. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write a catalog of allowed keys and a function that refuses any other key. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can write an audit that counts the items carrying my prefix. (O5)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can show that custom fields survive save and reopen, and find their <code>UserAttributePair</code> in the XML. (O6)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Instructor notes</p>
@@ -3368,15 +3589,17 @@ custom fields distinct, which matters if two DDI files are ever merged.</p>
   Custom fields fix that by keeping it in the DDI.</li>
 <li>Make the openness point explicitly: DDI gives you a <em>standardized</em> way to
   extend it. Show the <code>UserAttributePair</code> XML on screen so learners see the
-  custom field is still valid DDI, not a hack.</li>
+  custom field is still valid DDI, not a hack. Exercise 6 has them find it
+  themselves.</li>
 <li>Draw the line between Module 13 and this module: Module 13 taught the
   <code>set_property</code> <em>mechanics</em>; this module is about <em>governing</em> extensions for
   an organization: catalogs, namespaces, controlled values, auditing.</li>
 <li>The <code>UserID</code> vs custom-property distinction (identify vs describe) is a
   common point of confusion. Give two quick examples of each.</li>
-<li>For NSO and archive staff: connect to real governance: records-retention
-  schedules, security classifications, data-steward assignments. These are
-  audited in practice, and Section 9's audit loop is how you report on them.</li>
+<li>For staff of statistical offices and archives: connect to real governance:
+  records-retention schedules, security classifications, data-steward
+  assignments. These are audited in practice, and Section 9's audit loop is
+  how you report on them.</li>
 <li>Emphasize the one caution: do not reinvent built-in DDI. Custom fields are
   for genuine gaps, not for re-doing concepts, universes, or versioning.</li>
 </ul>
@@ -3461,6 +3684,10 @@ custom fields distinct, which matters if two DDI files are ever merged.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

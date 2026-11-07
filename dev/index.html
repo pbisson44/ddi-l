@@ -923,6 +923,8 @@
       
         
       
+        
+      
     
     
     
@@ -1404,14 +1406,42 @@
   
   
     <li class="md-nav__item">
-      <a href="curriculum/module-16-capstone/" class="md-nav__link">
+      <a href="curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1549,6 +1579,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1609,6 +1645,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1749,6 +1813,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2593,14 +2713,57 @@ authors new documents in DDI 3.3.</p>
 <a class="md-button md-button--secondary md-button--outlined" href="curriculum/">Start the training curriculum</a></p>
 </div>
 <h2 id="how-a-study-fits-together">How a study fits together<a class="headerlink" href="#how-a-study-fits-together" title="Permanent link">&para;</a></h2>
-<p>A DDI study holds the questions you asked. Each answer becomes a variable in
-your dataset, and each variable measures a concept.</p>
-<pre class="mermaid"><code>flowchart LR
+<p>A DDI study (a <code>StudyUnit</code>) keeps its metadata in modules, the boxes below:
+concepts and universes in a <code>ConceptualComponent</code>, the questionnaire and its
+questions in a <code>DataCollection</code>, variables, code lists and categories in a
+<code>LogicalProduct</code>, record layouts in a <code>PhysicalDataProduct</code>, each data file in
+a <code>PhysicalInstance</code>, and organizations and people in an <code>Archive</code>. Items refer
+to each other across modules (dashed arrows): a variable to the question that
+collected it, the concept it measures, its universe and its code list; a data
+file to the record layout and the logical record that list its variables.</p>
+<pre class="mermaid"><code>flowchart TB
     accTitle: How a DDI study fits together
-    accDescr: A study contains questions. Each question is recorded as a variable, and each variable measures a concept.
-    S[Study] --&gt;|asks| Q[Questions]
-    Q --&gt;|recorded as| V[Variables]
-    V --&gt;|measure| C[Concepts]</code></pre>
+    accDescr: A StudyUnit holds its metadata in modules: concepts and universes in a ConceptualComponent; the instrument, its control constructs and the questions in a DataCollection; variables, code lists, categories and data relationships in a LogicalProduct; record layouts in a PhysicalDataProduct; each data file in a PhysicalInstance; organizations and individuals in an Archive. Dashed arrows are references: a variable refers to its question, concept, universe and code list; a data file refers to its record layout and data relationship, which list its variables.
+    subgraph SU["StudyUnit"]
+        direction TB
+        subgraph CC["ConceptualComponent"]
+            CON[Concept]
+            UNI[Universe]
+        end
+        subgraph DC["DataCollection"]
+            INS[Instrument]
+            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
+            QI[QuestionItem]
+        end
+        subgraph LP["LogicalProduct"]
+            VAR[Variable]
+            CL[CodeList]
+            CAT[Category]
+            DR["DataRelationship\n(LogicalRecord)"]
+        end
+        subgraph PDP["PhysicalDataProduct"]
+            RL[RecordLayout]
+        end
+        subgraph PI["PhysicalInstance"]
+            DF["DataFileIdentification\n(the data file)"]
+        end
+        subgraph AR["Archive"]
+            ORG["Organization,\nIndividual"]
+        end
+    end
+    INS -.-&gt;|ControlConstructReference| CTL
+    CTL -.-&gt;|QuestionReference| QI
+    QI -.-&gt;|ConceptReference| CON
+    QI -.-&gt;|"CodeDomain:\nCodeListReference"| CL
+    VAR -.-&gt;|QuestionReference| QI
+    VAR -.-&gt;|ConceptReference| CON
+    VAR -.-&gt;|UniverseReference| UNI
+    VAR -.-&gt;|"CodeRepresentation:\nCodeListReference"| CL
+    CL -.-&gt;|"Code:\nCategoryReference"| CAT
+    DR -.-&gt;|VariableUsedReference| VAR
+    RL -.-&gt;|"DataItem:\nVariableReference"| VAR
+    PI -.-&gt;|RecordLayoutReference| RL
+    PI -.-&gt;|DataRelationshipReference| DR</code></pre>
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -2652,7 +2815,7 @@ the file is clean, so you can use them in scripts and CI:</p>
 <ul>
 <li>
 <p><strong>Learn</strong></p>
-<p>A 16-module course that takes you from "what is metadata?" to a fully
+<p>A 17-module course that takes you from "what is metadata?" to a fully
 documented, validated and versioned DDI package. No DDI or XML experience
 needed.</p>
 <p><a class="md-button md-button--primary" href="curriculum/">Training curriculum →</a></p>
@@ -2687,14 +2850,14 @@ generation and release process in depth.</p>
 <p>If you use <code>ddi-l</code> in research or in an archive's workflow, please cite it:</p>
 <blockquote>
 <p>Bisson, P. (2026). <em>ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-documents</em> (Version 0.1.2) [Computer software].
+documents</em> (Version 0.2.0) [Computer software].
 <a href="https://github.com/pbisson44/ddi-l">https://github.com/pbisson44/ddi-l</a></p>
 </blockquote>
 <div class="language-bibtex highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nc">@software</span><span class="p">{</span><span class="nl">bisson_ddi_l</span><span class="p">,</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="na">author</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="s">{Bisson, Philippe}</span><span class="p">,</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="na">title</span><span class="w">   </span><span class="p">=</span><span class="w"> </span><span class="s">{ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents}</span><span class="p">,</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="na">year</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{2026}</span><span class="p">,</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="na">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{0.1.2}</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="na">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{0.2.0}</span><span class="p">,</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="na">url</span><span class="w">     </span><span class="p">=</span><span class="w"> </span><span class="s">{https://github.com/pbisson44/ddi-l}</span><span class="p">,</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="na">license</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{MIT}</span>
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
@@ -2765,6 +2928,10 @@ other formats.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>

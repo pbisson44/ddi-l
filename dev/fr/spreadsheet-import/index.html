@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/spreadsheet-import/">
       
       
-        <link rel="prev" href="../colectica/">
+        <link rel="prev" href="../spec-conformance/">
       
       
         <link rel="next" href="../spreadsheet-templates/">
@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1403,14 +1405,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../curriculum/module-16-capstone/" class="md-nav__link">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16 : Projets de synthèse
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
   
 
     
@@ -1550,6 +1580,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1613,6 +1649,34 @@
     
   
     Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
   
 
     
@@ -1753,6 +1817,62 @@
     
   
     Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
   
 
     
@@ -3606,8 +3726,8 @@ DDI en une seule étape, pourvu qu'ils suivent la disposition décrite ici : un
 tableau par type d'élément, et des lignes qui se désignent les unes les autres
 par leur <code>id</code>.</p>
 <p>Les tableaux peuvent être un dossier de fichiers CSV, le même dossier
-compressé en zip, ou un seul classeur Excel avec une feuille par tableau. Le résultat est une <code>FragmentInstance</code> Colectica
-prête à importer dans un dépôt, ou une étude DDI.</p>
+compressé en zip, ou un seul classeur Excel avec une feuille par tableau. Le résultat est une <code>FragmentInstance</code> disposée comme l'écrit
+Colectica Designer, ou une étude DDI.</p>
 <p>Partez d'un modèle : la page des
 <a href="../spreadsheet-templates/">modèles de tableurs</a> offre des tableaux vides et un
 exemple bilingue rempli, en fichiers CSV et en classeur Excel.</p>
@@ -3682,47 +3802,89 @@ et les schémas de valeurs manquantes gérées. Chargez les tableaux, puis
 ajoutez-les aux modèles typés en Python, ou dans Colectica.</p>
 <h2 id="comment-les-tableaux-sarticulent">Comment les tableaux s'articulent<a class="headerlink" href="#comment-les-tableaux-sarticulent" title="Permanent link">&para;</a></h2>
 <p>Une colonne qui désigne un autre tableau contient des <code>id</code> de ce tableau. Les
-diagrammes montrent les liens, un domaine à la fois.</p>
-<p>Concepts, codes et variables :</p>
+diagrammes montrent tous les liens, un domaine à la fois. La patte d'oie marque
+le côté qui peut compter plusieurs lignes ; une colonne qui contient plusieurs
+<code>id</code> (<code>a|b</code>) fait un lien plusieurs-à-plusieurs. En DDI, chaque lien est une
+référence, comme le <code>r:QuestionReference</code> d'une variable ou le
+<code>r:DefiningConceptReference</code> d'un univers.</p>
+<p>Concepts, univers et codes, et les variables qu'ils définissent :</p>
 <pre class="mermaid"><code>erDiagram
-    concepts ||--o{ concepts : "parent"
-    concepts ||--o{ universes : "concept"
-    concepts ||--o{ unit_types : "concept"
-    concepts ||--o{ conceptual_variables : "concept"
-    unit_types ||--o{ conceptual_variables : "unit_type"
-    conceptual_variables ||--o{ represented_variables : "conceptual_variable"
+    concepts }o--o{ concepts : "parent"
+    concepts |o--o{ universes : "concept"
+    concepts |o--o{ unit_types : "concept"
+    concepts |o--o{ conceptual_variables : "concept"
+    universes }o--o{ conceptual_variables : "universe"
+    unit_types |o--o{ conceptual_variables : "unit_type"
+    concepts |o--o{ represented_variables : "concept"
+    unit_types |o--o{ represented_variables : "unit_type"
+    conceptual_variables |o--o{ represented_variables : "conceptual_variable"
+    code_lists |o--o{ represented_variables : "code_list"
     code_lists ||--o{ codes : "code_list"
-    code_lists ||--o{ represented_variables : "code_list"
-    represented_variables ||--o{ variables : "represented_variable"
-    universes }o--o{ variables : "universe"
-    variable_groups }o--o{ variables : "group"
-    datasets }o--o{ variables : "dataset"
-    variables }o--o{ ncubes : "dimensions"</code></pre>
-<p>Questions et questionnaire :</p>
+    codes |o--o{ codes : "parent"</code></pre>
+<p>Variables, leurs groupes, fichiers de données et n-cubes :</p>
 <pre class="mermaid"><code>erDiagram
-    instructions }o--o{ questions : "instruction"
-    code_lists ||--o{ questions : "code_list"
+    concepts |o--o{ variables : "concept"
+    universes }o--o{ variables : "universe"
+    unit_types |o--o{ variables : "unit_type"
+    code_lists |o--o{ variables : "code_list"
+    conceptual_variables |o--o{ variables : "conceptual_variable"
+    represented_variables |o--o{ variables : "represented_variable"
+    questions }o--o{ variables : "question"
+    datasets }o--o{ variables : "dataset"
+    variable_groups }o--o{ variables : "group"
+    variable_groups |o--o{ variable_groups : "parent"
+    concepts |o--o{ variable_groups : "concept"
+    universes }o--o{ variable_groups : "universe"
+    variables }o--o{ ncubes : "dimensions"
+    universes }o--o{ ncubes : "universe"</code></pre>
+<p>Questions, grilles, blocs et groupes :</p>
+<pre class="mermaid"><code>erDiagram
     questions ||--o{ question_texts : "question"
-    code_lists ||--o{ question_grids : "rows, columns"
+    concepts |o--o{ questions : "concept"
+    code_lists |o--o{ questions : "code_list"
+    instructions }o--o{ questions : "instruction"
+    question_groups }o--o{ questions : "group"
+    concepts |o--o{ question_grids : "concept"
+    code_lists |o--o{ question_grids : "rows, columns, code_list"
+    instructions }o--o{ question_grids : "instruction"
+    question_groups }o--o{ question_grids : "group"
     questions }o--o{ question_blocks : "questions"
     question_grids }o--o{ question_blocks : "questions"
-    question_groups }o--o{ questions : "group"
-    question_groups ||--o{ question_groups : "parent"
-    instruments ||--o{ flow : "instrument"
-    flow ||--o{ flow : "parent"
-    questions ||--o{ flow : "question"
-    questions }o--o{ variables : "question"</code></pre>
-<p>L'étude, ses personnes et ce qui s'y rattache :</p>
+    concepts |o--o{ question_blocks : "concept"
+    instructions }o--o{ question_blocks : "instruction"
+    question_groups }o--o{ question_blocks : "group"
+    question_groups |o--o{ question_groups : "parent"
+    concepts |o--o{ question_groups : "concept"</code></pre>
+<p>Le flux du questionnaire. Une étape <code>question</code> désigne une question, une
+grille ou un bloc :</p>
 <pre class="mermaid"><code>erDiagram
-    groups }o--o{ studies : "studies"
-    groups ||--o{ groups : "parent"
+    instruments ||--o{ flow : "instrument"
+    flow |o--o{ flow : "parent"
+    questions |o--o{ flow : "question"
+    question_grids |o--o{ flow : "question"
+    question_blocks |o--o{ flow : "question"</code></pre>
+<p>L'étude, ses personnes et ce qui s'y rattache. Un créateur ou un éditeur est
+une organisation ou une personne ; une étude a au plus une méthodologie :</p>
+<pre class="mermaid"><code>erDiagram
+    studies }o--o{ groups : "studies"
+    groups |o--o{ groups : "parent"
     organizations }o--o{ studies : "creator, publisher, funder"
     individuals }o--o{ studies : "creator, publisher"
+    universes |o--o{ studies : "universe"
+    concepts |o--o{ studies : "concept"
     studies ||--o{ instruments : "study"
     studies ||--o{ datasets : "study"
     studies ||--o| methodologies : "study"
     studies ||--o{ processing_events : "study"
     studies ||--o{ quality_statements : "study"</code></pre>
+<p>Les comparaisons. La colonne <code>type</code> dit quel tableau <code>source</code> et <code>target</code>
+désignent ; pour <code>category</code>, ce sont des codes :</p>
+<pre class="mermaid"><code>erDiagram
+    concepts |o--o{ comparisons : "source, target"
+    universes |o--o{ comparisons : "source, target"
+    questions |o--o{ comparisons : "source, target"
+    variables |o--o{ comparisons : "source, target"
+    codes |o--o{ comparisons : "source, target"</code></pre>
 <h2 id="les-regles-communes-a-tous-les-tableaux">Les règles communes à tous les tableaux<a class="headerlink" href="#les-regles-communes-a-tous-les-tableaux" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Un fichier ou une feuille par tableau</strong>, nommé comme dans les tableaux
@@ -4070,7 +4232,7 @@ ligne.</p>
 <tbody>
 <tr>
 <td><code>agency</code></td>
-<td>l'agence de maintenance de chaque élément, comme <code>ca.statcan</code></td>
+<td>l'agence de maintenance de chaque élément, comme <code>org.example</code></td>
 <td>requis</td>
 </tr>
 <tr>
@@ -4275,7 +4437,7 @@ d'<code>individuals</code> devient une référence vers lui ; toute autre valeur
 <tr>
 <td><code>abbreviation</code></td>
 <td></td>
-<td>un nom court : <code>StatCan</code></td>
+<td>un nom court ou un sigle</td>
 </tr>
 <tr>
 <td><code>email</code></td>
@@ -5156,8 +5318,8 @@ quatrième ligne que vous voyez dans Excel.</p>
 </ul>
 <h2 id="vers-colectica">Vers Colectica<a class="headerlink" href="#vers-colectica" title="Permanent link">&para;</a></h2>
 <p>La <code>FragmentInstance</code> produite par <code>to_fragment()</code> est écrite comme Colectica
-Designer écrit un export, un élément par <code>&lt;Fragment&gt;</code>, et s'importe dans un
-dépôt Colectica. Voir
+Designer écrit un export, un élément par <code>&lt;Fragment&gt;</code>, pour l'importer dans
+un dépôt Colectica ; essayez l'import dans un dépôt de test d'abord. Voir
 <a href="../colectica/">Travailler avec les exports Colectica</a> pour lire et modifier ces
 fichiers. Comme les identifiants sont dérivés de vos id, recharger les mêmes
 tableaux après modification donne les mêmes éléments avec les mêmes
@@ -5203,7 +5365,7 @@ de nouveau.</p>
       <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
         
           
-          <a href="../colectica/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Travailler avec les exports Colectica">
+          <a href="../spec-conformance/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Vérifier un questionnaire par rapport à une spécification">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -5213,7 +5375,7 @@ de nouveau.</p>
                 Précédent
               </span>
               <div class="md-ellipsis">
-                Travailler avec les exports Colectica
+                Vérifier un questionnaire par rapport à une spécification
               </div>
             </div>
           </a>
@@ -5241,6 +5403,10 @@ de nouveau.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
   
   
 </div>

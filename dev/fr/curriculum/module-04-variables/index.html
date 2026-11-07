@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1187,10 +1189,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-sauvegarder-et-examiner" class="md-nav__link">
+  <a href="#6-verifier-sauvegarder-et-examiner" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Sauvegarder et examiner
+        6. Vérifier, sauvegarder et examiner
       
     </span>
   </a>
@@ -1213,6 +1215,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
       
     </span>
   </a>
@@ -1543,14 +1556,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16 : Projets de synthèse
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
   
 
     
@@ -1688,6 +1729,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1748,6 +1795,34 @@
     
   
     Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
   
 
     
@@ -1888,6 +1963,62 @@
     
   
     Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
   
 
     
@@ -2644,10 +2775,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-sauvegarder-et-examiner" class="md-nav__link">
+  <a href="#6-verifier-sauvegarder-et-examiner" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Sauvegarder et examiner
+        6. Vérifier, sauvegarder et examiner
       
     </span>
   </a>
@@ -2670,6 +2801,17 @@
     <span class="md-ellipsis">
       
         Quiz
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faites le point
       
     </span>
   </a>
@@ -2751,18 +2893,28 @@
 
 <h1 id="module-4-ajouter-des-variables-et-les-associer-aux-questions">Module 4 : Ajouter des variables et les associer aux questions<a class="headerlink" href="#module-4-ajouter-des-variables-et-les-associer-aux-questions" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">Ce que vous apprendrez</p>
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
 <ul>
-<li>Définir ce qu'est une variable dans DDI.</li>
-<li>Créer des variables avec <code>doc.add_variable()</code>.</li>
-<li>Associer chaque variable à la question dont elle provient.</li>
-<li>Lister les variables avec <code>doc.variables</code>.</li>
-<li>Expliquer pourquoi associer les questions aux variables est important.</li>
+<li><strong>O1.</strong> Expliquer en une phrase ce qu'est une variable, en prenant une
+  colonne de tableur comme exemple.</li>
+<li><strong>O2.</strong> Écrire un script qui ajoute une variable avec libellé pour
+  chaque question avec <code>doc.add_variable()</code> et l'associe à sa question
+  avec <code>question=</code>, de sorte que <code>doc.validate()</code> et <code>doc.lint()</code> ne
+  signalent rien.</li>
+<li><strong>O3.</strong> Compter les variables avec <code>len(doc.variables)</code> et afficher
+  l'identifiant de chaque variable.</li>
+<li><strong>O4.</strong> Expliquer en deux phrases pourquoi il est important d'associer
+  une variable à sa question, en prenant une colonne de données comme
+  exemple.</li>
+<li><strong>O5.</strong> Trouver le nom d'une variable et son lien vers sa question
+  (<code>&lt;r:QuestionReference&gt;</code>) dans le XML sauvegardé.</li>
 </ul>
 </div>
-<p><strong>Prérequis :</strong> <a href="../module-03-first-study/">Module 3 : Créer votre première étude DDI</a></p>
+<p><strong>Prérequis :</strong> <a href="../module-03-first-study/">Module 3</a></p>
 <p><strong>Durée :</strong> 30 min en autonomie / 40 min avec instructeur.</p>
-<p><strong>API enseignée :</strong> <code>doc.add_variable(name=, question=)</code>, <code>doc.variables</code></p>
+<p><strong>Nouveau dans ce module :</strong> <code>doc.add_variable()</code> (avec <code>name=</code>, <code>label=</code> et
+<code>question=</code>), <code>doc.variables</code></p>
 <hr />
 <h2 id="1-quest-ce-quune-variable">1. Qu'est-ce qu'une variable ?<a class="headerlink" href="#1-quest-ce-quune-variable" title="Permanent link">&para;</a></h2>
 <p>Une <strong>variable</strong> est comme une colonne dans un tableur. Si vous avez un
@@ -2811,7 +2963,8 @@ question exacte qui a collecté les données.</p>
 <hr />
 <h2 id="3-ajouter-des-variables-associees-aux-questions">3. Ajouter des variables associées aux questions<a class="headerlink" href="#3-ajouter-des-variables-associees-aux-questions" title="Permanent link">&para;</a></h2>
 <p>Reprenons l'enquête sur le bien-être étudiant du Module 3. D'abord, créez
-l'étude et ajoutez les questions :</p>
+l'étude et ajoutez les questions, chacune avec un libellé comme vous l'avez
+appris au module 3 :</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span>
@@ -2819,23 +2972,31 @@ l'étude et ajoutez les questions :</p>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">agency</span><span class="o">=</span><span class="s2">"university.edu"</span><span class="p">,</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">)</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Self-rated health"</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Hours of sleep"</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>Maintenant, ajoutez trois variables. Chacune est associée à une question grâce
 à l'argument <code>question=</code> :</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"HealthRating"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"SleepHours"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Age in years"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"HealthRating"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Self-rated health, 1 to 5"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"SleepHours"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Hours of sleep per night"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Ce que cela fait :</p>
 <ul>
 <li><code>doc.add_variable()</code> crée une nouvelle variable dans l'étude.</li>
 <li><code>name=</code> donne un nom court à la variable, comme un en-tête de colonne.</li>
+<li><code>label=</code> lui donne un libellé lisible, comme vous l'avez fait pour les
+  questions au module 3. Sans libellé, <code>doc.lint()</code> signale un
+  avertissement.</li>
 <li><code>question=</code> associe la variable à l'objet question qui a collecté les
   données. Notez que vous passez l'<strong>objet question</strong> (comme <code>q1</code>), pas la
-  chaîne de texte de la question.</li>
+  chaîne de texte de la question. Passer le texte, comme dans
+  <code>question="What is your age?"</code>, provoque une erreur.</li>
 </ul>
 <hr />
 <h2 id="4-lister-toutes-les-variables">4. Lister toutes les variables<a class="headerlink" href="#4-lister-toutes-les-variables" title="Permanent link">&para;</a></h2>
@@ -2872,20 +3033,37 @@ consulter la question et voir : « How many hours do you sleep per night? »</p>
 <p>Sans le lien, vous devriez deviner quelle question a produit quelle colonne.
 Avec DDI, la connexion est claire et automatique.</p>
 <hr />
-<h2 id="6-sauvegarder-et-examiner">6. Sauvegarder et examiner<a class="headerlink" href="#6-sauvegarder-et-examiner" title="Permanent link">&para;</a></h2>
-<p>Sauvegardez le document complet :</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+<h2 id="6-verifier-sauvegarder-et-examiner">6. Vérifier, sauvegarder et examiner<a class="headerlink" href="#6-verifier-sauvegarder-et-examiner" title="Permanent link">&para;</a></h2>
+<p>Vérifiez votre travail, comme vous l'avez appris au module 3, puis
+sauvegardez le document complet :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Problèmes de schéma : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Constats de lint : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">lint</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Résultat attendu :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Problèmes de schéma : 0
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Constats de lint : 0
 </span></code></pre></div>
 <p>Ouvrez <code>well-being.xml</code> dans un éditeur de texte. Cherchez un élément
 variable. Vous devriez voir quelque chose comme :</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&lt;l:Variable&gt;</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&lt;l:VariableName&gt;</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">&lt;r:String&gt;</span>Age<span class="nt">&lt;/r:String&gt;</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&lt;/l:VariableName&gt;</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nt">&lt;/l:Variable&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">&lt;l:Variable&gt;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&lt;r:ID&gt;</span>c4eefbc3-...<span class="nt">&lt;/r:ID&gt;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&lt;l:VariableName&gt;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">&lt;r:String</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>Age<span class="nt">&lt;/r:String&gt;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&lt;/l:VariableName&gt;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">&lt;r:Label&gt;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">&lt;r:Content</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>Age<span class="w"> </span>in<span class="w"> </span>years<span class="nt">&lt;/r:Content&gt;</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">&lt;/r:Label&gt;</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">&lt;r:QuestionReference&gt;</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">&lt;r:ID&gt;</span>86aed7cf-...<span class="nt">&lt;/r:ID&gt;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="nt">&lt;r:TypeOfObject&gt;</span>QuestionItem<span class="nt">&lt;/r:TypeOfObject&gt;</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nt">&lt;/r:QuestionReference&gt;</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nt">&lt;/l:Variable&gt;</span>
 </span></code></pre></div>
-<p>Le XML contient aussi la référence qui associe chaque variable à sa question.
-<code>ddi-l</code> a créé tout cela pour vous.</p>
+<p><code>&lt;l:VariableName&gt;</code> contient le nom. <code>&lt;r:QuestionReference&gt;</code> est le lien :
+le <code>&lt;r:ID&gt;</code> qu'il contient est l'identifiant de la question <code>q1</code>, ce qui
+permet au lecteur de retrouver la question exacte. <code>ddi-l</code> a créé tout cela
+pour vous.</p>
 <p>Voir aussi : <a href="../../user-guide/#ajouter-des-variables">Guide utilisateur : Ajouter des variables</a></p>
 <hr />
 <h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
@@ -2896,98 +3074,231 @@ Module 3. Le professeur vous demande maintenant de définir les colonnes de
 données (variables) et de connecter chacune à la question qui l'a
 collectée.</p>
 </div>
-<p><strong>Exercice 1.</strong> Continuez à partir du Module 3. Créez l'étude, ajoutez trois
-questions, puis ajoutez trois variables associées à ces questions :</p>
+<p><strong>Exercice 1 (O1).</strong> Une étudiante de première année vous montre cet extrait
+de son fichier de données :</p>
+<table>
+<thead>
+<tr>
+<th>StudentID</th>
+<th style="text-align: right;">SleepHours</th>
+<th style="text-align: right;">ExerciseDays</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S001</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>S002</td>
+<td style="text-align: right;">7.6</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>S003</td>
+<td style="text-align: right;">6.6</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+<p>Écrivez <strong>une phrase</strong> qui explique ce qu'est une variable, en prenant
+<code>SleepHours</code> comme exemple.</p>
+<p>Résultat attendu : une phrase.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p>Par exemple : « Une variable est une colonne d'un fichier de données,
+comme <code>SleepHours</code>, qui contient la réponse de chaque étudiant à la même
+question : combien d'heures il dort par nuit. »</p>
+</details>
+<p><strong>Exercice 2 (O2).</strong> Continuez à partir du Module 3. Créez l'étude et
+ajoutez trois questions, chacune avec un libellé. Ajoutez ensuite trois
+variables, chacune avec un libellé et associée à sa question :</p>
 <ul>
 <li><code>Age</code> associée à la question sur l'âge.</li>
 <li><code>HealthRating</code> associée à la question sur la santé.</li>
 <li><code>SleepHours</code> associée à la question sur le sommeil.</li>
 </ul>
-<p>Affichez le nombre de variables.</p>
+<p>Vérifiez votre travail avec <code>doc.validate()</code> et <code>doc.lint()</code>.</p>
 <p>Résultat attendu :</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Variables: 3
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Problèmes de schéma : 0
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Constats de lint : 0
 </span></code></pre></div>
 <details class="success">
 <summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Student Well-Being Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"university.edu"</span><span class="p">)</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">)</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">)</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"HealthRating"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">)</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"SleepHours"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Student Well-Being Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"university.edu"</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your health?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Self-rated health"</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">text</span><span class="o">=</span><span class="s2">"How many hours do you sleep per night?"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Hours of sleep"</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">)</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Age in years"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"HealthRating"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Self-rated health, 1 to 5"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">)</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"SleepHours"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Hours of sleep per night"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Problèmes de schéma : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Problèmes de schéma : 0</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Constats de lint : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">lint</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Constats de lint : 0</span>
 </span></code></pre></div>
+<p>Si <code>doc.lint()</code> signale « Maintainable element is missing a label. »,
+l'une de vos questions ou variables n'a pas de <code>label=</code>.</p>
 </details>
-<p><strong>Exercice 2.</strong> Affichez l'identifiant de chaque variable à l'aide d'une
-boucle for. Vous devriez voir trois identifiants uniques, un par ligne.</p>
+<p><strong>Exercice 3 (O3).</strong> Affichez le nombre de variables, puis l'identifiant de
+chaque variable à l'aide d'une boucle <code>for</code>.</p>
+<p>Résultat attendu : <code>Variables: 3</code>, puis trois identifiants uniques, un par
+ligne (les vôtres seront différents).</p>
 <details class="success">
 <summary>Réponse</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Variables: 3</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Chaque identifiant est un UUID, par exemple <code>a1b2c3d4-...</code>.</p>
 </details>
-<p><strong>Exercice 3.</strong> Sauvegardez le document avec <code>doc.save("well-being.xml")</code>.
-Ouvrez le fichier XML dans un éditeur de texte. Pouvez-vous trouver un
-élément <code>&lt;l:Variable&gt;</code> ? Notez le nom de la variable que vous voyez dans le
-XML.</p>
+<p><strong>Exercice 4 (O4).</strong> Un collègue trouve la colonne <code>HealthRating</code>, avec des
+valeurs de 1 à 5, dans votre fichier de données. Écrivez <strong>deux phrases</strong> :
+ce que le lien entre <code>HealthRating</code> et sa question apprend à votre collègue,
+et ce qui pourrait mal tourner si ce lien manquait.</p>
+<p>Résultat attendu : deux phrases.</p>
 <details class="success">
 <summary>Réponse</summary>
-<p>Chaque variable est un élément <code>&lt;l:Variable&gt;</code>. Son nom se trouve dans
-<code>&lt;l:VariableName&gt;</code>, par exemple :</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nt">&lt;l:VariableName&gt;</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&lt;r:String</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>Age<span class="nt">&lt;/r:String&gt;</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nt">&lt;/l:VariableName&gt;</span>
+<p>Par exemple : « Le lien mène à la question "How would you rate your
+health?", donc mon collègue sait que les valeurs sont l'évaluation que
+chaque étudiant fait de sa propre santé. Sans ce lien, il pourrait se
+tromper, par exemple en croyant que les valeurs ont été mesurées par un
+médecin, ou que 1 correspond à la meilleure santé. »</p>
+</details>
+<p><strong>Exercice 5 (O5).</strong> Sauvegardez le document avec
+<code>doc.save("well-being.xml")</code>. Ouvrez le fichier XML dans un éditeur de texte
+et trouvez l'élément <code>&lt;l:Variable&gt;</code> de <code>Age</code>. Notez :</p>
+<ol>
+<li>Le nom de la variable dans <code>&lt;l:VariableName&gt;</code>.</li>
+<li>Le <code>&lt;r:ID&gt;</code> dans son <code>&lt;r:QuestionReference&gt;</code>.</li>
+</ol>
+<p>Exécutez ensuite <code>print(q1.identifier)</code> et comparez.</p>
+<p>Résultat attendu : le nom <code>Age</code>, et un identifiant identique à celui
+qu'affiche <code>print(q1.identifier)</code>.</p>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"well-being.xml"</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 </span></code></pre></div>
-<p>L'élément <code>&lt;r:QuestionReference&gt;</code> juste en dessous est le lien vers la
-question.</p>
+<p>Le nom de la variable se trouve dans <code>&lt;l:VariableName&gt;</code> :</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">&lt;l:VariableName&gt;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&lt;r:String</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>Age<span class="nt">&lt;/r:String&gt;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nt">&lt;/l:VariableName&gt;</span>
+</span></code></pre></div>
+<p>Le <code>&lt;r:ID&gt;</code> dans le <code>&lt;r:QuestionReference&gt;</code>, quelques lignes plus bas, est
+le même identifiant que celui qu'affiche <code>print(q1.identifier)</code>. Cet
+identifiant commun est le lien entre la variable et la question.</p>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1 : Que fait l'argument question= dans doc.add_variable() ?</summary>
-<p><strong>A.</strong> Il affiche le texte de la question à l'écran.</p>
-<p><strong>B.</strong> Il associe la variable à cette question pour que DDI enregistre la
-connexion.</p>
-<p><strong>C.</strong> Il supprime la question de l'étude.</p>
-<p><strong>D.</strong> Il renomme la question.</p>
-<details class="success">
-<summary>Réponse</summary>
-<p><strong>B.</strong> L'argument <code>question=</code> crée un lien dans le document DDI entre
-la variable et la question qui a collecté les données.</p>
-</details>
-</details>
-<details class="question" open="open">
-<summary>Question 2 : Comment lister toutes les variables d'une étude ?</summary>
-<p><strong>A.</strong> <code>doc.list_variables()</code></p>
-<p><strong>B.</strong> <code>doc.get_vars()</code></p>
-<p><strong>C.</strong> <code>doc.variables</code></p>
-<p><strong>D.</strong> <code>ddi.variables(doc)</code></p>
-<details class="success">
-<summary>Réponse</summary>
-<p><strong>C.</strong> <code>doc.variables</code> renvoie la liste de toutes les variables de
-l'étude. Vous pouvez utiliser <code>len(doc.variables)</code> pour les compter.</p>
-</details>
-</details>
-<details class="question" open="open">
-<summary>Question 3 : Une variable est comme _____ dans un tableur.</summary>
-<p><strong>A.</strong> Une ligne</p>
-<p><strong>B.</strong> Une cellule</p>
-<p><strong>C.</strong> Une colonne</p>
-<p><strong>D.</strong> Un nom de feuille</p>
+<summary>Question 1 (O1) : Dans un tableau avec les colonnes Age, HealthRating et SleepHours, lequel de ces éléments est une variable ?</summary>
+<p><strong>A.</strong> La ligne du premier répondant.</p>
+<p><strong>B.</strong> La valeur 4 dans la deuxième colonne.</p>
+<p><strong>C.</strong> La colonne <code>HealthRating</code>, qui contient la réponse de chaque
+répondant à une même question.</p>
+<p><strong>D.</strong> Le nom de l'onglet du tableur.</p>
 <details class="success">
 <summary>Réponse</summary>
 <p><strong>C.</strong> Une variable est comme une colonne. Chaque colonne contient un
-type d'information (comme l'âge ou le revenu) pour chaque personne du
-jeu de données.</p>
+type d'information, comme une évaluation de la santé, pour chaque
+personne du jeu de données. Une ligne est une personne ; une valeur
+est une réponse.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 2 (O2) : Que se passe-t-il quand vous exécutez <code>doc.add_variable(name='Age', question='What is your age?')</code> ?</summary>
+<p><strong>A.</strong> <code>ddi-l</code> trouve la question par son texte et l'associe.</p>
+<p><strong>B.</strong> Une erreur est levée, car <code>question=</code> attend l'objet question
+(comme <code>q1</code>), pas le texte de la question.</p>
+<p><strong>C.</strong> La variable est créée sans lien vers une question.</p>
+<p><strong>D.</strong> Une nouvelle question avec ce texte est créée.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> <code>question=</code> a besoin de l'objet renvoyé par
+<code>doc.add_question()</code>. Une simple chaîne n'est pas une question :
+l'appel échoue avec une <code>AttributeError</code>. Passez plutôt <code>q1</code>.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 (O2) : Que fait <code>question=q2</code> dans <code>doc.add_variable(name='HealthRating', question=q2)</code> ?</summary>
+<p><strong>A.</strong> Il enregistre, dans le document DDI, une référence de la variable
+vers la question <code>q2</code>.</p>
+<p><strong>B.</strong> Il affiche le texte de la question à l'écran.</p>
+<p><strong>C.</strong> Il supprime <code>q2</code> de l'étude.</p>
+<p><strong>D.</strong> Il renomme la question en <code>HealthRating</code>.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> L'argument <code>question=</code> enregistre un lien entre la variable et
+la question qui a collecté les données. Vous le voyez dans le XML
+sous la forme de <code>&lt;r:QuestionReference&gt;</code>.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 (O3) : Quel code affiche l'identifiant de chaque variable de l'étude ?</summary>
+<p><strong>A.</strong> <code>print(doc.variables.identifier)</code></p>
+<p><strong>B.</strong> <code>doc.list_variables()</code></p>
+<p><strong>C.</strong> <code>for v in doc.questions: print(v.identifier)</code></p>
+<p><strong>D.</strong> <code>for v in doc.variables: print(v.identifier)</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>D.</strong> <code>doc.variables</code> est une liste : vous la parcourez et affichez
+l'<code>identifier</code> de chaque variable. L'option A échoue, car une liste
+n'a pas d'<code>identifier</code>, et l'option C parcourt les questions, pas
+les variables.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O4) : Un utilisateur des données voit la colonne SleepHours et veut savoir exactement ce qui a été demandé. En quoi le lien entre la variable et sa question l'aide-t-il ?</summary>
+<p><strong>A.</strong> Il convertit les heures en minutes.</p>
+<p><strong>B.</strong> L'utilisateur peut suivre le lien jusqu'à la question « How many
+hours do you sleep per night? » au lieu de deviner.</p>
+<p><strong>C.</strong> Il cache la colonne aux utilisateurs qui n'en ont pas besoin.</p>
+<p><strong>D.</strong> Il réduit la taille du fichier de données.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> C'est la traçabilité : le lien mène l'utilisateur de la
+colonne de données jusqu'à la question exacte qui a collecté les
+données.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 6 (O5) : Dans le XML sauvegardé, quel élément associe une variable à la question qui l'a collectée ?</summary>
+<p><strong>A.</strong> <code>&lt;l:VariableName&gt;</code></p>
+<p><strong>B.</strong> <code>&lt;r:Agency&gt;</code></p>
+<p><strong>C.</strong> <code>&lt;r:QuestionReference&gt;</code></p>
+<p><strong>D.</strong> <code>&lt;d:QuestionText&gt;</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> <code>&lt;r:QuestionReference&gt;</code> se trouve dans l'élément
+<code>&lt;l:Variable&gt;</code> et contient l'identifiant de la question.
+<code>&lt;l:VariableName&gt;</code> contient le nom de la variable, et
+<code>&lt;d:QuestionText&gt;</code> appartient à la question elle-même.</p>
+</details>
+</details>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux expliquer en une phrase ce qu'est une variable, en prenant une
+  colonne de tableur comme exemple. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un script qui ajoute une variable avec libellé pour
+  chaque question et l'associe avec <code>question=</code>, de sorte que
+  <code>doc.validate()</code> et <code>doc.lint()</code> ne signalent rien. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux compter les variables avec <code>len(doc.variables)</code> et afficher
+  l'identifiant de chaque variable. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux expliquer en deux phrases pourquoi il est important d'associer
+  une variable à sa question. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux trouver le nom d'une variable et son <code>&lt;r:QuestionReference&gt;</code>
+  dans le XML sauvegardé. (O5)</li>
+</ul>
 <hr />
 <div class="admonition tip">
 <p class="admonition-title">Notes pour l'instructeur</p>
@@ -3000,15 +3311,16 @@ jeu de données.</p>
   question (une chaîne comme <code>"What is your age?"</code>) au lieu de l'objet
   question (<code>q1</code>). Rappelez-leur que <code>question=</code> attend l'objet renvoyé
   par <code>doc.add_question()</code>, pas le texte.</li>
-<li><strong>Vérification pratique :</strong> Après l'exercice 1, demandez aux apprenants
-  de partager leur résultat. Tout le monde devrait voir <code>Variables: 3</code>.</li>
+<li><strong>Vérification pratique :</strong> Après les exercices 2 et 3, demandez aux
+  apprenants de partager leur résultat. Tout le monde devrait voir
+  <code>Constats de lint : 0</code> et <code>Variables: 3</code>.</li>
 <li><strong>Activité d'approfondissement :</strong> Demandez aux plus rapides d'ajouter
-  une quatrième question et une quatrième variable, puis de sauvegarder
-  et d'examiner le XML mis à jour.</li>
+  une quatrième question et une quatrième variable, puis de vérifier, de
+  sauvegarder et d'examiner le XML mis à jour.</li>
 <li><strong>Renforcer le concept :</strong> Demandez au groupe : « Si vous n'aviez que
   le fichier de données sans lien avec les questions, comment sauriez-vous
   ce que chaque colonne signifie ? » Cela fait comprendre la valeur de la
-  traçabilité.</li>
+  traçabilité (exercice 4).</li>
 </ul>
 </div>
 
@@ -3089,6 +3401,10 @@ jeu de données.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
   
   
 </div>

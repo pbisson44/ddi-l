@@ -922,6 +922,8 @@
       
         
       
+        
+      
     
     
     
@@ -1290,6 +1292,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1558,14 +1571,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-16-capstone/" class="md-nav__link">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Module 16: Capstone projects
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
   
 
     
@@ -1703,6 +1744,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1763,6 +1810,34 @@
     
   
     Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
   
 
     
@@ -1903,6 +1978,62 @@
     
   
     Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
   
 
     
@@ -2708,6 +2839,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#check-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check yourself
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2783,18 +2925,19 @@
 
 <h1 id="module-6-open-modify-and-re-save-existing-ddi-files">Module 6: Open, modify, and re-save existing DDI files<a class="headerlink" href="#module-6-open-modify-and-re-save-existing-ddi-files" title="Permanent link">&para;</a></h1>
 <div class="admonition info">
-<p class="admonition-title">What you will learn</p>
+<p class="admonition-title">Learning objectives</p>
+<p>By the end of this module, you can:</p>
 <ul>
-<li>Open an existing DDI XML file with <code>ddi.open_ddi()</code>.</li>
-<li>Explore the contents of a loaded document.</li>
-<li>Open a file with validation turned on.</li>
-<li>Add new items to an existing document.</li>
-<li>Save the modified document to a new file.</li>
-<li>Understand the round-trip guarantee: unknown XML is preserved.</li>
+<li><strong>O1.</strong> Open an existing DDI file with <code>ddi.open_ddi()</code> and print how many questions and variables it holds.</li>
+<li><strong>O2.</strong> Open a file with <code>validate=True</code>, catch the <code>ddi.DDIValidationError</code> that a broken file raises, and name the element its message points to.</li>
+<li><strong>O3.</strong> Add new items to an opened document, reword an existing question, and code a variable with a code list.</li>
+<li><strong>O4.</strong> Save the changed document under a new filename and re-open it to confirm that your changes were kept and the original file is unchanged.</li>
+<li><strong>O5.</strong> Predict what happens to XML that <code>ddi-l</code> does not model when you open and save a file, and check your prediction.</li>
 </ul>
 </div>
-<p><strong>Prerequisites:</strong> <a href="../module-05-concepts-universes/">Module 5: Organize with concepts and universes</a>.</p>
+<p><strong>Prerequisites:</strong> <a href="../module-05-concepts-universes/">Module 5</a>.</p>
 <p><strong>Time:</strong> 30 min self-paced / 40 min instructor-led.</p>
+<p><strong>New in this module:</strong> <code>ddi.open_ddi()</code>, <code>open_ddi(..., validate=True)</code>, <code>ddi.DDIValidationError</code>, <code>question_texts</code>, <code>doc.add_code_list()</code>, <code>variable.set_coded()</code>.</p>
 <hr />
 <h2 id="1-open-an-existing-file">1. Open an existing file<a class="headerlink" href="#1-open-an-existing-file" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
@@ -2863,42 +3006,72 @@ during loading. A <strong>schema</strong> is a set of rules that says which elem
 allowed and how they must be arranged.</p>
 <ul>
 <li>If the file is valid, <code>open_ddi()</code> returns the document as usual.</li>
-<li>If the file has errors, <code>open_ddi()</code> raises an exception (an error message)
-  that tells you what is wrong.</li>
+<li>If the file breaks a schema rule, <code>open_ddi()</code> raises an <strong>exception</strong>: a
+  Python error that stops the script unless you catch it. For a schema
+  problem the exception is <code>ddi.DDIValidationError</code>.</li>
 </ul>
-<p>This is helpful when you receive a file from someone else and want to make
-sure it follows the DDI standard before you start working with it.</p>
+<p>To report the problem instead of stopping, catch the exception with
+<code>try</code>/<code>except</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"my-study.xml"</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">except</span> <span class="n">ddi</span><span class="o">.</span><span class="n">DDIValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Not valid: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The message has two parts. The first part names the rule that is broken. The
+part in parentheses, after <code>at</code>, is the <strong>path</strong> to the element with the problem,
+from the root of the file down. For example,
+<code>(at /{ddi:instance:3_3}DDIInstance/{ddi:reusable:3_3}Version)</code> points to the
+<code>Version</code> element directly under <code>DDIInstance</code>. You can ignore the parts in
+curly braces: they name the DDI namespace each element belongs to.</p>
+<p>If the file is not even well-formed XML (for example, a closing tag is
+missing), <code>open_ddi()</code> raises <code>ddi.DDIParseError</code> instead, with or without
+<code>validate=True</code>.</p>
+<p>Validating on load is helpful when you receive a file from someone else and
+want to make sure it follows the DDI standard before you start working with it.</p>
 <hr />
 <h2 id="4-add-new-items-to-an-existing-document">4. Add new items to an existing document<a class="headerlink" href="#4-add-new-items-to-an-existing-document" title="Permanent link">&para;</a></h2>
 <p>You can add questions, variables, concepts, universes, and code lists to an
 existing document. The methods are the same ones you used when you created a
 new document:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"my-study.xml"</span><span class="p">)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Add a new question</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">q</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your highest level of education?"</span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Add a new variable linked to the question</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">v</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Add a concept</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">c</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Educational Attainment"</span><span class="p">)</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Add a universe</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">u</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_universe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Adults aged 18 and over"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"my-study.xml"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Add a new question</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">q</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your highest level of education?"</span><span class="p">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Add a new variable linked to the question</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">v</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Add a concept</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">c</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_concept</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Educational Attainment"</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Add a universe</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">u</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_universe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Adults aged 18 and over"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Each <code>add_*</code> method returns the new item. You can use that item later, for
 example, to link a variable to a question or to set a custom property.</p>
 <h3 id="edit-items-that-are-already-there">Edit items that are already there<a class="headerlink" href="#edit-items-that-are-already-there" title="Permanent link">&para;</a></h3>
 <p>The items you get back, and the ones in <code>doc.questions</code>, <code>doc.variables</code> and
 the other lists, are live objects. Change a field and the change is saved with
-the document:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Reword the question added above</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">q</span><span class="o">.</span><span class="n">question_texts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"What is the highest level of education you have completed?"</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Code the variable with a code list; calling set_coded() again switches lists</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">levels</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education Levels"</span><span class="p">)</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">v</span><span class="o">.</span><span class="n">set_coded</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
+the document. A question keeps its wording in <code>question_texts</code>, a list with one
+entry per language, so <code>question_texts[0].text</code> is the first wording.</p>
+<p>A variable can also be <strong>coded</strong>: its values come from a <strong>code list</strong>, the
+set of allowed answers to a question (for example "High school", "College",
+"University"). Two calls are enough for now:</p>
+<ul>
+<li><code>doc.add_code_list(name=...)</code> creates a new, empty code list in the document
+  and returns it.</li>
+<li><code>v.set_coded(code_list)</code> records that the values of variable <code>v</code> come from
+  that code list. Calling it again with another list switches the variable to
+  that list.</li>
+</ul>
+<p><a href="../module-09-code-lists/">Module 9</a> covers code lists in depth, including how
+to fill a list with its answers.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Reword the question added above</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">q</span><span class="o">.</span><span class="n">question_texts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"What is the highest level of education you have completed?"</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Code the variable with a code list; calling set_coded() again switches lists</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">levels</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Education Levels"</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">v</span><span class="o">.</span><span class="n">set_coded</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span>
 </span></code></pre></div>
 <p>In a published file, an edit like this is a new version of the item.
 Later in the course, <a href="../module-15-update-and-version/#6-change-the-wording-of-a-question">Module 15</a>
@@ -2908,15 +3081,18 @@ including the version bump and the references you must update.</p>
 <hr />
 <h2 id="5-save-the-modified-document">5. Save the modified document<a class="headerlink" href="#5-save-the-modified-document" title="Permanent link">&para;</a></h2>
 <p>After you make changes, save the document to a file. You can save to the same
-filename (to overwrite) or to a new filename (to keep both copies).</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Save to a new file; this keeps the original unchanged</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"my-study-updated.xml"</span><span class="p">)</span>
+filename (to overwrite) or to a new filename (to keep both copies).
+Your changes live only in memory until you call <code>doc.save()</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Save to a new file; this keeps the original unchanged</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"my-study-updated.xml"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>It is usually best to save to a <strong>new filename</strong>. That way you always have the
 original file as a backup.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Overwrite the original (use with care)</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"my-study.xml"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Overwrite the original (use with care)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"my-study.xml"</span><span class="p">)</span>
 </span></code></pre></div>
+<p>To confirm that a save worked, open the new file again and count what is
+inside, as in Section 2.</p>
 <hr />
 <h2 id="6-the-round-trip-guarantee">6. The round-trip guarantee<a class="headerlink" href="#6-the-round-trip-guarantee" title="Permanent link">&para;</a></h2>
 <p><code>ddi-l</code> makes a promise: <strong>it will not delete content it does not
@@ -2928,11 +3104,11 @@ recognize, those elements are kept exactly as they are. They pass through
 the read-and-write cycle untouched.</p>
 <p>This means you can safely open a file that was created by another tool, add
 your metadata, and save it. The parts you did not touch will stay the same.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Original file           ddi-l                  Saved file
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>┌──────────────┐        ┌────────────┐            ┌──────────────┐
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│ Known items  │──────▶ │ Parsed     │──────────▶ │ Known items  │
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│ Unknown XML  │──────▶ │ Preserved  │──────────▶ │ Unknown XML  │
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>└──────────────┘        └────────────┘            └──────────────┘
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Original file           ddi-l                  Saved file
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>┌──────────────┐        ┌────────────┐            ┌──────────────┐
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│ Known items  │──────▶ │ Parsed     │──────────▶ │ Known items  │
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│ Unknown XML  │──────▶ │ Preserved  │──────────▶ │ Unknown XML  │
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>└──────────────┘        └────────────┘            └──────────────┘
 </span></code></pre></div>
 <hr />
 <h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">&para;</a></h2>
@@ -2942,104 +3118,255 @@ your metadata, and save it. The parts you did not touch will stay the same.</p>
 its contents, add missing metadata, validate the file, and save an updated
 copy.</p>
 </div>
-<p><strong>Exercise 1.</strong> Create a study with two questions and two variables (or use a
+<p><strong>Exercise 1 (O1).</strong> Create a study with two questions and two variables (or use a
 file from an earlier module). Save it to disk. Then re-open it with
 <code>open_ddi()</code> and print the question and variable counts.</p>
 <p>Expected output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Saved.
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Questions: 2
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Variables: 2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Saved.
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Questions: 2
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Variables: 2
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Create and save</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Census 2024"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"stats.example.org"</span><span class="p">)</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your gender?"</span><span class="p">)</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Gender"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">)</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Saved."</span><span class="p">)</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Re-open and inspect</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">doc2</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc2</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc2</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Create and save</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Census 2024"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"stats.example.org"</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">q1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">q2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your gender?"</span><span class="p">)</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">v1</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q1</span><span class="p">)</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">v2</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Gender"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q2</span><span class="p">)</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Saved."</span><span class="p">)</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Re-open and inspect</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="n">doc2</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc2</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 2</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc2</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Variables: 2</span>
 </span></code></pre></div>
 </details>
-<p><strong>Exercise 2.</strong> Add two new questions and two new variables to the re-opened
-document. Validate it. Save to a new filename.</p>
-<details class="success">
-<summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your marital status?"</span><span class="p">)</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many people live in your household?"</span><span class="p">)</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"MaritalStatus"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">v4</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"HouseholdSize"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q4</span><span class="p">)</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">errors</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Validation errors:"</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">else</span><span class="p">:</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Document is valid."</span><span class="p">)</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">doc2</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"census-2024-updated.xml"</span><span class="p">)</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Saved updated file."</span><span class="p">)</span>
+<p><strong>Exercise 2 (O2).</strong> Files from other people are not always valid. Run this
+code to make a broken copy of <code>census-2024.xml</code>: the first version number
+becomes the word <code>one</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">text</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">broken</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"&lt;r:Version&gt;1&lt;/r:Version&gt;"</span><span class="p">,</span> <span class="s2">"&lt;r:Version&gt;one&lt;/r:Version&gt;"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">Path</span><span class="p">(</span><span class="s2">"census-2024-broken.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">broken</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
 </span></code></pre></div>
-</details>
-<p><strong>Exercise 3.</strong> Re-open the new file. Verify that the counts increased.</p>
+<p>Then:</p>
+<ol>
+<li>Open <code>census-2024-broken.xml</code> with <code>validate=True</code>. Catch the
+   <code>ddi.DDIValidationError</code> and print its message.</li>
+<li>From the message, name the element that is wrong and say what is wrong
+   with it.</li>
+<li>Open the same file without <code>validate=True</code> and print its question count.
+   What does this tell you?</li>
+</ol>
 <p>Expected output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Questions: 4
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Variables: 4
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Not valid: value doesn't match any pattern of ['[0-9]+(\\.[0-9]+)*'] (at /{ddi:instance:3_3}DDIInstance/{ddi:reusable:3_3}Version)
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Opened without checking: 2 questions
 </span></code></pre></div>
 <details class="success">
 <summary>Answer</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">doc3</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024-updated.xml"</span><span class="p">)</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc3</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc3</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024-broken.xml"</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">except</span> <span class="n">ddi</span><span class="o">.</span><span class="n">DDIValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Not valid: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">unchecked</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024-broken.xml"</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Opened without checking: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unchecked</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2"> questions"</span><span class="p">)</span>
 </span></code></pre></div>
+<p>The path after <code>at</code> points to the <code>Version</code> element directly under
+<code>DDIInstance</code>. Its value, <code>one</code>, does not match the pattern for versions:
+<code>[0-9]+(\.[0-9]+)*</code> means digits, optionally followed by more groups of
+a dot and digits, such as <code>1</code> or <code>1.0.0</code>.</p>
+<p>Without <code>validate=True</code>, the broken file opens with no complaint. Only
+validation tells you that the file breaks the DDI rules.</p>
+</details>
+<p><strong>Exercise 3 (O3).</strong> Work on the document you re-opened in Exercise 1
+(<code>doc2</code>):</p>
+<ol>
+<li>Add two new questions and two new variables linked to them
+   (MaritalStatus and HouseholdSize).</li>
+<li>Reword the first question to "What was your age at your last birthday?".</li>
+<li>Create a code list called "Marital Status Codes" and code the
+   MaritalStatus variable with it.</li>
+<li>Validate the document. If it is valid, save it as
+   <code>census-2024-updated.xml</code>.</li>
+</ol>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Document is valid.
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Saved updated file.
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">q3</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your marital status?"</span><span class="p">)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">q4</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How many people live in your household?"</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">v3</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"MaritalStatus"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q3</span><span class="p">)</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">v4</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"HouseholdSize"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q4</span><span class="p">)</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">doc2</span><span class="o">.</span><span class="n">questions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">question_texts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"What was your age at your last birthday?"</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">statuses</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Marital Status Codes"</span><span class="p">)</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="n">v3</span><span class="o">.</span><span class="n">set_coded</span><span class="p">(</span><span class="n">statuses</span><span class="p">)</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="n">errors</span> <span class="o">=</span> <span class="n">doc2</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Validation errors:"</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="k">else</span><span class="p">:</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Document is valid."</span><span class="p">)</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>    <span class="n">doc2</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"census-2024-updated.xml"</span><span class="p">)</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Saved updated file."</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+<p><strong>Exercise 4 (O4).</strong> Re-open <code>census-2024-updated.xml</code>. Print its question,
+variable and code list counts, and the wording of its first question. Then
+re-open the original <code>census-2024.xml</code> and confirm that it still has two
+questions.</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Questions: 4
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Variables: 4
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Code lists: 1
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>First question: What was your age at your last birthday?
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Original questions: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">doc3</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024-updated.xml"</span><span class="p">)</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc3</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 4</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc3</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Code lists: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc3</span><span class="o">.</span><span class="n">code_lists</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"First question: </span><span class="si">{</span><span class="n">doc3</span><span class="o">.</span><span class="n">questions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">question_texts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">original</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Original questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The counts grew in the new file, and the original kept its two questions:
+saving under a new filename left it untouched.</p>
+</details>
+<p><strong>Exercise 5 (O5).</strong> A partner's copy of your file contains an element that
+<code>ddi-l</code> does not model: a description of the units the study covers. Run this
+code to make that copy:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">text</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"census-2024.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">extra</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s1">'&lt;r:AnalysisUnitsCovered&gt;&lt;r:String xml:lang="en"&gt;'</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="s2">"Persons living in private households"</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="s2">"&lt;/r:String&gt;&lt;/r:AnalysisUnitsCovered&gt;"</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="p">)</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="n">Path</span><span class="p">(</span><span class="s2">"census-2024-partner.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>    <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"&lt;d:DataCollection&gt;"</span><span class="p">,</span> <span class="n">extra</span> <span class="o">+</span> <span class="s2">"&lt;d:DataCollection&gt;"</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Before you go further, write down your prediction in one sentence: if you
+open <code>census-2024-partner.xml</code>, add a variable called Region, and save it as
+<code>census-2024-partner-updated.xml</code>, will the saved file still contain
+"Persons living in private households"? Then do it, and check by searching the
+saved file for that sentence.</p>
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>True
+</span></code></pre></div>
+<details class="success">
+<summary>Answer</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">partner</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"census-2024-partner.xml"</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">partner</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Region"</span><span class="p">)</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">partner</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"census-2024-partner-updated.xml"</span><span class="p">)</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="n">saved</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"census-2024-partner-updated.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"Persons living in private households"</span> <span class="ow">in</span> <span class="n">saved</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>The element survives: <code>ddi-l</code> keeps XML it does not model exactly as it
+was, so opening and saving a file never deletes content you did not
+touch. This is the round-trip guarantee.</p>
 </details>
 <hr />
 <h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
 <details class="question" open="open">
-<summary>Question 1: What does ddi.open_ddi() do?</summary>
-<p><strong>A.</strong> It creates a brand-new, empty DDI document.</p>
-<p><strong>B.</strong> It reads an existing DDI XML file from disk and returns a Document
-object.</p>
-<p><strong>C.</strong> It deletes a DDI file from your computer.</p>
-<p><strong>D.</strong> It sends a DDI file to a web server.</p>
+<summary>Question 1 (O1): What does this code print for a file with 3 questions and 5 variables?</summary>
+<p><code>doc = ddi.open_ddi("survey.xml")</code>, then
+<code>print(len(doc.questions), len(doc.variables))</code></p>
+<p><strong>A.</strong> <code>5 3</code></p>
+<p><strong>B.</strong> <code>0 0</code>, because a file must be validated before you can count
+its items.</p>
+<p><strong>C.</strong> <code>8</code></p>
+<p><strong>D.</strong> <code>3 5</code></p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> <code>ddi.open_ddi()</code> reads a DDI XML file and returns a <code>Document</code>
-object that you can inspect and modify.</p>
+<p><strong>D.</strong> <code>ddi.open_ddi()</code> reads the whole file. <code>doc.questions</code> and
+<code>doc.variables</code> list its questions and variables, in that order in
+the <code>print()</code> call.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 2: What does validate=True do when you call open_ddi()?</summary>
-<p><strong>A.</strong> It converts the file to JSON format.</p>
-<p><strong>B.</strong> It checks the file against the DDI schema rules while loading it.</p>
-<p><strong>C.</strong> It removes invalid items from the document.</p>
-<p><strong>D.</strong> It prints the file contents to the screen.</p>
+<summary>Question 2 (O2): What is wrong with this file?</summary>
+<p><code>ddi.open_ddi("partner.xml", validate=True)</code> raises a
+<code>ddi.DDIValidationError</code> with this message:</p>
+<p><code>value doesn't match any pattern of ['[0-9]+(\\.[0-9]+)*'] (at /{ddi:instance:3_3}DDIInstance/{ddi:reusable:3_3}Version)</code></p>
+<p><strong>A.</strong> The file <code>partner.xml</code> does not exist.</p>
+<p><strong>B.</strong> The <code>Version</code> element directly under <code>DDIInstance</code> holds a value
+that is not a version number such as <code>1</code> or <code>1.0.0</code>.</p>
+<p><strong>C.</strong> The file has too many questions.</p>
+<p><strong>D.</strong> <code>ddi-l</code> cannot read DDI 3.3 files.</p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>B.</strong> When you pass <code>validate=True</code>, <code>open_ddi()</code> runs the DDI schema
-check during loading. If the file has errors, you get an error message
-right away.</p>
+<p><strong>B.</strong> The path after <code>at</code> names the element: <code>Version</code>, under
+<code>DDIInstance</code>. The first part of the message says its value does not
+match the pattern for version numbers.</p>
 </details>
 </details>
 <details class="question" open="open">
-<summary>Question 3: Is existing content lost when you open a file, add items, and save it?</summary>
-<p><strong>A.</strong> Yes, ddi-l deletes anything it does not understand.</p>
-<p><strong>B.</strong> Yes, only the new items are saved.</p>
-<p><strong>C.</strong> No, ddi-l preserves unknown XML elements during round-trip.</p>
-<p><strong>D.</strong> No, but only if you save to the same filename.</p>
+<summary>Question 3 (O3): Which line codes the variable v with the code list levels?</summary>
+<p><strong>A.</strong> <code>levels.set_coded(v)</code></p>
+<p><strong>B.</strong> <code>doc.add_code_list(v)</code></p>
+<p><strong>C.</strong> <code>v.set_coded(levels)</code></p>
+<p><strong>D.</strong> <code>v.code_list = "levels"</code></p>
 <details class="success">
 <summary>Answer</summary>
-<p><strong>C.</strong> <code>ddi-l</code> preserves unknown XML elements. This is called the
-round-trip guarantee. Content that <code>ddi-l</code> does not recognize passes
-through unchanged.</p>
+<p><strong>C.</strong> <code>set_coded()</code> is a method of the variable, and it takes the
+code list as its argument. <code>doc.add_code_list()</code> creates a new list;
+it does not code a variable.</p>
 </details>
 </details>
+<details class="question" open="open">
+<summary>Question 4 (O4): What does my-study.xml contain afterwards?</summary>
+<p>You open <code>my-study.xml</code>, add a variable, and close Python without calling
+<code>doc.save()</code>.</p>
+<p><strong>A.</strong> The original content, without the new variable.</p>
+<p><strong>B.</strong> The original content and the new variable.</p>
+<p><strong>C.</strong> Nothing: the file is emptied.</p>
+<p><strong>D.</strong> A backup copy of the original.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>A.</strong> Changes live only in memory until you call <code>doc.save()</code>. The
+file on disk is unchanged.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O5): What happens to an element that ddi-l does not model?</summary>
+<p>A partner's file contains an element that <code>ddi-l</code> does not model. You
+open the file, add a variable, and save it under a new name.</p>
+<p><strong>A.</strong> It is deleted, because <code>ddi-l</code> writes only what it understands.</p>
+<p><strong>B.</strong> It is moved to the end of the file.</p>
+<p><strong>C.</strong> It is turned into a note.</p>
+<p><strong>D.</strong> It is kept unchanged in the saved file.</p>
+<details class="success">
+<summary>Answer</summary>
+<p><strong>D.</strong> This is the round-trip guarantee: content that <code>ddi-l</code> does not
+recognize passes through the read-and-write cycle untouched.</p>
+</details>
+</details>
+<hr />
+<h2 id="check-yourself">Check yourself<a class="headerlink" href="#check-yourself" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can open an existing DDI file with <code>ddi.open_ddi()</code> and print how many questions and variables it holds. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can open a file with <code>validate=True</code>, catch <code>ddi.DDIValidationError</code>, and name the element its message points to. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can add items to an opened document, reword a question, and code a variable with a code list. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can save the changed document under a new filename and re-open it to confirm my changes and the untouched original. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> I can predict what happens to XML that <code>ddi-l</code> does not model when I open and save a file, and check it. (O5)</li>
+</ul>
 <hr />
 <p><strong>See also:</strong></p>
 <ul>
@@ -3054,14 +3381,19 @@ through unchanged.</p>
   module. If they do not have one, create a quick file together as a group.
   The goal is to practice the open-modify-save workflow with a real file.</li>
 <li><strong>Validate on load.</strong> Demonstrate what happens when you open a broken
-  file with <code>validate=True</code>. You can create a broken file by editing the
-  XML in a text editor and deleting a closing tag.</li>
-<li><strong>Round-trip demo.</strong> Open a file that contains extra XML elements (for
-  example, <code>&lt;r:Note&gt;</code> blocks or custom extensions). Show that those
-  elements survive the round-trip. This builds trust in the tool.</li>
+  file with <code>validate=True</code>. Change a version number to a word, as in
+  Exercise 2, to show a schema error (<code>ddi.DDIValidationError</code>). Delete a
+  closing tag in a text editor to show a parse error
+  (<code>ddi.DDIParseError</code>), which appears even without <code>validate=True</code>.</li>
+<li><strong>Round-trip demo.</strong> Exercise 5 adds an element that <code>ddi-l</code> does not
+  model. Open the saved file in a text editor and show the element in
+  place. This builds trust in the tool.</li>
 <li><strong>Common mistake:</strong> Learners sometimes forget to save after making
   changes. Remind them that changes live only in memory until <code>doc.save()</code>
   is called.</li>
+<li><strong>Code lists come later.</strong> This module uses <code>add_code_list()</code> and
+  <code>set_coded()</code> with an empty list. If learners ask how to add the
+  answers, point them to Module 9.</li>
 <li><strong>Extension activity:</strong> Ask advanced learners to open a file, add items,
   version the study (Module 15, later in the course), and save, combining both modules into
   one workflow.</li>
@@ -3145,6 +3477,10 @@ through unchanged.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
   
   
 </div>
