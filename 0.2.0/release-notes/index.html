@@ -1,0 +1,4289 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="What changed in each ddi-l release, including breaking changes while the version is 0.x.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/release-notes/">
+      
+      
+        <link rel="prev" href="../schema-coverage/">
+      
+      
+        <link rel="next" href="../performance/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../fr/release-notes/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Release notes - ddi-l: DDI Lifecycle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../assets/stylesheets/accessibility.css">
+    
+      <link rel="stylesheet" href="../assets/stylesheets/landing.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {"accent": "custom", "primary": "custom", "scheme": "default"},
+        {"accent": "custom", "primary": "custom", "scheme": "slate"},
+        {"accent": "custom", "primary": "custom", "scheme": "high-contrast"}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
+    // Driven by Material's `document$` observable rather than DOMContentLoaded.
+    // `document$` emits on the initial load and again after every page swap, so
+    // this keeps working if `navigation.instant` is ever enabled -- it is off
+    // today only because mkdocs-static-i18n's language switcher is incompatible
+    // with it (see the comment in mkdocs.yml). Under DOMContentLoaded alone the
+    // decoration below would survive only the first page a visitor landed on.
+    //
+    // The script has two halves. `enhance()` re-applies to whatever document is
+    // current and runs on every emission. `setupOnce()` binds to things that
+    // outlive a page swap -- <body>, the header, window -- and is guarded,
+    // because re-running it would stack a duplicate observer and listener on
+    // every navigation for the length of the session.
+    //
+    // Both run from the DOM-ready signal rather than at parse time: this block
+    // lands in <head>, where document.body does not exist yet.
+    (function () {
+      var paletteLabels = {"default": "Light mode enabled", "high-contrast": "High contrast enabled", "slate": "Dark mode enabled"};
+      var initialised = false;
+
+      function enhance() {
+        var header = document.querySelector(".md-header");
+        if (header) {
+          header.setAttribute("role", "banner");
+          header.setAttribute("aria-label", "Site header");
+        }
+
+        var primaryNav = document.querySelector(".md-nav--primary nav, .md-nav--primary");
+        if (primaryNav) {
+          primaryNav.setAttribute("role", "navigation");
+          primaryNav.setAttribute("aria-label", "Primary navigation");
+        }
+
+        var secondaryNav = document.querySelector(".md-nav--secondary nav, .md-nav--secondary");
+        if (secondaryNav) {
+          secondaryNav.setAttribute("role", "navigation");
+          secondaryNav.setAttribute("aria-label", "On this page");
+        }
+
+        var main = document.querySelector("main.md-main");
+        if (main) {
+          if (!main.id) {
+            main.id = "main-content";
+          }
+          main.setAttribute("role", "main");
+          main.setAttribute("aria-label", "Documentation content");
+        }
+
+        setupOnce();
+      }
+
+      function announcePaletteChange(scheme) {
+        var announcer = document.getElementById("ddi-palette-announcer");
+        if (!announcer) {
+          return;
+        }
+        var message = paletteLabels[scheme] || scheme;
+        announcer.textContent = "";
+        // Brief delay ensures the live region update is detected.
+        setTimeout(function () {
+          announcer.textContent = message;
+        }, 50);
+      }
+
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
+      function setupOnce() {
+        if (initialised) {
+          return;
+        }
+        initialised = true;
+
+        // -- Palette announcements ------------------------------------------
+        //
+        // Material applies the palette by setting `data-md-color-scheme` on
+        // <body>, so that is what we observe. A colour change on its own gives
+        // a screen reader nothing to announce.
+        var lastScheme = document.body.getAttribute("data-md-color-scheme");
+        new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.attributeName !== "data-md-color-scheme") {
+              return;
+            }
+            var scheme = document.body.getAttribute("data-md-color-scheme");
+            if (scheme && scheme !== lastScheme) {
+              lastScheme = scheme;
+              announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
+            }
+          });
+        }).observe(document.body, { attributes: true });
+
+        // -- Palette menu ----------------------------------------------------
+        //
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
+        //
+        // Delegated from the menu container, which lives in the header and so
+        // survives instant navigation.
+        var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
+        if (menu) {
+          menu.addEventListener("click", function (event) {
+            var button = event.target.closest("[data-ddi-palette-index]");
+            if (!button) {
+              return;
+            }
+            var input = document.getElementById(
+              "__palette_" + button.getAttribute("data-ddi-palette-index")
+            );
+            if (input) {
+              input.click();
+              // Collapse the menu so focus returns to a predictable place.
+              var details = menu.querySelector("details");
+              if (details) {
+                details.open = false;
+              }
+            }
+          });
+        }
+
+        // -- Language switcher ----------------------------------------------
+        //
+        // mkdocs-static-i18n already renders each switcher link as the same
+        // page in the other language, with its trailing slash. Material's
+        // alternate-language handler (on <body>) intercepts the click anyway,
+        // misses its sitemap lookup, and navigates to the alternate URL with
+        // the trailing slash stripped -- `/ddi-l/fr/server` instead of
+        // `/ddi-l/fr/server/` -- which the server answers with a 302. Stopping
+        // the click in the capture phase keeps it from reaching that handler
+        // while leaving the browser's own navigation to the correct href.
+        window.addEventListener("click", function (event) {
+          if (event.target instanceof Element &&
+              event.target.closest("a.md-select__link[hreflang]")) {
+            event.stopPropagation();
+          }
+        }, true);
+
+        // -- Reduced motion --------------------------------------------------
+        //
+        // A media query cannot reach the transition declarations Material sets
+        // inline, so this class is what accessibility.css and landing.css hang
+        // their overrides on. Kept in sync rather than sampled once at load.
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        function applyReducedMotion(matches) {
+          document.documentElement.classList.toggle("ddi-reduced-motion", matches);
+        }
+        applyReducedMotion(reducedMotion.matches);
+        reducedMotion.addEventListener("change", function (event) {
+          applyReducedMotion(event.matches);
+        });
+      }
+
+      // Fall back to DOMContentLoaded if the bundle has not defined
+      // `document$`, so the ARIA work still happens if `navigation.instant` is
+      // ever turned off.
+      if (window.document$ && typeof window.document$.subscribe === "function") {
+        window.document$.subscribe(enhance);
+      } else {
+        document.addEventListener("DOMContentLoaded", enhance);
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#release-notes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  
+    You're viewing documentation for an <strong>older version</strong>.
+    <a href="../../">
+      <strong>View the latest version</strong>
+    </a>
+  
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL(".."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l: DDI Lifecycle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Release notes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+<form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    
+  
+</form><div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="Colour palette" aria-label="Colour palette">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="0"
+                  data-ddi-palette-scheme="default">
+            Light
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="1"
+                  data-ddi-palette-scheme="slate">
+            Dark
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="2"
+                  data-ddi-palette-scheme="high-contrast">
+            High contrast
+          </button>
+        </li>
+      
+    </ul>
+  </details>
+</div>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../fr/release-notes/" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pbisson44/ddi-l" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../curriculum/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Learn
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../validation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  How-to guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l: DDI Lifecycle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Home
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install ddi-l
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../curriculum/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Learn
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Learn
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 1: What is metadata?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 2: Set up your environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 3: Create your first study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 4: Variables and questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 5: Concepts and universes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 6: Open and modify files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 7: Validate from the command line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 8: From CSV/Excel to DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 9: Code lists
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 10: Questionnaire flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 11: Data lineage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 12: Data linkage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 13: Properties, find, and validate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 14: Custom fields
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 15: Update and version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 16: Advanced questionnaire specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17: Capstone projects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Answer keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-to guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-to guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validate and lint DDI content
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lint rule reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use the command line
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automate validation in CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot schema errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuse fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with Colectica exports
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Work with other tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check a questionnaire against a spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load DDI from spreadsheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spreadsheet templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Move between XML and objects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serve the HTTP API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use ddi-l from R
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build tools and applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Namespace catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release notes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#020-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 (unreleased)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 (unreleased)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behaviour-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behaviour changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-ddi-from-spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load DDI from spreadsheets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spec conformance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-xml-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native XML core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling-and-packaging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling and packaging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#study-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Study structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questionnaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questionnaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling-and-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling and distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance playbook
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Performance playbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema conversion benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Python packages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#020-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 (unreleased)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 (unreleased)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behaviour-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behaviour changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colectica-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Colectica exports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-ddi-from-spreadsheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load DDI from spreadsheets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spec-conformance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spec conformance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-xml-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native XML core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling-and-packaging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling and packaging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#study-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Study structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data description
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questionnaires" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questionnaires
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-and-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation and quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling-and-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling and distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    ddi-l
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    About
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/release-notes.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="release-notes">Release notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h1>
+<h2 id="020-unreleased">0.2.0 (unreleased)<a class="headerlink" href="#020-unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="behaviour-changes">Behaviour changes<a class="headerlink" href="#behaviour-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The native XML core comes with ddi-l.</strong> <code>pip install ddi-l</code> also installs
+  <code>ddi-l-native</code>, and ddi-l reads and writes XML with it before lxml, so an
+  installation with the <code>full</code> extra now uses the native core. The results
+  are the same; set <code>DDI_L_XML_BACKEND=lxml</code> to keep lxml. On a platform with
+  no compiled wheel, pip installs a pure-Python stand-in and nothing changes;
+  see <a href="../installation/#extras-when-you-need-one">which extras you need</a>.</li>
+<li><strong>A file read is written back as read.</strong> <code>write_ddi()</code>, <code>save()</code>,
+  <code>to_xml()</code>, <code>ddi roundtrip</code> and <code>POST /v1/roundtrip</code> write a document read
+  from a file or bytes with every unchanged element as it was read, byte for
+  byte: its quotes, character references, CDATA, comments, prefixes and
+  indentation. Only new or changed elements are laid out, like the file
+  around them (Colectica's layout in a <code>FragmentInstance</code>, the file's own
+  indentation otherwise). Elements are matched by content, so an item moved,
+  copied or rebuilt from its model unchanged keeps its bytes. Before, only a
+  <code>FragmentInstance</code> already in Colectica's layout came back unchanged, and a
+  <code>DDIInstance</code> came back in this library's layout. A <code>DDIInstance</code> whose
+  file binds a DDI namespace to another prefix (<code>p0</code>, <code>ns1</code>) is still laid
+  out afresh by <code>save()</code> and <code>to_xml()</code>, with the canonical prefixes (<code>c</code>,
+  <code>s</code>...). Pass <code>layout="colectica"</code> or <code>layout="default"</code> (<code>--layout</code>,
+  <code>?layout=</code>) to lay the whole file out as before; <code>DDIFragment.save()</code> now
+  defaults to <code>layout=None</code> for the same reason. A document keeps the bytes
+  it was read from, so it holds the file's size in memory as well.</li>
+<li><strong>Schema validation reports every error.</strong> <code>validate()</code> and everything
+  built on it (<code>ddi validate</code>, <code>Document.validate()</code>, <code>POST /v1/validate</code>)
+  reported the first schema error and stopped. They now report each one,
+  then the warnings. An error found before the schema is read, such as a
+  missing identification, is still reported alone. <code>validate(max_issues=)</code>
+  stops after that many errors with a warning saying so; the HTTP API stops
+  at <code>ServerConfig.max_schema_issues</code> (100 by default).</li>
+<li><strong><code>conform</code> decides gates and edits exactly when the <code>logic</code> extra is
+  installed.</strong> A gate written differently that always agrees with the
+  spec's (<code>PetCount &gt; 0</code> and <code>PetCount &gt;= 1</code>, for a question whose domain has
+  no decimals) is no longer <code>spec.gate.different</code>, and a page gate is found
+  the same way. A <code>spec.gate.different</code> or <code>spec.edit.different</code> finding
+  names a respondent the two disagree on, in its message ("(they differ when
+  PetCount is 1)") and in a new <code>example</code> field, which JSON output has only
+  when it is set. The spec's response domains and variable types say what
+  each name is. <code>ddi conform --semantics syntactic</code> (<code>conform(semantics=
+  "syntactic")</code>) compares normal forms, as before; <code>--semantics smt</code> needs
+  the extra.</li>
+<li><strong><code>equivalent()</code> calculates when the <code>logic</code> extra is installed.</strong> Gates
+  written differently that always agree are equivalent: <code>x + 1 &gt; 3</code> and
+  <code>x &gt; 2</code>. <code>equivalent(exact=False)</code> compares normal forms only, as before;
+  without the extra nothing changes.</li>
+<li><strong>Lint configuration is per call.</strong> <code>run_lint()</code>, <code>run_profile()</code>,
+  <code>document.lint()</code> and the <code>validate_*()</code> functions take a <code>configuration</code>
+  from the new <code>lint_configuration()</code>, for that call alone; <code>configure_lint()</code>
+  still sets the default for calls given none. <code>ddi lint</code> no longer changes
+  the process default, so calling <code>cli.main()</code> twice in one process no longer
+  carries the first call's options into the second.</li>
+<li><strong>Scoped settings stay in their thread or task.</strong> <code>ddi.configured()</code>
+  changed the process-wide default for the length of its <code>with</code> block, so
+  other threads saw it. It now applies to its own thread or task only;
+  <code>ddi.configure()</code> still sets the default for every thread.</li>
+<li><strong>ddi-l no longer writes ElementTree's namespace registry.</strong> On the
+  standard library backend, the prefixes a document registered went to
+  <code>ElementTree.register_namespace</code>, which the whole process shares: other
+  code using ElementTree saw them, and so did other threads. They are now
+  kept for the current thread or task, and the writer names namespaces from
+  them. Output in one thread is unchanged; a document built in one thread
+  and written with a layout in another writes <code>ns0</code>, <code>ns1</code>... for prefixes
+  registered only in the first.</li>
+<li><strong>The validation backend is chosen per call.</strong> <code>schema_loader.validate()</code>
+  takes <code>backend="python"</code> or <code>"lxml"</code>, and the new
+  <code>schema_loader.validation_backend()</code> scopes one to a <code>with</code> block, in its
+  own thread or task. <code>set_validation_backend()</code> still sets the application
+  default, which the new <code>get_validation_backend()</code> returns.
+  <code>VALIDATION_IMPLEMENTATION</code> now names the best backend available, fixed at
+  import; it no longer follows <code>set_validation_backend()</code>.</li>
+<li><strong><code>lint.ALLOWED_AGENCIES</code> and <code>namespaces.NAMESPACE_PROFILES</code> are
+  read-only.</strong> <code>ALLOWED_AGENCIES</code> was a set an application could change in
+  place, which the agency rule read when the default configuration had no
+  list. It is now a frozen view of the default configuration: set the list
+  with <code>configure_lint(allowed_agencies=[...])</code>.</li>
+<li><strong>A fragment is linted as a fragment over HTTP too.</strong> <code>POST /v1/lint</code> and
+  <code>POST /v1/validate</code> linted a <code>FragmentInstance</code> inside a made-up
+  <code>DDIInstance</code>, so a dangling reference was an error there and a warning in
+  <code>ddi lint</code>, and an allowed-agency list checked the made-up container's
+  agency. Both now lint the fragment itself, as <code>ddi lint</code> does: a fragment
+  whose only problem is a dangling reference is now <code>valid</code>.</li>
+<li><strong>Of two copies of one version, the first counts everywhere.</strong> An export
+  that holds an item twice at the same version (a shared ID) named the
+  second copy in condition explanations, synopses and <code>ddi conform</code>, and the
+  first everywhere else; it is now the first throughout.</li>
+<li><strong>Reference findings are split three ways.</strong> <code>ddi.reference.integrity</code>
+  matched <code>(agency, id, version)</code> exactly, so on Colectica exports it reported
+  every late-bound parameter reference (written at version 1 while the
+  parameter is at, say, 4) and every <code>BasedOn</code> link to the item a copy came
+  from. On the bundled Colectica sample it reported 116 references, of which 2
+  were really unresolved. Now:</li>
+<li>a <code>lateBound="true"</code> reference resolves to any version of its item;</li>
+<li><strong><code>ddi.reference.version</code></strong> (warning) reports a reference whose item is
+    present, but not at the version named, and lists the versions that are;</li>
+<li><strong><code>ddi.reference.provenance-external</code></strong> (info) reports a <code>BasedOn</code> or
+    user-attribute reference to an item outside the file;</li>
+<li><code>ddi.reference.integrity</code> keeps the rest, at the same severity as before.</li>
+<li><strong>A new <code>info</code> severity.</strong> <code>info</code> findings never fail <code>ddi lint</code> unless you
+  pass <code>--fail-severity info</code>, which is now accepted. <code>ddi lint</code> used to
+  treat any severity other than <code>warning</code> as an error. A finding with a
+  severity other than <code>error</code>, <code>warning</code> or <code>info</code> now raises <code>ValueError</code>.</li>
+<li><strong><code>run_lint()</code> without <code>rules=</code> runs the default profile</strong> rather than every
+  registered rule, so rules meant for a named profile (such as the new
+  <code>colectica-questionnaire</code>) stay out of <code>ddi lint</code>. A rule added with
+  <code>register_rule()</code> still joins the default profile unless you pass
+  <code>default=False</code>.</li>
+<li><strong>A minor or subversion increment refuses a whole-number version.</strong>
+  <code>increment_minor_version()</code> turned <code>"6"</code> into <code>"6.1"</code>, a version tools that
+  number versions with integers, Colectica among them, may not read. It now
+  raises <code>DDIModelError</code>; <code>increment_major_version()</code> gives <code>"7"</code>, and
+  <code>allow_dotted=True</code> keeps the old behaviour. New items start at <code>"1"</code>, so a
+  minor bump on one now needs <code>allow_dotted=True</code> or a three-part version set
+  first. <code>increment_all_versions()</code> checks every item before changing any.</li>
+<li><strong>Parameters and bindings of control constructs are typed.</strong> On
+  <code>IfThenElse</code>, <code>Loop</code> and <code>StatementItem</code>, <code>r:InParameter</code>, <code>r:OutParameter</code>
+  and <code>r:Binding</code> were kept in <code>other_elements</code>, as was <code>r:InParameter</code> on
+  <code>Sequence</code>; they are now in <code>in_parameters</code>, <code>out_parameters</code> and
+  <code>bindings</code>. <code>Sequence.bindings</code> holds <code>Binding</code> objects rather than
+  elements, and <code>OutParameter.representation</code> holds any representation (it
+  took only a code or numeric one; the others were in <code>other_elements</code>). The
+  lists are typed <code>list[InParameter | Element]</code> and so on, <code>Sequence</code>'s
+  <code>out_parameters</code> included (it was <code>list[OutParameter]</code>), and still accept
+  raw elements; code checked with mypy narrows an item with <code>isinstance()</code>
+  before using it as a parameter.</li>
+<li><strong>Parameters and bindings of generated constructs are typed too.</strong>
+  <code>ComputationItem</code> and <code>QuestionConstruct</code> read <code>r:InParameter</code>,
+  <code>r:OutParameter</code> and <code>r:Binding</code> as <code>InParameter</code>, <code>OutParameter</code> and
+  <code>Binding</code> rather than as elements, and so do an <code>Instruction</code>'s
+  <code>in_parameters</code> and the generic item models that have them (<code>Split</code>,
+  <code>SplitJoin</code>, <code>RepeatUntil</code>, <code>RepeatWhile</code>, <code>MeasurementItem</code>,
+  <code>MeasurementConstruct</code>, <code>DevelopmentStep</code>, <code>SampleStep</code>, <code>SamplingStage</code>).
+  Code that read these values as elements calls <code>to_xml()</code> on them; one read
+  and written back unchanged is still written as read, and the lists still
+  take raw elements. The generic models' annotations still say
+  <code>list[Element]</code>.</li>
+<li><strong>A language added to a name or label read from a file joins it.</strong> A
+  string built in code used to start a container of its own next to the ones
+  read, so adding <code>fr</code> to a name read in <code>en</code> wrote two <code>d:ConstructName</code>
+  elements. It now joins the last container read when that container has no
+  string in its language, keeping the container's attributes; a second
+  string in the same language still starts a new container.</li>
+<li><strong><code>IndividualIdentificationFields.individual_names</code> holds elements.</strong> An
+  <code>a:IndividualName</code> is made of parts (<code>a:FirstGiven</code>, <code>a:LastFamily</code>...),
+  not of <code>r:String</code>s, but the code generator typed it as international
+  strings and dropped the parts. The generator now asks whether a name's type
+  derives from <code>r:InternationalStringType</code>.</li>
+<li><strong>Bumping a version refreshes <code>versionDate</code>.</strong> On an item that has a
+  <code>versionDate</code>, every increment sets it to now, in Colectica's format; pass
+  <code>touch=False</code> to keep the old date. Items without one are unchanged.</li>
+<li>
+<p><strong>Neutral conditions use all of Colectica's operator codes.</strong>
+  <code>Operator(0)</code> is <code>NONE</code>, not <code>UNKNOWN_0</code>, and a code that was read as an
+  unknown one before (<code>2</code>, <code>4</code> to <code>6</code>, <code>8</code> to <code>10</code>, <code>13</code>, <code>15</code> to <code>17</code>) is
+  now a named member. A <code>ContainsAny</code> or <code>ContainsAll</code> statement with a value
+  but no selected codes reads back as unverifiable, where it read as <code>=</code>.
+  <code>compile_condition()</code> writes <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code> and <code>answered()</code> as
+  <code>Neutral</code> where it wrote Blaise.</p>
+</li>
+<li>
+<p><strong>A missing or unreadable schema fails loudly.</strong> If the packaged XSD was
+  missing or could not be read, validation fell back to a stand-in that only
+  checked the root element and the identification fields, so a broken install
+  passed invalid files. <code>get_schema()</code> now raises <code>FileNotFoundError</code> for a
+  missing schema and lets xmlschema's own error through otherwise.</p>
+</li>
+<li><strong>An error in an <code>on_register</code> callback reaches the caller.</strong> The registry
+  ignored it. The class is still registered before the callbacks run.</li>
+<li><strong>The example builder writes to the current folder.</strong> <code>python -m
+  ddi_l.examples.build_and_validate</code> wrote into the installed package by
+  default, and put the package folder itself on <code>sys.path</code>, where
+  <code>ddi_l/io.py</code> could shadow the standard <code>io</code> module. <code>make example</code> passes
+  the packaged paths, so it still refreshes the bundled files.</li>
+<li><strong>A <code>FragmentInstance</code> is written in Colectica's layout by default.</strong>
+  <code>write_ddi()</code>, <code>DDIFragment.to_xml()</code>, <code>ddi roundtrip</code>, <code>ddi from-json</code>,
+  <code>POST /v1/roundtrip</code> and <code>POST /v1/convert/xml</code> wrote this library's layout,
+  so a Colectica export written back through them changed (declaration,
+  prefixes, byte-order mark) though nothing was lost. Only <code>save()</code> wrote
+  Colectica's. Now the root decides: a <code>FragmentInstance</code> gets Colectica's
+  layout and a <code>DDIInstance</code> this library's. <code>layout="default"</code>
+  (<code>--layout default</code>, <code>?layout=default</code>) gives the old output, as do
+  <code>pretty_print=False</code>, <code>xml_declaration=False</code> or an encoding other than
+  UTF-8, which only that layout has.</li>
+</ul>
+<h3 id="colectica-exports">Colectica exports<a class="headerlink" href="#colectica-exports" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Read, edit and write Colectica <code>FragmentInstance</code> exports.</strong>
+  <code>ddi.open_fragment()</code> opens one; <code>DDIFragment.items()</code>, <code>get()</code>,
+  <code>top_level_item()</code>, <code>put()</code> and <code>remove()</code> work with its items as typed
+  models; <code>DDIFragment.save()</code> writes Colectica Designer's exact layout (UTF-8
+  with a byte-order mark, one item per <code>&lt;Fragment&gt;</code>, each item declaring its
+  module as the default namespace, attributes in schema order), so an export
+  opened and saved comes back byte for byte. <code>DDIFragment.from_items()</code> builds
+  a new export with what Colectica writes on every item. Every other way of
+  writing a <code>FragmentInstance</code> uses the same layout by default (see <em>Behaviour
+  changes</em>), and so does the <code>ddi_l.colectica</code> module. See <em>Work with
+  Colectica exports</em>.</li>
+<li><strong>A typed model for every fragment item type.</strong> All 161 item types a DDI 3.3
+  fragment can carry now parse with <code>MaintainableBase.from_xml</code>; the 91 without
+  a hand-written class get one from <code>ddi_l.models.items</code>. A test builds a
+  schema-valid sample of each from the XSDs and checks it round-trips
+  exactly.</li>
+<li><strong><code>version_date</code></strong> reads and sets <code>versionDate</code> on any item.</li>
+<li><strong>Exports without a byte-order mark round-trip byte for byte.</strong> The
+  Colectica layout always wrote a mark. Now <code>DDIFragment.source_bom</code> records
+  whether the file had one and <code>save()</code>, <code>to_colectica_bytes()</code>,
+  <code>write_ddi(..., layout="colectica")</code> and <code>ddi roundtrip --layout colectica</code>
+  write the same; pass <code>bom=</code> to choose.</li>
+<li><strong>Inline XHTML keeps its spaces.</strong> In <code>&lt;b&gt;Kind&lt;/b&gt; &lt;i&gt;of&lt;/i&gt; pet</code> the
+  space between the elements is text. It was read as indentation: lxml read
+  "Kindof pet", and the stdlib backend wrote such a file differently. Both
+  backends now keep it and write it back as read, with the default layout as
+  with Colectica's; whitespace between XHTML blocks is layout. Such a file is
+  parsed twice on lxml, so reading it takes up to twice as long.
+  A <code>&lt;br&gt;</code> separates words, and text under <code>xml:space="preserve"</code> is written
+  as read.
+  <code>iterparse_ddi()</code> reads items as <code>read_ddi()</code> does. See <em>Layout</em> on the Colectica page.</li>
+<li><strong><code>ddi lint --profile colectica-questionnaire</code></strong> for Colectica exports. Its
+  <code>colectica.maintainable.labels</code> accepts an item's name (<code>ConstructName</code>,
+  <code>QuestionItemName</code>, <code>r:Name</code>) as well as <code>r:Label</code>, provided it holds text.</li>
+<li><strong>Read, edit and explain Colectica conditions.</strong> <code>ddi_l.colectica_logic</code>
+  parses the logic Colectica stores in an <code>r:Command</code>: the <code>Neutral</code> JSON of
+  its condition editor (<code>Condition</code>, with groups and statements), the fields
+  of a <code>Blaise5DataLookup</code> (<code>DataLookup</code>), and native code kept as text
+  (<code>NativeCondition</code>). It reads the condition of an <code>IfThenElse</code> and of each
+  of its <code>ElseIf</code> branches, of a <code>ComputationItem</code>, and of a <code>Loop</code>,
+  <code>RepeatUntil</code> or <code>RepeatWhile</code> (<code>which=</code> reaches a <code>Loop</code>'s <code>InitialValue</code>
+  and <code>StepValue</code>). An unchanged condition is written back byte for byte,
+  and an edited one as Colectica writes JSON. The operator codes (all 18)
+  and join codes are Colectica's; a code not listed is kept as read.
+  <code>render_synopsis()</code> describes a condition from its logic, naming subjects
+  after their questions and codes by value, where Colectica's stored synopsis
+  can be stale and numbers codes by position. <code>ddi explain-condition FILE ID</code>
+  shows both, the condition's description, and its used and unused inputs.</li>
+<li><strong>25 lint rules for Colectica questionnaires</strong>, in the
+  <code>colectica-questionnaire</code> profile: shared identifiers, dangling bindings,
+  malformed, empty, impossible or native-invalid conditions (of every
+  <code>ElseIf</code> branch and loop as well; a <code>ComputationItem</code> with outputs holds a
+  program, which may span lines and assign them), unused inputs,
+  stale synopses, gates wrapping only part of a page, code domains without a
+  code list, domain labels and wording that do not fit the item, missing
+  translations, template placeholders, pasted user-interface text, malformed
+  or undeclared pipes, duplicate or suspicious lookup fields, lookup outputs
+  their field list does not hold, compounded or
+  malformed aliases, design notes shown as statements, values read before the
+  flow asks or computes them (on each path to a reused page), and gates on one
+  answer of a question with several, which Designer's routing view reports as
+  broken. Heuristic rules
+  report warnings at most; rules depending on an organisation's conventions
+  are off until configured with the new <code>LintConfiguration</code> options
+  (<code>required_languages</code>, <code>known_names</code>, <code>ui_chrome_tokens</code>, ...).</li>
+<li><strong><code>colectica.flow.unreachable</code>: constructs no respondent reaches.</strong> With
+  the <code>logic</code> extra, the solver works out each construct's ask-condition, the
+  disjunction over the ways to it of the gates' conjunction, with the parts
+  of the flow that many paths share encoded once, and reports a construct
+  for which no answers meet it (<code>PetAge &gt; 10 and PetAge &lt; 1</code>, or a gate inside
+  a branch it contradicts). Only the first construct on a way is reported. A
+  condition it cannot read may hold or not. Without the extra, a flow with a
+  gate gets one <code>info</code> finding saying it was not checked.</li>
+<li><strong><code>colectica.flow.read-before-computed</code> names a respondent.</strong> With the
+  <code>logic</code> extra, a finding adds a respondent who reaches the item before the
+  question or computation ("For example, when PetCount is 0."). When there
+  is none, because every way that reaches it first is ruled out, the finding
+  is <code>info</code>: only Designer's routing view is affected. Each respondent given
+  is checked by walking the flow with <code>evaluate</code>.</li>
+<li><strong><code>ddi lint --format table</code></strong>, <code>--required-language</code>, <code>--known-names FILE</code>
+  and <code>--lint-config FILE</code>. <code>configure_lint()</code> accepts any <code>LintConfiguration</code>
+  field by name.</li>
+<li><strong>A generated lint rule reference.</strong> The <em>Lint rule reference</em> page lists
+  every registered rule with its severity, profiles and an example finding;
+  <code>register_rule()</code> takes <code>severity=</code> and <code>example=</code>, and
+  <code>iter_rule_metadata()</code> reports them.</li>
+<li><strong>Edit a questionnaire without leaving its references behind.</strong>
+  <code>DDIFragment.revise()</code> gives items a new version and, with <code>cascade</code>, every
+  item pinning them, up to the instrument, leaving late-bound references
+  alone; <code>dry_run=True</code> returns the plan only. It versions as Colectica does:
+  what an item declares (its parameters, its codes) takes the item's new
+  version, a reference pinning one of those is re-pointed too, and the items
+  of one call share one <code>versionDate</code> (<code>version_date=</code> sets it). <code>rationale=</code>
+  records why, as every revised item's <code>r:VersionRationale</code>, as Colectica
+  records a save's message; the rationale an item carried, which explained its
+  previous version, is dropped. New items record the configured
+  responsibility. <code>move_construct()</code>,
+  <code>insert_construct()</code> and <code>wrap_in_condition()</code> edit sequences and return
+  the items to revise.
+  <code>duplicate()</code> copies an item with new IDs for everything it declares, and
+  <code>repair_shared_identifiables()</code> (a dry run by default) re-identifies the
+  copies of a shared parameter, reporting references it cannot attribute.</li>
+<li><strong>Typed parameters and bindings.</strong> <code>InParameter</code> and <code>Binding</code> join
+  <code>OutParameter</code> in <code>ddi_l.models</code>. <code>IfThenElse</code>, <code>Loop</code>, <code>StatementItem</code> and
+  <code>Sequence</code> hold theirs in <code>in_parameters</code>, <code>out_parameters</code> and <code>bindings</code>,
+  so a new gate can declare the inputs its condition tests.
+  <code>Binding.between(source, target, late_bound=False)</code> links two parameters,
+  and <code>to_reference()</code> refers to one without an <code>r:URN</code>, as Colectica writes
+  it. A parameter reads its <code>r:ParameterName</code>, <code>r:Description</code>,
+  <code>r:DefaultValue</code>, <code>isArray</code> and any representation.</li>
+<li><strong>Record who changed a version.</strong> The <code>increment_*</code> methods take
+  <code>responsibility=</code>, and <code>ddi.configure(version_responsibility=...)</code> sets a
+  default for it. <code>ddi.configured()</code> scopes a setting to a <code>with</code> block, and
+  <code>ddi.reset_configuration()</code> restores the defaults.</li>
+</ul>
+<h3 id="load-ddi-from-spreadsheets">Load DDI from spreadsheets<a class="headerlink" href="#load-ddi-from-spreadsheets" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Bulk-load a study's metadata from CSV files, a zip of them, or an Excel
+  workbook.</strong> One
+  table per kind of item, rows linked by <code>id</code>, covering what most
+  organizations document:</li>
+<li>the study, its groups, organizations and people (<code>studies</code>, <code>groups</code>,
+    <code>organizations</code>, <code>individuals</code>);</li>
+<li>concepts, universes, unit types and the variable cascade
+    (<code>conceptual_variables</code>, <code>represented_variables</code>, <code>variables</code>);</li>
+<li>code lists, including hierarchical classifications (<code>codes.parent</code>);</li>
+<li>questions with instructions, grids, blocks and question groups, worded
+    per language and per audience (<code>question_texts</code>);</li>
+<li>questionnaires and their flow (<code>instruments</code>, <code>flow</code>): sequences,
+    statements, if-then-else and loops;</li>
+<li>variable groups, data files (<code>datasets</code>) and n-cubes;</li>
+<li>methodology, processing events, quality statements and comparison maps.</li>
+</ul>
+<p>Text goes in one column per language (<code>label@en</code>, <code>label@fr</code>) and
+  <code>custom:&lt;name&gt;</code> columns are stored as <code>r:UserAttributePair</code>.
+  <code>ddi_l.tables.load_tables()</code> returns typed models; <code>to_fragment()</code> writes a
+  Colectica <code>FragmentInstance</code> holding every item, valid against the DDI 3.3
+  schema, and <code>to_study()</code> a DDI study for tables a study document can hold.
+  The items the rows imply are written too: a data collection per study,
+  sequences for the flow, a data relationship per data file. Identifiers are
+  derived from the agency and your ids, so loading again gives the same
+  items. Every problem is reported at once with its file, row and column.
+  Also <code>ddi tables template</code> and <code>ddi tables import</code>, and
+  <code>Document.attach()</code> to place an item built elsewhere into a study. Excel
+  workbooks are read and written with the standard library: no new
+  dependency. See <em>Load DDI from spreadsheets</em> and <em>Spreadsheet templates</em>,
+  which has blank and example templates to download.</p>
+<h3 id="spec-conformance">Spec conformance<a class="headerlink" href="#spec-conformance" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Check a questionnaire against a spec.</strong> A spec lists, in YAML or JSON, a
+  survey's modules, the questions and statements in each, their response
+  domains and code lists, the gates on modules and questions, the edit
+  checks, and the variables a data lookup supplies or the instrument
+  computes. <code>ddi conform INSTRUMENT --spec SPEC</code> (and
+  <code>ddi_l.spec.conform()</code>) compares an instrument with it and reports, with a
+  rule id and a severity, modules and items that are missing, extra,
+  misplaced or ambiguous, codes and labels, languages, domains, gates and
+  edits that differ. Output is JSON or a table; <code>--fail-severity</code> sets what
+  fails the run, and exit code 2 means it could not run. Ids are found where
+  the spec's <code>match</code> block says, and an id found on several constructs is
+  reported, never guessed. An item reached by several paths is compared
+  where the spec puts it, a gate is read from the bindings of each item's
+  latest version, and referenced and mixed domains are compared. With
+  <code>gate_scope: page</code>, each statement of the module must sit under its page
+  gate too. See <em>Check a questionnaire against a spec</em>.</li>
+<li><strong><code>ddi spec validate|schema|example</code></strong> checks a spec against its JSON
+  Schema and against itself (every problem with its path, in document
+  order), writes the schema, or writes the example (a fictional Pet survey).
+  YAML is read as YAML 1.2: repeated keys and merge keys are errors.</li>
+<li><strong>An expression language for gates and edits</strong> (<code>ddi_l.spec.expression</code>):
+  comparisons, <code>and</code>, <code>or</code>, <code>not</code>, arithmetic, dates and the predicates
+  <code>answered()</code>, <code>missing()</code>, <code>empty()</code>, <code>refused()</code> and <code>today()</code>.
+  <code>normalise()</code> compares two gates without calculating: <code>x &gt; 3</code> and
+  <code>x &gt;= 4</code> stay different. So does <code>equivalent()</code> without the <code>logic</code>
+  extra (below). An answer test beside a
+  comparison of the same question is dropped (<code>answered(x) and x &gt; 3</code> is
+  <code>x &gt; 3</code>), so such a gate compiles to <code>Neutral</code>.</li>
+<li><strong>Compile a gate for Colectica</strong> (<code>compile_condition()</code>): a <code>Neutral</code>
+  condition when Colectica's operator codes can hold it, else Blaise code with
+  <code>fallback_reason</code> saying why. <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code> and <code>&gt;=</code> have codes of their
+  own, <code>answered(x)</code> is <code>NotEmpty</code> and <code>NotRefused</code>, and <code>x != 2</code> on a coded
+  question is <code>ContainsNone</code>; a <code>not</code> in front of a comparison, dates,
+  arithmetic, two questions compared and <code>and</code> and <code>or</code> mixed in a group are
+  still Blaise. Reading a condition back has a branch for every code, and a
+  <code>DontKnow</code> test is reported as unverifiable. The Blaise words for empty, refused,
+  today and dates have no defaults: a <code>BlaiseDialect</code> or the spec's <code>blaise</code>
+  block sets them, and a date template must read back without doubt.
+  <code>parse_blaise()</code> and <code>condition_to_expression()</code> read either form back;
+  <code>comparable()</code> makes a quoted plain number that number, since <code>Neutral</code>
+  stores <code>"2"</code> and <code>2</code> alike. Numbers keep every digit, however long. A
+  choice among one coded question's codes is one <code>ContainsAny</code> statement
+  wherever it sits, so <code>a and (x = 2 or x = 3) or b</code> compiles to <code>Neutral</code>.
+  Each compiled condition is read back and compared with the gate, by
+  normal form and then with the <code>logic</code> extra when it is installed:
+  <code>CompiledCondition.verified</code> records the result, and
+  <code>compile_condition(validate=True)</code> raises when they differ, naming a
+  respondent they disagree on.</li>
+<li><strong>Edits are reported as not verifiable by default</strong>, since where an
+  instrument stores them is not known in general; <code>--edits strict</code> compares
+  them once the spec's <code>match.edits</code> says how they are marked.</li>
+<li><strong>Decide whether two gates hold for the same respondents</strong> (<code>decide()</code>,
+  with the new <code>logic</code> extra, <code>pip install 'ddi-l[logic]'</code>, which adds the
+  Z3 solver). When they do not, the verdict gives a respondent they disagree
+  on: <code>x &gt; 3</code> and <code>x &gt;= 4</code> differ when <code>x</code> is 3.25, and agree with
+  <code>types={"x": "integer"}</code>. A respondent leaves each question empty, refuses
+  it or answers it, and an answer may have no value to compare (a
+  don't-know); a comparison holds only when the questions it reads have
+  values. What cannot be modelled, such as text compared by order, is
+  <code>unknown</code>, with the reason. <code>evaluate()</code> tells whether an expression holds
+  for one respondent, and each <code>different</code> verdict is checked with it. A
+  work limit, not a clock, bounds the solver, so a verdict is the same on
+  every run, and <code>import ddi_l.spec</code> does not load it.</li>
+<li><strong>A new <code>spec</code> extra</strong>, <code>pip install 'ddi-l[spec]'</code>, adds PyYAML and
+  jsonschema to read specs. The expression language and its compilers need
+  only the standard library, and <code>import ddi_l</code> loads none of it.</li>
+</ul>
+<h3 id="http-api">HTTP API<a class="headerlink" href="#http-api" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Lint options per request.</strong> <code>POST /v1/lint</code> takes <code>?rule=</code>,
+  <code>?skip_rule=</code> and <code>?lint_config=</code> (the JSON object <code>--lint-config</code> reads),
+  and <code>POST /v1/validate</code> takes <code>?lint_config=</code>. They apply to that request
+  alone, so concurrent requests no longer share one process-wide setting.</li>
+<li><strong>Colectica exports round-trip byte for byte.</strong> <code>POST /v1/roundtrip</code> writes
+  a <code>FragmentInstance</code> as Colectica Designer does, so an unchanged export comes
+  back identical and a diff shows only what a parse lost. Before, every
+  Colectica file looked changed; <code>?layout=default</code> gives this library's
+  layout.</li>
+<li><strong>Load metadata tables over HTTP.</strong> <code>POST /v1/tables/import</code> takes an
+  <code>.xlsx</code> workbook or a <code>.zip</code> of CSV files and answers with a Colectica
+  <code>FragmentInstance</code> (or, with <code>?study=</code>, a study). Tables with problems are a
+  <code>422</code> whose <code>extra</code> lists every problem with its file, row and column.
+  <code>GET /v1/tables/template</code> downloads the blank or example tables, and
+  <code>GET /v1/tables</code> describes every table and column as JSON. Uploads are read
+  in memory, within limits on their size, number of files, and rows and
+  columns.</li>
+<li><strong><code>load_tables()</code> also reads a zip of CSV files, or the bytes of a workbook
+  or a zip.</strong> So does <code>ddi tables import</code>.</li>
+</ul>
+<h3 id="native-xml-core">Native XML core<a class="headerlink" href="#native-xml-core" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>pip install ddi-l</code> brings a compiled XML core</strong>, the <code>ddi-l-native</code>
+  package (Rust, built with PyO3), which ddi-l uses before lxml. It has
+  wheels for Linux (x86_64, aarch64), macOS and Windows (x64), on CPython
+  3.11 and later; anywhere else pip installs a pure-Python stand-in of the
+  same name and version, which ddi-l does without, so installing ddi-l never
+  compiles anything. Its parser builds the tree the standard
+  library's builds and its elements behave like the standard library's; the
+  tree keeps the bytes it was read from and caches each element's content
+  digest, cleared only on the path from a change to the root.
+  <code>DDI_L_XML_BACKEND=native|lxml|stdlib</code> picks a backend; see
+  <a href="../installation/#xml-backends">Installation</a>.</li>
+<li><strong>The same results on every backend.</strong> The whole test suite runs on the
+  native backend. The parser is checked against the standard library's on
+  every fixture, on crafted inputs and on random and damaged XML: it reads
+  the same documents into the same trees and refuses the same ones, and it
+  also refuses any document type declaration. Its digests and its source
+  index are checked against the pure-Python ones after random edits, and the
+  writer writes the same bytes with either.</li>
+<li><strong>Faster where it counts.</strong> On a 9 MB export: <code>read_ddi</code> 0.13 s (lxml
+  0.33 s); writing it back unchanged 0.01 s (0.28 s), or after an edit
+  0.04 s (0.31 s); the <code>colectica-questionnaire</code> profile 0.67 s (1.74 s).
+  The parse runs at 185 MB/s (lxml 124 MB/s, standard library 41 MB/s), far
+  from memory bandwidth: making the tree's nodes costs most of it. Writing a
+  document with a fresh layout is slower than with lxml (0.80 s against
+  0.26 s); see <a href="../performance/">Performance</a>.</li>
+<li><strong>Schema validation in one pass, with lines, on the native backend.</strong>
+  A new <code>native</code> validation backend, the default there, checks a document
+  in one pass against a compiled form of the schema (<code>ddi_l/schemas/ir/</code>,
+  made by <code>codegen/schema_ir.py</code> from the bundled XSDs). A valid document
+  never loads xmlschema. Each element that may be wrong is checked by
+  xmlschema alone, so the messages and paths are xmlschema's, and the
+  issues carry the line each element starts on, as on the lxml backend. On
+  a 9 MB export: 0.09 s valid; 0.13 s with an error (2.6 s on the first
+  call), where libxml2 then xmlschema take 6.5 s. Tested against xmlschema
+  on every fixture and on 300 randomly damaged documents per run: the same
+  errors, in the same order.</li>
+<li><strong>Linting again costs what changed, on the native backend.</strong> A lint run
+  keeps what it read from each item under the item's content digest, and a
+  later run on the same document reads again only the items whose digest
+  changed. On a 9 MB export, the <code>colectica-questionnaire</code> profile takes
+  0.13 s after an edit, against 0.8 s for a first run, with the same
+  findings. Rules that follow the whole flow
+  (<code>colectica.flow.read-before-computed</code>, <code>colectica.ifthenelse.partial-gate</code>)
+  still walk it each time. A first run costs about 0.04 s more: it works out
+  the digests, which a later write reuses. Tested after random edits against
+  a run that reads everything.</li>
+</ul>
+<h3 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>revise</code> no longer scans every item for each item it revises.</strong> It
+  finds who refers to a revised item in an index built once per call (kept
+  per item on the native backend), and a dry run makes its changes and takes
+  them back instead of copying the fragment; <code>repair_shared_identifiables</code>
+  does the same. On a 9 MB export, revising one question with its six
+  ancestors takes 0.02 s on the native backend (0.20 s before; a
+  dry run 0.38 s) and 0.14 s on lxml (0.41 s; a dry run 0.49 s).
+  Tested after random edits against the cascade as it was: the same plan and
+  the same document.</li>
+<li><strong>One lint run builds each index once.</strong> The rules of a run share what
+  they build from the document: its items and their latest versions, the
+  reference resolutions, the bindings and the parsed conditions; <code>conform</code>
+  does the same. Each was rebuilt by every rule that needed it, and the
+  innermost items of a <code>DDIInstance</code> were found by searching every item's
+  subtree. The <code>colectica-questionnaire</code> profile on a 9 MB export (4,478
+  items) went from 6.1 s to 2.0 s, with the same findings.</li>
+<li><strong><code>colectica.flow.read-before-computed</code> no longer walks every path.</strong> A
+  page reached by several paths was walked again on each, so a flow of
+  chained gates took time doubling with every gate. A construct reached
+  again now replays what it found the first time, for the same bindings
+  above it; the findings are the same. A flow with 20 chained gates (a
+  million paths) takes milliseconds. A flow that loops back on itself is
+  still walked path by path.</li>
+<li><strong><code>conform</code> no longer walks every path to a construct.</strong> A construct is
+  one node for each run of sequences above it, which counts the paths to
+  it and keeps the gates of the first; whether the paths agree on a gate is
+  found without walking them one by one. The reports are the same. A
+  question below 16 chained gates (65,536 paths) took 9.1 s and now takes
+  13 ms; below 20 gates, 17 ms. An instrument that loops back on itself is
+  still walked path by path.</li>
+</ul>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>DDIReferenceWarning</code> can be made again from its arguments</strong>, as <code>pickle</code>,
+  <code>copy</code> and pytest-xdist do: its argument is the records, and its text is
+  unchanged.</li>
+<li><strong>An attribute set in code on a new <code>&lt;Fragment&gt;</code> is written.</strong> Colectica's
+  layout wrote every <code>&lt;Fragment&gt;</code> start tag from a template, so an attribute
+  on a copied or added one was lost; one on a fragment read from a file was
+  kept.</li>
+<li><strong>A dry run of <code>revise</code> given an element picks the item the real run
+  picks.</strong> It looked the item up by its ID alone, so with two items of that
+  ID under different agencies it could plan for the other one.</li>
+<li><strong>A document type declaration is refused on both backends.</strong> The stdlib
+  backend accepted <code>&lt;!DOCTYPE root&gt;&lt;root/&gt;</code>, which lxml refused; both now
+  refuse it with the same message. <code>iterparse_ddi</code> refuses one too, and a
+  caller can no longer relax its parser: <code>resolve_entities=True</code>,
+  <code>load_dtd=True</code>, <code>no_network=False</code>, a <code>forbid_*=False</code> or a <code>parser</code>
+  raise <code>ValueError</code>.</li>
+<li><strong>Questions added to an opened file are saved.</strong> A data collection or
+  question scheme read from a file wrote back only the questions it was read
+  with: one added after <code>open_ddi()</code> was dropped on save with no warning, and
+  one removed came back.</li>
+<li><code>validate_document(doc)</code> on a <code>Document</code> no longer detaches the models the
+  caller holds; edits made to them afterwards were lost on save.</li>
+<li><code>--debug</code> works on every command; <code>tables</code>, <code>spec</code>, <code>conform</code>,
+  <code>explain-condition</code>, <code>versions</code> and <code>serve</code> rejected it.</li>
+<li><code>ddi.citation.title.languages</code> is registered, listed and documented as the
+  <code>warning</code> it reports, not as an <code>error</code>.</li>
+<li><code>DDIDocument.validate(raise_error=True)</code> is documented as raising
+  <code>DDIValidationError</code>, which it does.</li>
+<li><strong><code>colectica.statement.logic-note</code> skips Notes.</strong> A statement Colectica
+  types as a Note (<code>extension:TypeOfStatement</code> = <code>Note</code>) is not shown, so a
+  flow condition written in one is where it belongs, and is no longer
+  reported as shown to respondents.</li>
+<li><strong>A <code>str</code> is read as the text it is.</strong> <code>read_ddi()</code> reads XML given as a
+  string whatever encoding its declaration names; it was decoded again under
+  that encoding, or refused.</li>
+<li><strong>Names built in code are schema-valid.</strong> A name set in code
+  (<code>construct_names</code>, <code>names</code> and every other <code>…Name</code> field of a generated
+  model) was written with <code>r:Content</code>, which the schema forbids in a name,
+  so <code>validate()</code> rejected items such as <code>ComputationItem</code>,
+  <code>QuestionConstruct</code>, <code>Category</code>, <code>Universe</code> and every scheme and group.
+  Names are written with <code>r:String</code>. A name read from a file keeps its tag,
+  unless it was the invalid <code>r:Content</code>.</li>
+<li><strong><code>ConceptualComponent</code> keeps its module names.</strong> A
+  <code>c:ConceptualComponentModuleName</code> set in code was never written, and one
+  read from a file was kept only as unmapped content; both now go through
+  <code>conceptual_component_module_names</code>.</li>
+<li><strong>Two item types can no longer silently share one generated ID.</strong> A
+  <code>DataCollection</code> gives each item built with a non-UUID identifier the ID
+  <code>uuid5(agency:identifier)</code>, so a <code>DataCollection</code> and a <code>CollectionEvent</code>
+  both called <code>main</code> came out with the same <code>r:ID</code>, as did a <code>CollectionEvent</code>
+  called <code>main</code> added to that <code>DataCollection</code> after reading it back.
+  Serializing now raises <code>ModelValidationError</code> naming both types. Versions
+  of one item still share their ID, and identifiers an item already has are
+  written as given.</li>
+<li><strong>A study in a fragment no longer warns about its references.</strong>
+  <code>DDIFragment.from_items()</code> and <code>put()</code> reported every reference of a
+  <code>StudyUnit</code> as unresolved, since in a fragment the items it references sit
+  in fragments of their own.</li>
+<li><strong>The typed models no longer lose content.</strong> Reading an item and writing it
+  back used to drop <code>versionDate</code>, <code>r:VersionResponsibility</code> and the
+  <code>r:BasedOnObject</code> lineage on hand-written models (Variable, CodeList,
+  RepresentedVariable, DataRelationship, StudyUnit and others); split a
+  bilingual <code>r:Label</code> or name into one element per language; drop
+  <code>audienceLanguage</code> and <code>d:ConditionalText</code> from question text, user
+  attribute pairs and attributes inside references, attributes on
+  <code>r:URN</code>/<code>r:ID</code>, controlled-vocabulary attributes, and the scheme-level
+  metadata of inline schemes; and wrote some content out of schema order
+  (QuestionItem, Sequence), which the schema rejects.</li>
+<li><strong>Text with markup is kept.</strong> A label, description or other multilingual
+  text whose <code>r:Content</code> holds XHTML (<code>&lt;b&gt;Kind&lt;/b&gt; of pet</code>) was cut to the
+  text before its first element whenever its item was written from its model
+  (<code>put()</code>, <code>to_xml()</code>), and its blocks could be reordered (a <code>&lt;ul&gt;</code> moved
+  before the <code>&lt;p&gt;</code> it followed). Such a string now holds its whole text
+  (<code>"Kind of pet"</code>, with a space between blocks) and is written back as read
+  while unchanged; an edited
+  one is written as its text, and the other languages keep their markup.
+  Parameters keep the attributes of their <code>r:URN</code> when edited.</li>
+<li><strong><code>DDIFragment.from_items()</code> drops every restated reference URN.</strong> It
+  skipped the reference after each one it removed, so an item with several
+  references kept some <code>r:URN</code>s Colectica does not write.</li>
+<li><strong>References are written as read.</strong> A reference read without an <code>r:URN</code>
+  no longer gains one; a reference built in code still does.</li>
+<li><strong><code>xs:boolean</code> <code>"1"</code> is true.</strong> Several wrappers read it as false and wrote
+  <code>"false"</code>. Values keep their original spelling while unchanged.</li>
+<li><strong>Identifiers read from a file are kept.</strong> <code>DataCollection</code> rewrote
+  non-UUID <code>r:ID</code>s (its own and those of everything inside it) into generated
+  UUIDs, breaking references from other items; it now does so only for
+  objects built in code.</li>
+<li><strong>Validation of fragments no longer forgives real errors.</strong> An error inside
+  a fragment's <code>StudyUnit</code> (and a few other real DDI items) was passed over,
+  and validation stopped there, hiding any error after it. Only the library's
+  own extension types are exempt now, and every error is checked.</li>
+<li><code>ConceptualComponent</code> always writes concepts, universes, conceptual
+  variables and unit types inside their schemes; written bare they were
+  invalid.</li>
+<li><code>d:Methodology</code> writes <code>d:MethodologyName</code> in the DDI 3.3 namespace.</li>
+<li><code>r:ExternalURLReference</code>, <code>r:ExternalURNReference</code> and a few other
+  elements named <code>*Reference</code> are no longer read as DDI references (which
+  emptied them).</li>
+<li>A schema-valid value that does not parse as its declared number type no
+  longer stops an item from loading.</li>
+<li>Building a fragment is linear in its size (it was quadratic: 53 s for a
+  4,478-item export, now under 3 s).</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>A page on working with other tools.</strong> "Work with other tools" shows,
+  with examples that run, how ddi-l exchanges metadata with XML and schema
+  tools (<code>xmllint</code>), linked-data tools (<code>rdflib</code> and SPARQL), JSON, spreadsheets,
+  R, any language over HTTP, DDI Codebook files (for example Dataverse's export,
+  converted through the tables import), DDI 3.2 tools and open-source
+  questionnaire generators, and what to check before exchanging a file.</li>
+<li><strong>Measurable learning objectives in every module.</strong> Each of the 17 modules
+  opens with three to six objectives that say what the learner can do
+  ("write a script that...", "run <code>ddi lint</code> and name one finding"), tags
+  every exercise and quiz question with the objective it practises, gives the
+  expected output of each exercise, and ends with a "Check yourself" list.
+  Every objective now has an exercise and a quiz question; quiz answers are
+  spread across A to D (B was the answer to 42 of 72 questions). Modules 12,
+  14, 15 and 16 keep six objectives or fewer and move the rest to "Going
+  further". The capstone rubric scores each track's techniques, and all four
+  tracks have a sample solution. Ten stale copies of renumbered modules, in
+  both languages, are removed.</li>
+<li><strong>Cross-references render on the API page.</strong> Docstrings wrote them as
+  Sphinx roles (<code>:func:</code>...``), which showed raw; they are now code spans.</li>
+<li><strong>A curriculum module on advanced questionnaire specification.</strong> Module 16
+  teaches spec writers to write a questionnaire spec, give gates and edit
+  checks the meaning they intend on a missing answer, replace "go to" and
+  "otherwise" with gates, fit gates to a tool's condition editor without
+  changing their meaning, keep one variable per idea in two languages, and check an instrument with
+  <code>ddi conform</code>. The capstone projects are now Module 17, and the old
+  address redirects to them.</li>
+<li><strong>One colour scheme that works in every mode.</strong> The site uses one brand
+  blue for the header, links and buttons, with orange only for the keyboard
+  focus ring, and every text colour meets WCAG AA in light, dark and high
+  contrast. Dark mode now uses the site's own colours rather than Material's
+  defaults, and its buttons are readable: the outline buttons were 2.3:1, and
+  a download button in a page was 1.1:1, navy on black. High contrast has a
+  black header, visible navigation tabs and readable code, and its notes and
+  tips are dark like the page instead of white boxes whose tables were white
+  on white. The
+  logo follows the header colour instead of drawing in black, and the palette
+  menu sits in the header beside the light/dark toggle instead of overlapping
+  the search icon on phones. The three colour-vision palettes are gone: the
+  blue-and-orange scheme already suits those readers.</li>
+<li><strong>Links without a version no longer 404.</strong> The README and issue template
+  link through <code>/latest/</code>, and the site root now serves a <code>404.html</code> that
+  sends any unversioned path (<code>/ddi-l/server/</code>) to the same page under
+  <code>/latest/</code> and maps renamed curriculum pages to their new names.</li>
+<li><strong>Install from PyPI everywhere.</strong> Pages that said <code>pip install .</code> or
+  <code>pip install -e .</code> now say <code>pip install ddi-l</code>, and the install tabs add
+  <code>uv add ddi-l</code>.</li>
+<li><strong>One place to learn.</strong> The site is organized as Learn (the curriculum),
+  How-to guides, Reference and About. The authoring tutorial, training labs
+  and persona tracks are folded into the curriculum, which now has a single
+  set of learner profiles and an automation track.</li>
+<li><strong>Curriculum order.</strong> Opening files and command-line validation move up to
+  Modules 6 and 7, and Module 3 now checks its work with <code>doc.validate()</code> and
+  <code>doc.lint()</code>, so learners validate from the start. Modules 6 to 13 become 8
+  to 15.</li>
+<li><strong>Answers under each exercise.</strong> Every exercise has a collapsible answer.
+  The answer-key page for instructors is generated from the modules, so it can
+  no longer drift from them.</li>
+<li><strong>Homepage.</strong> A lint-clean first example, what DDI is, DDI 3.1, 3.2 and 3.3
+  scope, a study diagram, a Learn tile, an R / HTTP API tile and a "Cite ddi-l"
+  section. Every page now has its own search description.</li>
+</ul>
+<h3 id="tooling-and-packaging">Tooling and packaging<a class="headerlink" href="#tooling-and-packaging" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tests run on every core.</strong> <code>pytest</code> runs with pytest-xdist (<code>-n auto</code>, a
+  new dev dependency); <code>-n 0</code> runs in one process. On four cores the lxml
+  suite takes 58 s instead of 3 min 20 s (without coverage); with coverage,
+  lxml takes 1 min 43 s, the standard library 2 min 49 s and native
+  3 min 45 s.</li>
+<li><strong>The test suite runs without warnings.</strong> A test whose items refer to items
+  outside its document now says so, and any other <code>DDIReferenceWarning</code> fails
+  it; the two curriculum pages that warn on purpose must still warn. Five
+  skips are gone: two generator bugs (a fixed element value, a content model
+  that must occur twice) left three item types untested, and a deliberately
+  truncated fixture is no longer fed to tests that need well-formed XML. The
+  skips left depend on the environment (no R, no native core, the other XML
+  backend) or on the generic engine not reading substitution-group members.</li>
+<li><strong>Python 3.15.</strong> ddi-l is tested on Python 3.15 too: a pull request tests
+  3.11 and 3.15, a push to <code>main</code> tests 3.11 to 3.15, both XML backends each
+  time. CI pins uv 0.13.7, the first uv series that installs 3.15.</li>
+<li><strong>One command sets the version.</strong> <code>scripts/set_version.py 0.3.0</code> (or
+  <code>patch</code>, <code>minor</code>, <code>major</code>) writes the version in all 11 files that state
+  it, with the release date and the citations' year, then runs <code>uv lock</code>;
+  it writes nothing unless every file matches. A test fails when another
+  file starts stating the version.</li>
+<li><strong>A link to a missing heading fails the docs build.</strong> <code>mkdocs build
+  --strict</code> now checks anchors (<code>validation: anchors: warn</code>). It found two
+  cheat-sheet links to a Module 15 section that had moved, now fixed.</li>
+<li><strong>Mutation runs draw fewer examples, the same each time.</strong> Under mutmut a
+  property test draws at most 30 examples, derandomized, instead of 300 (or
+  Hypothesis's 100), since it runs once for each mutant it covers; a mutant
+  is caught on every run or none. The suite still draws 300.</li>
+<li><strong>The native core in CI and releases.</strong> A CI job checks the Rust code
+  (<code>cargo fmt</code>, <code>cargo clippy</code>) and runs the whole suite on the native
+  backend. A release builds <code>ddi-l-native</code> wheels (one stable-ABI wheel per
+  platform: Linux x86_64 and aarch64, macOS universal2, Windows x64) and its
+  sdist, plus the pure-Python stand-in wheel (<code>native/fallback/</code>), and
+  publishes them with ddi-l; PyPI needs this repository set up as a trusted
+  publisher for the <code>ddi-l-native</code> project too. The monthly job fuzzes the
+  parser against the standard library's, 300,000 inputs per test. In the
+  repository, <code>uv.lock</code> installs the stand-in, so no contributor needs Rust;
+  the ddi-l sdist carries it and the crate's sources.</li>
+<li><strong>Test fixtures ship in the sdist only.</strong> The wheel carried 250 test files
+  under <code>ddi_l/examples/tests/</code>. It keeps the two samples the CLI recipes run;
+  the rest live in <code>tests/fixtures/</code>, and <code>scripts/check_distributions.py</code>
+  fails if they reach the wheel again.</li>
+<li><strong>A mutation-testing gate.</strong> <code>mutmut</code> now covers fifteen modules, and the
+  monthly job fails when a mutant survives that <code>tests/mutation_baseline.txt</code>
+  does not list, or when a listed one no longer survives
+  (<code>scripts/check_mutation.py</code>, <code>make mutation</code>). The latest full run caught
+  12,290 of 14,542 mutants (84.5 %). The list holds the 2,252 survivors: 239
+  with the reason no test can catch them, and 2,013 not looked at yet. New
+  tests caught about 500 survivors, most in validation, the operations, the
+  condition compiler, I/O and conformance. In the four modules new in this
+  release (the fact base, the instrument index, the evaluator and the solver
+  encoding), 1,237 of 1,282 mutants are caught, and each of the 45 survivors
+  has its reason.</li>
+<li>Ruff and the dependency audit run once in CI instead of on all eight test
+  legs.</li>
+<li>A pull request tests Python 3.11 and 3.14 on both backends; a push to
+  <code>main</code> still tests all four versions.</li>
+<li>Removed code nothing used, merged five copies of the version sort key, and
+  replaced the serializer's strategy classes with one function.</li>
+</ul>
+<h3 id="known-issues">Known issues<a class="headerlink" href="#known-issues" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>ddi validate</code> exits 1 when it reports any issue, including one of
+  <code>warning</code> severity.</li>
+<li>A study moved into a <code>Group</code> (<code>Document.add_group()</code>) is missing from
+  <code>iter_study_units()</code>, and so from the index built from it.</li>
+<li>Without lxml, output written with <code>pretty_print=False</code> spells empty elements
+  <code>&lt;tag /&gt;</code>, where lxml writes <code>&lt;tag/&gt;</code>.</li>
+<li>A DDI 3.2 <code>DDIInstance</code> is written back with generated prefixes (<code>ns0:</code>
+  with lxml, <code>p0:</code> without) and with <code>r:</code> bound to the 3.3 namespace. The XML
+  means the same, but no longer reads as the source did. A 3.2
+  <code>FragmentInstance</code> is written in Colectica's layout, with <code>r:</code> and <code>ddi:</code>
+  bound to the 3.2 namespaces.</li>
+</ul>
+<h2 id="010">0.1.0<a class="headerlink" href="#010" title="Permanent link">&para;</a></h2>
+<p>The first release of <code>ddi-l</code>: a Python toolkit for creating, reading,
+updating, and validating <a href="https://ddialliance.org/Specification/DDI-Lifecycle/3.3/">DDI Lifecycle 3.3</a>
+XML documents, with a simple CRUD API over an XSD-generated model layer.</p>
+<h3 id="authoring">Authoring<a class="headerlink" href="#authoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Simple CRUD API</strong>: <code>ddi.new_study()</code>, <code>ddi.open_ddi()</code>, and the
+  <code>Document</code> class with <code>add_question()</code>, <code>add_variable()</code>, <code>add_concept()</code>,
+  <code>add_universe()</code>, <code>add_code_list()</code>, <code>add_item()</code>, <code>find()</code>, <code>remove()</code>,
+  <code>save()</code>, and <code>validate()</code>. Every <code>add_*</code> helper takes an optional <code>label=</code>
+  (and <code>label_lang=</code>), so an item can be labelled where it is created rather
+  than in a second pass. That is the difference between output that lints clean and
+  output that warns about itself.</li>
+<li><strong>Generic <code>add_item()</code> / <code>items()</code></strong>: 30 DDI item types (QuestionItem,
+  Variable, Category, Instrument, Concept, Universe, and more) through a single
+  type registry.</li>
+<li><strong>Variable representations</strong>: <code>Variable.set_numeric()</code>, <code>set_coded()</code>,
+  <code>set_text()</code>, and <code>set_datetime()</code> declare what kind of values a variable
+  holds, with optional numeric ranges (<code>low_inclusive</code> / <code>high_inclusive</code>),
+  <code>missing_values</code>, <code>blank_is_missing_value</code>, or a code-list reference. The
+  setters chain onto <code>add_variable()</code>.</li>
+<li><strong>Custom properties</strong>: <code>set_property()</code>, <code>get_property()</code>, <code>properties</code>,
+  and <code>remove_property()</code> on any DDI item.</li>
+<li><strong>Versioning</strong>: <code>increment_major_version()</code>, <code>increment_minor_version()</code>,
+  <code>increment_subversion()</code>, version rationales, and version responsibility.</li>
+<li><strong>Multilingual support</strong>: a <code>lang=</code> parameter on every <code>add_*</code> method, and
+  <code>InternationalString</code> for additional translations.</li>
+</ul>
+<h3 id="study-structure">Study structure<a class="headerlink" href="#study-structure" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Multi-study series</strong>: <code>doc.add_study()</code> adds further studies to the
+  group. <code>doc.study(identifier)</code> returns a <code>StudyCursor</code> whose <code>add_variable()</code>,
+  <code>add_question()</code>, and other <code>add_*</code> helpers target that specific study, so
+  non-primary studies are editable through the high-level API. <code>doc.study()</code>
+  with no argument targets the primary study.</li>
+<li><strong>Study groups</strong>: <code>doc.add_group()</code> organizes a study into a <code>&lt;g:Group&gt;</code>
+  (a study series or publication package). The document stays fully editable,
+  and group-organized files open and round-trip.</li>
+<li><strong>Instance-level packages</strong>: <code>doc.add_resource_package()</code> and
+  <code>doc.add_local_holding_package()</code> attach a <code>ResourcePackage</code> (reusable
+  metadata) or a <code>LocalHoldingPackage</code> (a local holding of a deposited study,
+  referencing the primary study by default) directly on the <code>DDIInstance</code>;
+  <code>doc.resource_packages</code> / <code>doc.local_holding_packages</code> read them back.</li>
+<li><strong>Archive</strong>: <code>doc.add_archive()</code> attaches an <code>Archive</code> module (archive
+  lifecycle metadata) to the primary study; <code>doc.archives</code> reads them back.</li>
+<li><strong>Translation information</strong>: <code>doc.add_translation_information(languages=...,
+  description=...)</code> sets the instance's <code>TranslationInformation</code>;
+  <code>doc.translation_information</code> reads it back.</li>
+<li><strong>Comparisons</strong>: <code>doc.add_comparison()</code> records harmonization maps between
+  items across studies or versions: <code>add_variable_map()</code>, <code>add_concept_map()</code>,
+  <code>add_managed_item_map()</code>, <code>add_representation_map()</code>, a <code>correspondence()</code>
+  builder, and <code>source_scheme</code> / <code>target_scheme</code> / <code>correspondence</code> arguments
+  on the map helpers.</li>
+<li><strong>DDI profiles</strong>: <code>doc.add_ddi_profile()</code> attaches a <code>DDIProfile</code> declaring
+  which DDI elements a system uses, via <code>add_used()</code> / <code>add_not_used()</code> XPath
+  statements.</li>
+</ul>
+<h3 id="data-description">Data description<a class="headerlink" href="#data-description" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Data relationships</strong>: <code>doc.add_data_relationship()</code> builds a
+  <code>DataRelationship</code> whose <code>add_logical_record()</code> declares which variables make
+  up one case (the rectangular-file default).</li>
+<li><strong>NCubes</strong>: <code>doc.add_ncube()</code> builds a multidimensional cube;
+  <code>add_dimension(variable_ref)</code> adds an axis, <code>add_measure(variable_ref)</code> adds a
+  measured value, and <code>add_attribute()</code> adds a qualifying variable.
+  <code>add_coordinate_region()</code> and <code>add_dimension_value()</code> describe a region of a
+  cube, and <code>add_attribute(..., attachment_region=)</code> attaches to one.</li>
+<li><strong>Physical instances</strong>: <code>PhysicalInstance</code> is a first-class <code>add_item</code> type
+  at the study level, describing a concrete data file with <code>set_data_file()</code>,
+  <code>set_record_count()</code>, and <code>set_citation_title()</code>.</li>
+<li><strong>Record layouts</strong>: <code>doc.add_record_layout()</code> maps variables to positions in
+  a data file via <code>add_data_item(variable_ref, start_position=, width=)</code>, which
+  also accepts <code>storage_format</code>, <code>delimiter</code>, and <code>decimal_positions</code>. Pass
+  <code>logical_record=</code> to tie the backing structure to a modeled logical record.
+  <code>PhysicalStructure.link_logical_record(..., key_variable=)</code> declares a
+  segment key.</li>
+<li><strong>Inline datasets</strong>: <code>doc.add_dataset()</code> stores data values directly in the
+  document, in <code>ItemSet</code> (<code>add_item_value()</code>), <code>RecordSet</code>
+  (<code>set_variable_order()</code> / <code>add_record()</code>), or <code>VariableSet</code>
+  (<code>add_variable_item()</code>) form.</li>
+</ul>
+<h3 id="questionnaires">Questionnaires<a class="headerlink" href="#questionnaires" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Flow constructs</strong>: <code>QuestionConstruct</code>, <code>Sequence</code>, <code>IfThenElse</code>,
+  <code>StatementItem</code>, <code>ComputationItem</code>, and <code>Loop</code> are first-class <code>add_item()</code>
+  types, stored in a <code>ControlConstructScheme</code> that is built, serialized, and
+  round-tripped automatically, and linked to one another with <code>.to_reference()</code>.</li>
+</ul>
+<h3 id="validation-and-quality">Validation and quality<a class="headerlink" href="#validation-and-quality" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Offline schema validation</strong>: the DDI 3.1, 3.2, and 3.3 XSDs ship inside
+  the package, so <code>doc.validate()</code> and <code>ddi validate</code> work with no network
+  access and no separate download.</li>
+<li><strong>Reads DDI 3.1, 3.2 and 3.3</strong>: <code>read_ddi()</code>, <code>ddi validate</code>, <code>ddi lint</code>,
+  <code>ddi to-json</code> and <code>ddi roundtrip</code> detect the version a document declares.
+  The <code>Document</code> authoring API and the typed models target DDI 3.3; 3.1 and
+  3.2 documents are worked with as XML through <code>DDIDocument.root</code>.</li>
+<li><strong>Lint engine</strong>: <code>ddi lint</code> and <code>Document.lint()</code> check reference
+  integrity, missing labels and citation completeness. The label rule follows
+  the schema: it only asks for a label where the element's content model has
+  an <code>r:Label</code> slot (174 of DDI 3.3's 1247 elements). The citation-language
+  rule matches language ranges per RFC 4647, so a required <code>en</code> is satisfied by
+  <code>en</code>, <code>en-CA</code> or <code>en-Latn-CA</code>, but not by <code>eng</code>.</li>
+<li><strong>Lint-clean output by default</strong>: the <code>Document</code> API labels the modules,
+  schemes and physical wrappers it creates, and every <code>add_*</code> helper accepts
+  <code>label=</code>. <code>set_scheme_label()</code> labels any generated scheme wrapper. Documents
+  you <em>parse</em> are never modified.</li>
+<li><strong>Lint defaults suit a published library</strong>: the agency allow-list is
+  opt-in (<code>configure_lint(allowed_agencies=[...])</code> or <code>--allowed-agency</code>); a
+  <em>missing</em> agency is always an error. <code>ddi lint</code> exits non-zero on errors
+  only; pass <code>--fail-severity warning</code> for a strict gate.</li>
+<li><strong>Labels only where the schema allows them</strong>: label support is derived
+  from the XSDs. Setting a label on a type with no <code>r:Label</code> slot warns
+  instead of producing an invalid document.</li>
+<li><strong>Reference checks</strong>: <code>Document.save()</code> reports references to items the
+  study does not contain as a single <code>DDIReferenceWarning</code>.</li>
+<li><strong>Clear errors</strong>: malformed XML raises <code>DDIParseError</code> with the parser's
+  line and column; unresolvable references raise <code>DDIReferenceError</code> (a
+  <code>LookupError</code>); duplicate identifiers raise <code>DuplicateIdentifierError</code>, and
+  empty or non-string names are rejected when an item is added. Schema
+  failures raise <code>SchemaValidationError</code>, a <code>DDIValidationError</code>, whose
+  <code>.issues</code> carries the individual problems.</li>
+<li><strong>Examples that pass our own gates</strong>: the bundled <code>example_instance.xml</code>
+  and <code>Quality_of_Life.xml</code> are schema-valid and free of lint errors;
+  <code>example_instance.xml</code> has no findings at any severity.</li>
+<li><strong><code>Methodology</code> uses DDI's own namespace</strong>: <code>&lt;Methodology&gt;</code> is written in
+  <code>ddi:datacollection:3_3</code>, as DDI 3.3 declares it.</li>
+<li><strong>Extension types are visibly ours</strong>: the few <code>Process</code> and <code>Methodology</code>
+  helper types that no DDI Lifecycle release defines serialize into
+  <code>urn:ddi-l:extension:*</code>, so nothing can be mistaken for an official DDI
+  namespace.</li>
+<li><strong>Round-trip fidelity</strong>: unknown XML elements and attributes are preserved
+  when opening and re-saving files.</li>
+<li><strong>The <code>lxml</code> backend is a speed choice, not a dialect</strong>: documents <code>ddi-l</code>
+  authors serialize to byte-identical output with and without <code>ddi-l[full]</code>.
+  A third-party file whose namespaces are laid out differently (a prefixed
+  root plus per-element <code>xmlns=</code> redeclarations, as in <code>Quality_of_Life.xml</code>)
+  can differ in prefix spelling between backends; its content is identical.</li>
+</ul>
+<h3 id="performance_1">Performance<a class="headerlink" href="#performance_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>import ddi_l</code> loads names on first use, so importing the package and
+  starting the <code>ddi</code> command take a few hundredths of a second.</li>
+<li><code>read_ddi()</code> builds its resolver index lazily.</li>
+<li>With <code>ddi-l[full]</code>, validation first checks the document with libxml2 and
+  runs the detailed xmlschema validator only when that check fails: valid
+  documents validate in milliseconds, and reported issues are identical on
+  both backends.</li>
+<li><code>iter_variables()</code>, <code>iter_questions()</code> and <code>iterparse_ddi()</code> stream large
+  documents and yield fully populated objects.</li>
+<li>See <a href="../performance/">Performance</a> for measured timings.</li>
+</ul>
+<h3 id="http-api_1">HTTP API<a class="headerlink" href="#http-api_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Optional Litestar service</strong>: <code>pip install 'ddi-l[server]'</code> then
+  <code>ddi serve</code> exposes validate, lint and convert over HTTP, with OpenAPI docs at
+  <code>/schema</code>. Every endpoint is a thin wrapper over <code>ddi_l.operations</code>, which the
+  CLI also calls, so the two cannot disagree about whether a document is valid.</li>
+<li><strong>Self-describing OpenAPI</strong>: <code>/schema</code> serves Swagger UI, and a browser
+  opening the root is redirected there. Every endpoint declares its request
+  body, query parameters and a typed response schema with a captured example;
+  "Try it out" arrives prefilled with a valid DDI instance.</li>
+<li><strong>Service-appropriate defaults</strong>: a 32 MiB request body cap, a bounded
+  number of concurrent jobs (<code>--max-jobs</code>, <code>503</code> beyond it), the default
+  schema preloaded at startup, no disk writes, CORS off unless origins are
+  named, and the same XML hardening as the library.</li>
+<li><strong>JSON-LD output</strong>: <code>POST /v1/convert/jsonld</code> and <code>ddi to-jsonld</code> render a
+  study as linked data using the DDI Alliance's own DDI-RDF Discovery
+  vocabulary ("Disco"), with Dublin Core and SKOS for labels and DDI URNs as
+  IRIs. Covers DDI's discovery subset and is one-way by design, as the Disco
+  specification intends; <code>to-json</code> remains the lossless, round-trippable format
+  (XML to JSON and back returns the bytes it was given, and so does
+  <code>/v1/roundtrip</code>).</li>
+<li><strong><code>ddi_l.operations</code></strong>: the transport-neutral core, usable directly when
+  embedding ddi-l in another application.</li>
+</ul>
+<h3 id="model-layer">Model layer<a class="headerlink" href="#model-layer" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>XSD-driven model generation</strong>: every model class is generated from the
+  official DDI 3.3 XSD, the single source of truth for fields, element
+  ordering, namespaces, and documentation. All 508 XSD complex types are
+  covered.</li>
+<li><strong>Generic XML engine</strong>: <code>from_xml()</code> / <code>to_xml()</code> driven by the generated
+  <code>_FIELD_XML_MAP</code>, <code>_ATTR_XML_MAP</code>, and <code>_ELEMENT_ORDER</code> tables, emitting
+  children in XSD-declared order.</li>
+<li><strong>Stable DDI namespace prefixes</strong>: output uses the canonical <code>r:</code>, <code>s:</code>,
+  <code>d:</code>, <code>l:</code>, <code>c:</code>, <code>a:</code>, <code>p:</code>, <code>pr:</code> (ddiprofile), and <code>prc:</code> (process)
+  prefixes rather than generated <code>ns0</code>/<code>p0</code> names, and serialization prefers a
+  namespace's registered prefix over an auto-generated one.</li>
+<li><strong>Namespace constants</strong>: exported for every DDI module, including
+  <code>DDI_PROFILE_NS</code> and <code>DATASET_NS</code>.</li>
+<li><strong>Typed</strong>: ships <code>py.typed</code>; the public API is fully annotated.</li>
+</ul>
+<h3 id="tooling-and-distribution">Tooling and distribution<a class="headerlink" href="#tooling-and-distribution" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>CLI</strong>: <code>ddi validate</code>, <code>ddi lint</code>, <code>ddi to-json</code>, <code>ddi to-jsonld</code>,
+  <code>ddi from-json</code>, <code>ddi roundtrip</code>, <code>ddi versions</code>, and <code>ddi serve</code>. Commands
+  take <code>-o/--output</code> and <code>--ddi-version</code>; <code>ddi validate --format json</code> prints
+  a JSON array (empty when valid) for scripts.</li>
+<li><strong>Optional lxml backend</strong>: <code>pip install ddi-l[full]</code> enables faster parsing
+  of large documents.</li>
+<li><strong>Generated API reference</strong> built from the source docstrings, alongside the
+  guides.</li>
+<li><strong>Every documented code sample is executed in CI</strong>, including the R
+  examples.</li>
+<li><strong>Python 3.11, 3.12, 3.13, and 3.14</strong> supported and tested in CI.</li>
+<li><strong>PyPI publishing</strong> via GitHub OIDC trusted publishing.</li>
+<li><strong>Bilingual documentation</strong> in English and French, including a guide to
+  <a href="../r-users/">using ddi-l from R</a> through reticulate.</li>
+<li><strong>Training curriculum</strong>: a 16-module progressive course with exercises,
+  quizzes, an instructor guide, answer keys, and a bilingual cheat sheet.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../schema-coverage/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Schema coverage">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Schema coverage
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../performance/" class="md-footer__link md-footer__link--next" aria-label="Next: Performance">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Performance
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.action.edit", "content.code.annotate", "content.code.copy", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "palette.switcher", "palette.toggle", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

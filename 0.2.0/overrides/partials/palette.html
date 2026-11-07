@@ -1,0 +1,66 @@
+{#-
+  Overrides Material's `partials/palette.html`.
+
+  Upstream points each toggle label at `loop.index % loop.length`, i.e. the next
+  entry in the whole palette list. That is right when every palette is a colour
+  mode, but this site also ships a high-contrast palette that has no place on
+  the light/dark toggle. With it in the list, the toggle became a three-state
+  cycle (light -> dark -> high contrast -> light) whose tooltip changed meaning
+  on each press.
+
+  Declaring no `toggle:` on the high-contrast entry is not enough on its own,
+  because the cycle is computed over `loop.length` -- every entry -- not over
+  the ones that render a label. So the label targets are computed here from the
+  toggle-bearing entries only: light and dark point at each other.
+
+  Everything else matches upstream, including rendering a radio input for every
+  entry. The palette menu after the form clicks those inputs, which keeps
+  selection and persistence in Material's hands rather than ours. The menu
+  lists every palette: in high contrast the toggle has no label to show, so the
+  menu is also the way back out.
+-#}
+{% set toggle_indices = namespace(items=[]) %}
+{% for option in config.theme.palette %}
+  {% if option.toggle %}
+    {% set toggle_indices.items = toggle_indices.items + [loop.index0] %}
+  {% endif %}
+{% endfor %}
+<form class="md-header__option" data-md-component="palette">
+  {% for option in config.theme.palette %}
+    {% set scheme  = option.scheme  | d("default", true) %}
+    {% set primary = option.primary | d("indigo", true) %}
+    {% set accent  = option.accent  | d("indigo", true) %}
+    <input class="md-option" data-md-color-media="{{ option.media }}" data-md-color-scheme="{{ scheme | replace(' ', '-') }}" data-md-color-primary="{{ primary | replace(' ', '-') }}" data-md-color-accent="{{ accent | replace(' ', '-') }}" {% if option.toggle %} aria-label="{{ option.toggle.name }}" {% else %} aria-hidden="true" {% endif %} type="radio" name="__palette" id="__palette_{{ loop.index0 }}">
+    {% if option.toggle %}
+      {%- set position = toggle_indices.items.index(loop.index0) -%}
+      {%- set next_index = toggle_indices.items[(position + 1) % toggle_indices.items | length] -%}
+      <label class="md-header__button md-icon" title="{{ option.toggle.name }}" for="__palette_{{ next_index }}" hidden>
+        {% include ".icons/" ~ option.toggle.icon ~ ".svg" %}
+      </label>
+    {% endif %}
+  {% endfor %}
+</form>
+{%- set menu_label = config.extra.palette_menu_label | default("Colour palette") -%}
+<div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="{{ menu_label }}" aria-label="{{ menu_label }}">
+      {% include ".icons/material/palette.svg" %}
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      {% for option in config.theme.palette %}
+        <li>
+          {#
+            `loop.index0` is the N in Material's `__palette_N` input id.
+          #}
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="{{ loop.index0 }}"
+                  data-ddi-palette-scheme="{{ option.scheme }}">
+            {{ config.extra.palette_names[option.scheme] | default(option.scheme) }}
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </details>
+</div>

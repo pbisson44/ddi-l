@@ -1,0 +1,3875 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Décrire dans une spécification YAML ou JSON ce qu'un questionnaire doit contenir, puis y comparer un instrument avec ddi conform : modules, questions, codes, domaines, filtres et contrôles.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/spec-conformance/">
+      
+      
+        <link rel="prev" href="../interoperability/">
+      
+      
+        <link rel="next" href="../spreadsheet-import/">
+      
+      
+        
+          <link rel="alternate" href="../../spec-conformance/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Vérifier un questionnaire par rapport à une spécification - ddi-l: DDI Lifecycle</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/accessibility.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/landing.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <script>
+    // Reconcile the palette Material stored on an earlier visit with the
+    // palettes this site has now, before Material's own restore at the top of
+    // <body> copies it onto the page.
+    //
+    // - A palette that no longer exists (the three colour-vision palettes of
+    //   earlier versions) is forgotten: Material would restore its unstyled
+    //   scheme name and clamp the stale index onto high contrast. The visitor
+    //   gets the OS light/dark default instead.
+    // - A palette that still exists keeps the visitor's choice but takes its
+    //   current colours: choices stored before `primary: custom` carry
+    //   Material's default "indigo", which paints the old indigo header and
+    //   links until Material's bundle loads and corrects it.
+    (function () {
+      if (typeof __md_get !== "function" || typeof __md_set !== "function") {
+        return;
+      }
+      var palettes = [
+        {"accent": "custom", "primary": "custom", "scheme": "default"},
+        {"accent": "custom", "primary": "custom", "scheme": "slate"},
+        {"accent": "custom", "primary": "custom", "scheme": "high-contrast"}
+      ];
+      var stored = __md_get("__palette");
+      if (!stored) {
+        return;
+      }
+      var current = palettes[stored.index];
+      if (!stored.color || !current || stored.color.scheme !== current.scheme) {
+        __md_set("__palette", null);
+      } else if (stored.color.primary !== current.primary ||
+                 stored.color.accent !== current.accent) {
+        stored.color.primary = current.primary;
+        stored.color.accent = current.accent;
+        __md_set("__palette", stored);
+      }
+    })();
+  </script>
+  <script>
+    // Driven by Material's `document$` observable rather than DOMContentLoaded.
+    // `document$` emits on the initial load and again after every page swap, so
+    // this keeps working if `navigation.instant` is ever enabled -- it is off
+    // today only because mkdocs-static-i18n's language switcher is incompatible
+    // with it (see the comment in mkdocs.yml). Under DOMContentLoaded alone the
+    // decoration below would survive only the first page a visitor landed on.
+    //
+    // The script has two halves. `enhance()` re-applies to whatever document is
+    // current and runs on every emission. `setupOnce()` binds to things that
+    // outlive a page swap -- <body>, the header, window -- and is guarded,
+    // because re-running it would stack a duplicate observer and listener on
+    // every navigation for the length of the session.
+    //
+    // Both run from the DOM-ready signal rather than at parse time: this block
+    // lands in <head>, where document.body does not exist yet.
+    (function () {
+      var paletteLabels = {"default": "Mode clair activ\u00e9", "high-contrast": "Contraste \u00e9lev\u00e9 activ\u00e9", "slate": "Mode sombre activ\u00e9"};
+      var initialised = false;
+
+      function enhance() {
+        var header = document.querySelector(".md-header");
+        if (header) {
+          header.setAttribute("role", "banner");
+          header.setAttribute("aria-label", "En-t\u00eate du site");
+        }
+
+        var primaryNav = document.querySelector(".md-nav--primary nav, .md-nav--primary");
+        if (primaryNav) {
+          primaryNav.setAttribute("role", "navigation");
+          primaryNav.setAttribute("aria-label", "Navigation principale");
+        }
+
+        var secondaryNav = document.querySelector(".md-nav--secondary nav, .md-nav--secondary");
+        if (secondaryNav) {
+          secondaryNav.setAttribute("role", "navigation");
+          secondaryNav.setAttribute("aria-label", "Sur cette page");
+        }
+
+        var main = document.querySelector("main.md-main");
+        if (main) {
+          if (!main.id) {
+            main.id = "main-content";
+          }
+          main.setAttribute("role", "main");
+          main.setAttribute("aria-label", "Contenu de la documentation");
+        }
+
+        setupOnce();
+      }
+
+      function announcePaletteChange(scheme) {
+        var announcer = document.getElementById("ddi-palette-announcer");
+        if (!announcer) {
+          return;
+        }
+        var message = paletteLabels[scheme] || scheme;
+        announcer.textContent = "";
+        // Brief delay ensures the live region update is detected.
+        setTimeout(function () {
+          announcer.textContent = message;
+        }, 50);
+      }
+
+      // Tell assistive technology which menu entry is the palette in use.
+      function markCurrentPalette(scheme) {
+        var options = document.querySelectorAll("[data-ddi-palette-scheme]");
+        for (var i = 0; i < options.length; i++) {
+          var current = options[i].getAttribute("data-ddi-palette-scheme") === scheme;
+          if (current) {
+            options[i].setAttribute("aria-current", "true");
+          } else {
+            options[i].removeAttribute("aria-current");
+          }
+        }
+      }
+
+      function setupOnce() {
+        if (initialised) {
+          return;
+        }
+        initialised = true;
+
+        // -- Palette announcements ------------------------------------------
+        //
+        // Material applies the palette by setting `data-md-color-scheme` on
+        // <body>, so that is what we observe. A colour change on its own gives
+        // a screen reader nothing to announce.
+        var lastScheme = document.body.getAttribute("data-md-color-scheme");
+        new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.attributeName !== "data-md-color-scheme") {
+              return;
+            }
+            var scheme = document.body.getAttribute("data-md-color-scheme");
+            if (scheme && scheme !== lastScheme) {
+              lastScheme = scheme;
+              announcePaletteChange(scheme);
+              markCurrentPalette(scheme);
+            }
+          });
+        }).observe(document.body, { attributes: true });
+
+        // -- Palette menu ----------------------------------------------------
+        //
+        // The menu in partials/palette.html lists every palette, including
+        // high contrast, which carries no `toggle:` and so stays off the
+        // light/dark cycle while Material still renders a radio input for it.
+        // Clicking that input is the supported way in: Material's own
+        // subscription applies the colours and persists the choice under
+        // `<scope>.__palette`. Writing localStorage directly here is what an
+        // earlier version did, against a key Material never reads.
+        //
+        // Delegated from the menu container, which lives in the header and so
+        // survives instant navigation.
+        var menu = document.querySelector("[data-ddi-palette-menu]");
+        markCurrentPalette(lastScheme);
+        if (menu) {
+          menu.addEventListener("click", function (event) {
+            var button = event.target.closest("[data-ddi-palette-index]");
+            if (!button) {
+              return;
+            }
+            var input = document.getElementById(
+              "__palette_" + button.getAttribute("data-ddi-palette-index")
+            );
+            if (input) {
+              input.click();
+              // Collapse the menu so focus returns to a predictable place.
+              var details = menu.querySelector("details");
+              if (details) {
+                details.open = false;
+              }
+            }
+          });
+        }
+
+        // -- Language switcher ----------------------------------------------
+        //
+        // mkdocs-static-i18n already renders each switcher link as the same
+        // page in the other language, with its trailing slash. Material's
+        // alternate-language handler (on <body>) intercepts the click anyway,
+        // misses its sitemap lookup, and navigates to the alternate URL with
+        // the trailing slash stripped -- `/ddi-l/fr/server` instead of
+        // `/ddi-l/fr/server/` -- which the server answers with a 302. Stopping
+        // the click in the capture phase keeps it from reaching that handler
+        // while leaving the browser's own navigation to the correct href.
+        window.addEventListener("click", function (event) {
+          if (event.target instanceof Element &&
+              event.target.closest("a.md-select__link[hreflang]")) {
+            event.stopPropagation();
+          }
+        }, true);
+
+        // -- Reduced motion --------------------------------------------------
+        //
+        // A media query cannot reach the transition declarations Material sets
+        // inline, so this class is what accessibility.css and landing.css hang
+        // their overrides on. Kept in sync rather than sampled once at load.
+        var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        function applyReducedMotion(matches) {
+          document.documentElement.classList.toggle("ddi-reduced-motion", matches);
+        }
+        applyReducedMotion(reducedMotion.matches);
+        reducedMotion.addEventListener("change", function (event) {
+          applyReducedMotion(event.matches);
+        });
+      }
+
+      // Fall back to DOMContentLoaded if the bundle has not defined
+      // `document$`, so the ARIA work still happens if `navigation.instant` is
+      // ever turned off.
+      if (window.document$ && typeof window.document$.subscribe === "function") {
+        window.document$.subscribe(enhance);
+      } else {
+        document.addEventListener("DOMContentLoaded", enhance);
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#verifier-un-questionnaire-par-rapport-a-une-specification" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  
+    Vous consultez la documentation d'une <strong>version antérieure</strong>.
+    <a href="../../../">
+      <strong>Voir la dernière version</strong>
+    </a>
+  
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../" title="ddi-l: DDI Lifecycle" class="md-header__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l: DDI Lifecycle
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Vérifier un questionnaire par rapport à une spécification
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+<form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="high-contrast" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_2">
+    
+  
+</form><div class="md-header__option ddi-palette-menu" data-ddi-palette-menu>
+  <details class="ddi-palette-menu__details">
+    <summary class="md-header__button md-icon ddi-palette-menu__summary"
+             title="Palette de couleurs" aria-label="Palette de couleurs">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.5 12a1.5 1.5 0 0 1-1.5-1.5A1.5 1.5 0 0 1 17.5 9a1.5 1.5 0 0 1 1.5 1.5 1.5 1.5 0 0 1-1.5 1.5m-3-4A1.5 1.5 0 0 1 13 6.5 1.5 1.5 0 0 1 14.5 5 1.5 1.5 0 0 1 16 6.5 1.5 1.5 0 0 1 14.5 8m-5 0A1.5 1.5 0 0 1 8 6.5 1.5 1.5 0 0 1 9.5 5 1.5 1.5 0 0 1 11 6.5 1.5 1.5 0 0 1 9.5 8m-3 4A1.5 1.5 0 0 1 5 10.5 1.5 1.5 0 0 1 6.5 9 1.5 1.5 0 0 1 8 10.5 1.5 1.5 0 0 1 6.5 12M12 3a9 9 0 0 0-9 9 9 9 0 0 0 9 9 1.5 1.5 0 0 0 1.5-1.5c0-.39-.15-.74-.39-1-.23-.27-.38-.62-.38-1a1.5 1.5 0 0 1 1.5-1.5H16a5 5 0 0 0 5-5c0-4.42-4.03-8-9-8"/></svg>
+    </summary>
+    <ul class="ddi-palette-menu__list">
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="0"
+                  data-ddi-palette-scheme="default">
+            Clair
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="1"
+                  data-ddi-palette-scheme="slate">
+            Sombre
+          </button>
+        </li>
+      
+        <li>
+          
+          <button type="button"
+                  class="ddi-palette-menu__option"
+                  data-ddi-palette-index="2"
+                  data-ddi-palette-scheme="high-contrast">
+            Contraste élevé
+          </button>
+        </li>
+      
+    </ul>
+  </details>
+</div>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../spec-conformance/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Partager" aria-label="Partager" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Accueil
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../curriculum/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../validation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guides pratiques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../user-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../release-notes/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  À propos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="ddi-l: DDI Lifecycle" class="md-nav__button md-logo" aria-label="ddi-l: DDI Lifecycle" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l: DDI Lifecycle
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Accueil
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Accueil
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installer ddi-l
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../curriculum/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Apprendre
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Apprendre
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 1 : Qu’est-ce que les métadonnées ?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 2 : Préparez votre environnement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 3 : Créez votre première étude
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 4 : Variables et questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 5 : Concepts et univers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 6 : Ouvrir et modifier des fichiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 7 : Valider depuis la ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 8 : Du CSV/Excel au DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 9 : Listes de codes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 10 : Flux de questionnaire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 11 : Traçabilité des données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 12 : Couplage de données
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 13 : Propriétés, recherche et validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 14 : Champs personnalisés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 15 : Mise à jour et versionnage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 16 : Spécification avancée de questionnaires
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module 17 : Projets de synthèse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide de l’instructeur
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aide-mémoire
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Corrigés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides pratiques
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides pratiques
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Valider et analyser le contenu DDI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des règles lint
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser la ligne de commande
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automatiser la validation en CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dépanner les erreurs de schéma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Réutiliser des fragments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec les exports Colectica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Travailler avec d'autres outils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vérifier un questionnaire par rapport à une spécification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ecrire-une-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Écrire une spécification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtres-et-controles-le-langage-dexpressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtres et contrôles : le langage d'expressions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtres et contrôles : le langage d&#39;expressions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decider-si-deux-filtres-concordent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Décider si deux filtres concordent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecrire-un-filtre-pour-colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Écrire un filtre pour Colectica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifier-un-instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vérifier un instrument
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vérifier un instrument">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ou-les-identifiants-sont-trouves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Où les identifiants sont trouvés
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtres
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controles-de-saisie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrôles de saisie
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Règles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limites
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Charger du DDI depuis des tableurs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modèles de tableurs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passer du XML aux objets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Servir l'API HTTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utiliser ddi-l depuis R
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Construire des outils et applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Référence
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide d'utilisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence de l'API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Référence des modèles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalogue des espaces de noms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Couverture du schéma
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    À propos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    À propos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notes de version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Playbook de performance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Playbook de performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmark de conversion de schémas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paquets Python associés
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide de développement
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ecrire-une-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Écrire une spécification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filtres-et-controles-le-langage-dexpressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtres et contrôles : le langage d'expressions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtres et contrôles : le langage d&#39;expressions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decider-si-deux-filtres-concordent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Décider si deux filtres concordent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecrire-un-filtre-pour-colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Écrire un filtre pour Colectica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifier-un-instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vérifier un instrument
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vérifier un instrument">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ou-les-identifiants-sont-trouves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Où les identifiants sont trouvés
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtres
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controles-de-saisie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrôles de saisie
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Règles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limites
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../" class="md-path__link">
+        
+  <span class="md-ellipsis">
+    ddi-l
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../validation/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Guides pratiques
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/spec-conformance.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="verifier-un-questionnaire-par-rapport-a-une-specification">Vérifier un questionnaire par rapport à une spécification<a class="headerlink" href="#verifier-un-questionnaire-par-rapport-a-une-specification" title="Permanent link">&para;</a></h1>
+<p>Une spécification dit ce qu'un questionnaire doit contenir : ses modules, les
+questions et les énoncés de chacun, leurs domaines de réponse et listes de
+codes, les filtres qui décident qui voit quoi, et les contrôles de saisie.
+<code>ddi conform</code> y compare un instrument et signale chaque écart, avec un
+identifiant de règle, une sévérité, et le module et l'élément en cause.</p>
+<p>La spécification est un fichier YAML ou JSON que vous écrivez, ou que vous
+produisez à partir de vos propres documents de conception. <code>ddi-l</code> ne lit
+rien d'autre : passer des documents de votre organisation à une
+spécification vous appartient.</p>
+<p>Lire une spécification demande l'extra <code>spec</code> :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'ddi-l[spec]'</span>
+</span></code></pre></div>
+<p>Sans lui, <code>ddi spec</code> et <code>ddi conform</code> affichent cette ligne et se terminent
+avec le code 1. Le langage d'expressions et ses compilateurs n'ont besoin que
+de la bibliothèque standard.</p>
+<h2 id="ecrire-une-specification">Écrire une spécification<a class="headerlink" href="#ecrire-une-specification" title="Permanent link">&para;</a></h2>
+<p><code>ddi spec example</code> écrit l'exemple, la spécification de l'enquête fictive sur
+les animaux de compagnie ; <code>ddi spec schema</code> écrit le schéma JSON auquel
+une spécification est comparée, pour un éditeur qui complète et vérifie le
+YAML.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ddi<span class="w"> </span>spec<span class="w"> </span>example<span class="w"> </span>&gt;<span class="w"> </span>pet-survey.spec.yaml
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ddi<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>pet-survey.spec.yaml
+</span></code></pre></div>
+<p>L'exemple au complet :</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">spec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pet-survey</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A small bilingual survey about the pets of a household.</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">languages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">en</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">fr</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># The words of your Blaise version, for gates that compile to Blaise.</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># ddi-l assumes none of them.</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">blaise</span><span class="p">:</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">empty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EMPTY</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">refused</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REFUSAL</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">today</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SYSDATE</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nt">code_lists</span><span class="p">:</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">Species</span><span class="p">:</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">values</span><span class="p">:</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="nv">Dog</span><span class="p p-Indicator">,</span><span class="nt"> fr</span><span class="p">:</span><span class="w"> </span><span class="nv">Chien</span><span class="p p-Indicator">}</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="nv">Cat</span><span class="p p-Indicator">,</span><span class="nt"> fr</span><span class="p">:</span><span class="w"> </span><span class="nv">Chat</span><span class="p p-Indicator">}</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="nv">Bird</span><span class="p p-Indicator">,</span><span class="nt"> fr</span><span class="p">:</span><span class="w"> </span><span class="nv">Oiseau</span><span class="p p-Indicator">}</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="nt">imported_variables</span><span class="p">:</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">OwnerName</span><span class="p p-Indicator">,</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">text</span><span class="p p-Indicator">,</span><span class="nt"> source</span><span class="p">:</span><span class="w"> </span><span class="nv">register</span><span class="p p-Indicator">}</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nt">derived_variables</span><span class="p">:</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">HasPets</span><span class="p p-Indicator">,</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">numeric</span><span class="p p-Indicator">,</span><span class="nt"> values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">]}</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="nt">modules</span><span class="p">:</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">household</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="nt">questions</span><span class="p">:</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetCount</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">numeric</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> max</span><span class="p">:</span><span class="w"> </span><span class="nv">20</span><span class="p p-Indicator">,</span><span class="nt"> decimals</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">}}</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pets</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">    </span><span class="nt">gate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetCount &gt; 0</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">    </span><span class="nt">statements</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">PetsIntro</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="nt">questions</span><span class="p">:</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetKind</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">        </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">list</span><span class="p">:</span><span class="w"> </span><span class="nv">Species</span><span class="p p-Indicator">}}</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetName</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">        </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="nv">50</span><span class="p p-Indicator">}}</span>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">        </span><span class="nt">gate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answered(PetKind)</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetAge</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">        </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">numeric</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> max</span><span class="p">:</span><span class="w"> </span><span class="nv">40</span><span class="p p-Indicator">,</span><span class="nt"> decimals</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">}}</span>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">visits</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">    </span><span class="nt">questions</span><span class="p">:</span>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VisitDate</span>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="w">        </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">Date</span><span class="p p-Indicator">}}</span>
+</span><span id="__span-2-48"><a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>
+</span><span id="__span-2-49"><a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="nt">edits</span><span class="p">:</span>
+</span><span id="__span-2-50"><a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">age_range</span>
+</span><span id="__span-2-51"><a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PetAge &gt; 30</span>
+</span><span id="__span-2-52"><a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="w">    </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pets</span>
+</span><span id="__span-2-53"><a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="w">    </span><span class="nt">message</span><span class="p">:</span>
+</span><span id="__span-2-54"><a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="w">      </span><span class="nt">en</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Is the pet really over 30?</span>
+</span><span id="__span-2-55"><a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="w">      </span><span class="nt">fr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">L’animal a-t-il vraiment plus de 30 ans ?</span>
+</span><span id="__span-2-56"><a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warning</span>
+</span></code></pre></div>
+<p>Les parties :</p>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Ce qu'elle contient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spec</code>, <code>version</code>, <code>description</code></td>
+<td>Le nom de la spécification, et votre propre version et vos notes.</td>
+</tr>
+<tr>
+<td><code>instrument</code></td>
+<td>L'instrument à vérifier quand le fichier en a plusieurs : son nom, son libellé, son identifiant d'utilisateur ou son ID.</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>Les langues de tout texte de question et de tout libellé de code (<code>en</code> correspond à <code>en-CA</code>). Un libellé écrit sans langue est dans la première.</td>
+</tr>
+<tr>
+<td><code>blaise</code></td>
+<td>Les mots Blaise pour vide, refus, aujourd'hui et les dates, pour les filtres en code Blaise.</td>
+</tr>
+<tr>
+<td><code>match</code></td>
+<td>Où trouver chaque identifiant dans l'instrument (plus bas).</td>
+</tr>
+<tr>
+<td><code>severities</code></td>
+<td>Une sévérité pour une règle, à la place de celle par défaut : <code>{spec.module.extra: error}</code>.</td>
+</tr>
+<tr>
+<td><code>code_lists</code></td>
+<td>Les listes de codes qu'une question nomme avec <code>list:</code>.</td>
+</tr>
+<tr>
+<td><code>imported_variables</code>, <code>derived_variables</code></td>
+<td>Les variables qu'une recherche de données fournit, et celles que l'instrument calcule.</td>
+</tr>
+<tr>
+<td><code>modules</code></td>
+<td>Chaque module : son <code>id</code>, s'il est requis (<code>required</code>, <code>true</code> par défaut), son filtre (<code>gate</code>) et sa portée (<code>gate_scope</code> : <code>module</code> par défaut, ou <code>page</code>), ses énoncés (<code>statements</code>) et ses questions (<code>questions</code>).</td>
+</tr>
+<tr>
+<td><code>edits</code></td>
+<td>Chaque contrôle de saisie : son <code>id</code>, la condition qui le déclenche (<code>when</code>), son <code>module</code>, son message (<code>message</code>) et sa sévérité (<code>severity</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>Une question a un <code>id</code>, un domaine (<code>domain</code>) et un filtre (<code>gate</code>) à elle,
+qui s'ajoute à celui de son module. Un domaine est l'un de :</p>
+<table>
+<thead>
+<tr>
+<th>Domaine</th>
+<th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code</code></td>
+<td><code>values</code> (chaque valeur et son libellé), ou <code>list</code> (une entrée de <code>code_lists</code>).</td>
+</tr>
+<tr>
+<td><code>numeric</code></td>
+<td><code>min</code>, <code>max</code>, <code>min_inclusive</code> et <code>max_inclusive</code> (<code>true</code> par défaut), <code>decimals</code>.</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>min_length</code>, <code>max_length</code>.</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>type</code> : le <code>DateTypeCode</code> DDI (<code>Date</code>, <code>DateTime</code>, <code>Year</code>...).</td>
+</tr>
+</tbody>
+</table>
+<p><code>ddi spec validate</code> vérifie une spécification par rapport au schéma, puis par
+rapport à elle-même : chaque identifiant n'apparaît qu'une fois, chaque
+<code>list:</code> nomme une liste de codes, chaque filtre et contrôle s'analyse et ne
+nomme que des questions et variables de la spécification, <code>min</code> est sous
+<code>max</code>, les libellés sont dans les langues de la spécification, et
+<code>severities</code> nomme de vraies règles. Chaque problème dit où il se trouve :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pet-survey.spec.yaml: modules[1].questions[2].gate: 'PetAgee' is not a question or variable of the spec
+</span></code></pre></div>
+<p>Le YAML est lu strictement, comme du YAML 1.2. Une clé donnée deux fois est
+une erreur, tout comme une clé de fusion (<code>&lt;&lt;</code>) ; <code>01</code> reste la chaîne
+<code>"01"</code>, un code et non le nombre 1 ; seuls <code>true</code> et <code>false</code> sont des
+booléens, si bien que <code>no</code> et <code>off</code> restent des chaînes ; les dates et <code>=</code>
+restent des chaînes ; et un nombre entier écrit <code>4e1</code> vaut <code>40</code>. Une
+spécification doit être en UTF-8, les <code>NaN</code> et <code>Infinity</code> de JSON sont
+refusés, et un filtre peut imbriquer parenthèses, <code>not</code> et signe moins sur 50
+niveaux au plus.</p>
+<h2 id="filtres-et-controles-le-langage-dexpressions">Filtres et contrôles : le langage d'expressions<a class="headerlink" href="#filtres-et-controles-le-langage-dexpressions" title="Permanent link">&para;</a></h2>
+<p>Un filtre ou la condition d'un contrôle est une expression :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PetCount &gt; 0 and answered(PetKind)
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>not refused(OwnerAge) or OwnerAge &gt;= 18
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>VisitDate &lt;= today()
+</span></code></pre></div>
+<p>De la liaison la plus lâche à la plus serrée :</p>
+<table>
+<thead>
+<tr>
+<th>Opérateurs</th>
+<th>Sens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>or</code>, <code>\|\|</code></td>
+<td>l'un ou l'autre côté</td>
+</tr>
+<tr>
+<td><code>and</code>, <code>&amp;&amp;</code></td>
+<td>les deux côtés</td>
+</tr>
+<tr>
+<td><code>not</code></td>
+<td>la négation</td>
+</tr>
+<tr>
+<td><code>=</code> <code>==</code> <code>!=</code> <code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code></td>
+<td>une seule comparaison ; elles ne s'enchaînent pas : écrivez <code>1 &lt; x and x &lt; 3</code>, et non <code>1 &lt; x &lt; 3</code></td>
+</tr>
+<tr>
+<td><code>+</code> <code>-</code></td>
+<td>addition, soustraction</td>
+</tr>
+<tr>
+<td><code>*</code> <code>/</code></td>
+<td>multiplication, division</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>l'opposé d'un nombre</td>
+</tr>
+</tbody>
+</table>
+<p>Les opérandes sont des nombres (<code>3</code>, <code>2.5</code>), des chaînes (<code>"texte"</code> ou
+<code>'texte'</code>, un guillemet doublé à l'intérieur), des dates ISO (<code>2024-05-31</code> :
+entourez un moins d'espaces pour soustraire), les identifiants de questions et
+de variables, des parenthèses, et cinq fonctions :</p>
+<table>
+<thead>
+<tr>
+<th>Fonction</th>
+<th>Vraie quand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>answered(x)</code></td>
+<td><code>x</code> a une réponse : ni vide ni refusée</td>
+</tr>
+<tr>
+<td><code>missing(x)</code></td>
+<td><code>x</code> n'a pas de réponse : vide ou refusée</td>
+</tr>
+<tr>
+<td><code>empty(x)</code></td>
+<td><code>x</code> est restée sans réponse</td>
+</tr>
+<tr>
+<td><code>refused(x)</code></td>
+<td><code>x</code> a été refusée</td>
+</tr>
+<tr>
+<td><code>today()</code></td>
+<td>(une valeur) la date de l'entrevue</td>
+</tr>
+</tbody>
+</table>
+<p>Les mots-clés et les noms de fonctions ne tiennent pas compte de la casse ;
+les identifiants, si. Un nombre est comparé comme nombre, donc <code>01</code> vaut <code>1</code> :
+écrivez entre guillemets un code dont le zéro initial compte, <code>"01"</code>.
+<code>identifiers()</code> liste les identifiants qu'une expression utilise, dans
+l'ordre de leur première apparition, et <code>walk()</code> donne chacun de ses nœuds.</p>
+<p>Deux filtres sont comparés une fois normalisés : <code>missing(x)</code> devient
+<code>empty(x) or refused(x)</code> et <code>answered(x)</code> sa négation, une valeur comparée à
+une question passe à droite, <code>not</code> se déplace vers l'intérieur de <code>and</code> et de
+<code>or</code>, et les parties d'un <code>and</code> ou d'un <code>or</code> sont triées. Dans un <code>and</code>, un
+test de réponse à côté d'une comparaison de la même question disparaît,
+puisqu'une comparaison est fausse sans réponse : <code>answered(x) and x &gt; 3</code> est
+<code>x &gt; 3</code>. Dans un filtre
+enregistré sous la forme <code>Neutral</code> de Colectica, qui enregistre <code>"2"</code> et <code>2</code>
+de la même façon, un nombre simple entre guillemets est comparé comme ce
+nombre (<code>x = "2"</code> correspond à <code>x = 2</code>) ; <code>"02"</code>, <code>"+2"</code> ou <code>" 2"</code> restent
+du texte, et dans du code Blaise un nombre entre guillemets est toujours du
+texte.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">equivalent</span><span class="p">,</span> <span class="n">format_expression</span><span class="p">,</span> <span class="n">normalise</span><span class="p">,</span> <span class="n">parse_expression</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">gate</span> <span class="o">=</span> <span class="n">parse_expression</span><span class="p">(</span><span class="s2">"not (answered(PetKind) and 3 &lt; PetCount)"</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">format_expression</span><span class="p">(</span><span class="n">normalise</span><span class="p">(</span><span class="n">gate</span><span class="p">)))</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">equivalent</span><span class="p">(</span><span class="s2">"answered(x)"</span><span class="p">,</span> <span class="s2">"not missing(x)"</span><span class="p">))</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">equivalent</span><span class="p">(</span><span class="s2">"x &gt; 3"</span><span class="p">,</span> <span class="s2">"x &gt;= 4"</span><span class="p">))</span>
+</span></code></pre></div>
+<p>La dernière ligne affiche <code>False</code>. La normalisation ne calcule rien : <code>x &gt; 3</code>
+et <code>x &gt;= 4</code> ont des formes normales différentes. Sans l'extra <code>logic</code>, c'est
+tout ce que sait <code>equivalent()</code> : un filtre signalé comme différent peut donc
+être juste, et le rapport montre les deux formes normales pour en juger. Avec
+l'extra, <code>equivalent()</code> décide le reste : ces deux filtres diffèrent encore,
+pour un <code>x</code> entre 3 et 4, et concordent quand <code>x</code> est un nombre entier. De
+même, <code>not (x &gt; 3)</code> n'est pas <code>x &lt;= 3</code> : un <code>x</code> sans réponse rend le premier
+vrai et le second faux.</p>
+<h3 id="decider-si-deux-filtres-concordent">Décider si deux filtres concordent<a class="headerlink" href="#decider-si-deux-filtres-concordent" title="Permanent link">&para;</a></h3>
+<p>Avec l'extra <code>logic</code> (<code>pip install 'ddi-l[logic]'</code>, qui ajoute le solveur
+Z3), <code>decide()</code> dit si deux filtres valent pour les mêmes répondants. Quand ce
+n'est pas le cas, il donne un répondant sur lequel ils divergent :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">decide</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"answered(x)"</span><span class="p">,</span> <span class="s2">"x &gt; 3 or x &lt;= 3"</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; different</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>  <span class="c1"># -&gt; x is answered with no value</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s2">"x &gt; 3"</span><span class="p">,</span> <span class="s2">"x &gt;= 4"</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">})</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; equivalent</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s1">'Owner = "Ana"'</span><span class="p">,</span> <span class="s1">'Owner &lt; "B"'</span><span class="p">)</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># -&gt; compares text by order</span>
+</span></code></pre></div>
+<p>Un répondant laisse chaque question vide, la refuse ou y répond, et une
+réponse peut n'avoir aucune valeur à comparer, comme un « ne sait pas ». Une
+comparaison n'est vraie que si chaque question qu'elle lit a une valeur et
+que rien n'y divise par zéro. Comment chaque nom est lu :</p>
+<ul>
+<li>une question comparée seulement par <code>=</code> et <code>!=</code> peut avoir plusieurs
+  réponses : <code>x = 1</code> est vrai quand 1 est parmi elles, <code>x != 1</code> quand elle a
+  des réponses et que 1 n'en est pas une ;</li>
+<li>une question ordonnée (<code>&lt;</code>...), calculée, ou comparée à une date ou à
+  <code>today()</code> a une seule valeur ;</li>
+<li>les nombres peuvent être des fractions sauf si <code>types</code> dit <code>integer</code>, et
+  les dates sont des jours entiers. <code>types</code> donne à chaque nom l'un de
+  <code>numeric</code>, <code>integer</code>, <code>date</code>, <code>text</code> ou <code>code</code>.</li>
+</ul>
+<p>Le verdict est <code>equivalent</code>, <code>different</code> avec son <code>example</code>, ou <code>unknown</code> avec
+une <code>reason</code> : du texte comparé par ordre, une condition comparée comme une
+valeur, un nom comparé à des nombres et à du texte, ou deux noms comparés
+quand l'un ou l'autre peut avoir plusieurs réponses. Deux filtres qui ne
+diffèrent que pour une question à plusieurs codes répondus sont aussi
+<code>unknown</code>, puisque cela dépend de la question. <code>evaluate()</code> dit si une
+expression vaut pour un répondant, et chaque verdict <code>different</code> est vérifié
+avec elle. Une limite de travail, et non une horloge, borne le solveur : un
+verdict est le même à chaque exécution.</p>
+<h2 id="ecrire-un-filtre-pour-colectica">Écrire un filtre pour Colectica<a class="headerlink" href="#ecrire-un-filtre-pour-colectica" title="Permanent link">&para;</a></h2>
+<p><code>compile_condition()</code> traduit un filtre en ce que Colectica enregistre dans un
+<code>r:Command</code>. Le JSON de son éditeur de conditions (<code>Neutral</code>) contient ce que
+les codes d'opérateurs de Colectica (énumérés dans
+<a href="../colectica/#les-codes-sont-ceux-de-colectica">Travailler avec les exports Colectica</a>)
+peuvent exprimer :</p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Énoncé</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x = 3</code>, <code>x != 3</code> (<code>x</code> sans codes)</td>
+<td><code>Equal</code>, <code>NotEqual</code> 3</td>
+</tr>
+<tr>
+<td><code>x &gt; 3</code>, <code>x &gt;= 3</code>, <code>x &lt; 3</code>, <code>x &lt;= 3</code></td>
+<td><code>GreaterThan</code>, <code>GreaterThanOrEqual</code>, <code>LessThan</code>, <code>LessThanOrEqual</code> 3</td>
+</tr>
+<tr>
+<td><code>empty(x)</code>, <code>not empty(x)</code></td>
+<td><code>Empty</code>, <code>NotEmpty</code></td>
+</tr>
+<tr>
+<td><code>refused(x)</code>, <code>not refused(x)</code></td>
+<td><code>Refused</code>, <code>NotRefused</code></td>
+</tr>
+<tr>
+<td><code>x = 2</code>, <code>x = 2 or x = 3</code> (<code>x</code> codée)</td>
+<td><code>ContainsAny</code> ces codes</td>
+</tr>
+<tr>
+<td><code>x = 2 and x = 3</code> (<code>x</code> codée)</td>
+<td><code>ContainsAll</code> ces codes</td>
+</tr>
+<tr>
+<td><code>x != 2</code>, <code>x != 2 and x != 3</code> (<code>x</code> codée)</td>
+<td><code>ContainsNone</code> ces codes</td>
+</tr>
+</tbody>
+</table>
+<p><code>answered(x)</code>, qui est <code>not empty(x) and not refused(x)</code>, fait donc deux
+énoncés, et <code>missing(x)</code> est <code>Empty</code> ou <code>Refused</code>. Les énoncés sont joints en
+un groupe par <code>and</code> ou <code>or</code>, ou en groupes joints par un seul <code>and</code> ou <code>or</code>
+(<code>(a or b) and c</code>). Un choix parmi les codes d'une question codée est un seul
+énoncé, où qu'il se trouve : <code>a and (x = 2 or x = 3) or b</code> convient donc
+aussi.</p>
+<p><code>ddi-l</code> lit chaque énoncé de comparaison comme le langage d'expressions lit une
+comparaison : faux quand la question n'a pas de réponse. On ne sait pas si
+Colectica fait de même. Cela compte surtout pour <code>NotEqual</code> et
+<code>ContainsNone</code>, qu'on pourrait aussi lire comme vrais quand rien n'a été
+répondu ; vérifiez un tel filtre dans un aperçu.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.colectica_logic</span><span class="w"> </span><span class="kn">import</span> <span class="n">serialize_condition</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlaiseDialect</span><span class="p">,</span> <span class="n">compile_condition</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">subjects</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="s2">"PetCount"</span><span class="p">:</span> <span class="s2">"urn:ddi:example.org:in-count:1"</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="s2">"PetKind"</span><span class="p">:</span> <span class="s2">"urn:ddi:example.org:in-kind:1"</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">codes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PetKind"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"2"</span><span class="p">:</span> <span class="s2">"urn:ddi:example.org:code-cat:1"</span><span class="p">}}</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">compiled</span> <span class="o">=</span> <span class="n">compile_condition</span><span class="p">(</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="s2">"PetCount &gt; 0 and PetKind = 2"</span><span class="p">,</span> <span class="n">subjects</span><span class="o">=</span><span class="n">subjects</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="n">codes</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="p">)</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">compiled</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">compiled</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">serialize_condition</span><span class="p">(</span><span class="n">compiled</span><span class="o">.</span><span class="n">condition</span><span class="p">))</span>
+</span></code></pre></div>
+<p><code>subjects</code> donne l'<code>r:InParameter</code> de l'élément auquel chaque identifiant est
+lié, et <code>codes</code> le <code>l:Code</code> de chaque valeur codée.</p>
+<p>Tout le reste est écrit en code Blaise, et <code>fallback_reason</code> dit pourquoi :
+- un <code>not</code> devant une comparaison : <code>not (x = 3)</code> est vrai quand <code>x</code> n'a pas
+  de réponse, et on ne sait pas si <code>NotEqual</code> l'est ;
+- de l'arithmétique, des dates ou <code>today()</code> ;
+- une question comparée à une autre, ou du texte comparé par <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>
+  ou <code>&gt;=</code> ;
+- <code>and</code> et <code>or</code> mêlés dans un groupe (hors un choix parmi les codes d'une
+  question codée), puisque l'ordre dans lequel Colectica les évalue n'est pas
+  documenté.</p>
+<p>Blaise nomme les entrées <code>{{name}}</code> et met chaque comparaison entre
+parenthèses. Les mots qu'il emploie pour vide, refus, aujourd'hui et les
+dates viennent d'un <code>BlaiseDialect</code>, qui n'a aucune valeur par défaut. Sans
+le mot nécessaire, rien n'est compilé, et la raison nomme le réglage. Un
+modèle de date doit se relire sans ambiguïté : <code>{year}</code>, <code>{month}</code> et <code>{day}</code>
+une fois chacun, un texte avant le premier champ qui ne finit pas par un
+chiffre, autre chose que des chiffres entre deux champs, aucun chiffre juste
+après un champ, et des formats de la seule forme <code>0Nd</code> (<code>{month:02d}</code> ; une
+largeur complète par des zéros, donc une valeur plus large se relit
+aussi) ; <code>TODATE({year}, {month}, {day})</code>
+convient, <code>{year}{month:02d}{day:02d}</code> est refusé :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">dialect</span> <span class="o">=</span> <span class="n">BlaiseDialect</span><span class="p">(</span><span class="n">empty</span><span class="o">=</span><span class="s2">"EMPTY"</span><span class="p">,</span> <span class="n">refused</span><span class="o">=</span><span class="s2">"REFUSAL"</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">gate</span> <span class="o">=</span> <span class="s2">"answered(PetKind) and not (PetCount = 0)"</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">compiled</span> <span class="o">=</span> <span class="n">compile_condition</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="n">subjects</span><span class="o">=</span><span class="n">subjects</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="n">dialect</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">compiled</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">compiled</span><span class="o">.</span><span class="n">fallback_reason</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">unset</span> <span class="o">=</span> <span class="n">compile_condition</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="n">subjects</span><span class="o">=</span><span class="n">subjects</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">unset</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">unset</span><span class="o">.</span><span class="n">missing_settings</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>parse_blaise()</code> et <code>condition_to_expression()</code> relisent les deux formes en
+expressions ; <code>ddi conform</code> s'en sert pour comparer les filtres d'un
+instrument à ceux de la spécification. <code>compile_condition()</code> s'en sert aussi :
+il relit ce qu'il a compilé et le compare au filtre, par forme normale puis
+avec l'extra <code>logic</code> s'il est installé. <code>compiled.verified</code> vaut <code>True</code> quand
+ils concordent, <code>False</code> quand ils diffèrent et <code>None</code> quand il n'a pas pu
+trancher ; <code>compile_condition(..., validate=True)</code> lève une exception au lieu
+de rendre une condition qui diffère, et nomme un répondant sur lequel elle
+diffère.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">compiled</span><span class="o">.</span><span class="n">verified</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<h2 id="verifier-un-instrument">Vérifier un instrument<a class="headerlink" href="#verifier-un-instrument" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pet-survey: Instrument 55555555 (Pet survey instrument)
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>module     severity  rule                             item       message
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>---------  --------  -------------------------------  ---------  --------------------------------------------------------------------------------------------------
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>household  info      spec.item.id-sources-differ      PetCount   The question PetCount is found by its construct_alias; its item_name is 'HouseholdPets'.
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>pets       error     spec.code.missing                PetKind    The question PetKind does not offer the code(s) 3.
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>pets       error     spec.code.extra                  PetKind    The question PetKind offers the code(s) 4, which the spec does not list.
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pets       warning   spec.code.label                  PetKind    Code 2 of PetKind is labelled 'Chats' in fr; the spec says 'Chat'.
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>pets       error     spec.domain.length               PetName    The maximum length of PetName is 40; the spec says 50.
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>pets       warning   spec.language.missing            PetAge     The question text of PetAge has no fr.
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>pets       error     spec.domain.range                PetAge     The range of PetAge is [0, 30]; the spec says [0, 40].
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>pets       warning   spec.domain.decimals             PetAge     PetAge allows 1 decimal(s); the spec says 0.
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>pets       warning   spec.gate.extra                  PetAge     Question PetAge is gated by PetCount &gt; 1; the spec gates it with nothing.
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>pets       warning   spec.item.extra                  PetColour  Module pets has the question QuestionConstruct 55555555 (PetColour), which the spec does not list.
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>visits     warning   spec.item.misplaced              VisitDate  The question VisitDate belongs in module visits, but is in module pets.
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>-          warning   spec.module.extra                feedback   The instrument has the module Sequence 55555555 (feedback), which the spec does not list.
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>-          error     spec.variable.derived-is-lookup  HasPets    The derived variable HasPets is a data lookup field: it is imported, not computed.
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>pets       info      spec.edit.unverifiable           age_range  The edit age_range: not verifiable (edit storage unknown).
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>5 error(s), 7 warning(s), 2 info.
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--spec SPEC</code></td>
+<td>La spécification (obligatoire).</td>
+</tr>
+<tr>
+<td><code>--module ID</code></td>
+<td>Ne comparer qu'un module ; les modules que la spécification ne liste pas et les variables ne sont alors pas vérifiés, et un élément du module que la spécification liste dans un autre module est signalé en trop.</td>
+</tr>
+<tr>
+<td><code>--instrument NAME</code></td>
+<td>L'instrument à comparer quand le fichier en a plusieurs.</td>
+</tr>
+<tr>
+<td><code>--edits off\|info\|strict</code></td>
+<td>Comment vérifier les contrôles (plus bas). Par défaut : <code>info</code>.</td>
+</tr>
+<tr>
+<td><code>--format json\|table</code></td>
+<td>JSON (par défaut) : la spécification, l'instrument, un résumé, le résultat de chaque module et les constats ; ou un tableau.</td>
+</tr>
+<tr>
+<td><code>-o PATH</code>, <code>--indent N</code></td>
+<td>Où écrire, et l'indentation du JSON.</td>
+</tr>
+<tr>
+<td><code>--fail-severity info\|warning\|error</code></td>
+<td>Le constat le moins sévère qui fait échouer l'exécution. Par défaut : <code>error</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>ddi conform</code> se termine avec :</p>
+<ul>
+<li><strong>0</strong> : aucun constat n'atteint <code>--fail-severity</code> ;</li>
+<li><strong>1</strong> : un constat l'atteint, ou l'extra <code>spec</code> n'est pas installé ;</li>
+<li><strong>2</strong> : la comparaison ne peut pas s'exécuter : la spécification ne se lit
+  pas ou ne passe pas ses vérifications, <code>--module</code> ne nomme aucun module de
+  la spécification, <code>--edits strict</code> est demandé sans <code>match.edits</code> dans la
+  spécification, ou le fichier de l'instrument ne se lit pas.</li>
+</ul>
+<p>Depuis Python :</p>
+<!-- docs-test: skip -->
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">conform</span><span class="p">,</span> <span class="n">load_spec</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">report</span> <span class="o">=</span> <span class="n">conform</span><span class="p">(</span><span class="n">ddi</span><span class="o">.</span><span class="n">read_ddi</span><span class="p">(</span><span class="s2">"instrument.xml"</span><span class="p">),</span> <span class="n">load_spec</span><span class="p">(</span><span class="s2">"pet-survey.spec.yaml"</span><span class="p">))</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">findings</span><span class="p">:</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="nb">print</span><span class="p">(</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="n">finding</span><span class="o">.</span><span class="n">severity</span><span class="p">,</span> <span class="n">finding</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span> <span class="n">finding</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">finding</span><span class="o">.</span><span class="n">item</span><span class="p">,</span> <span class="n">finding</span><span class="o">.</span><span class="n">message</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<h3 id="ou-les-identifiants-sont-trouves">Où les identifiants sont trouvés<a class="headerlink" href="#ou-les-identifiants-sont-trouves" title="Permanent link">&para;</a></h3>
+<p>Chaque identifiant est cherché aux endroits que <code>match</code> énumère, dans
+l'ordre. Le premier endroit qui contient un identifiant, n'importe où dans
+l'instrument, est celui qui sert. Un identifiant trouvé là sur plusieurs
+constructions est signalé comme ambigu, jamais deviné.</p>
+<table>
+<thead>
+<tr>
+<th>Clé</th>
+<th>Par défaut</th>
+<th>Endroits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>question_id</code></td>
+<td><code>[construct_alias, item_name, item_alias, construct_name]</code></td>
+<td>l'alias de l'<code>r:OutParameter</code> de la construction de question, le nom de la question, son alias de sortie, le nom de la construction</td>
+</tr>
+<tr>
+<td><code>statement_id</code></td>
+<td><code>[construct_name, label, user_id]</code></td>
+<td>le <code>ConstructName</code>, l'<code>r:Label</code> et l'<code>r:UserID</code> de l'énoncé</td>
+</tr>
+<tr>
+<td><code>module_id</code></td>
+<td><code>[construct_name, label, user_id]</code></td>
+<td>les mêmes, sur une séquence</td>
+</tr>
+<tr>
+<td><code>module_depth</code></td>
+<td>toute profondeur</td>
+<td>la profondeur des séquences de modules : la séquence de l'instrument est 1, ses enfants 2</td>
+</tr>
+<tr>
+<td><code>edits</code></td>
+<td>aucun</td>
+<td>comment les contrôles sont enregistrés, pour <code>--edits strict</code></td>
+</tr>
+<tr>
+<td><code>lookup_types</code></td>
+<td>aucun</td>
+<td>un type de champ de recherche de données et le type de la spécification qu'il représente : <code>{Text: text, Integer: numeric}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Un module est une séquence. Une séquence de type <code>ConditionalChildContainer</code>
+est le corps d'une branche d'un <code>IfThenElse</code>, jamais un module ni une page ;
+une page est toute autre séquence à l'intérieur d'un module. Quand plusieurs
+endroits donnent des identifiants différents pour une même question (l'alias
+de sa construction et le nom de la question, par exemple), la question est
+trouvée par le premier, et <code>spec.item.id-sources-differ</code> dit ce que
+contiennent les autres.</p>
+<p>Un module trouvé sur plusieurs séquences est <code>spec.module.ambiguous</code> ; aucun
+de ses candidats n'est signalé comme module en trop, et les éléments qu'ils
+contiennent ne sont ni mal placés ni comparés pour leurs filtres. Un élément
+référencé à plusieurs endroits est comparé là où la spécification le place :
+il n'est mal placé que si aucun de ses endroits n'est dans son module, et
+chaque autre module qui le contient le signale comme <code>spec.item.extra</code>. Un
+domaine référencé (une <code>ManagedNumericRepresentation</code>, par exemple) est
+comparé comme un domaine en ligne ; d'un <code>StructuredMixedResponseDomain</code>,
+c'est le seul domaine du type de la spécification qui est comparé.</p>
+<h3 id="filtres">Filtres<a class="headerlink" href="#filtres" title="Permanent link">&para;</a></h3>
+<p>Le filtre d'un module est l'ensemble des conditions sur le chemin de
+l'instrument au module ; le filtre propre d'une question est l'ensemble des
+conditions entre son module et la question. La branche Then d'un
+<code>IfThenElse</code> ajoute sa condition ; une branche <code>ElseIf</code> ajoute sa condition
+et la négation des précédentes ; la branche Else ajoute la négation de
+toutes. Avec <code>gate_scope: page</code>, le filtre du module est attendu sur chaque
+page plutôt que sur le module. Une spécification ne donne pas de filtre propre
+à un énoncé : avec <code>gate_scope: page</code>, le filtre de sa page doit être l'un des
+filtres entre son module et lui (sinon <code>spec.gate.missing</code> ou
+<code>spec.gate.different</code>), et un autre filtre qui lui est propre n'est pas
+comparé.</p>
+<p>Quand les chemins vers un élément, dans son module, portent des filtres qui
+ne sont pas équivalents, son filtre est <code>spec.gate.unverifiable</code>.</p>
+<p>Avec l'extra <code>logic</code>, les filtres et les contrôles sont décidés comme le fait
+<code>decide()</code> après comparaison de leurs formes normales : un filtre écrit
+autrement qui concorde toujours avec celui de la spécification n'est pas
+signalé. Les domaines de réponse et les types de variables de la
+spécification disent ce qu'est chaque nom : un domaine numérique sans
+décimales est un nombre entier, si bien que <code>PetCount &gt; 0</code> et <code>PetCount &gt;= 1</code>
+concordent. Un filtre ou un contrôle qui diffère nomme un répondant sur lequel
+les deux divergent, dans le message et dans le champ <code>example</code> du constat :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Module pets is gated by PetCount &gt; 0; the spec says PetCount &gt; 1 (they differ when PetCount is 1).
+</span></code></pre></div>
+<p><code>--semantics syntactic</code> (<code>conform(semantics="syntactic")</code>) ne compare que les
+formes normales, comme sans l'extra ; <code>--semantics smt</code> échoue sans lui.</p>
+<p>Les sujets d'une condition <code>Neutral</code> sont suivis à travers leurs liaisons,
+celles de la dernière version de chaque élément, jusqu'à la question dont ils
+viennent. Une question que la spécification ne liste pas est nommée par son
+premier identifiant : un filtre lié à la mauvaise question se lit donc comme
+cette question ; une sortie d'une question qui en a plusieurs (la cellule
+d'une grille) est nommée par son alias ou, quand la spécification ne connaît
+pas cet alias, par la variable de la spécification qu'un alias du chemin
+nomme. Un sujet lié à aucune question est nommé par la sortie où ses liaisons
+aboutissent (le champ d'une recherche de données) : un alias ne cache jamais
+à quelle question, sortie ou champ un filtre est lié. Le code Blaise est lu avec les mots <code>blaise</code> de la
+spécification, ses entrées <code>{{name}}</code> nommées de la même façon.</p>
+<h3 id="controles-de-saisie">Contrôles de saisie<a class="headerlink" href="#controles-de-saisie" title="Permanent link">&para;</a></h3>
+<p>L'endroit où un instrument enregistre ses contrôles n'est pas connu en
+général : par défaut, chaque contrôle est donc signalé comme <strong>info : not
+verifiable (edit storage unknown)</strong>. <code>--edits off</code> laisse les contrôles de
+côté.</p>
+<p><code>--edits strict</code> les cherche, dès que la spécification dit comment ils sont
+enregistrés. Un contrôle est un <code>ComputationItem</code> marqué par un attribut
+d'utilisateur ; son identifiant est dans son <code>construct_name</code>, son <code>label</code>
+ou son <code>user_id</code> :</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">match</span><span class="p">:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">edits</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">attribute</span><span class="p">:</span><span class="w"> </span><span class="nv">kind</span><span class="p p-Indicator">,</span><span class="nt"> value</span><span class="p">:</span><span class="w"> </span><span class="nv">EditCheck</span><span class="p p-Indicator">,</span><span class="nt"> id</span><span class="p">:</span><span class="w"> </span><span class="nv">construct_name</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+<p>Colectica, par exemple, marque ses calculs d'un <code>r:UserAttributePair</code> dont
+l'<code>r:AttributeKey</code> est <code>x:TypeOfComputation</code> : donnez à <code>attribute</code> et à
+<code>value</code> ce que contiennent vos exports. Un contrôle sans tel calcul est
+<code>spec.edit.missing</code> ; un calcul dont la condition diffère de <code>when</code> est
+<code>spec.edit.different</code>.</p>
+<h2 id="regles">Règles<a class="headerlink" href="#regles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Règle</th>
+<th>Par défaut</th>
+<th>Signalée quand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spec.instrument.missing</code></td>
+<td>error</td>
+<td>Aucun instrument du fichier ne correspond à l'<code>instrument</code> de la spécification, ou le fichier n'en a aucun.</td>
+</tr>
+<tr>
+<td><code>spec.instrument.ambiguous</code></td>
+<td>error</td>
+<td>Plusieurs instruments correspondent ; nommez-en un avec <code>instrument</code> ou <code>--instrument</code>.</td>
+</tr>
+<tr>
+<td><code>spec.module.missing</code></td>
+<td>error</td>
+<td>Un module requis n'est pas dans l'instrument.</td>
+</tr>
+<tr>
+<td><code>spec.module.ambiguous</code></td>
+<td>error</td>
+<td>Plusieurs séquences portent l'identifiant d'un module.</td>
+</tr>
+<tr>
+<td><code>spec.module.extra</code></td>
+<td>warning</td>
+<td>Une séquence à la profondeur des modules que la spécification ne liste pas.</td>
+</tr>
+<tr>
+<td><code>spec.item.missing</code></td>
+<td>error</td>
+<td>Une question ou un énoncé est introuvable.</td>
+</tr>
+<tr>
+<td><code>spec.item.ambiguous</code></td>
+<td>error</td>
+<td>Plusieurs constructions portent l'identifiant d'une question ou d'un énoncé.</td>
+</tr>
+<tr>
+<td><code>spec.item.extra</code></td>
+<td>warning</td>
+<td>Une question ou un énoncé d'un module que la spécification n'y liste pas, ou qu'elle liste dans un autre module.</td>
+</tr>
+<tr>
+<td><code>spec.item.misplaced</code></td>
+<td>warning</td>
+<td>Une question ou un énoncé trouvé seulement dans d'autres modules que celui de la spécification.</td>
+</tr>
+<tr>
+<td><code>spec.item.id-sources-differ</code></td>
+<td>info</td>
+<td>Les sources d'identifiant d'une question ne concordent pas (le nom de sa construction et celui de la question, par exemple).</td>
+</tr>
+<tr>
+<td><code>spec.code.missing</code></td>
+<td>error</td>
+<td>Un code que la spécification liste n'est pas offert.</td>
+</tr>
+<tr>
+<td><code>spec.code.extra</code></td>
+<td>error</td>
+<td>Un code est offert que la spécification ne liste pas.</td>
+</tr>
+<tr>
+<td><code>spec.code.label</code></td>
+<td>warning</td>
+<td>Le libellé de catégorie d'un code diffère de celui de la spécification, dans une langue.</td>
+</tr>
+<tr>
+<td><code>spec.language.missing</code></td>
+<td>warning</td>
+<td>Le texte d'une question ou d'un énoncé, ou le libellé d'un code, n'est pas dans l'une des langues de la spécification.</td>
+</tr>
+<tr>
+<td><code>spec.domain.type</code></td>
+<td>error</td>
+<td>Le domaine de réponse est d'un autre genre (code, numérique, texte, date), ou un domaine mixte n'en contient aucun du type de la spécification.</td>
+</tr>
+<tr>
+<td><code>spec.domain.length</code></td>
+<td>error</td>
+<td>La longueur minimale ou maximale d'un domaine texte diffère.</td>
+</tr>
+<tr>
+<td><code>spec.domain.range</code></td>
+<td>error</td>
+<td>Les bornes d'un domaine numérique, ou leur inclusion, diffèrent.</td>
+</tr>
+<tr>
+<td><code>spec.domain.decimals</code></td>
+<td>warning</td>
+<td>Les décimales d'un domaine numérique diffèrent.</td>
+</tr>
+<tr>
+<td><code>spec.domain.unverifiable</code></td>
+<td>info</td>
+<td>Le domaine de la question ne peut pas être lu (plusieurs domaines, un domaine mixte qui en contient plusieurs du type de la spécification, une référence absente du fichier, une liste de codes introuvable).</td>
+</tr>
+<tr>
+<td><code>spec.gate.missing</code></td>
+<td>error</td>
+<td>La spécification filtre un module ou une question, et rien ne le filtre.</td>
+</tr>
+<tr>
+<td><code>spec.gate.different</code></td>
+<td>error</td>
+<td>Le filtre diffère de celui de la spécification ; les deux formes normales sont montrées.</td>
+</tr>
+<tr>
+<td><code>spec.gate.extra</code></td>
+<td>warning</td>
+<td>Un module ou une question est filtré, et la spécification ne le filtre pas.</td>
+</tr>
+<tr>
+<td><code>spec.gate.scope</code></td>
+<td>error</td>
+<td>Le filtre entoure chaque page là où la spécification dit le module, ou l'inverse.</td>
+</tr>
+<tr>
+<td><code>spec.gate.unverifiable</code></td>
+<td>warning</td>
+<td>Le filtre enregistré ne peut pas être relu en expression (un code d'opérateur non énuméré, un test de « ne sait pas », and et or mêlés, du JSON <code>Neutral</code> mal formé, du code natif que ce lecteur ne connaît pas), ou les chemins vers l'élément portent des filtres différents.</td>
+</tr>
+<tr>
+<td><code>spec.edit.unverifiable</code></td>
+<td>info</td>
+<td>Non vérifiable (enregistrement des contrôles inconnu) : signalé pour chaque contrôle, sauf avec <code>--edits strict</code> ou <code>off</code>.</td>
+</tr>
+<tr>
+<td><code>spec.edit.missing</code></td>
+<td>error</td>
+<td>Avec <code>--edits strict</code>, aucun calcul ne porte l'identifiant du contrôle.</td>
+</tr>
+<tr>
+<td><code>spec.edit.different</code></td>
+<td>error</td>
+<td>Avec <code>--edits strict</code>, la condition du calcul diffère de <code>when</code>.</td>
+</tr>
+<tr>
+<td><code>spec.variable.import-undeclared</code></td>
+<td>error</td>
+<td>Une variable importée n'est un champ d'aucune recherche de données que l'instrument atteint.</td>
+</tr>
+<tr>
+<td><code>spec.variable.import-type</code></td>
+<td>warning</td>
+<td>Le type du champ de recherche d'une variable importée diffère (avec <code>match.lookup_types</code>).</td>
+</tr>
+<tr>
+<td><code>spec.variable.derived-is-lookup</code></td>
+<td>error</td>
+<td>Une variable dérivée est un champ de recherche de données : elle est importée, non calculée.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="limites">Limites<a class="headerlink" href="#limites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Seuls les noms des codes d'opérateurs sont connus.</strong> Un code non
+  énuméré, et <code>DontKnow</code> et <code>NotDontKnow</code> (le langage d'expressions n'a pas
+  de « ne sait pas »), sont signalés comme non vérifiables.</li>
+<li><strong>La façon dont un énoncé traite une question sans réponse n'est pas
+  connue.</strong> <code>ddi-l</code> lit chaque comparaison comme fausse sans réponse,
+  comme le fait le langage d'expressions.</li>
+<li><strong>L'ordre de <code>and</code> et de <code>or</code> dans un groupe n'est pas connu.</strong> Les
+  filtres qui les mêlent dans un groupe sont signalés comme non vérifiables, et
+  aucun n'est compilé ainsi.</li>
+<li><strong>Sans l'extra <code>logic</code>, rien n'est calculé.</strong> La normalisation ne prouve
+  pas l'équivalence arithmétique : <code>x &gt; 3</code> et <code>x &gt;= 4</code> sont signalés comme
+  différents, même pour une question à nombre entier. Avec lui, ce que
+  <code>decide()</code> ne sait pas modéliser, comme du texte comparé par ordre, est
+  encore comparé par forme normale.</li>
+<li><strong>Une question comparée seulement par <code>=</code> et <code>!=</code> peut avoir plusieurs
+  réponses</strong>, sauf si son domaine dit autre chose. Deux filtres qui ne
+  diffèrent que pour plusieurs réponses (<code>x = 1 and x = 2</code> et
+  <code>x = 1 and x = 3</code>) sont signalés comme différents, sans répondant.</li>
+<li><strong>L'endroit où les contrôles sont enregistrés n'est pas connu en général</strong>,
+  d'où <code>--edits info</code> par défaut.</li>
+<li><strong>Une comparaison sous <code>not</code> reste telle qu'écrite</strong>, puisqu'elle diffère de
+  son contraire quand la question n'a pas de réponse.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../interoperability/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Travailler avec d&#39;autres outils">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Travailler avec d'autres outils
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../spreadsheet-import/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Charger du DDI depuis des tableurs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Charger du DDI depuis des tableurs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.edit", "content.code.annotate", "content.code.copy", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "palette.switcher", "palette.toggle", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
