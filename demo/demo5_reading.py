@@ -182,7 +182,7 @@ def main():
     output_path = output_dir / "demo5_parsed.xml"
 
     write_ddi(doc, output_path)
-    print(f"   Saved to: {output_path}")
+    print("   Saved parsed document successfully.")
 
     # 5. Re-read the saved file
     print("\n5. Re-reading saved file...")
