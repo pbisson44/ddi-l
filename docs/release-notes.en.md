@@ -6,7 +6,7 @@ description: >-
 
 # Release notes
 
-## 0.2.0 (unreleased)
+## 0.2.0
 
 ### Behaviour changes
 
