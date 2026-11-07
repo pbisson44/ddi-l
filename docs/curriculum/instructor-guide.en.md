@@ -18,16 +18,38 @@ The curriculum works in both modes:
   learners complete the exercises. Use the timing and facilitation tips
   below.
 - **Self-paced**: Learners read each module, follow the code examples,
-  and check their work against the [answer keys](answer-keys.md).
+  and check their work against the [answer keys](answer-keys.en.md).
 
 ## Suggested schedules
 
-| Format | Modules | Total time |
-| -------- | --------- | ------------ |
-| Half-day workshop (3.5 h) | 1-7 | Foundations, including opening files and validation |
-| Full-day workshop (6 h) | 1-10 | Foundations + CSV-to-DDI, code lists and questionnaire flows |
-| Two-day intensive (11 h) | 1-16 | Full curriculum with capstone |
-| Self-paced | 1 per session | ~3 weeks at 30-45 min/session |
+The workshop rows add up the instructor-led times the modules give, and the
+self-paced row their self-paced times, without breaks or setup. The
+[course overview](index.en.md#suggested-schedules) gives both totals for each
+format.
+
+| Format | Modules | Time | Covers |
+| -------- | --------- | ------------ | ------------ |
+| Half-day workshop | 1-5 | 3 h 20 min | What metadata is, setup, a first study, variables, concepts and universes |
+| Full-day workshop | 1-9 | 6 h 30 min | All of Tier 1 (including opening files and validation), CSV to DDI and code lists |
+| Three-day intensive | 1-17 | 16 h, about 5 h 20 min a day | Full curriculum with capstone |
+| Self-paced | One module per session | 12 h 20 min to 12 h 50 min | 17 sessions of 20 to 90 min, about 3 to 4 weeks |
+
+## Using the learning objectives
+
+Every module opens with numbered learning objectives (O1, O2, ...), tags each
+exercise and quiz question with the objectives it practises, and ends with a
+**Check yourself** list, one line per objective. Use them to run each session:
+
+- **Open with the objectives.** Read the module's objectives aloud, or show
+  the box, at the start of the session. Learners then know what they will be
+  able to do by the end, and you know what to check.
+- **Pick exercises by tag.** Short on time? Choose one exercise per objective
+  rather than the first few in the list. If a learner struggles with one
+  objective, give them another exercise with the same tag.
+- **Close with Check yourself as an exit ticket.** In the last five minutes,
+  learners tick the lines they can do. A line many learners leave unticked
+  tells you what to revisit at the start of the next session. In Module 17,
+  the rubric and the presentation do the same job.
 
 ## Environment setup checklist
 
@@ -148,8 +170,9 @@ pre-built container with everything installed.
   fields, weighted agreement, clerical review).
 - Stress that `source_variable_references` crossing study boundaries is the
   technical heart of linkage; the save-time warning is expected.
-- For NSO staff: connect to SDLE, B-LFE, and LEBAF, and to governance
-  (pre-approved vs reviewed linkages under the Directive on Microdata Linkage).
+- For NSO staff: connect to their own organization's linkage environment and
+  approval rules (for example, linkages that are pre-approved and those that
+  need a review).
 - Always end a linkage on de-identification and, often, synthetic data.
 - Time: 75 min.
 
@@ -179,14 +202,29 @@ pre-built container with everything installed.
 - Key module for archivists and NSO staff managing long-running surveys.
 - Show the XML before and after versioning so learners see the version
   number and rationale in the file.
-- Time: 50 min.
+- Time: 75 min.
 
-### Module 16: Capstone projects
+### Module 16: Advanced questionnaire specification
+
+- For spec writers and NSO staff who move from screen designs and workbooks
+  to a spec that instruments are checked against.
+- Put the missing-answer table of section 2 on the board first, and let
+  learners fill in the last row before you show it.
+- Stress that a gate kept in the tool's own code is a correct result, and
+  that an undocumented format is never guessed: the operators to use are the
+  ones the tool's documentation lists.
+- Time: 90 min.
+
+### Module 17: Capstone projects
 
 - Let learners choose their persona track. If in a mixed group, form
   teams by role.
-- Budget 90 min including a short presentation at the end.
-- Grade using the self-assessment rubric in the module.
+- Ask to see each learner's plan (objective O1) before they write code.
+- Budget 90 min including the 5-minute presentations at the end (O6).
+  Tracks B and D record two techniques each and run longest.
+- Score with the self-assessment rubric in the module: 80 points for the
+  skills every track shares, and 20 for the track's own techniques (flow,
+  lineage, linkage, custom fields or specification).
 
 ## Common mistakes across all modules
 
@@ -194,10 +232,11 @@ pre-built container with everything installed.
 | --------- | -------- | ----- |
 | Forgetting quotes around strings | 3 | Show the error message and explain |
 | Passing text instead of object to `question=` | 4 | Show the difference between `"age"` and `q1` |
-| Forgetting to import Category/Instrument | 9 | Show the import line explicitly |
+| Forgetting to import Category/Instrument | 9, 10 | Show the import line explicitly |
 | Confusing Question with QuestionConstruct | 10 | Question = content, QuestionConstruct = flow step |
 | Confusing question_references with source_variable_references | 11 | question_ref = what was asked, source_var_ref = what data was used |
 | Using `find()` with a name instead of identifier | 13 | Print `item.identifier` first |
+| Writing `not x > 30` where `x <= 30` was meant | 16 | Fill in the missing-answer table: they differ when `x` has no answer |
 | Not validating before saving | 3 onwards | Make validation a habit: always validate before save |
 
 ## Adapting for each audience
@@ -207,41 +246,43 @@ pre-built container with everything installed.
 | University students | Modules 1 (motivation), 3-7 (basics and checking your work) | SQL section in Module 8 |
 | Researchers | Modules 1, 4 and 5 (DDI vocabulary), 8 (CSV workflow), 9-13 (code lists, flows, lineage, linkage, properties) | Module 2 if they already use Python |
 | Archivists | Modules 2-7 (Python, open/modify, validation), 14 (custom fields), 15 (versioning) | Module 1 if DDI-experienced |
-| NSO staff | Modules 8-15 (full pipeline), especially 10 (flows), 11 (lineage), 12 (linkage), 14 (custom fields) | Modules 1 and 3 |
-| Developers automating DDI checks | Modules 3 and 7, then the [automation track](index.md#automation-track) | Modules 1, 4 and 5 |
+| NSO staff | Modules 8-16 (full pipeline), especially 10 (flows), 11 (lineage), 12 (linkage), 14 (custom fields), 16 (questionnaire specification) | Modules 1 and 3 |
+| Developers automating DDI checks | Modules 3 and 7, then the [automation track](index.en.md#automation-track) | Modules 1, 4 and 5 |
 
 ## Assessment approach
 
-- **Quizzes** (Modules 1-15): Formative, to check understanding. Review
+- **Quizzes** (Modules 1-16): Formative, to check understanding. Review
   answers as a group in classroom settings.
-- **Capstone** (Module 16): Summative, to evaluate the complete skill set.
-  Use the rubric in the module.
-- **Reflection questions** (Module 16): No right answer. Use for
+- **Check yourself** (every module): An exit ticket at the end of each
+  session. See [Using the learning objectives](#using-the-learning-objectives).
+- **Capstone** (Module 17): Summative. The rubric scores the module's six
+  objectives on one dataset, including the plan and the presentation.
+- **Reflection questions** (Module 17): No right answer. Use for
   discussion or written feedback.
 
 ## Terminology glossary (EN / FR)
 
 | English | French |
 | --------- | -------- |
-| Metadata | Metadonnees |
-| Study | Etude |
-| Survey | Enquete |
+| Metadata | Métadonnées |
+| Study | Étude |
+| Survey | Enquête |
 | Variable | Variable |
 | Question | Question |
 | Concept | Concept |
 | Universe | Univers |
 | Code list | Liste de codes |
-| Category | Categorie |
+| Category | Catégorie |
 | Validate | Valider |
 | Version | Version |
-| Custom property | Propriete personnalisee |
+| Custom property | Propriété personnalisée |
 | Agency | Agence |
 | Identifier | Identifiant |
 | Save | Enregistrer |
 | Open | Ouvrir |
-| Data linkage | Couplage de donnees |
-| Linkage key | Cle de couplage |
-| Custom field | Champ personnalise |
+| Data linkage | Couplage de données |
+| Linkage key | Clé de couplage |
+| Custom field | Champ personnalisé |
 | Extension point | Point d'extension |
 
 ## Collecting feedback
@@ -256,7 +297,7 @@ After the final session:
 
 ## Additional resources
 
-- [Automation track](index.md#automation-track): A workshop plan for teams
+- [Automation track](index.en.md#automation-track): A workshop plan for teams
   that automate validation
-- [Answer keys](answer-keys.md): Every exercise solution and quiz answer on
+- [Answer keys](answer-keys.en.md): Every exercise solution and quiz answer on
   one page

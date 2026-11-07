@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import dataclasses
 import importlib
 import io
 import json
@@ -47,61 +48,61 @@ schema_loader: Any = _LazyModule("ddi_l.schema_loader")
 
 
 def read(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.io.read_ddi`."""
+    """Forward to `ddi_l.io.read_ddi`."""
     from .io import read_ddi
 
     return read_ddi(*args, **kwargs)
 
 
 def write(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.io.write_ddi`."""
+    """Forward to `ddi_l.io.write_ddi`."""
     from .io import write_ddi
 
     return write_ddi(*args, **kwargs)
 
 
-def configure_lint(**kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.lint.configure_lint`."""
-    from .lint import configure_lint as _configure_lint
+def lint_configuration(**kwargs: Any) -> Any:
+    """Forward to `ddi_l.lint.lint_configuration`."""
+    from .lint import lint_configuration as _lint_configuration
 
-    return _configure_lint(**kwargs)
+    return _lint_configuration(**kwargs)
 
 
 def iter_registered_profiles() -> Any:
-    """Forward to :func:`ddi_l.lint.iter_registered_profiles`."""
+    """Forward to `ddi_l.lint.iter_registered_profiles`."""
     from .lint import iter_registered_profiles as _iter_profiles
 
     return _iter_profiles()
 
 
 def iter_registered_rules() -> Any:
-    """Forward to :func:`ddi_l.lint.iter_registered_rules`."""
+    """Forward to `ddi_l.lint.iter_registered_rules`."""
     from .lint import iter_registered_rules as _iter_rules
 
     return _iter_rules()
 
 
 def run_profile(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.lint.run_profile`."""
+    """Forward to `ddi_l.lint.run_profile`."""
     from .lint import run_profile as _run_profile
 
     return _run_profile(*args, **kwargs)
 
 
 def run_lint_rules(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.lint.run_lint`."""
+    """Forward to `ddi_l.lint.run_lint`."""
     from .lint import run_lint
 
     return run_lint(*args, **kwargs)
 
 
 def _coerce_json_payload(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.operations.coerce_json_payload`."""
+    """Forward to `ddi_l.operations.coerce_json_payload`."""
     return operations.coerce_json_payload(*args, **kwargs)
 
 
 def _wrap_element(*args: Any, **kwargs: Any) -> Any:
-    """Forward to :func:`ddi_l.operations.wrap_element`."""
+    """Forward to `ddi_l.operations.wrap_element`."""
     return operations.wrap_element(*args, **kwargs)
 
 
@@ -146,7 +147,7 @@ def _buffer_path_source(path: Path) -> BinaryIO:
         A seekable binary handle containing the serialized XML document.
 
     Notes:
-        Uses :class:`tempfile.SpooledTemporaryFile` so that small documents stay
+        Uses `tempfile.SpooledTemporaryFile` so that small documents stay
         in memory while larger files transparently spill to disk.
     """
     buffer = tempfile.SpooledTemporaryFile(  # noqa: SIM115
@@ -201,7 +202,7 @@ def _iter_sources(values: Sequence[str] | None) -> list[tuple[str, SchemaInput]]
 
     Returns:
         A list of ``(label, source)`` tuples where ``label`` is a human-readable
-        identifier for the source and ``source`` is a :class:`Path` or binary
+        identifier for the source and ``source`` is a `Path` or binary
         stream ready to be consumed by downstream helpers.
     """
     inputs = list(values or ["-"])
@@ -306,7 +307,7 @@ def _render_issues_text(
     return "\n".join(lines) + "\n"
 
 
-def _format_table(rows: Sequence[tuple[str, str]], headers: tuple[str, ...]) -> str:
+def _format_table(rows: Sequence[Sequence[str]], headers: tuple[str, ...]) -> str:
     """Render a simple padded table from ``rows``."""
     if not rows:
         widths = [len(header) for header in headers]
@@ -431,11 +432,17 @@ def _finalize_statuses(statuses: Sequence[tuple[str, int]]) -> int:
     return 0 if all(status == 0 for _, status in statuses) else 1
 
 
-_SEVERITY_LEVELS: dict[str, int] = {"warning": 1, "error": 2}
+# Lint findings can only carry these (``ddi_l.lint.SEVERITIES``); ``info``
+# reports without failing unless ``--fail-severity info`` asks it to.
+_SEVERITY_LEVELS: dict[str, int] = {"info": 0, "warning": 1, "error": 2}
 
 
 def _severity_level(value: str | None) -> int:
-    """Coerce a severity string to an integer priority."""
+    """Coerce a severity string to an integer priority.
+
+    A missing or unknown severity counts as an error, so it fails rather than
+    slipping past the gate.
+    """
     if value is None:
         return max(_SEVERITY_LEVELS.values())
     return _SEVERITY_LEVELS.get(value.lower(), max(_SEVERITY_LEVELS.values()))
@@ -711,13 +718,15 @@ def _run_from_json(args: argparse.Namespace) -> int:
                     xml_declaration=not args.no_declaration,
                     encoding=args.encoding,
                     version=args.version,
+                    # Printed as text: no byte-order mark in it.
+                    bom=False,
                 )
                 buffer.seek(0)
                 payload = buffer.read().decode(args.encoding)  # type: ignore[assignment]
                 _write_labeled_payload(
                     payload,
                     label=label,
-                    indent=args.indent if hasattr(args, "indent") else None,
+                    indent=None,
                     with_labels=True,
                     destination=destination,
                 )
@@ -790,6 +799,59 @@ def _resolve_destination_for_source(
     raise ValueError(
         "When providing multiple inputs the output must be '-' or a directory."
     )
+
+
+def _run_explain_condition(args: argparse.Namespace) -> int:
+    """Explain the condition held by one item of a Colectica export."""
+    from .colectica_logic import explain_condition
+
+    try:
+        document = read(Path(args.input))
+        explanation = explain_condition(document, args.identifier)
+    except KeyError as error:
+        print(f"ddi explain-condition: {error.args[0]}", file=sys.stderr)
+        return 1
+    except _cli_exception_types() as error:
+        print(f"ddi explain-condition: {error}", file=sys.stderr)
+        return 1
+
+    if args.format == "json":
+        payload = dataclasses.asdict(explanation)
+        sys.stdout.write(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+        return 0
+
+    def line(label: str, value: object) -> None:
+        sys.stdout.write(f"{label:<18}{value}\n")
+
+    line(
+        "Item",
+        f"{explanation.item_type} {explanation.identifier} "
+        f"(version {explanation.version})",
+    )
+    line("Language", explanation.language or "(no command)")
+    if explanation.error:
+        line("Error", explanation.error)
+    if explanation.stored_synopsis is not None:
+        line("Stored synopsis", explanation.stored_synopsis)
+    if explanation.rendered_synopsis is not None:
+        line("Rendered", explanation.rendered_synopsis)
+    if explanation.unnamed_subjects:
+        line(
+            "Synopsis mismatch",
+            "the stored synopsis does not name "
+            + ", ".join(explanation.unnamed_subjects),
+        )
+    for language, text in explanation.descriptions.items():
+        line(f"Description {language}".rstrip(), text)
+    line("Inputs used", ", ".join(explanation.used_inputs) or "(none)")
+    unused = explanation.unused_inputs
+    line(
+        "Inputs unused",
+        "(not known: a command does not parse, or is a data lookup)"
+        if unused is None
+        else ", ".join(unused) or "(none)",
+    )
+    return 0
 
 
 def _run_versions(args: argparse.Namespace) -> int:
@@ -916,6 +978,206 @@ def _run_tables_import(args: argparse.Namespace) -> int:
     return 0
 
 
+_SPEC_EXTRA_HINT = 'Error: this command needs the spec extra: pip install "ddi-l[spec]"'
+
+
+def _has_spec_extra() -> bool:
+    """Whether the ``spec`` extra imports; prints the one-line hint if not."""
+    try:
+        import jsonschema  # noqa: F401
+        import yaml  # noqa: F401
+    except ImportError:
+        print(_SPEC_EXTRA_HINT, file=sys.stderr)
+        return False
+    return True
+
+
+def _write_text(text: str, output: str) -> None:
+    """Write ``text`` to the ``output`` path, or to stdout for ``-``."""
+    if output == "-":
+        sys.stdout.write(text)
+        sys.stdout.flush()
+        return
+    Path(output).write_text(text, encoding="utf-8")
+
+
+def _run_spec_validate(args: argparse.Namespace) -> int:
+    """Check a spec against the schema and against itself."""
+    if not _has_spec_extra():
+        return 1
+    from .spec.model import SpecError, load_spec
+
+    try:
+        spec = load_spec(args.spec)
+    except SpecError as error:
+        for problem in error.problems:
+            print(f"{args.spec}: {problem}", file=sys.stderr)
+        return 1
+    questions = sum(len(module.questions) for module in spec.modules)
+    print(
+        f"{args.spec}: the spec {spec.name!r} is valid: {len(spec.modules)} "
+        f"module(s), {questions} question(s), {len(spec.edits)} edit(s)."
+    )
+    return 0
+
+
+def _run_spec_schema(args: argparse.Namespace) -> int:
+    """Write the JSON Schema of specs."""
+    if not _has_spec_extra():
+        return 1
+    from .spec.model import spec_schema
+
+    text = json.dumps(spec_schema(), indent=2, ensure_ascii=False) + "\n"
+    _write_text(text, args.output)
+    return 0
+
+
+def _run_spec_example(args: argparse.Namespace) -> int:
+    """Write the example spec."""
+    if not _has_spec_extra():
+        return 1
+    from .spec.model import example_spec
+
+    _write_text(example_spec(args.format), args.output)
+    return 0
+
+
+def _write_conform_table(report: Any, destination: str | BinaryIO) -> None:
+    """Write a conformance report as a padded table, with its summary."""
+    rows = [
+        (
+            finding.module or "-",
+            finding.severity,
+            finding.rule_id,
+            finding.item or "-",
+            finding.message,
+        )
+        for finding in report.findings
+    ]
+    table = _format_table(rows, ("module", "severity", "rule", "item", "message"))
+    summary = report.summary
+    lines = [
+        f"{report.spec}: {report.instrument or 'no instrument'}",
+        *(line.rstrip() for line in table.splitlines()),
+        f"{summary['error']} error(s), {summary['warning']} warning(s), "
+        f"{summary['info']} info.",
+    ]
+    text = "\n".join(lines) + "\n"
+    if destination is sys.stdout.buffer:
+        sys.stdout.write(text)
+        sys.stdout.flush()
+        return
+    Path(destination).write_text(text, encoding="utf-8")  # type: ignore[arg-type]
+
+
+def _run_conform(args: argparse.Namespace) -> int:
+    """Compare an instrument with a questionnaire spec."""
+    if not _has_spec_extra():
+        return 1
+    from .spec import ConformError, SpecError, conform, load_spec
+
+    try:
+        spec = load_spec(args.spec)
+    except SpecError as error:
+        for problem in error.problems:
+            print(f"{args.spec}: {problem}", file=sys.stderr)
+        return 2
+    except OSError as error:
+        print(f"ddi conform: {error}", file=sys.stderr)
+        return 2
+    try:
+        document = read(_load_source(args.document))
+    except _cli_exception_types() as error:
+        _handle_cli_error(error)
+        return 2
+    try:
+        report = conform(
+            document,
+            spec,
+            module=args.module,
+            edits=args.edits,
+            instrument=args.instrument,
+            semantics=args.semantics,
+        )
+    except ConformError as error:
+        print(f"ddi conform: {error}", file=sys.stderr)
+        return 2
+    destination = _resolve_destination(args.output)
+    if args.format == "table":
+        _write_conform_table(report, destination)
+    else:
+        _write_labeled_payload(
+            report.as_dict(),
+            label=args.document,
+            indent=args.indent,
+            with_labels=False,
+            destination=destination,
+        )
+    return 1 if report.failed(args.fail_severity) else 0
+
+
+def _lint_options_from_args(args: argparse.Namespace) -> dict[str, object]:
+    """Lint options given by ``--lint-config``, ``--known-names`` and friends.
+
+    Raises:
+        OSError: If a file cannot be read.
+        ValueError: If ``--lint-config`` is not a JSON object.
+    """
+    options: dict[str, object] = {}
+    config_path = getattr(args, "lint_config", None)
+    if config_path:
+        loaded = json.loads(Path(config_path).read_text(encoding="utf-8"))
+        if not isinstance(loaded, dict):
+            raise ValueError(f"{config_path}: --lint-config takes a JSON object.")
+        options.update(
+            {
+                key: tuple(value) if isinstance(value, list) else value
+                for key, value in loaded.items()
+            }
+        )
+    if getattr(args, "required_language", None):
+        options["required_languages"] = tuple(args.required_language)
+    names_path = getattr(args, "known_names", None)
+    if names_path:
+        lines = Path(names_path).read_text(encoding="utf-8").splitlines()
+        names = [line.split("#", 1)[0].strip() for line in lines]
+        configured = options.get("known_names", ())
+        known: tuple[str, ...] = tuple(
+            configured if isinstance(configured, (list, tuple)) else ()
+        )
+        options["known_names"] = known + tuple(name for name in names if name)
+    return options
+
+
+def _write_findings_table(
+    schema_issues: Sequence[schema_loader.SchemaValidationIssue],
+    lint_findings: Sequence[LintFinding],
+    *,
+    label: str | None,
+    destination: str | BinaryIO,
+) -> None:
+    """Write findings as a padded table: severity, rule and message."""
+    rows = [
+        (issue.severity or "error", "schema", issue.message) for issue in schema_issues
+    ]
+    order = {"error": 0, "warning": 1, "info": 2}
+    rows.extend(
+        (finding.severity, finding.rule_id, finding.message)
+        for finding in sorted(
+            lint_findings, key=lambda item: order.get(item.severity, 3)
+        )
+    )
+    table = _format_table(rows, ("severity", "rule", "message"))
+    text = "\n".join(line.rstrip() for line in table.splitlines()) + "\n"
+    if label is not None:
+        text = f"{label}\n{text}"
+    if destination is sys.stdout.buffer:
+        sys.stdout.write(text)
+        sys.stdout.flush()
+        return
+    Path(destination).write_text(text, encoding="utf-8")  # type: ignore[arg-type]
+
+
 def _run_lint(args: argparse.Namespace) -> int:
     """Run lint rules against document(s) and emit findings as JSON."""
     if getattr(args, "list_rules", False) or getattr(args, "list_profiles", False):
@@ -943,8 +1205,18 @@ def _run_lint(args: argparse.Namespace) -> int:
             args.required_citation_language
         )
 
-    if lint_configuration_updates:
-        configure_lint(**lint_configuration_updates)
+    try:
+        lint_configuration_updates.update(_lint_options_from_args(args))
+    except (OSError, ValueError) as error:
+        print(f"ddi lint: {error}", file=sys.stderr)
+        return 2
+
+    # The options apply to this command's calls, not to the process.
+    try:
+        configuration = lint_configuration(**lint_configuration_updates)
+    except (TypeError, ValueError) as error:
+        print(f"ddi lint: {error}", file=sys.stderr)
+        return 2
 
     sources = _iter_sources(getattr(args, "inputs", None))
     multiple_inputs = len(sources) > 1
@@ -966,6 +1238,8 @@ def _run_lint(args: argparse.Namespace) -> int:
                     document,
                     args.profile,
                     include_schema=args.validate,
+                    configuration=configuration,
+                    version=args.version,
                 )
                 lint_findings = [
                     finding
@@ -983,7 +1257,9 @@ def _run_lint(args: argparse.Namespace) -> int:
                     )
                 lint_findings = [
                     finding
-                    for finding in run_lint_rules(document, rules=selected_rules)
+                    for finding in run_lint_rules(
+                        document, rules=selected_rules, configuration=configuration
+                    )
                     if finding.rule_id not in ignored_rules
                 ]
 
@@ -994,20 +1270,30 @@ def _run_lint(args: argparse.Namespace) -> int:
                 ],
                 "lint_findings": [finding.as_dict() for finding in lint_findings],
             }
+            table = getattr(args, "format", "json") == "table"
+            suffix = ".lint.txt" if table else ".lint.json"
             destination = _resolve_destination_for_source(
                 getattr(args, "output", "-"),
                 source_label=label,
                 multiple_inputs=multiple_inputs,
-                fallback_suffix=".lint.json",
-                suffix=".lint.json",
+                fallback_suffix=suffix,
+                suffix=suffix,
             )
-            _write_labeled_payload(
-                payload,
-                label=label,
-                indent=args.indent,
-                with_labels=getattr(args, "with_labels", False),
-                destination=destination,
-            )
+            if table:
+                _write_findings_table(
+                    schema_issues,
+                    lint_findings,
+                    label=label if multiple_inputs else None,
+                    destination=destination,
+                )
+            else:
+                _write_labeled_payload(
+                    payload,
+                    label=label,
+                    indent=args.indent,
+                    with_labels=getattr(args, "with_labels", False),
+                    destination=destination,
+                )
 
             should_fail = _has_failing_findings(
                 schema_issues, lint_findings, fail_severity=args.fail_severity
@@ -1152,12 +1438,13 @@ def build_parser() -> argparse.ArgumentParser:
         version=f"ddi-l {__version__} (DDI Lifecycle {DEFAULT_SCHEMA_VERSION})",
         help="Show the ddi-l version and exit.",
     )
-    backend_options = argparse.ArgumentParser(add_help=False)
-    backend_options.add_argument(
+    debug_option = argparse.ArgumentParser(add_help=False)
+    debug_option.add_argument(
         "--debug",
         action="store_true",
         help="Re-raise unexpected errors with a full traceback.",
     )
+    backend_options = argparse.ArgumentParser(add_help=False, parents=[debug_option])
     # Only the "python" backend ships today; the options stay accepted for
     # scripts and plugins but are hidden from --help.
     backend_options.add_argument("--validation-backend", help=argparse.SUPPRESS)
@@ -1356,11 +1643,12 @@ def build_parser() -> argparse.ArgumentParser:
     roundtrip_parser.add_argument(
         "--layout",
         choices=("default", "colectica"),
-        default="default",
+        default=None,
         help=(
-            "Output layout. 'colectica' writes a FragmentInstance exactly as "
-            "Colectica Designer does, so an export read and written back is "
-            "byte-identical."
+            "Output layout for the whole file. 'colectica' writes a "
+            "FragmentInstance exactly as Colectica Designer does; 'default' "
+            "is this library's layout. Without it, the unchanged parts are "
+            "written as read, byte for byte."
         ),
     )
     roundtrip_parser.set_defaults(func=_run_roundtrip)
@@ -1379,6 +1667,7 @@ def build_parser() -> argparse.ArgumentParser:
     template_parser = tables_commands.add_parser(
         "template",
         help="Write the metadata tables to fill in.",
+        parents=[debug_option],
     )
     template_parser.add_argument(
         "destination",
@@ -1409,6 +1698,7 @@ def build_parser() -> argparse.ArgumentParser:
     import_parser = tables_commands.add_parser(
         "import",
         help="Load metadata tables and write them as DDI XML.",
+        parents=[debug_option],
     )
     import_parser.add_argument(
         "source", help="A folder of CSV files, a .zip of them, or an .xlsx workbook."
@@ -1439,6 +1729,119 @@ def build_parser() -> argparse.ArgumentParser:
         "--language", help="The language of names; overrides settings."
     )
     import_parser.set_defaults(func=_run_tables_import)
+
+    spec_parser = subparsers.add_parser(
+        "spec",
+        help="Check or start a questionnaire spec (needs the spec extra).",
+    )
+    spec_commands = spec_parser.add_subparsers(dest="spec_command")
+
+    def _spec_help(_args: argparse.Namespace) -> int:
+        spec_parser.print_help()
+        return 1
+
+    spec_parser.set_defaults(func=_spec_help)
+    spec_validate_parser = spec_commands.add_parser(
+        "validate",
+        help="Check a spec against the schema and against itself.",
+        parents=[debug_option],
+    )
+    spec_validate_parser.add_argument("spec", help="The spec: YAML, or .json.")
+    spec_validate_parser.set_defaults(func=_run_spec_validate)
+    spec_schema_parser = spec_commands.add_parser(
+        "schema",
+        help="Write the JSON Schema a spec is checked against.",
+        parents=[debug_option],
+    )
+    spec_schema_parser.add_argument(
+        "-o",
+        "--output",
+        default="-",
+        help="Destination path, or '-' for stdout (default).",
+    )
+    spec_schema_parser.set_defaults(func=_run_spec_schema)
+    spec_example_parser = spec_commands.add_parser(
+        "example",
+        help="Write the example spec of the fictional Pet survey.",
+        parents=[debug_option],
+    )
+    spec_example_parser.add_argument(
+        "--format", choices=("yaml", "json"), default="yaml", help="Default: yaml."
+    )
+    spec_example_parser.add_argument(
+        "-o",
+        "--output",
+        default="-",
+        help="Destination path, or '-' for stdout (default).",
+    )
+    spec_example_parser.set_defaults(func=_run_spec_example)
+
+    conform_parser = subparsers.add_parser(
+        "conform",
+        help=(
+            "Compare an instrument with a questionnaire spec (needs the spec extra)."
+        ),
+        parents=[debug_option],
+    )
+    conform_parser.add_argument(
+        "document",
+        metavar="INSTRUMENT",
+        help="The DDI file holding the instrument, or '-' for stdin.",
+    )
+    conform_parser.add_argument(
+        "--spec", required=True, help="The spec: YAML, or .json."
+    )
+    conform_parser.add_argument(
+        "--module", metavar="ID", help="Compare only this module of the spec."
+    )
+    conform_parser.add_argument(
+        "--instrument",
+        metavar="NAME",
+        help=(
+            "The instrument to compare when the file has several: its name, "
+            "label, user ID or ID."
+        ),
+    )
+    conform_parser.add_argument(
+        "--edits",
+        choices=("off", "info", "strict"),
+        default="info",
+        help=(
+            "info (default): report each edit as not verifiable; strict: find "
+            "and compare edit checks as the spec's match.edits says; off: skip."
+        ),
+    )
+    conform_parser.add_argument(
+        "--semantics",
+        choices=("syntactic", "smt"),
+        help=(
+            "How gates and edits are compared: syntactic, by normal form; smt, "
+            "exactly, with a respondent each difference shows in (needs the "
+            "logic extra). Default: smt when the logic extra is installed."
+        ),
+    )
+    conform_parser.add_argument(
+        "--format",
+        choices=("json", "table"),
+        default="json",
+        help="json (default), or a table for reading.",
+    )
+    conform_parser.add_argument(
+        "-o",
+        "--output",
+        default="-",
+        help="Destination path, or '-' for stdout (default).",
+    )
+    conform_parser.add_argument(
+        "--indent", type=int, default=2, help="Indentation of the JSON output."
+    )
+    conform_parser.add_argument(
+        "--fail-severity",
+        choices=tuple(_SEVERITY_LEVELS),
+        default="error",
+        help="Exit 1 when a finding is at least this severe (default: error).",
+    )
+    conform_parser.set_defaults(func=_run_conform)
 
     lint_parser = subparsers.add_parser(
         "lint",
@@ -1532,6 +1935,37 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     lint_parser.add_argument(
+        "--format",
+        choices=("json", "table"),
+        default="json",
+        help="Output findings as JSON (default) or as a human-readable table.",
+    )
+    lint_parser.add_argument(
+        "--required-language",
+        action="append",
+        dest="required_language",
+        help=(
+            "BCP 47 language tag that question texts, statements and labels must have "
+            "(i18n.missing-language); repeat for each language."
+        ),
+    )
+    lint_parser.add_argument(
+        "--known-names",
+        metavar="FILE",
+        help=(
+            "File of names, one per line, that text may pipe as #{name} because the "
+            "run-time system supplies them (text.pipe-undeclared)."
+        ),
+    )
+    lint_parser.add_argument(
+        "--lint-config",
+        metavar="FILE",
+        help=(
+            "JSON object of lint options (LintConfiguration fields), such as "
+            '{"placeholder_patterns": [...], "ui_chrome_tokens": [...]}.'
+        ),
+    )
+    lint_parser.add_argument(
         "--skip-rule",
         "--disable-rule",
         action="append",
@@ -1567,13 +2001,39 @@ def build_parser() -> argparse.ArgumentParser:
         # `--fail-severity warning` for a strict CI gate.
         help=(
             "Minimum severity that produces a non-zero exit status (default: error); "
-            "use 'warning' to fail on warnings too."
+            "use 'warning' to fail on warnings too, or 'info' to fail on any finding."
         ),
     )
     lint_parser.set_defaults(func=_run_lint)
 
+    explain_parser = subparsers.add_parser(
+        "explain-condition",
+        help="Explain the condition of an IfThenElse, loop or ComputationItem.",
+        description=(
+            "Print the synopsis Colectica stored for an item's condition beside "
+            "one rendered from its logic (subjects named after their questions, "
+            "codes by value), the condition's description, and which of the "
+            "item's inputs the condition (or an ElseIf branch) uses. A Loop's "
+            "condition is its LoopWhile."
+        ),
+        parents=[debug_option],
+    )
+    explain_parser.add_argument("input", help="Path to the DDI file.")
+    explain_parser.add_argument(
+        "identifier", help="The r:ID of the item; its highest version is used."
+    )
+    explain_parser.add_argument(
+        "--format",
+        choices=("text", "json"),
+        default="text",
+        help="Human-readable text (default) or JSON.",
+    )
+    explain_parser.set_defaults(func=_run_explain_condition)
+
     versions_parser = subparsers.add_parser(
-        "versions", help="List supported DDI schema releases."
+        "versions",
+        help="List supported DDI schema releases.",
+        parents=[debug_option],
     )
     versions_parser.add_argument(
         "--indent", type=int, default=2, help="Indentation to use for JSON output."
@@ -1623,6 +2083,7 @@ def build_parser() -> argparse.ArgumentParser:
             "opening the root is redirected there. "
             "Install with: pip install 'ddi-l[server]'"
         ),
+        parents=[debug_option],
     )
     serve_parser.add_argument(
         "--host",

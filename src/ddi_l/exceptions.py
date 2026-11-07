@@ -313,7 +313,7 @@ class DDIParseError(DDIReadError):
     """Raised when XML parsing fails.
 
     This covers syntax errors, malformed XML, and structural issues
-    encountered during parsing. It is a :class:`DDIReadError`, so code that
+    encountered during parsing. It is a `DDIReadError`, so code that
     handles read failures also handles malformed input.
 
     Attributes:
@@ -572,10 +572,15 @@ class DDIReferenceWarning(UserWarning):
 
     Attributes:
         records: The unresolved references, as
-            :class:`~ddi_l.models.base.ReferenceWarning` records.
+            `ReferenceWarning` records.
     """
 
     def __init__(self, records: Sequence[Any]) -> None:
         self.records = tuple(records)
+        # The records are the argument, so the warning can be made again
+        # from its args: copied, pickled, or passed between processes.
+        super().__init__(self.records)
+
+    def __str__(self) -> str:
         details = "; ".join(record.message.rstrip(".") for record in self.records)
-        super().__init__(f"{len(self.records)} unresolved reference(s): {details}")
+        return f"{len(self.records)} unresolved reference(s): {details}"

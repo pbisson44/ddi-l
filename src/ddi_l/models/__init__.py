@@ -43,6 +43,7 @@ from .conceptualcomponent import ConceptualComponent
 
 # Data collection - all exports from datacollection package
 from .datacollection import (
+    Binding,
     CollectionActivity,
     CollectionEvent,
     ComputationItem,
@@ -56,6 +57,7 @@ from .datacollection import (
     GenerationInstruction,
     GridDimension,
     IfThenElse,
+    InParameter,
     Instruction,
     InstructionGroup,
     Instrument,
@@ -160,6 +162,7 @@ from .study import StudyUnit
 __all__ = [
     # Archive
     "Archive",
+    "Binding",
     # Logical product
     "Category",
     "CategoryScheme",
@@ -200,6 +203,7 @@ __all__ = [
     "GridDimension",
     "Group",
     "IfThenElse",
+    "InParameter",
     # Reusable
     "InformationClassification",
     "Instruction",

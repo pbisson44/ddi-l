@@ -19,25 +19,70 @@ Python, et `ddi-l` écrit le XML. La bibliothèque lit, valide et analyse le
 3.2 et 3.3, ce qui permet aux archives de vérifier leurs fonds plus anciens
 avec le même outil, et elle produit les nouveaux documents en DDI 3.3.
 
-<div class="ddi-cta-group">
+<div class="ddi-cta-group" markdown>
 
-<a class="md-button md-button--primary" href="installation.md#installer-depuis-pypi">Installer ddi-l</a>
-<a class="md-button md-button--secondary md-button--outlined" href="curriculum/index.md">Commencer le programme de formation</a>
+[Installer ddi-l](installation.fr.md#installer-depuis-pypi){ .md-button .md-button--primary }
+[Commencer le programme de formation](curriculum/index.fr.md){ .md-button .md-button--secondary .md-button--outlined }
 
 </div>
 
 ## Comment s'articule une étude
 
-Une étude DDI contient les questions posées. Chaque réponse devient une
-variable de votre jeu de données, et chaque variable mesure un concept.
+Une étude DDI (un `StudyUnit`) range ses métadonnées en modules, les cadres
+ci-dessous : concepts et univers dans un `ConceptualComponent`, le
+questionnaire et ses questions dans un `DataCollection`, variables, listes de
+codes et catégories dans un `LogicalProduct`, dispositions d'enregistrement dans
+un `PhysicalDataProduct`, chaque fichier de données dans un `PhysicalInstance`,
+et organisations et personnes dans un `Archive`. Les éléments se renvoient les
+uns aux autres d'un module à l'autre (flèches pointillées) : une variable à la
+question qui l'a collectée, au concept qu'elle mesure, à son univers et à sa
+liste de codes ; un fichier de données à la disposition d'enregistrement et à
+l'enregistrement logique qui listent ses variables.
 
 ```mermaid
-flowchart LR
+flowchart TB
     accTitle: Comment s'articule une étude DDI
-    accDescr: Une étude contient des questions. Chaque question est enregistrée dans une variable, et chaque variable mesure un concept.
-    S[Étude] -->|pose| Q[Questions]
-    Q -->|enregistrées dans| V[Variables]
-    V -->|mesurent| C[Concepts]
+    accDescr: Un StudyUnit range ses métadonnées en modules : concepts et univers dans un ConceptualComponent ; l'instrument, ses constructions de contrôle et les questions dans un DataCollection ; variables, listes de codes, catégories et relations de données dans un LogicalProduct ; dispositions d'enregistrement dans un PhysicalDataProduct ; chaque fichier de données dans un PhysicalInstance ; organisations et personnes dans un Archive. Les flèches pointillées sont des références : une variable renvoie à sa question, à son concept, à son univers et à sa liste de codes ; un fichier de données renvoie à sa disposition d'enregistrement et à sa relation de données, qui listent ses variables.
+    subgraph SU["StudyUnit"]
+        direction TB
+        subgraph CC["ConceptualComponent"]
+            CON[Concept]
+            UNI[Universe]
+        end
+        subgraph DC["DataCollection"]
+            INS[Instrument]
+            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
+            QI[QuestionItem]
+        end
+        subgraph LP["LogicalProduct"]
+            VAR[Variable]
+            CL[CodeList]
+            CAT[Category]
+            DR["DataRelationship\n(LogicalRecord)"]
+        end
+        subgraph PDP["PhysicalDataProduct"]
+            RL[RecordLayout]
+        end
+        subgraph PI["PhysicalInstance"]
+            DF["DataFileIdentification\n(le fichier de données)"]
+        end
+        subgraph AR["Archive"]
+            ORG["Organization,\nIndividual"]
+        end
+    end
+    INS -.->|ControlConstructReference| CTL
+    CTL -.->|QuestionReference| QI
+    QI -.->|ConceptReference| CON
+    QI -.->|"CodeDomain:\nCodeListReference"| CL
+    VAR -.->|QuestionReference| QI
+    VAR -.->|ConceptReference| CON
+    VAR -.->|UniverseReference| UNI
+    VAR -.->|"CodeRepresentation:\nCodeListReference"| CL
+    CL -.->|"Code:\nCategoryReference"| CAT
+    DR -.->|VariableUsedReference| VAR
+    RL -.->|"DataItem:\nVariableReference"| VAR
+    PI -.->|RecordLayoutReference| RL
+    PI -.->|DataRelationshipReference| DR
 ```
 
 ## Démarrage rapide
@@ -77,7 +122,7 @@ ddi lint enquete-menages.xml
 ## Installer
 
 Installez `ddi-l` depuis PyPI. L'extra `full` ajoute le moteur `lxml`, plus
-rapide (voir [Installation](installation.md)).
+rapide (voir [Installation](installation.fr.md)).
 
 === "pip"
     ```bash
@@ -102,42 +147,42 @@ rapide (voir [Installation](installation.md)).
 
 - **Apprendre**
 
-    Un cours en 16 modules qui vous mène de « qu'est-ce que les
+    Un cours en 17 modules qui vous mène de « qu'est-ce que les
     métadonnées ? » à un paquet DDI entièrement documenté, validé et
     versionné. Aucune expérience du DDI ni du XML n'est requise.
 
-    [Programme de formation →](curriculum/index.md){ .md-button .md-button--primary }
+    [Programme de formation →](curriculum/index.fr.md){ .md-button .md-button--primary }
 
 - **Valider**
 
     Validez les documents par rapport aux schémas DDI, exécutez les règles de
     lint et ajoutez ces contrôles à la CI.
 
-    [Guide de validation →](validation.md){ .md-button .md-button--secondary .md-button--outlined }
+    [Guide de validation →](validation.fr.md){ .md-button .md-button--secondary .md-button--outlined }
 
 - **Utiliser la CLI**
 
     Validez, faites l'aller-retour et convertissez des fichiers avec la
     commande `ddi`.
 
-    [Recettes CLI →](cli-recipes.md){ .md-button .md-button--secondary .md-button--outlined }
+    [Recettes CLI →](cli-recipes.fr.md){ .md-button .md-button--secondary .md-button--outlined }
 
 - **Vous n'utilisez pas Python ?**
 
     Appelez `ddi-l` depuis R avec reticulate, ou depuis n'importe quel langage
     par son API HTTP.
 
-    [Depuis R →](r-users.md){ .md-button .md-button--secondary .md-button--outlined }
-    [API HTTP →](server.md){ .md-button .md-button--secondary .md-button--outlined }
+    [Depuis R →](r-users.fr.md){ .md-button .md-button--secondary .md-button--outlined }
+    [API HTTP →](server.fr.md){ .md-button .md-button--secondary .md-button--outlined }
 
 </div>
 
 Pour un tour d'horizon de l'API `Document` en une page, consultez le
-[guide d'utilisation](user-guide.md). La [référence de l'API](api.md) et la
-[référence des modèles](models.md) décrivent chaque classe. Pour contribuer,
+[guide d'utilisation](user-guide.fr.md). La [référence de l'API](api.fr.md) et la
+[référence des modèles](models.fr.md) décrivent chaque classe. Pour contribuer,
 commencez par le
 [guide des contributeurs](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md) ;
-le [guide de développement](DEVELOPMENT.md) détaille l'architecture, la
+le [guide de développement](DEVELOPMENT.fr.md) détaille l'architecture, la
 génération de code et le processus de publication.
 
 ## Citer ddi-l
@@ -146,7 +191,7 @@ Si vous utilisez `ddi-l` dans une recherche ou dans le flux de travail d'une
 archive, merci de le citer :
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.1.2) [Logiciel].
+> documents* (Version 0.2.0) [Logiciel].
 > <https://github.com/pbisson44/ddi-l>
 
 ```bibtex
@@ -154,7 +199,7 @@ archive, merci de le citer :
   author  = {Bisson, Philippe},
   title   = {ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents},
   year    = {2026},
-  version = {0.1.2},
+  version = {0.2.0},
   url     = {https://github.com/pbisson44/ddi-l},
   license = {MIT}
 }

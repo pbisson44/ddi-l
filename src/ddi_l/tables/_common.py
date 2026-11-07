@@ -465,7 +465,7 @@ def literal_text(
 def literal_texts(
     tag: str, found: Iterable[InternationalString], default_language: str
 ) -> list[Element]:
-    """:func:`literal_text` for each of ``found``."""
+    """`literal_text` for each of ``found``."""
     return [
         literal_text(tag, string.text, string.lang or default_language)
         for string in found
@@ -477,7 +477,7 @@ def item_element(
 ) -> Element:
     """An item's root with identification, custom pairs, labels, descriptions.
 
-    Builders append the other children in any order: :func:`typed` puts them
+    Builders append the other children in any order: `typed` puts them
     in schema order.
     """
     root = el(tag, *identification(identity))

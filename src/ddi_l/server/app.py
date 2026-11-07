@@ -39,13 +39,13 @@ def create_app(config: ServerConfig | None = None) -> Litestar:
 
     Args:
         config: Runtime limits and exposure settings. Defaults to
-            :class:`~ddi_l.server.config.ServerConfig`, which is conservative: a
+            `ServerConfig`, which is conservative: a
             32 MiB body cap, a 60-second bound on how long a client waits, and
             CORS off. See ``ServerConfig`` for what the timeout does and does
             not cover.
 
     Returns:
-        A configured :class:`litestar.Litestar` instance.
+        A configured `litestar.Litestar` instance.
     """
     config = config or ServerConfig()
 

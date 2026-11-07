@@ -8,7 +8,7 @@ description: >-
 # Spreadsheet templates
 
 Templates for the tables described in
-[Load DDI from spreadsheets](spreadsheet-import.md). Each comes as an Excel
+[Load DDI from spreadsheets](spreadsheet-import.en.md). Each comes as an Excel
 workbook (one sheet per table, plus a README sheet listing every column) and as
 a zip of CSV files (one file per table, plus `README.txt`).
 

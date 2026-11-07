@@ -13,7 +13,7 @@ contribution :
   sur GitHub, est la version courte : préparer l'environnement, lancer les
   contrôles, ouvrir une pull request. Commencez par là.
 - Ce guide est la référence détaillée qui le complète : l'architecture, le
-  générateur de code à partir des XSD, l'ajout d'une version de DDI, les deux
+  générateur de code à partir des XSD, l'ajout d'une version de DDI, les
   moteurs XML, la chaîne de documentation et le processus de publication.
 
 ## Préparer votre environnement
@@ -29,6 +29,12 @@ uv sync --group dev --extra full # ...plus le backend optionnel lxml
 uv sync --group docs             # Chaîne de production de la documentation
 ```
 
+`uv.lock` installe `ddi-l-native` sous la forme de son remplaçant en Python
+pur (`native/fallback/`) : aucune de ces commandes ne demande Rust, et les
+tests tournent avec lxml ou la bibliothèque standard.
+[Les backends XML](#les-backends-xml) disent comment construire et tester le
+noyau natif.
+
 Préfixez les commandes avec `uv run` (`uv run pytest`), ou activez
 l'environnement avec `source .venv/bin/activate`.
 
@@ -41,7 +47,7 @@ Si vous préférez pip :
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e '.[full]' --group dev   # pip 25.1+ reads dependency groups
+pip install -e '.[full]' ./native/fallback --group dev   # pip 25.1+ reads groups
 ```
 
 ## Contrôles qualité
@@ -56,6 +62,9 @@ uv run pytest                  # Tests (cible : 90 % de couverture)
 uvx pip-audit --strict         # Scan de vulnérabilités
 git diff --exit-code           # Un run de tests ne doit modifier aucun fichier suivi
 ```
+
+`pytest` tourne sur tous les cœurs (`-n auto`, pytest-xdist) ; passez `-n 0`
+pour un seul processus, comme le demande `--pdb`.
 
 `ruff` et `mypy` sont épinglés à des versions exactes dans le groupe `dev`.
 Une nouvelle version de l'un ou l'autre peut changer ce qui constitue une
@@ -78,40 +87,58 @@ valide un document.
 
 ### Tests de mutation
 
-La couverture indique qu'une ligne a été exécutée. Elle ne dit pas si un test
-s'apercevrait que cette ligne est fausse, et l'écart compte surtout dans les
-petits prédicats qui décident si une étiquette de langue correspond ou si un
-espace de noms est utilisé. `mutmut` répond à la seconde question : il modifie
-le code et vérifie si la suite proteste.
+La couverture dit qu'une ligne a été exécutée. Elle ne dit pas qu'un test
+remarquerait une erreur dans cette ligne. `mutmut` le vérifie : il apporte de
+petites modifications au code (des « mutants »), lance les tests et signale
+chaque modification qu'aucun test n'a remarquée (un « survivant »).
 
 ```bash
-uv run mutmut run                       # tout ce qui est dans le périmètre
+make mutation                           # mutmut run, puis la vérification
 uv run mutmut results                   # ce qui a survécu
 uv run mutmut show <nom-du-mutant>      # le diff d'un survivant
-uv run mutmut run <nom-du-mutant>       # recontrôler après avoir ajoute un test
+uv run mutmut run <nom-du-mutant>       # revérifier après avoir ajouté un test
 ```
 
-Le périmètre est défini dans `[tool.mutmut]` du `pyproject.toml` et reste
-volontairement étroit : quatre modules de logique de décision écrite à la main,
-ni les dataclasses générées ni la plomberie XML, dont les mutants sont pour
-l'essentiel équivalents. Élargissez-le quand vous ajoutez un module comportant
-de vraies ramifications.
+**Portée.** `[tool.mutmut]` dans `pyproject.toml` liste dix-sept modules qui
+contiennent de vrais embranchements : le lint, la base de faits que ses
+règles partagent et ce que le lint incrémental garde, les règles Colectica,
+la lecture et l'édition des conditions, le langage de spécification avec son
+évaluateur et son encodage pour le solveur, la conformité avec son index du
+questionnaire, ce qu'un répondant atteint dans un flux, la validation, les
+entrées-sorties et la conversion. Pas les modèles générés, dont presque tous
+les mutants sont équivalents.
 
-**Ce n'est pas un contrôle bloquant sur les pull requests**, et
-`.github/workflows/mutation.yml` explique longuement pourquoi : un passage
-cible représente environ 2 200 mutants et des dizaines de minutes, les
-survivants demandent un jugement qu'un seuil ne peut pas fournir, et les
-résultats différent entre les deux moteurs XML. Le travail s'exécute chaque
-semaine et à la demande ; le rapport se lit, il ne se satisfait pas.
+**La barrière.** `tests/mutation_baseline.txt` liste les survivants connus.
+`scripts/check_mutation.py` échoue quand survit un mutant que la liste ne
+nomme pas, et quand un mutant listé ne survit plus : la liste ne peut que
+raccourcir. `.github/workflows/mutation.yml` lance les deux chaque mois
+(le 1er) et sur demande ; une exécution complète dure des heures, elle ne
+tourne donc pas sur chaque PR.
 
-Lire les survivants est le savoir-faire. Certains sont réels :
-`test_tree_uses_namespace_looks_at_tags_and_attributes` existe parce que forcer
-cet utilitaire à toujours répondre « non » laissait toute la suite au vert,
-donc rien ne vérifiait qu'un document *utilisant* `xsi:schemaLocation` conserve
-sa déclaration. D'autres ne peuvent pas être tus et ne doivent pas l'être :
-`getattr(node, "nsmap", )` se comporte exactement comme `getattr(node, "nsmap",
-None)` quand tous les noeuds possèdent l'attribut. Corrigez les premiers en
-écrivant le test manquant ; laissez les seconds tranquilles.
+**Exemples.** Sous mutmut, chaque test de propriété tire au plus 30
+exemples, les mêmes à chaque exécution (`tests/helpers/examples.py`) : il
+tourne une fois par mutant qu'il couvre, et un mutant doit être attrapé à
+chaque exécution ou jamais. La suite elle-même en tire 300.
+
+**Quand la vérification échoue sur un nouveau survivant**, lancez
+`mutmut show <nom>` et décidez :
+
+- **Un vrai manque** : un test attraperait une erreur comme celle-ci. Écrivez
+  ce test.
+- **Équivalent** : aucun test ne peut distinguer le mutant de l'original, par
+  exemple `getattr(node, "nsmap", )` au lieu de `getattr(node, "nsmap", None)`.
+  Ajoutez le nom à la liste avec `# equivalent:` et la raison.
+- **Moteur stdlib seulement** : l'exécution utilise lxml, donc une modification
+  du code que seul le moteur de la bibliothèque standard exécute survit.
+  Ajoutez `# stdlib backend only:` et la raison.
+- **Moteur natif seulement** : de même pour le code que seul le moteur natif
+  exécute, comme ce que garde le lint incrémental (`ddi_l/_incremental.py`) ;
+  ses tests tournent sur le moteur natif. Ajoutez `# native backend only:` et
+  la raison.
+
+Modifier une fonction renumérote ses mutants. Après une telle modification,
+lancez `uv run python scripts/check_mutation.py --update`, qui garde les
+raisons des entrées toujours présentes, et relisez le diff de la liste.
 
 ## Normes de codage
 
@@ -235,7 +262,7 @@ Cette voie est balisée ; 3.1 et 3.2 ont toutes deux été ajoutées ainsi.
    version. Ce n'est ni automatique ni gratuit : régénérer contre un nouveau XSD
    modifie `_FIELD_XML_MAP`, `_ATTR_XML_MAP` et `_ELEMENT_ORDER`, donc la sortie
    sérialisée, donc l'ensemble des fixtures de référence sous
-   `src/ddi_l/examples/tests/fixtures/`. Traitez cela comme un changement
+   `tests/fixtures/`. Traitez cela comme un changement
    cassant.
 
 ### Voie B : DDI 4.0
@@ -377,7 +404,6 @@ vers le même URI. La détection de version n'utilise que l'espace de noms
 src/ddi_l/
   __init__.py                # API publique : new_study, open_ddi, Document
   document.py                # Document, DDIDocument, DDIFragment, StudyCursor
-  _document_mixins.py        # Comportement de Document decoupe par sujet
   _document_maintainables.py # Helpers de recherche / rattachement
   _document_namespaces.py    # Gestion des espaces de noms pour Document
   models/
@@ -406,23 +432,68 @@ construction), `tests/`, `benchmarks/`, `demo/` et `docs/`. Aucun n'est
 empaqueté : rien de ce qu'ils contiennent ne peut servir de point d'entrée
 console ni être importe à l'exécution.
 
-## Les deux backends XML
+## Les backends XML
 
-`lxml` est un accélérateur optionnel installé avec `ddi-l[full]`. Sa présence
-ne doit pas changer ce que `ddi-l` entend par un document, et la différence de
-résolution des préfixes entre les deux mérite d'être comprise avant de toucher
-à la sérialisation :
+`lxml` est un accélérateur optionnel installé avec `ddi-l[full]`, et le noyau
+natif (`native/`, la wheel `ddi-l-native` dont dépend `ddi-l`) en est un autre.
+Leur présence ne doit pas changer ce que `ddi-l` entend par un document.
+`DDI_L_XML_BACKEND=native|lxml|stdlib` choisit le backend d'une exécution des
+tests.
+
+`ddi-l-native` est publié deux fois à chaque version : des wheels compilées
+pour les plateformes de `.github/workflows/publish.yml`, et un remplaçant en
+Python pur (`native/fallback/`) que pip prend partout ailleurs. Importer le
+remplaçant lève `ModuleNotFoundError` : `ddi-l` se rabat sur lxml ou la
+bibliothèque standard, et l'installer ne compile jamais Rust. `uv.lock`
+installe le remplaçant ; construisez le vrai noyau par-dessus (Rust et, sous
+Windows, les Build Tools de Visual Studio avec la charge de travail C++), puis
+lancez avec `--no-sync`, puisque `uv sync` et `uv run` remettent le
+remplaçant :
+
+```bash
+DDI_L_XML_BACKEND=lxml uv run pytest
+uv pip install --reinstall-package ddi-l-native ./native
+DDI_L_XML_BACKEND=native uv run --no-sync pytest --no-cov
+```
+
+Les éléments natifs se comportent comme ceux de la bibliothèque standard : le
+backend natif partage les fonctions du backend stdlib dans
+`ddi_l/_etree.py` et n'en diffère que par l'analyse. Le code en Python pur est
+la référence : `tests/test_native.py` compare l'analyseur à celui de la
+bibliothèque standard (et le teste au hasard), et les empreintes et l'index de
+la source natifs à `ddi_l/_lossless.py`.
+
+Le code Rust est dans `native/`. Après une modification, reconstruisez
+l'extension et lancez ses vérifications :
+
+```bash
+uv pip install --reinstall-package ddi-l-native ./native
+cd native && cargo fmt --check && cargo clippy --all-targets -- -D warnings
+```
+
+Sur le moteur natif, ce que le lint et `revise` lisent d'un élément est gardé
+sous l'empreinte de son contenu (`ddi_l/_incremental.py`) : un appel suivant
+ne relit que ce qui a changé. Un lecteur passé à `per_element` ou à
+`per_chunk` ne doit dépendre que de l'élément. Une règle de `_PER_ITEM`
+(`ddi_l/colectica_lint.py`) doit signaler un élément à partir de cet élément
+seul, par `_Context.finding`. `tests/test_incremental.py` vérifie, après des
+modifications au hasard, que chaque passe signale ce que signale une passe
+qui relit tout.
+
+La différence de résolution des préfixes entre stdlib et lxml mérite d'être
+comprise avant de toucher à la sérialisation :
 
 - **`ElementTree` (bibliothèque standard)** résout les préfixes au moment de la
-  *sérialisation*, depuis un registre global au processus. Un préfixe
-  enregistré en écrivant un document affecte tous les suivants dans le même
-  processus.
+  *sérialisation*, depuis un registre. ddi-l tient ce registre lui-même, par
+  fil ou par tâche (il n'écrit jamais celui d'ElementTree, commun à tout le
+  processus) : un préfixe enregistré en construisant un document affecte tous
+  les suivants dans le même fil.
 - **`lxml`** résout depuis le `nsmap` de chaque élément, **figé à la création
   de l'élément**. Il ne peut pas être redéfini sur place, d'où le fait que
   `apply_namespace_map()` renvoie une racine au lieu d'en muter une.
 
 Cette asymétrie est la source la plus fréquente de comportements propres à un
-backend : lancez la suite sur les deux backends quand vous touchez à la
+backend : lancez la suite sur chaque backend quand vous touchez à la
 sérialisation.
 
 ### Ce qui est garanti
@@ -474,9 +545,9 @@ make docs-build    # Construction et validation
 ```
 
 Le logo, le favicon et leurs règles d'usage sont décrits dans les
-[ressources de marque](assets/README.md).
+[ressources de marque](assets/README.fr.md).
 
-La page des [corrigés](curriculum/answer-keys.md) du programme est générée par
+La page des [corrigés](curriculum/answer-keys.fr.md) du programme est générée par
 `hooks/answer_keys.py` à partir des réponses `??? success` de chaque module.
 Ajoutez ou modifiez une réponse dans le module, jamais sur la page des
 corrigés.
@@ -551,17 +622,33 @@ de la [publication de confiance](https://docs.pypi.org/trusted-publishers/)
 
 1. Sur [PyPI](https://pypi.org/manage/account/publishing/) et
    [TestPyPI](https://test.pypi.org/manage/account/publishing/), ajoutez un
-   éditeur de confiance en attente pour le projet `ddi-l` : propriétaire
-   `pbisson44`, dépôt `ddi`, workflow `publish.yml`, environnement `pypi`
-   (TestPyPI : `testpypi`).
+   éditeur de confiance en attente pour chacun des projets `ddi-l` et
+   `ddi-l-native` : propriétaire `pbisson44`, dépôt `ddi`, workflow
+   `publish.yml`, environnement `pypi` (TestPyPI : `testpypi`).
 2. Dans les paramètres du dépôt GitHub, créez les environnements `pypi` et
    `testpypi`. Protégez `pypi` par des relecteurs obligatoires.
 
 ### À chaque version
 
-1. Fixez la version dans `pyproject.toml` et `CITATION.cff`, et réglez
-   `date-released` dans `CITATION.cff` sur la date de publication.
-   `tests/test_release_metadata.py` vérifie leur concordance.
+1. Fixez la version et la date de publication en une commande :
+
+    ```bash
+    uv run python scripts/set_version.py 0.3.0 --date 2027-01-15
+    # ou : patch, minor, major au lieu de la version ; --date vaut aujourd'hui par défaut
+    ```
+
+    ddi-l et ddi-l-native partagent une version. Le script l'écrit dans
+    `pyproject.toml` (avec la dépendance `ddi-l-native==X.Y.Z`),
+    `native/pyproject.toml`, `native/Cargo.toml`, `native/Cargo.lock`,
+    `native/fallback/pyproject.toml`, `CITATION.cff`, les citations du
+    README et de la page d'accueil, et le titre « (non publiée) » des notes
+    de version ; il règle `date-released` et l'année des citations, puis
+    lance `uv lock`. Il n'écrit rien tant que chaque fichier ne correspond
+    pas. Quand il ouvre une nouvelle série, ajoutez-la au tableau de
+    `SECURITY.md` ; le script le signale. `tests/test_release_metadata.py`
+    et le workflow de publication refusent une version où elles diffèrent,
+    et `tests/test_set_version.py` échoue quand un autre fichier se met à
+    indiquer la version.
 2. Datez le titre dans `docs/release-notes.en.md` et `docs/release-notes.fr.md`.
 3. Lancez les contrôles locaux : `uv run make release-check` et la suite de
    tests complète.

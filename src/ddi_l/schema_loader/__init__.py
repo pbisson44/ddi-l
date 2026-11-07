@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from .._etree import Element, create_element
 from .._etree import fromstring as _etree_fromstring
+from ..registry import MaintainableRegistry as _Registry
 from ._cache import clear_schema_cache, get_schema
 from ._compat import (
     XMLSchemaConverter,
@@ -27,7 +28,6 @@ from ._conversion_runtime import (  # type: ignore[attr-defined]
     set_conversion_backend,
     to_dict,
 )
-from ._fallback import _FallbackSchema  # noqa: F401  # re-exported for consumers/tests
 from ._validation import (
     IMPLEMENTATION as VALIDATION_IMPLEMENTATION,
 )
@@ -36,8 +36,10 @@ from ._validation import (
     SchemaValidationIssue,
     _clear_known_type_name_cache,
     get_available_validation_backends,
+    get_validation_backend,
     set_validation_backend,
     validate,
+    validation_backend,
 )
 
 
@@ -51,12 +53,7 @@ def _invalidate_cache_on_register(_cls: type) -> None:
     _clear_known_type_name_cache()
 
 
-try:
-    from ..registry import MaintainableRegistry as _Registry
-
-    _Registry.on_register(_invalidate_cache_on_register)
-except Exception:
-    pass  # Registry may not be available during early initialization
+_Registry.on_register(_invalidate_cache_on_register)
 
 
 fromstring = _etree_fromstring
@@ -82,10 +79,12 @@ __all__ = [
     "get_available_conversion_backends",
     "get_available_validation_backends",
     "get_schema",
+    "get_validation_backend",
     "qname_to_clark_notation",
     "set_conversion_backend",
     "set_validation_backend",
     "to_dict",
     "validate",
+    "validation_backend",
     "xmlschema",
 ]

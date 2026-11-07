@@ -83,5 +83,5 @@ ddi roundtrip my-study.xml my-study-roundtrip.xml --validate
 
 ## Next steps
 
-- [User guide](../user-guide.md) for the full CRUD API reference.
-- [Models reference](../models.md) for all available model types.
+- [User guide](../user-guide.en.md) for the full CRUD API reference.
+- [Models reference](../models.en.md) for all available model types.

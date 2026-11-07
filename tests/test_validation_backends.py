@@ -57,11 +57,11 @@ FRAGMENT_GAP_XML = """
 def _patched_environment(
     xmlschema_enabled: bool, monkeypatch: pytest.MonkeyPatch
 ) -> Iterable[None]:
-    validation_mod = importlib.import_module("ddi_l.schema_loader._validation")
-    loader_mod = importlib.import_module("ddi_l.schema_loader")
+    # No importlib.reload: it would replace the module's exception classes,
+    # and later test modules catch the ones they imported.
+    validation_module = importlib.import_module("ddi_l.schema_loader._validation")
+    loader = importlib.import_module("ddi_l.schema_loader")
     with monkeypatch.context() as patch:
-        validation_module = importlib.reload(validation_mod)
-        loader = importlib.reload(loader_mod)
         if not xmlschema_enabled:
             patch.setattr(loader, "xmlschema", None)
         elif (
@@ -69,8 +69,6 @@ def _patched_environment(
         ):  # pragma: no cover - depends on optional dependency
             pytest.skip("xmlschema backend unavailable")
         yield patch, loader, validation_module  # type: ignore[misc]
-    importlib.reload(validation_mod)
-    importlib.reload(loader_mod)
 
 
 def _run_validation(
@@ -85,7 +83,8 @@ def _run_validation(
             configure(patch, loader)
         loader.get_schema.cache_clear()
         element = loader.fromstring(xml_payload)
-        issues = loader.validate(element, raise_error=False)
+        # The stubs stand in for xmlschema, which the native check bypasses.
+        issues = loader.validate(element, raise_error=False, backend="python")
         loader.get_schema.cache_clear()
     return [issue.to_dict() for issue in issues]
 
@@ -172,23 +171,25 @@ def test_validation_backend_selector_rejects_unknown(
         def find(_path: str) -> None:
             return None
 
-    with monkeypatch.context() as patch:
+    with monkeypatch.context() as patch, _backend("python"):
         patch.setattr(runtime, "_coerce_element", lambda _document: _DummyElement())
         patch.setattr(runtime, "detect_version_from_element", lambda _root: "3.3")
-        runtime.set_validation_backend("python")
         loader.validate(object(), raise_error=False)
 
     with pytest.raises(ValueError):
-        runtime.set_validation_backend("native")
+        runtime.set_validation_backend("bogus")
 
 
 def test_available_validation_backends_follow_lxml() -> None:
     runtime = importlib.import_module("ddi_l.schema_loader._validation")
-    from ddi_l._etree import USING_LXML
+    from ddi_l._etree import NATIVE
+    from ddi_l.schema_loader import _libxml2
 
-    expected = ("python", "lxml") if USING_LXML else ("python",)
+    # libxml2 checks any backend's tree when lxml is installed; the native
+    # validator needs the native backend's tree.
+    expected = ("python",) + ("lxml",) * _libxml2.available() + ("native",) * NATIVE
     assert runtime.get_available_validation_backends() == expected
-    assert runtime._default_backend == expected[-1]
+    assert expected[-1] == runtime.IMPLEMENTATION
 
 
 def _lxml_only() -> None:
@@ -202,12 +203,8 @@ def _lxml_only() -> None:
 @contextmanager
 def _backend(name: str):
     runtime = importlib.import_module("ddi_l.schema_loader._validation")
-    previous = runtime.IMPLEMENTATION
-    runtime.set_validation_backend(name)
-    try:
+    with runtime.validation_backend(name):
         yield runtime
-    finally:
-        runtime.set_validation_backend(previous)
 
 
 def test_lxml_backend_skips_xmlschema_for_valid_documents(monkeypatch) -> None:

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:ddi="ddi:instance:3_3">
+  <ddi:TopLevelReference>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>11111111-1111-4111-8111-000000000005</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Sequence</r:TypeOfObject>
+  </ddi:TopLevelReference>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-01-05T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:11111111-1111-4111-8111-000000000005:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>11111111-1111-4111-8111-000000000005</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Pet survey</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>11111111-1111-4111-8111-000000000003</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-01-05T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:11111111-1111-4111-8111-000000000001:4</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>11111111-1111-4111-8111-000000000001</r:ID>
+    <r:Version>4</r:Version>
+    <r:BasedOnObject>
+      <r:BasedOnReference>
+        <r:Agency>int.example</r:Agency>
+        <r:ID>11111111-1111-4111-8111-0000000000ff</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+      </r:BasedOnReference>
+      <r:BasedOnRationaleCode>DuplicateItem</r:BasedOnRationaleCode>
+    </r:BasedOnObject>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">PetCount</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:11111111-1111-4111-8111-000000000002:4</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>11111111-1111-4111-8111-000000000002</r:ID>
+      <r:Version>4</r:Version>
+      <r:Alias>PetCount</r:Alias>
+      <r:NumericRepresentation blankIsMissingValue="false" />
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">How many pets live with you?</Text>
+      </LiteralText>
+    </QuestionText>
+    <NumericDomain blankIsMissingValue="false">
+      <r:NumberRange>
+        <r:Low isInclusive="true">0</r:Low>
+        <r:High isInclusive="true">20</r:High>
+      </r:NumberRange>
+      <r:NumericTypeCode>Integer</r:NumericTypeCode>
+    </NumericDomain>
+  </QuestionItem>
+</Fragment>
+</ddi:FragmentInstance>

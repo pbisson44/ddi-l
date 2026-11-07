@@ -51,15 +51,28 @@ def is_valid(root: Any, version: str) -> bool:
 
     ``False`` means "not confirmed": the caller must run the full validator.
     """
-    if not hasattr(root, "getroottree"):  # stdlib element: libxml2 cannot see it
-        return False
     schema = get_libxml2_schema(version)
     if schema is None:
         return False
     try:
+        if not hasattr(root, "getroottree"):  # another backend's tree
+            root = _as_lxml(root)
         return bool(schema.validate(root))
     except Exception:  # pragma: no cover - defer to the full validator
         return False
+
+
+def _as_lxml(root: Any) -> Any:
+    """``root`` (a native or standard library tree) as lxml reads it.
+
+    Serialising and re-parsing costs far less than validating with xmlschema.
+    """
+    from xml.etree import ElementTree
+
+    from lxml import etree
+
+    parser = etree.XMLParser(resolve_entities=False, load_dtd=False, no_network=True)
+    return etree.fromstring(ElementTree.tostring(root), parser)
 
 
 def clear() -> None:

@@ -49,7 +49,7 @@ def _xmlschema_converter() -> _XMLSchemaConverterType | None:
 
 
 def _coerce_element(document: SchemaInput) -> Element:
-    """Return an :class:`~xml.etree.ElementTree.Element` for ``document``."""
+    """Return an `Element` for ``document``."""
     try:
         return _coerce_xml_input(document)
     except TypeError as exc:  # pragma: no cover - defensive guard
@@ -490,7 +490,7 @@ def _normalize_input_mapping(
 def _prepare_nsmap(
     nsmap: Mapping[str | None, str] | None,
 ) -> dict[str | None, str] | None:
-    """Normalize namespace declarations for use with :func:`create_element`."""
+    """Normalize namespace declarations for use with `create_element`."""
     if not nsmap:
         return None
 

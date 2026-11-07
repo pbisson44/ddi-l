@@ -6,21 +6,30 @@ description: >-
 
 # Module 15: Update and version your documents
 
-!!! info "What you will learn"
-    - Explain why versioning matters for surveys and studies.
-    - Open an existing DDI document and add new content.
-    - Use version numbers to track changes over time.
-    - Increment major, minor, and sub-version numbers.
-    - Record why a change was made using `VersionRationale`.
-    - Set who is responsible for a version change.
-    - Change the wording of an existing question.
-    - Switch a variable from one code list to another.
-    - Keep references pointing at the new version of an edited item.
-    - Describe a new data file and update many variables from it in one loop.
+!!! info "Learning objectives"
+    By the end of this module, you can:
 
-**Prerequisites:** [Module 14: Custom fields](module-14-custom-fields.md).
+    - **O1.** Open an existing DDI file, add and remove items, and save the
+      result under a new file name so the old file stays unchanged.
+    - **O2.** Choose a major, minor or sub-version increment for a described
+      change, and predict the version number it gives.
+    - **O3.** Record a version rationale and a version responsibility on the
+      item you changed.
+    - **O4.** Change the wording of a question in every language, give it a
+      sub-version, and repoint the variable that refers to it so `doc.lint()`
+      reports no errors.
+    - **O5.** Switch a variable to a different code list with `set_coded()`,
+      check which list it now uses, and give it a new version with a
+      rationale.
+
+**Prerequisites:** [Module 14](module-14-custom-fields.en.md).
 
 **Time:** 65 min self-paced / 75 min instructor-led.
+
+**New in this module:** `increment_major_version()`,
+`increment_minor_version()`, `increment_subversion()`, `allow_dotted=True`,
+`VersionRationale`, `version_rationales`, `version_responsibility`,
+`to_reference()`, `set_coded()`.
 
 ---
 
@@ -49,18 +58,18 @@ The basic steps to update a DDI document are:
 1. **Open** the existing file.
 2. **Add** new content (questions, variables, concepts).
 3. **Remove** outdated content.
-4. **Save** the updated file with a new name.
+4. **Check** the result, and **save** it under a new name.
 
-Here is a short example. The first two lines stand in for last year's file;
+Here is a short example. The first three lines stand in for last year's file;
 if you already have a DDI file of your own, open that instead and skip them.
 
 ```python
 import ddi_l as ddi
 
 # Stand-in for last year's file
-ddi.new_study(title="Labour Force Survey 2023", agency="example.org").save(
-    "lfs-2023.xml"
-)
+last_year = ddi.new_study(title="Labour Force Survey 2023", agency="example.org")
+last_year.add_question(text="Do you use a fax machine at work?")
+last_year.save("lfs-2023.xml")
 
 # Step 1: Open the existing file
 doc = ddi.open_ddi("lfs-2023.xml")
@@ -68,14 +77,24 @@ doc = ddi.open_ddi("lfs-2023.xml")
 # Step 2: Add a new question
 doc.add_question(text="Do you work from home?")
 
-# Step 3: Save with a new filename
+# Step 3: Remove the outdated question, by its identifier
+fax = next(
+    q
+    for q in doc.questions
+    if q.question_texts[0].text == "Do you use a fax machine at work?"
+)
+doc.remove(fax.identifier)
+
+# Step 4: Check, then save with a new filename
+print(doc.validate())  # -> []
 doc.save("lfs-2024.xml")
 ```
 
 The function `ddi.open_ddi()` reads a DDI XML file from disk and gives you a
 `Document` object. You can then add or remove items just like you did when you
 first created the document. The function `doc.save()` writes the updated
-document to a new file.
+document to a new file, so `lfs-2023.xml` stays exactly as it was: you can
+still compare the two years, or go back.
 
 ---
 
@@ -100,6 +119,13 @@ print(study.version)  # e.g. "1"
 When you first create a study with `ddi.new_study()`, the default version is
 `"1"`. You can set it to `"1.0.0"` if you prefer three-part numbers.
 
+An item keeps the numbering it has. On a single-number version such as `"1"`,
+`increment_minor_version()` and `increment_subversion()` raise an error rather
+than turn it into `"1.1"`, because some tools only read whole-number
+versions. Set `"1.0.0"` first, or pass `allow_dotted=True` when
+you do want `"1"` to become `"1.1"`. The examples below that start from a new
+study pass it.
+
 ---
 
 ## 4. Increment versions
@@ -112,7 +138,8 @@ all DDI objects.
 ### Major version: big changes
 
 Use `increment_major_version()` when you make a large change that could break
-things. For example, you redesign the entire questionnaire.
+things. For example, you redesign the entire questionnaire, or answers are no
+longer comparable with last year's.
 
 <!-- docs-test: skip -- fragment: `item` is whichever item the reader is versioning -->
 ```python
@@ -146,6 +173,27 @@ Each method increases one number and resets the numbers to its right back to
 zero. For example, if the version is `1.2.3` and you call
 `increment_minor_version()`, the result is `1.3.0`.
 
+### Check your prediction
+
+Predict each printed version before you run the block:
+
+```python
+item = doc.add_question(text="How many hours do you work per week?")
+print(item.version)  # -> 1
+
+try:
+    item.increment_minor_version()
+except ddi.DDIModelError:
+    print("Refused: a one-part version stays one-part")
+
+item.increment_minor_version(allow_dotted=True)
+print(item.version)  # -> 1.1
+
+item.version = "1.2.3"
+item.increment_minor_version()
+print(item.version)  # -> 1.3.0
+```
+
 ---
 
 ## 5. Record why you changed something
@@ -178,10 +226,15 @@ item.version_responsibility = "Survey Design Team"
 - `VersionRationale` is a small object that holds a list of descriptions. Each
   description is an `InternationalString` so you can write it in more than one
   language.
-- `version_rationales` is a list. You can add more than one rationale if
-  needed.
+- `version_rationales` is a list, but the schema allows only one rationale
+  per item: the reason for its current version. If the item already has one
+  from an earlier change, replace it (`item.version_rationales = [rationale]`)
+  instead of appending a second; with two, `doc.validate()` reports an error.
 - `version_responsibility` is a plain text string with the name of the person
   or team.
+
+Put the rationale and the responsibility on the item you changed. A reworded
+question gets its own; the study gets one only for a change to the study.
 
 ---
 
@@ -195,7 +248,7 @@ same small file.
 The file holds one question, "Do you work from home?". It is answered with a
 **Yes/No** code list, and the answer is stored in the variable `WFH`. The block
 below creates it, using the code-list pattern from
-[Module 14](module-14-custom-fields.md). Skip it if you have a file of your
+[Module 14](module-14-custom-fields.en.md). Skip it if you have a file of your
 own.
 
 ```python
@@ -244,7 +297,7 @@ wfh_question = next(
 ```
 
 If you know the question's identifier, `doc.find(identifier)` from
-[Module 13](module-13-properties-find-validate.md) works as well.
+[Module 13](module-13-properties-find-validate.en.md) works as well.
 
 ### Step 2: Change the text
 
@@ -274,7 +327,7 @@ question measures, so that answers are no longer comparable with last year,
 use a **major** version instead.
 
 ```python
-wfh_question.increment_subversion()
+wfh_question.increment_subversion(allow_dotted=True)
 wfh_question.version_rationales.append(
     VersionRationale(
         descriptions=[
@@ -287,12 +340,11 @@ wfh_question.version_responsibility = "Survey Design Team"
 print(wfh_question.version)  # -> 1.0.1
 ```
 
-### Step 4: Point the references at the new version
+### Step 4: Point the variable at the new version
 
 A DDI reference names one exact version of an item. The variable `WFH` still
 says "question `…`, version `1`". That version is no longer in the file, so the
-reference is now broken. Point every reference to the question at its new
-version. In this file only the variable refers to the question:
+reference is now broken. Point it at the question's new version:
 
 ```python
 for variable in doc.variables:
@@ -307,20 +359,6 @@ for variable in doc.variables:
 `to_reference()` builds a reference to the item as it is *now*, with its new
 version.
 
-A file with a questionnaire flow (Module 10) has more references to the
-question: each `QuestionConstruct` that asks it holds a `question_reference`.
-Repoint those the same way. In this file there are none, so the loop does
-nothing:
-
-```python
-from ddi_l.models.datacollection import QuestionConstruct
-
-for construct in doc.items(QuestionConstruct):
-    ref = construct.question_reference
-    if ref is not None and ref.identifier == wfh_question.identifier:
-        construct.question_reference = wfh_question.to_reference()
-```
-
 Then let `doc.lint()` check that nothing still points at the old version. Each
 `ddi.reference.integrity` error it reports names an item you still have to
 repoint:
@@ -329,6 +367,10 @@ repoint:
 errors = [finding for finding in doc.lint() if finding.severity == "error"]
 print(f"Lint errors: {len(errors)}")  # -> Lint errors: 0
 ```
+
+In this file only the variable refers to the question. A larger file can have
+more references to it: see
+[Going further](#keep-every-reference-current).
 
 ---
 
@@ -392,10 +434,9 @@ The variable started at version `"1"`, so a major bump gives `"2"`. The
 question's sub-version bump gave `"1.0.1"` because a sub-version needs all
 three parts.
 
-As with the question, anything that refers to the variable now points at its
-old version. In this file nothing does. In a larger file, check the variables
-derived from it (their `source_variable_references`, Module 11) and any record
-layout (section 8). Repoint them the same way, or build them after the bump.
+In this file nothing refers to the variable. If something did (a derived
+variable, a record layout), it would now point at the old version:
+[Going further](#keep-every-reference-current) shows how to handle that.
 
 ### Step 4: Keep or remove the old code list
 
@@ -428,7 +469,7 @@ doc.save("wfh-2024.xml")
 
 !!! note "The question's response domain"
     In this curriculum a code list is attached to the **variable**. Files from
-    other tools, such as Colectica, often attach it to the **question** as
+    other tools often attach it to the **question** as
     well, in a `d:CodeDomain` element inside the question. `ddi-l` keeps that
     element exactly as it was read: `set_coded()` changes the variable only,
     and `ddi-l` has no helper yet for changing a question's response domain.
@@ -437,16 +478,425 @@ doc.save("wfh-2024.xml")
 
 ---
 
-## 8. Update many variables from a new data file
+## 8. Best practices
+
+- **Keep old versions.** Save each version to a different filename (like
+  `survey-v1.xml`, `survey-v2.xml`). Do not overwrite old files.
+- **Use the right increment.** Match it to the size of the change: a
+  sub-version for a fix, a minor version for an addition, a major version when
+  answers are no longer comparable.
+- **Version the item you edited, not only the study.** A reworded question or
+  a variable with new answer categories gets its own version bump, rationale
+  and responsibility.
+- **Write clear rationales.** A good rationale says *what* changed and *why*.
+- **Update the references, then check.** After a version bump, point every
+  reference to the item at its new version. Run `doc.validate()` and
+  `doc.lint()`, and fix every error before you share the file.
+
+---
+
+## Exercises
+
+!!! example "Scenario"
+    A national labour force survey runs every year. The 2024 version added a
+    new question, retired an old one, and reworded and recoded the employment
+    question. The agency needs to update the DDI document and record why.
+
+**Exercise 1 (O1).** Create a study, "Labour Force Survey v1", with three
+questions: "What is your current employment status?" (with the French text
+"Quelle est votre situation d'emploi actuelle ?"), "How many hours do you work
+per week?" and "Do you use a fax machine at work?". Add a variable `EMPSTAT`
+for the first question. Save the study as `survey-v1.xml`.
+
+Expected output:
+
+```text
+Saved with 3 questions and 1 variable.
+```
+
+??? success "Answer"
+    ```python
+    import ddi_l as ddi
+    from ddi_l.models.base import InternationalString
+
+    doc = ddi.new_study(title="Labour Force Survey v1", agency="stats.example.org")
+    q1 = doc.add_question(text="What is your current employment status?")
+    q1.question_texts.append(
+        InternationalString(
+            text="Quelle est votre situation d'emploi actuelle ?", lang="fr"
+        )
+    )
+    q2 = doc.add_question(text="How many hours do you work per week?")
+    q3 = doc.add_question(text="Do you use a fax machine at work?")
+    doc.add_variable(name="EMPSTAT", label="Employment status", question=q1)
+
+    doc.save("survey-v1.xml")
+    print(f"Saved with {len(doc.questions)} questions and {len(doc.variables)} variable.")
+    ```
+
+**Exercise 2 (O1).** Re-open `survey-v1.xml`. Add the question "How many hours
+do you sleep per night?". Remove the fax question, found by its text. Print the
+question count before and after, and check the document with
+`doc.validate()`.
+
+Expected output:
+
+```text
+Before: 3 questions
+After: 3 questions
+[]
+```
+
+??? success "Answer"
+    ```python
+    doc = ddi.open_ddi("survey-v1.xml")
+    print(f"Before: {len(doc.questions)} questions")
+
+    # Add a new question
+    doc.add_question(text="How many hours do you sleep per night?")
+
+    # Remove the outdated fax question
+    fax_q = next(
+        q
+        for q in doc.questions
+        if q.question_texts[0].text == "Do you use a fax machine at work?"
+    )
+    doc.remove(fax_q.identifier)
+    print(f"After: {len(doc.questions)} questions")
+    print(doc.validate())  # -> []
+    ```
+
+    The count is the same, but the content is not: one question in, one out.
+    `survey-v1.xml` on disk is unchanged until you save over it, which you
+    will not do.
+
+**Exercise 3 (O2).** A study is at version `1.2.0`. For each change below,
+choose the increment and predict the new version, starting from `1.2.0` each
+time: (a) you fix a typo in a question; (b) you add two questions; (c) you
+replace the questionnaire, so answers are no longer comparable with last
+year. Then check (b) and (c) in Python on a new study set to `1.2.0`.
+
+Expected output:
+
+```text
+1.3.0
+2.0.0
+```
+
+??? success "Answer"
+    (a) Sub-version: `1.2.1`. (b) Minor: `1.3.0`. (c) Major: `2.0.0`.
+
+    ```python
+    check = ddi.new_study(title="Version check", agency="example.org").study_unit
+
+    check.version = "1.2.0"
+    check.increment_minor_version()
+    print(check.version)  # -> 1.3.0
+
+    check.version = "1.2.0"
+    check.increment_major_version()
+    print(check.version)  # -> 2.0.0
+    ```
+
+    Each increment resets the numbers to its right to zero.
+
+**Exercise 4 (O3).** Back in the document of Exercise 2, get the study, call
+`increment_minor_version()` on it (it is at `"1"`, so pass
+`allow_dotted=True`), add a `VersionRationale`, and set
+`version_responsibility`. Validate, save as `survey-v2.xml`, and print the
+version, the rationale and the responsibility.
+
+Expected output:
+
+```text
+Version: 1.1
+Rationale: Added sleep question; retired fax question
+Responsibility: Survey Design Team
+```
+
+??? success "Answer"
+    ```python
+    from ddi_l.models.base import VersionRationale
+
+    study = doc.study_unit
+    study.increment_minor_version(allow_dotted=True)
+    study.version_rationales.append(
+        VersionRationale(
+            descriptions=[
+                InternationalString(text="Added sleep question; retired fax question")
+            ]
+        )
+    )
+    study.version_responsibility = "Survey Design Team"
+
+    errors = doc.validate()
+    if errors:
+        print("Errors:", errors)
+    else:
+        doc.save("survey-v2.xml")
+        print(f"Version: {study.version}")  # -> Version: 1.1
+        for r in study.version_rationales:
+            for d in r.descriptions:
+                print(f"Rationale: {d.text}")
+        print(f"Responsibility: {study.version_responsibility}")
+    ```
+
+**Exercise 5 (O4).** Re-open `survey-v2.xml`. Change the wording of the
+employment-status question, in both languages, to "What was your main activity
+last week?" and "Quelle était votre activité principale la semaine
+dernière ?". Give the question a sub-version bump and a rationale. Point
+`EMPSTAT` at the question's new version, check with `doc.lint()`, and save the
+file as `survey-v3.xml`.
+
+Expected output:
+
+```text
+What was your main activity last week? (version 1.0.1)
+Quelle était votre activité principale la semaine dernière ?
+Lint errors: 0
+```
+
+??? success "Answer"
+    ```python
+    doc = ddi.open_ddi("survey-v2.xml")
+
+    status_q = next(
+        q
+        for q in doc.questions
+        if q.question_texts[0].text == "What is your current employment status?"
+    )
+    for text in status_q.question_texts:
+        if text.lang == "en":
+            text.text = "What was your main activity last week?"
+        if text.lang == "fr":
+            text.text = "Quelle était votre activité principale la semaine dernière ?"
+
+    status_q.increment_subversion(allow_dotted=True)
+    status_q.version_rationales.append(
+        VersionRationale(
+            descriptions=[
+                InternationalString(text="Aligned wording with the ILO definition")
+            ]
+        )
+    )
+
+    # Repoint the variable that references the question
+    for variable in doc.variables:
+        variable.question_references = [
+            status_q.to_reference() if ref.identifier == status_q.identifier else ref
+            for ref in variable.question_references
+        ]
+
+    print(f"{status_q.question_texts[0].text} (version {status_q.version})")
+    # -> What was your main activity last week? (version 1.0.1)
+    print(status_q.question_texts[1].text)
+
+    errors = [finding for finding in doc.lint() if finding.severity == "error"]
+    print(f"Lint errors: {len(errors)}")  # -> Lint errors: 0
+    doc.save("survey-v3.xml")
+    ```
+
+    Skip the repointing loop once and run `doc.lint()`: it reports a
+    `ddi.reference.integrity` error for `EMPSTAT`.
+
+**Exercise 6 (O5).** In the same document, code `EMPSTAT` with a three-value
+list (Employed, Unemployed, Not in labour force), as last year's file would
+have it. Then switch it to a four-value list that splits "Not in labour force"
+into "Student" and "Retired". Bump the variable's major version, record why,
+and print the name of the code list it now uses and its version.
+
+Expected output:
+
+```text
+Status (4)
+2
+```
+
+??? success "Answer"
+    ```python
+    three_way = doc.add_code_list(name="Status (3)", label="Status (3)")
+    add_codes(
+        doc,
+        three_way,
+        [("1", "Employed"), ("2", "Unemployed"), ("3", "Not in labour force")],
+    )
+    four_way = doc.add_code_list(name="Status (4)", label="Status (4)")
+    add_codes(
+        doc,
+        four_way,
+        [("1", "Employed"), ("2", "Unemployed"), ("3", "Student"), ("4", "Retired")],
+    )
+
+    empstat = next(v for v in doc.variables if v.names[0].text == "EMPSTAT")
+    empstat.set_coded(three_way)
+
+    # The switch
+    empstat.set_coded(four_way)
+    empstat.increment_major_version()
+    empstat.version_rationales.append(
+        VersionRationale(
+            descriptions=[
+                InternationalString(
+                    text="Split 'Not in labour force' into Student and Retired"
+                )
+            ]
+        )
+    )
+
+    reference = empstat.variable_representation.code_representation.code_list_reference
+    print(doc.find(reference.identifier).names[0].text)  # -> Status (4)
+    print(empstat.version)  # -> 2
+    ```
+
+    A major bump fits: last year's code 3 no longer means the same thing.
+
+---
+
+## Quiz
+
+???+ question "Question 1 (O1): You opened survey-2023.xml and added two questions. Which line keeps last year's file unchanged?"
+    **A.** `doc.save("survey-2023.xml")`
+
+    **B.** `doc.validate()`
+
+    **C.** `doc.save("survey-2024.xml")`
+
+    **D.** `ddi.open_ddi("survey-2024.xml")`
+
+    ??? success "Answer"
+        **C.** Saving under a new name writes the update to a new file and
+        leaves `survey-2023.xml` as it was. A overwrites last year's file. B
+        checks but saves nothing; D reads a file that does not exist yet.
+
+???+ question "Question 2 (O2): A question is at version 1.2.3. You call increment_minor_version(). What is its version now?"
+    **A.** `1.3.3`
+
+    **B.** `2.0.0`
+
+    **C.** `1.2.4`
+
+    **D.** `1.3.0`
+
+    ??? success "Answer"
+        **D.** The minor number goes up by one, and the number to its right
+        resets to zero.
+
+???+ question "Question 3 (O2): A variable is at version 1. You call increment_subversion() with no arguments. What happens?"
+    **A.** It raises an error: pass `allow_dotted=True` to get `1.0.1`, or
+    use `increment_major_version()`.
+
+    **B.** The version becomes `1.0.1`.
+
+    **C.** The version becomes `2`.
+
+    **D.** Nothing: the version stays `1` and no error is raised.
+
+    ??? success "Answer"
+        **A.** An item keeps the numbering it has. A one-part version stays
+        one-part unless you pass `allow_dotted=True`, because some tools only
+        read whole-number versions.
+
+???+ question "Question 4 (O3): Which code records why question q changed and who changed it?"
+    **A.** `q.labels.append(InternationalString(text="Reworded for 2024"))`
+
+    **B.** `q.version_rationales.append(VersionRationale(descriptions=[InternationalString(text="Reworded for 2024")]))`,
+    then `q.version_responsibility = "Survey Design Team"`
+
+    **C.** `q.set_property("why", "Reworded for 2024")`
+
+    **D.** `doc.save("survey-2024.xml")`
+
+    ??? success "Answer"
+        **B.** A `VersionRationale` holds the reason, and
+        `version_responsibility` names who made the change. A changes the
+        label; C stores a custom field that no DDI tool reads as a rationale.
+
+???+ question "Question 5 (O4): You reworded a question and bumped its version. doc.lint() now reports ddi.reference.integrity. What do you fix?"
+    **A.** Delete the variable and create a new one.
+
+    **B.** Undo the version bump.
+
+    **C.** Replace the variable's reference with `question.to_reference()`,
+    which names the new version.
+
+    **D.** Nothing: `doc.validate()` passes, so the file is fine.
+
+    ??? success "Answer"
+        **C.** A DDI reference names one exact version. After the bump, the
+        variable's `question_references` still name the old one, so replace
+        them with `question.to_reference()`. `doc.validate()` does not check
+        references, which is why D is wrong.
+
+???+ question "Question 6 (O5): How do you switch a variable from one code list to another?"
+    **A.** Call `variable.set_coded(new_code_list)`.
+
+    **B.** Rename the old code list.
+
+    **C.** Add the new codes to the old code list.
+
+    **D.** Call `doc.add_code_list()` with the variable's name.
+
+    ??? success "Answer"
+        **A.** `set_coded()` replaces the variable's representation with one
+        that references the new code list. Then bump the variable's version,
+        record a rationale, and remove the old code list if nothing else
+        uses it.
+
+???+ question "Question 7 (O5): A variable's answers change from Yes/No to Every day, Some days, Never. Which increment fits?"
+    **A.** A sub-version: only the labels changed.
+
+    **B.** A minor version: one category was added.
+
+    **C.** None: the variable's name did not change.
+
+    **D.** A major version: last year's answers cannot be compared directly
+    with this year's.
+
+    ??? success "Answer"
+        **D.** New answer categories change what the variable holds. When
+        answers are no longer comparable, the change is major.
+
+---
+
+## Going further (optional)
+
+### Keep every reference current
+
+Section 6 repointed the one variable that referred to the question. A larger
+file can have more references to an item you version:
+
+- **A questionnaire flow** (Module 10): each `QuestionConstruct` that asks a
+  question holds a `question_reference`. Repoint it the same way:
+
+    ```python
+    from ddi_l.models.datacollection import QuestionConstruct
+
+
+    def repoint_constructs(doc, question):
+        """Point every QuestionConstruct that asks `question` at its new version."""
+        for construct in doc.items(QuestionConstruct):
+            ref = construct.question_reference
+            if ref is not None and ref.identifier == question.identifier:
+                construct.question_reference = question.to_reference()
+    ```
+
+- **Derived variables** (Module 11) refer to their sources in
+  `source_variable_references`.
+- **A record layout** refers to every variable of a data file (below).
+
+Either repoint each one with `to_reference()`, or build it after the bump so it
+points at the new version from the start. Then run `doc.lint()`: every
+`ddi.reference.integrity` error names one you missed.
+
+### Update many variables from a new data file
 
 A new wave usually arrives as a **data file**. The metadata has to catch up
 with it: the new file needs describing, and many variables need the same kind
 of change. In DDI, a data file is described by a **physical instance**
 (`PhysicalInstance`): where the file is and how many records it holds.
 
-This section puts the pieces together. You describe the new file, then loop
-over the variables once and update each one from the data, versioning each
-change as you go.
+You describe the new file, then loop over the variables once and update each
+one from the data, versioning each change as you go.
 
 The example uses the sample file from Module 8:
 
@@ -470,7 +920,7 @@ data_2023.set_record_count(4800)
 last_year.save("income-2023.xml")
 ```
 
-### Step 1: Open the document and read the new data file
+**Step 1: Open the document and read the new data file.**
 
 ```python
 doc = ddi.open_ddi("income-2023.xml")
@@ -481,10 +931,8 @@ with open("survey_sample.csv", newline="", encoding="utf-8") as f:
 print(f"{len(rows)} records")  # -> 5 records
 ```
 
-### Step 2: Describe the new file
-
-Add a physical instance for the 2024 file. Keep the 2023 one: it still
-describes last year's file correctly.
+**Step 2: Describe the new file.** Add a physical instance for the 2024 file.
+Keep the 2023 one: it still describes last year's file correctly.
 
 ```python
 data_2024 = doc.add_item(PhysicalInstance, name="Income Survey 2024 data")
@@ -492,11 +940,9 @@ data_2024.set_data_file("https://example.org/data/income-2024.csv")
 data_2024.set_record_count(len(rows))
 ```
 
-### Step 3: Write down the changes
-
-Put the changes in one place before you touch any variable. Here every
-variable gets a clearer label, two get a numeric range, and two get a code
-list:
+**Step 3: Write down the changes.** Put the changes in one place before you
+touch any variable. Here every variable gets a clearer label, two get a
+numeric range, and two get a code list:
 
 ```python
 new_labels = {
@@ -510,10 +956,9 @@ numeric_columns = {"age", "income"}
 coded_columns = {"gender", "education_level"}
 ```
 
-### Step 4: Update every variable in one loop
-
-For each variable, find its column in the data file, apply the changes, and
-then version it. The code lists use the `add_codes()` helper from section 6.
+**Step 4: Update every variable in one loop.** For each variable, find its
+column in the data file, apply the changes, and then version it. The code
+lists use the `add_codes()` helper from section 6.
 
 ```python
 for variable in doc.variables:
@@ -536,7 +981,7 @@ for variable in doc.variables:
         variable.set_text()
 
     # Version the change and say why
-    variable.increment_minor_version()
+    variable.increment_minor_version(allow_dotted=True)
     variable.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -567,11 +1012,10 @@ age_range = age.variable_representation.numeric_representation.number_range
 print(age_range.low, age_range.high)  # -> 22 51
 ```
 
-### Step 5: Say where each variable sits in the new file
-
-A **record layout** lists the variables in the data file. Build it *after* the
-version bumps, so that it points at the new versions. A layout built before
-the loop would point at the old ones. Then link the layout to the 2024 file:
+**Step 5: Say where each variable sits in the new file.** A **record layout**
+lists the variables in the data file. Build it *after* the version bumps, so
+that it points at the new versions. A layout built before the loop would point
+at the old ones. Then link the layout to the 2024 file:
 
 ```python
 layout = doc.add_record_layout()
@@ -580,7 +1024,7 @@ for variable in doc.variables:
 data_2024.record_layout_references.append(layout.to_reference())
 ```
 
-### Step 6: Check and save
+**Step 6: Check and save.**
 
 ```python
 errors = [finding for finding in doc.lint() if finding.severity == "error"]
@@ -599,351 +1043,20 @@ doc.save("income-2024.xml")
 
 ---
 
-## 9. The full update cycle
-
-Here is the complete workflow from start to finish:
-
-```python
-import ddi_l as ddi
-from ddi_l.models.base import VersionRationale, InternationalString
-
-# Stand-in for last year's file (skip if you have one of your own)
-first = ddi.new_study(title="Survey v1", agency="example.org")
-first.add_question(text="Do you own a fax machine?")
-first.save("survey-v1.xml")
-
-# 1. Open the existing document
-doc = ddi.open_ddi("survey-v1.xml")
-
-# 2. Add new content
-doc.add_question(text="How many hours do you sleep per night?")
-
-# 3. Remove outdated content (use the identifier of the old item)
-old_question = doc.questions[0]
-doc.remove(old_question.identifier)
-
-# 4. Increment the version on the study
-study = doc.study_unit
-study.increment_minor_version()
-
-# 5. Add a rationale
-study.version_rationales.append(
-    VersionRationale(
-        descriptions=[
-            InternationalString(text="Added sleep question; removed outdated item")
-        ]
-    )
-)
-study.version_responsibility = "Research Methods Unit"
-
-# 6. Validate
-errors = doc.validate()
-if errors:
-    print("Errors:", errors)
-else:
-    print("Document is valid.")  # -> Document is valid.
-
-# 7. Save
-doc.save("survey-v2.xml")
-```
-
----
-
-## 10. Best practices
-
-Follow these rules to keep your versioning clean and useful:
-
-- **Always validate before you publish.** Run `doc.validate()` and fix any
-  errors before sharing the file.
-- **Keep old versions.** Save each version to a different filename (like
-  `survey-v1.xml`, `survey-v2.xml`). Do not overwrite old files.
-- **Write clear rationales.** Future users will thank you. A good rationale
-  says *what* changed and *why*.
-- **Use the right increment.** Do not use a major version bump for a small fix.
-  Match the increment to the size of the change.
-- **Set version responsibility.** Record who approved or made the change so
-  there is a contact for questions.
-- **Version the item you edited, not only the study.** A reworded question or
-  a variable with new answer categories gets its own version bump and
-  rationale.
-- **Update the references.** After a version bump, point every reference to
-  the item at its new version, then run `doc.lint()` to confirm nothing is
-  broken.
-
----
-
-## Exercises
-
-!!! example "Scenario"
-    A national labour force survey runs every year. The 2024 version added two
-    new questions and retired one old question. The agency needs to update the
-    DDI document and record why.
-
-**Exercise 1.** Create a study with three questions ("Survey v1"). Save it as
-`survey-v1.xml`.
-
-??? success "Answer"
-    ```python
-    import ddi_l as ddi
-
-    doc = ddi.new_study(title="Labour Force Survey v1", agency="stats.example.org")
-    q1 = doc.add_question(text="What is your current employment status?")
-    q2 = doc.add_question(text="How many hours do you work per week?")
-    q3 = doc.add_question(text="Do you use a fax machine at work?")
-    doc.save("survey-v1.xml")
-    print(f"Saved with {len(doc.questions)} questions.")
-    ```
-
-**Exercise 2.** Re-open `survey-v1.xml`. Add one new question. Remove one old
-question.
-
-??? success "Answer"
-    ```python
-    doc = ddi.open_ddi("survey-v1.xml")
-    print(f"Before: {len(doc.questions)} questions")
-
-    # Add a new question
-    doc.add_question(text="How many hours do you sleep per night?")
-
-    # Remove the outdated fax question (the third one)
-    fax_q = doc.questions[2]
-    doc.remove(fax_q.identifier)
-    print(f"After: {len(doc.questions)} questions")
-    ```
-
-**Exercise 3.** Get the study from the document. Call
-`increment_minor_version()` on it. Add a `VersionRationale`. Set
-`version_responsibility`.
-
-??? success "Answer"
-    ```python
-    from ddi_l.models.base import VersionRationale, InternationalString
-
-    study = doc.study_unit
-    study.increment_minor_version()
-
-    study.version_rationales.append(
-        VersionRationale(
-            descriptions=[
-                InternationalString(text="Added sleep quality question for wave 2")
-            ]
-        )
-    )
-    study.version_responsibility = "Survey Design Team"
-    ```
-
-**Exercise 4.** Validate and save as `survey-v2.xml`. Print the version and
-rationale.
-
-Expected output:
-
-```text
-Version: 1.1
-Rationale: Added sleep quality question for wave 2
-```
-
-??? success "Answer"
-    ```python
-    errors = doc.validate()
-    if errors:
-        print("Errors:", errors)
-    else:
-        doc.save("survey-v2.xml")
-        print(f"Version: {study.version}")
-        for r in study.version_rationales:
-            for d in r.descriptions:
-                print(f"Rationale: {d.text}")
-    ```
-
-**Exercise 5.** Re-open `survey-v2.xml`. Change the wording of the
-employment-status question to "What was your main activity last week?". Give
-the question a sub-version bump and a rationale. Then save the file as
-`survey-v3.xml`.
-
-??? success "Answer"
-    ```python
-    doc = ddi.open_ddi("survey-v2.xml")
-
-    status_q = next(
-        q
-        for q in doc.questions
-        if q.question_texts[0].text == "What is your current employment status?"
-    )
-    for text in status_q.question_texts:
-        if text.lang == "en":
-            text.text = "What was your main activity last week?"
-
-    status_q.increment_subversion()
-    status_q.version_rationales.append(
-        VersionRationale(
-            descriptions=[
-                InternationalString(text="Aligned wording with the ILO definition")
-            ]
-        )
-    )
-
-    # Repoint any variable that references the question
-    for variable in doc.variables:
-        variable.question_references = [
-            status_q.to_reference() if ref.identifier == status_q.identifier else ref
-            for ref in variable.question_references
-        ]
-
-    doc.save("survey-v3.xml")
-    print(f"{status_q.question_texts[0].text} (version {status_q.version})")
-    # -> What was your main activity last week? (version 1.0.1)
-    ```
-
-**Exercise 6.** In the same document, add a variable `EMPSTAT` for the
-question. Code it with a three-value list (Employed, Unemployed, Not in labour
-force). Then switch it to a four-value list that splits "Not in labour force"
-into "Student" and "Retired". Bump the variable's major version and record
-why.
-
-??? success "Answer"
-    ```python
-    three_way = doc.add_code_list(name="Status (3)", label="Status (3)")
-    add_codes(
-        doc,
-        three_way,
-        [("1", "Employed"), ("2", "Unemployed"), ("3", "Not in labour force")],
-    )
-    four_way = doc.add_code_list(name="Status (4)", label="Status (4)")
-    add_codes(
-        doc,
-        four_way,
-        [("1", "Employed"), ("2", "Unemployed"), ("3", "Student"), ("4", "Retired")],
-    )
-
-    empstat = doc.add_variable(name="EMPSTAT", label="Employment status", question=status_q)
-    empstat.set_coded(three_way)
-
-    # The switch
-    empstat.set_coded(four_way)
-    empstat.increment_major_version()
-    empstat.version_rationales.append(
-        VersionRationale(
-            descriptions=[
-                InternationalString(
-                    text="Split 'Not in labour force' into Student and Retired"
-                )
-            ]
-        )
-    )
-
-    reference = empstat.variable_representation.code_representation.code_list_reference
-    print(doc.find(reference.identifier).names[0].text)  # -> Status (4)
-    ```
-
----
-
-## Quiz
-
-???+ question "Question 1: What does increment_minor_version() do?"
-    **A.** It changes the version from 1.0.0 to 2.0.0.
-
-    **B.** It changes the version from 1.0.0 to 1.1.0.
-
-    **C.** It changes the version from 1.0.0 to 1.0.1.
-
-    **D.** It deletes the version number.
-
-    ??? success "Answer"
-        **B.** `increment_minor_version()` increases the second number and
-        resets the third number to zero. So 1.0.0 becomes 1.1.0.
-
-???+ question "Question 2: What does a version rationale record?"
-    **A.** The file size of the document.
-
-    **B.** The number of questions in the survey.
-
-    **C.** An explanation of why the document changed.
-
-    **D.** The name of the Python file used to create the document.
-
-    ??? success "Answer"
-        **C.** A version rationale is a short note that explains why a change
-        was made. It helps future users understand the history of the document.
-
-???+ question "Question 3: What does version_responsibility track?"
-    **A.** The computer where the file is stored.
-
-    **B.** The person or team who made the version change.
-
-    **C.** The date of the next survey wave.
-
-    **D.** The total number of versions.
-
-    ??? success "Answer"
-        **B.** `version_responsibility` is a text field that records who made
-        or approved the change. It could be a person's name or a team name.
-
-???+ question "Question 4: When should you use a major version increment?"
-    **A.** When you fix a typo in a question.
-
-    **B.** When you add one new variable.
-
-    **C.** When you make a big change, like redesigning the whole questionnaire.
-
-    **D.** When you save the file to a new folder.
-
-    ??? success "Answer"
-        **C.** A major version increment (1.0.0 to 2.0.0) signals a large,
-        potentially breaking change. Small additions use a minor increment.
-        Typo fixes use a sub-version increment.
-
-???+ question "Question 5: You reword a question and bump its version. What else must you do?"
-    **A.** Nothing; the variable follows the question automatically.
-
-    **B.** Delete the variable and create a new one.
-
-    **C.** Point every reference to the question at its new version.
-
-    **D.** Rename the file to `.ddi`.
-
-    ??? success "Answer"
-        **C.** A DDI reference names one exact version. After the bump, the
-        variable's `question_references` (and any `QuestionConstruct` that
-        asks the question) still name the old version, so replace them with
-        `question.to_reference()`. `doc.lint()` reports a
-        `ddi.reference.integrity` error for each one you miss.
-
-???+ question "Question 6: How do you switch a variable from one code list to another?"
-    **A.** Call `variable.set_coded(new_code_list)`.
-
-    **B.** Rename the old code list.
-
-    **C.** Add the new codes to the old code list.
-
-    **D.** Call `doc.add_code_list()` with the variable's name.
-
-    ??? success "Answer"
-        **A.** `set_coded()` replaces the variable's representation with one
-        that references the new code list. Then bump the variable's version,
-        record a rationale, and remove the old code list if nothing else
-        uses it.
-
-???+ question "Question 7: You update 30 variables from a new data file. When should you build the new record layout?"
-    **A.** Before the loop, so it is ready.
-
-    **B.** After the version bumps, so it points at the new versions.
-
-    **C.** Never; the physical instance finds the variables by name.
-
-    **D.** Only if the file is fixed-width.
-
-    ??? success "Answer"
-        **B.** A record layout holds references to the variables, and each
-        reference names a version. Built before the bumps, it would point at
-        the old versions. Built after, `variable.to_reference()` gives the
-        new ones.
+## Check yourself
+
+- [ ] I can open a DDI file, add and remove items, and save the result under a new name. (O1)
+- [ ] I can choose the increment for a change and predict the version it gives. (O2)
+- [ ] I can record a version rationale and a version responsibility on the item I changed. (O3)
+- [ ] I can reword a question in every language, version it, and repoint the variable that refers to it. (O4)
+- [ ] I can switch a variable to another code list, check which list it uses, and version it. (O5)
 
 ---
 
 !!! tip "Instructor notes"
-    - **Key module for archivists and NSO staff.** Versioning is built into the
-      DDI standard itself; it is not something added on top. Every
-      maintainable object carries its own version, rationale, and
+    - **Key module for archivists and statistical-office staff.** Versioning
+      is built into the DDI standard itself; it is not something added on
+      top. Every maintainable object carries its own version, rationale, and
       responsibility fields.
     - **Show before/after XML.** Open `survey-v1.xml` and `survey-v2.xml` in a
       text editor side by side. Point out the `<r:Version>` and
@@ -952,10 +1065,11 @@ why.
     - **The version methods live on `MaintainableBase`.** All DDI objects
       (questions, variables, concepts, studies, code lists) inherit these
       methods. You can version any item, not just the top-level study.
-    - **Common mistake:** Learners may forget to set the version to a
-      three-part string like `"1.0.0"` before calling `increment_subversion()`.
-      If the version is just `"1"`, the method will pad it automatically, but
-      it helps to start with three parts for clarity.
+    - **Common mistake:** calling `increment_minor_version()` or
+      `increment_subversion()` on a one-part version such as `"1"`. The
+      method raises an error rather than pad it. Learners either set
+      `"1.0.0"` first or pass `allow_dotted=True`; section 4 lets them see
+      the error.
     - **Edits, not just additions (sections 6 and 7).** Most real updates
       reword a question or change its answer categories. Stress the four steps:
       find the item, change it, version it with a rationale, repoint the
@@ -964,11 +1078,12 @@ why.
     - **Wording vs. meaning.** Ask whether a wording change keeps answers
       comparable with last year. If yes, use a sub-version; if not, use a
       major version. The same question applies to a new code list.
-    - **Bulk updates (section 8).** This is the realistic case for NSO staff:
-      a new wave's data file arrives and dozens of variables need the same
-      kind of change. Point out that Step 3 is a plain dictionary. Learners
-      can keep it in a spreadsheet and load it, so subject-matter staff can
-      review the changes before anyone runs the loop.
+    - **Bulk updates (Going further).** This is the realistic case for
+      statistical-office staff: a new wave's data file arrives and dozens of
+      variables need the same kind of change. Point out that Step 3 is a
+      plain dictionary. Learners can keep it in a spreadsheet and load it, so
+      subject-matter staff can review the changes before anyone runs the
+      loop.
     - **Discussion prompt:** Ask learners how their organization currently
       tracks changes to survey instruments. Compare that process to DDI
       versioning.

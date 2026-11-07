@@ -5,7 +5,7 @@ translated. Swagger UI's chrome ("Try it out", "Execute") is not; the
 renderers have no i18n support.
 
 The catalog is keyed by the English string, so rewording an English
-description invalidates its translation and :func:`missing_translations`
+description invalidates its translation and `missing_translations`
 reports it.
 
 Never translated: ``info.title``, JSON field names and example values, which
@@ -26,7 +26,7 @@ __all__ = [
     "unused_translations",
 ]
 
-#: The locale the handlers are written in; :func:`translate_schema` returns the
+#: The locale the handlers are written in; `translate_schema` returns the
 #: schema untouched for it.
 DEFAULT_LOCALE: Final = "en"
 
@@ -67,6 +67,21 @@ _FR: Final[dict[str, str]] = {
     "Run lint rules alongside schema validation. Pass `false` to skip them.": (
         "Exécuter les règles de lint en plus de la validation de schéma. "
         "Passez `false` pour les ignorer."
+    ),
+    "Lint options for this request, as the JSON object `ddi lint "
+    '--lint-config` reads: `{"allowed_agencies": ["example.org"]}`. '
+    "Options left out keep their defaults.": (
+        "Options de lint pour cette requête, sous la forme de l'objet JSON que "
+        'lit `ddi lint --lint-config` : `{"allowed_agencies": '
+        '["example.org"]}`. Les options omises gardent leur valeur par défaut.'
+    ),
+    "Run only these rules instead of the default set; repeat it for each. "
+    "Ignored with `profile`.": (
+        "N'exécuter que ces règles au lieu du jeu par défaut ; répétez le "
+        "paramètre pour chacune. Ignoré avec `profile`."
+    ),
+    "Leave out the findings of these rules; repeat it for each.": (
+        "Écarter les constats de ces règles ; répétez le paramètre pour chacune."
     ),
     "A DDI Lifecycle XML document, sent as the raw request body -- not "
     "multipart, not JSON-wrapped. `curl --data-binary @study.xml` is the "
@@ -219,10 +234,10 @@ _FR: Final[dict[str, str]] = {
         "filtrer ou appliquer une suppression."
     ),
     "What the rule found.": "Ce que la règle a trouvé.",
-    "`error` or `warning`. Only `error` makes a document invalid, matching "
-    "`ddi lint`'s default exit status.": (
-        "`error` ou `warning`. Seul `error` rend un document invalide, ce qui "
-        "correspond au statut de sortie par défaut de `ddi lint`."
+    "`error`, `warning` or `info`. Only `error` makes a document invalid, "
+    "matching `ddi lint`'s default exit status.": (
+        "`error`, `warning` ou `info`. Seul `error` rend un document invalide, "
+        "ce qui correspond au statut de sortie par défaut de `ddi lint`."
     ),
     "Prefixed path to the element that triggered the rule.": (
         "Chemin préfixé vers l'élément qui a déclenché la règle."
@@ -255,7 +270,7 @@ _FR: Final[dict[str, str]] = {
     "The finding, from whichever check produced it.": (
         "Le constat, quelle que soit la vérification qui l'a produit."
     ),
-    "`error` or `warning`.": "`error` ou `warning`.",
+    "`error`, `warning` or `info`.": "`error`, `warning` ou `info`.",
     "Which check produced it: `schema` or `lint`.": (
         "Quelle vérification l'a produit : `schema` ou `lint`."
     ),
@@ -293,13 +308,15 @@ _FR: Final[dict[str, str]] = {
         "Toutes les versions acceptées dans `?version=`."
     ),
     # --- Metadata tables and the Colectica layout ---------------------------
-    "`colectica` writes a FragmentInstance as Colectica Designer does (UTF-8 "
-    "with a byte-order mark, one item per fragment), so an unchanged Colectica "
-    "export comes back byte for byte. Only for a FragmentInstance.": (
-        "`colectica` écrit une FragmentInstance comme Colectica Designer (UTF-8 "
-        "avec indicateur d'ordre des octets, un élément par fragment) : un "
-        "export Colectica inchangé revient octet pour octet. Seulement pour une "
-        "FragmentInstance."
+    "Lay the whole file out: `colectica` writes a FragmentInstance as "
+    "Colectica Designer does (UTF-8 with a byte-order mark, one item per "
+    "fragment); `default` is this library's layout. Left out, the file comes "
+    "back as sent, byte for byte.": (
+        "Remet en forme tout le fichier : `colectica` écrit une FragmentInstance "
+        "comme Colectica Designer (UTF-8 avec indicateur d'ordre des octets, un "
+        "élément par fragment) ; `default` est la mise en forme de cette "
+        "bibliothèque. Sans ce paramètre, le fichier revient tel qu'envoyé, "
+        "octet pour octet."
     ),
     "The metadata tables and their columns": (
         "Les tableaux de métadonnées et leurs colonnes"
@@ -442,11 +459,11 @@ _FR: Final[dict[str, str]] = {
     "From a zip of three CSV files: `settings.csv` (the agency), "
     "`concepts.csv` (AGE) and `variables.csv` (AGE, a numeric variable "
     "measuring that concept). Written as Colectica Designer writes an export, "
-    "so it imports into a Colectica repository.": (
+    "for importing into a Colectica repository.": (
         "À partir d'un zip de trois fichiers CSV : `settings.csv` (l'agence), "
         "`concepts.csv` (AGE) et `variables.csv` (AGE, une variable numérique "
         "qui mesure ce concept). Écrite comme Colectica Designer écrit un "
-        "export : elle s'importe dans un dépôt Colectica."
+        "export, pour l'importer dans un dépôt Colectica."
     ),
     "The body was empty, or not an .xlsx workbook or a .zip of CSV files.": (
         "Le corps était vide, ou n'était ni un classeur .xlsx ni un .zip de "
@@ -475,7 +492,7 @@ LOCALES: Final[dict[str, dict[str, str]]] = {"fr": _FR}
 def _walk(node: Any, visit: Any) -> None:
     """Apply ``visit(container, key, text)`` to every translatable string.
 
-    Skips :data:`_OPAQUE_KEYS` entirely rather than merely declining to
+    Skips `_OPAQUE_KEYS` entirely rather than merely declining to
     translate them, so a sample document containing a ``description`` key is
     never even inspected.
     """
@@ -497,12 +514,12 @@ def translate_schema(schema: dict[str, Any], locale: str) -> dict[str, Any]:
 
     The input is never mutated: Litestar reuses one schema object for every
     request. A string with no catalog entry is left in English;
-    :func:`missing_translations` reports such gaps.
+    `missing_translations` reports such gaps.
 
     Args:
         schema: The serialized OpenAPI document, as ``OpenAPI.to_schema()``
             returns it.
-        locale: A key of :data:`LOCALES`, or :data:`DEFAULT_LOCALE`.
+        locale: A key of `LOCALES`, or `DEFAULT_LOCALE`.
 
     Returns:
         A deep copy with every known string replaced, or ``schema`` itself when

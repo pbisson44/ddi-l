@@ -6,17 +6,20 @@ description: >-
 
 # Module 11 : Documenter les fichiers de données et la traçabilité des variables
 
-!!! info "Ce que vous apprendrez"
-    - Comprendre les trois étapes des données d'enquête : **collecte**, **production** et **diffusion**.
-    - Créer des variables avec différentes représentations (`NumericRepresentation`, `CodeRepresentation`, `TextRepresentation`).
-    - Lier chaque variable à sa **question source** avec `question_references`.
-    - Modéliser des **variables dérivées** avec `source_variable_references` pour la traçabilité.
-    - Suivre la **relation basée-sur** entre les variables de collecte et de production.
-    - Construire une chaîne de provenance complète du fichier de diffusion jusqu'au questionnaire original.
+!!! info "Objectifs d'apprentissage"
+    À la fin de ce module, vous pouvez :
 
-**Prérequis :** [Module 10 : Flux de questionnaire](module-10-questionnaire-flows.md).
+    - **O1.** Expliquer en deux ou trois phrases en quoi un fichier de collecte, un fichier de production et un fichier maître diffèrent, et quelles variables chacun contient.
+    - **O2.** Choisir une représentation pour une variable d'après ses valeurs, et la définir avec `set_numeric()`, `set_coded()` ou `set_text()`.
+    - **O3.** Lier chaque variable de collecte à sa question source avec `doc.add_variable(..., question=...)`.
+    - **O4.** Enregistrer les sources d'une variable dérivée dans `source_variable_references`, qu'elle ait une source ou plusieurs.
+    - **O5.** Retracer une variable du fichier maître jusqu'à sa question d'origine en suivant `source_variable_references` et `question_references` avec `doc.find()`.
+
+**Prérequis :** [Module 10](module-10-questionnaire-flows.fr.md).
 
 **Durée :** 60 min en autonomie / 75 min avec instructeur.
+
+**Nouveau dans ce module :** `set_numeric()`, `set_text()`, `variable_representation`, `source_variable_references`, `question_references`, `doc.find()`.
 
 ---
 
@@ -74,19 +77,7 @@ Commencez par créer l'étude et les questions de notre enquête sur la santé.
 
 ```python
 import ddi_l as ddi
-from ddi_l.models.logicalproduct import (
-    Variable,
-    CodeList,
-    Category,
-    CodeItem,
-    VariableRepresentation,
-    NumericRepresentation,
-    CodeRepresentation,
-    TextRepresentation,
-    NumberRange,
-)
-from ddi_l.models.datacollection import QuestionConstruct
-from ddi_l.models.base import Reference, InternationalString
+from ddi_l.models.logicalproduct import Category
 
 doc = ddi.new_study(
     title="National Health Survey: Data Documentation",
@@ -105,19 +96,29 @@ q_smoke = doc.add_question(text="Do you smoke?")
 ## 4. Construire les variables de collecte
 
 Les **variables de collecte** capturent exactement ce qui a été demandé.
-Chacune a une **représentation** (numérique, texte ou codée) et un lien vers sa **question source**.
+Chacune a une **représentation** (numérique, codée ou texte) et un lien vers sa **question source**.
+
+Une représentation indique aux utilisateurs **quel type de valeurs** la variable contient :
+
+| Les valeurs sont... | Appel | Exemples |
+| --- | --- | --- |
+| Des nombres qu'on compte ou mesure | `set_numeric()` | âge, revenu, nuits à l'hôpital |
+| Une réponse parmi un ensemble fixe | `set_coded(code_list)` | genre, état de santé, oui/non |
+| Des mots libres | `set_text()` | profession, commentaires |
 
 ### Variable numérique : age
 
 ```python
 v_age = doc.add_variable(name="age", question=q_age)
+v_age.set_numeric("Integer", low=0, high=120)
 ```
 
 Le paramètre `question=` crée automatiquement une entrée `question_references` qui lie cette variable à la question dont elle provient.
+`set_numeric()` enregistre que les valeurs sont des nombres entiers (`"Integer"`) de 0 à 120.
 
 ### Variable codée : gender
 
-Pour les variables codées, vous créez d'abord une `CodeList`, puis vous définissez la représentation de la variable pour l'utiliser.
+Pour les variables codées, vous créez d'abord une liste de codes (module 9), puis vous pointez la variable vers elle avec `set_coded()`, que vous avez vu au module 6.
 
 ```python
 # Créer la liste de codes Genre
@@ -125,18 +126,35 @@ cl_gender = doc.add_code_list(name="Gender Codes")
 doc.add_item(Category, name="Male")
 doc.add_item(Category, name="Female")
 doc.add_item(Category, name="Other")
+
+v_gender = doc.add_variable(name="gender", question=q_gender)
+v_gender.set_coded(cl_gender)
 ```
 
 ### Variable texte : occupation
 
 ```python
 v_occupation = doc.add_variable(name="occupation", question=q_occupation)
+v_occupation.set_text()
+```
+
+### Vérifier une représentation
+
+Chaque appel remplit la `variable_representation` de la variable. Elle contient
+un seul type de représentation (`numeric_representation`,
+`code_representation` ou `text_representation`), et les deux autres restent
+`None` :
+
+```python
+print(v_age.variable_representation.numeric_representation.numeric_type_code)
+# -> Integer
+print(v_occupation.variable_representation.text_representation is not None)
+# -> True
 ```
 
 ### Construire toutes les variables de collecte
 
 ```python
-v_gender = doc.add_variable(name="gender", question=q_gender)
 v_employed = doc.add_variable(name="employed", question=q_employed)
 v_health = doc.add_variable(name="health_rating", question=q_health)
 v_smoke = doc.add_variable(name="smoker", question=q_smoke)
@@ -179,21 +197,17 @@ doc.add_item(Category, name="65+")
 
 ```python
 v_age_group = doc.add_variable(name="age_group", question=q_age)
+v_age_group.set_coded(cl_age_group)
 ```
 
 ### Étape 3 : Lier à sa variable source
 
 Le champ clé est `source_variable_references`.
 Il dit à quiconque lit les métadonnées : « Cette variable a été dérivée de ces autres variables. »
+Construisez chaque référence avec `.to_reference()`, comme pour les constructions au module 10 :
 
 ```python
-v_age_group.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_age.identifier,
-        version="1",
-    ),
-]
+v_age_group.source_variable_references = [v_age.to_reference()]
 ```
 
 Maintenant `age_group` a deux liens de provenance :
@@ -208,23 +222,11 @@ Le fichier de production a à la fois les variables de collecte originales **et*
 ```python
 # Dérivée : employment_status_code depuis employed
 v_emp_code = doc.add_variable(name="employment_status_code", question=q_employed)
-v_emp_code.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_employed.identifier,
-        version="1",
-    ),
-]
+v_emp_code.source_variable_references = [v_employed.to_reference()]
 
 # Dérivée : health_score depuis health_rating
 v_health_score = doc.add_variable(name="health_score", question=q_health)
-v_health_score.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_health.identifier,
-        version="1",
-    ),
-]
+v_health_score.source_variable_references = [v_health.to_reference()]
 
 print(f"Total variables (collection + derived): {len(doc.variables)}")
 # -> Total variables (collection + derived): 9
@@ -248,19 +250,35 @@ flowchart BT
     Q1["Question : What is your age?"]
     V1["Variable de collecte : age\n(numérique)"]
     V2["Variable dérivée : age_group\n(codée : 0-15, 16-24, ...)"]
-    V3["Variable maître : age_group\n(diffusion)"]
+    V3["Variable maître : age_group_master\n(diffusion)"]
 
-    V1 -->|"question_references"| Q1
-    V2 -->|"question_references"| Q1
-    V2 -->|"source_variable_references"| V1
-    V3 -->|"source_variable_references"| V2
+    V1 -->|"QuestionReference\n(question_references)"| Q1
+    V2 -->|"QuestionReference"| Q1
+    V3 -->|"QuestionReference"| Q1
+    V2 -->|"SourceVariableReference\n(source_variable_references)"| V1
+    V3 -->|"SourceVariableReference"| V2
 ```
 
 En lisant de bas en haut, vous pouvez répondre :
 
-- « D'où vient `age_group` dans le fichier maître ? » → De la variable de production `age_group`.
+- « D'où vient `age_group_master` dans le fichier maître ? » → De la variable de production `age_group`.
 - « D'où vient le `age_group` de production ? » → Dérivée de `age` dans le fichier de collecte.
 - « D'où vient `age` ? » → De la question « What is your age? »
+
+### Suivre la chaîne dans le code
+
+Une référence stocke l'**identifiant** de sa cible. `doc.find(identifier)`
+renvoie l'élément qui porte cet identifiant, où qu'il soit dans le document.
+Le [module 13](module-13-properties-find-validate.fr.md) approfondit la recherche
+d'éléments. Remontez `age_group` d'une étape, puis jusqu'à sa question :
+
+```python
+source = doc.find(v_age_group.source_variable_references[0].identifier)
+print(source.names[0].text)  # -> age
+
+question = doc.find(source.question_references[0].identifier)
+print(question.question_texts[0].text)  # -> What is your age?
+```
 
 ## 9. Construire les variables du fichier maître
 
@@ -268,41 +286,16 @@ Le fichier maître contient seulement les variables dérivées prêtes pour la d
 Celles-ci référencent les variables dérivées de l'étape de production comme leur source.
 
 ```python
-# Variables du fichier maître référencent les variables de production
+# Les variables du fichier maître référencent les variables de production
 v_master_age_group = doc.add_variable(name="age_group_master", question=q_age)
-v_master_age_group.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_age_group.identifier,
-        version="1",
-    ),
-]
+v_master_age_group.source_variable_references = [v_age_group.to_reference()]
 
-v_master_emp = doc.add_variable(
-    name="employment_status_master",
-    question=q_employed,
-)
-v_master_emp.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_emp_code.identifier,
-        version="1",
-    ),
-]
+v_master_emp = doc.add_variable(name="employment_status_master", question=q_employed)
+v_master_emp.source_variable_references = [v_emp_code.to_reference()]
 
-v_master_health = doc.add_variable(
-    name="health_score_master",
-    question=q_health,
-)
-v_master_health.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_health_score.identifier,
-        version="1",
-    ),
-]
+v_master_health = doc.add_variable(name="health_score_master", question=q_health)
+v_master_health.source_variable_references = [v_health_score.to_reference()]
 
-print(f"Master variables: 3")
 print(f"Total variables in document: {len(doc.variables)}")
 # -> Total variables in document: 12
 ```
@@ -321,17 +314,11 @@ v_weight = doc.add_variable(name="weight_kg", question=q_weight)
 
 v_bmi = doc.add_variable(name="bmi")
 v_bmi.source_variable_references = [
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_height.identifier,
-        version="1",
-    ),
-    Reference(
-        agency="health.gc.ca",
-        identifier=v_weight.identifier,
-        version="1",
-    ),
+    v_height.to_reference(),
+    v_weight.to_reference(),
 ]
+
+print(f"BMI sources: {len(v_bmi.source_variable_references)}")  # -> BMI sources: 2
 ```
 
 La liste `source_variable_references` contient **deux** références.
@@ -346,66 +333,25 @@ Un patron courant en traitement de données : une variable de collecte **numéri
 | Collecte | `age` | Numérique (0-120) | 34, 17, 68 |
 | Production | `age_group` | Codée (5 catégories) | « 25-44 », « 16-24 », « 65+ » |
 
-Cela se documente en DDI par :
+Vous l'avez documenté en trois étapes :
 
-1. Définir `age` avec une représentation numérique
-2. Définir `age_group` avec une représentation codée qui pointe vers une liste de codes
-3. Lier `age_group.source_variable_references` → `age`
+1. `v_age.set_numeric("Integer", low=0, high=120)` donne à `age` une représentation numérique.
+2. `v_age_group.set_coded(cl_age_group)` donne à `age_group` une représentation codée qui pointe vers la liste Age Group Codes.
+3. `v_age_group.source_variable_references` pointe vers `age`.
 
 La représentation indique aux utilisateurs **quel type de valeurs** la variable contient.
 La référence source leur dit **d'où viennent ces valeurs**.
 
-## 12. Résumé : le modèle complet de traçabilité
+## 12. Le modèle de traçabilité en un coup d'œil
 
-```mermaid
-flowchart TD
-    subgraph Questions
-        QA["Q : Quel est votre âge ?"]
-        QG["Q : Quel est votre genre ?"]
-        QE["Q : Êtes-vous employé ?"]
-        QH["Q : Évaluez votre santé ?"]
-    end
+| Fichier | Variables | Chacune pointe vers |
+| --- | --- | --- |
+| Collecte | `age`, `gender`, `employed`, `occupation`, `health_rating`, `smoker` | sa question (`question_references`) |
+| Production (dérivées) | `age_group`, `employment_status_code`, `health_score` | une variable de collecte (`source_variable_references`) |
+| Maître | `age_group_master`, `employment_status_master`, `health_score_master` | une variable de production (`source_variable_references`) |
 
-    subgraph Collection["Fichier de collecte"]
-        CA["age (numérique)"]
-        CG["gender (codée)"]
-        CE["employed (oui/non)"]
-        CH["health_rating (codée)"]
-    end
-
-    subgraph Production["Fichier de production"]
-        PA["age (numérique)"]
-        PG["gender (codée)"]
-        PE["employed (oui/non)"]
-        DA["age_group (codée)"]
-        DE["employment_code (codée)"]
-        DH["health_score (numérique)"]
-    end
-
-    subgraph Master["Fichier maître"]
-        MA["age_group"]
-        ME["employment_code"]
-        MH["health_score"]
-    end
-
-    CA -->|"question_ref"| QA
-    CG -->|"question_ref"| QG
-    CE -->|"question_ref"| QE
-    CH -->|"question_ref"| QH
-
-    PA -->|"source_var_ref"| CA
-    DA -->|"source_var_ref"| CA
-    DA -->|"question_ref"| QA
-    DE -->|"source_var_ref"| CE
-    DH -->|"source_var_ref"| CH
-
-    MA -->|"source_var_ref"| DA
-    ME -->|"source_var_ref"| DE
-    MH -->|"source_var_ref"| DH
-```
-
-Chaque flèche est un objet `Reference` en DDI.
-Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
+Chaque lien est une `Reference`. Suivez-les depuis n'importe quelle variable
+maître et vous arrivez à la question d'origine.
 
 ---
 
@@ -421,18 +367,31 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
 
 ## Exercices
 
-1. Créez une étude pour l'enquête sur la santé. Ajoutez 6 questions et 6 variables de collecte, chacune liée à sa question source. Affichez le compteur.
+1. **(O1)** Regardez les trois tableaux de la section 2. En deux ou trois phrases, expliquez en quoi les fichiers de collecte, de production et maître diffèrent, et dites quel fichier reçoit un membre du public.
+
+    ??? success "Réponse"
+        Une réponse possible : « Le fichier de collecte contient les réponses
+        brutes telles que les répondants les ont données, comme `age` et
+        `health_rating`. Le fichier de production garde ces variables
+        nettoyées et ajoute des variables dérivées calculées à partir d'elles,
+        comme `age_group` et `health_score`. Le fichier maître ne garde que
+        les variables dérivées prêtes pour la diffusion, et c'est lui que
+        reçoit le public. »
+
+2. **(O3)** Créez une étude pour l'enquête sur la santé. Ajoutez 6 questions et 6 variables de collecte, chacune liée à sa question source. Affichez les compteurs et le nombre de références de question de `age`.
 
     **Résultat attendu :**
 
     ```text
     Questions: 6
     Variables: 6
+    age question references: 1
     ```
 
     ??? success "Réponse"
         ```python
         import ddi_l as ddi
+        from ddi_l.models.logicalproduct import Category
 
         doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
 
@@ -452,36 +411,43 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
 
         print(f"Questions: {len(doc.questions)}")
         print(f"Variables: {len(doc.variables)}")
+        print(f"age question references: {len(v_age.question_references)}")
         ```
 
-2. Créez une liste de codes pour les groupes d'âge (0-15, 16-24, 25-44, 45-64, 65+). Créez la variable dérivée `age_group` et liez-la à la variable de collecte `age` avec `source_variable_references`. Affichez le compteur.
+3. **(O2)** Choisissez et définissez une représentation pour trois des variables de collecte : `age` contient des nombres entiers de 0 à 120, `gender` contient Male, Female ou Other, et `occupation` contient du texte libre. Puis affichez une vérification pour chacune.
 
     **Résultat attendu :**
 
     ```text
-    Code lists: 1
-    Variables: 7
+    age: Integer
+    gender is coded: True
+    occupation is text: True
     ```
 
     ??? success "Réponse"
         ```python
-        from ddi_l.models.base import Reference
-        from ddi_l.models.logicalproduct import Category
+        v_age.set_numeric("Integer", low=0, high=120)
 
-        cl = doc.add_code_list(name="Age Group Codes")
-        for group in ("0-15", "16-24", "25-44", "45-64", "65+"):
-            doc.add_item(Category, name=group)
+        cl_gender = doc.add_code_list(name="Gender Codes")
+        for name in ("Male", "Female", "Other"):
+            doc.add_item(Category, name=name)
+        v_gender.set_coded(cl_gender)
 
-        v_age_group = doc.add_variable(name="age_group", question=q_age)
-        v_age_group.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_age.identifier, version="1"),
-        ]
+        v_occupation.set_text()
 
-        print(f"Code lists: {len(doc.code_lists)}")
-        print(f"Variables: {len(doc.variables)}")
+        rep = v_age.variable_representation
+        print(f"age: {rep.numeric_representation.numeric_type_code}")
+        rep = v_gender.variable_representation
+        print(f"gender is coded: {rep.code_representation is not None}")
+        rep = v_occupation.variable_representation
+        print(f"occupation is text: {rep.text_representation is not None}")
         ```
 
-3. Créez deux autres variables dérivées : `employment_status_code` (depuis `employed`) et `health_score` (depuis `health_rating`). Chacune doit avoir `source_variable_references` pointant vers sa source. Affichez le total.
+        `gender` reçoit une liste de codes car ses réponses viennent d'un
+        ensemble fixe. `occupation` est du texte car n'importe quel titre
+        d'emploi est possible.
+
+4. **(O4)** Créez les trois variables de production. `age_group` est codée avec une liste « Age Group Codes » (0-15, 16-24, 25-44, 45-64, 65+) et dérivée de `age`. `employment_status_code` est dérivée de `employed`, et `health_score` de `health_rating`. Enregistrez chaque source dans `source_variable_references`. Affichez le total.
 
     **Résultat attendu :**
 
@@ -491,39 +457,49 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
 
     ??? success "Réponse"
         ```python
+        cl_age_group = doc.add_code_list(name="Age Group Codes")
+        for group in ("0-15", "16-24", "25-44", "45-64", "65+"):
+            doc.add_item(Category, name=group)
+
+        v_age_group = doc.add_variable(name="age_group", question=q_age)
+        v_age_group.set_coded(cl_age_group)
+        v_age_group.source_variable_references = [v_age.to_reference()]
+
         v_emp_code = doc.add_variable(name="employment_status_code", question=q_employed)
-        v_emp_code.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_employed.identifier, version="1"),
-        ]
+        v_emp_code.source_variable_references = [v_employed.to_reference()]
 
         v_health_score = doc.add_variable(name="health_score", question=q_health)
-        v_health_score.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_health.identifier, version="1"),
-        ]
+        v_health_score.source_variable_references = [v_health.to_reference()]
 
         print(f"Variables: {len(doc.variables)}")
         ```
 
-4. Créez 3 variables du fichier maître (`age_group_master`, `employment_status_master`, `health_score_master`). Chacune doit référencer sa variable dérivée de production comme source. Affichez le compteur final et vérifiez la traçabilité en affichant les références sources.
+5. **(O4)** Créez 3 variables du fichier maître (`age_group_master`, `employment_status_master`, `health_score_master`). Chacune doit référencer sa variable dérivée de production comme source. Affichez le total, puis chaque variable qui a une source.
+
+    **Résultat attendu :**
+
+    ```text
+    Variables: 12
+      age_group: 1 source(s)
+      employment_status_code: 1 source(s)
+      health_score: 1 source(s)
+      age_group_master: 1 source(s)
+      employment_status_master: 1 source(s)
+      health_score_master: 1 source(s)
+    ```
 
     ??? success "Réponse"
         ```python
         v_master_ag = doc.add_variable(name="age_group_master", question=q_age)
-        v_master_ag.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_age_group.identifier, version="1"),
-        ]
+        v_master_ag.source_variable_references = [v_age_group.to_reference()]
 
         v_master_emp = doc.add_variable(name="employment_status_master", question=q_employed)
-        v_master_emp.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_emp_code.identifier, version="1"),
-        ]
+        v_master_emp.source_variable_references = [v_emp_code.to_reference()]
 
         v_master_hs = doc.add_variable(name="health_score_master", question=q_health)
-        v_master_hs.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_health_score.identifier, version="1"),
-        ]
+        v_master_hs.source_variable_references = [v_health_score.to_reference()]
 
-        print(f"Total variables: {len(doc.variables)}")  # -> Total variables: 12
+        print(f"Variables: {len(doc.variables)}")
 
         for v in doc.variables:
             sources = len(v.source_variable_references)
@@ -531,10 +507,13 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
                 print(f"  {v.names[0].text}: {sources} source(s)")
         ```
 
-        Six variables s'affichent, chacune avec `1 source(s)` : les trois variables
-        dérivées de production et les trois variables du fichier maître.
+6. **(O4)** Créez une variable IMC dérivée de deux sources, `height_cm` et `weight_kg`. Affichez combien de références source elle a.
 
-5. (Bonus) Créez une variable IMC dérivée de deux sources (taille et poids). Vérifiez qu'elle a 2 références de variables sources.
+    **Résultat attendu :**
+
+    ```text
+    BMI sources: 2
+    ```
 
     ??? success "Réponse"
         ```python
@@ -543,59 +522,99 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
 
         v_bmi = doc.add_variable(name="bmi")
         v_bmi.source_variable_references = [
-            Reference(agency="health.gc.ca", identifier=v_height.identifier, version="1"),
-            Reference(agency="health.gc.ca", identifier=v_weight.identifier, version="1"),
+            v_height.to_reference(),
+            v_weight.to_reference(),
         ]
 
-        print(len(v_bmi.source_variable_references))  # -> 2
+        print(f"BMI sources: {len(v_bmi.source_variable_references)}")
         ```
+
+7. **(O5)** Retracez `health_score_master` jusqu'à sa question. Partez de cette variable, affichez son nom, et suivez sa première référence source avec `doc.find()` jusqu'à une variable sans source. Affichez ensuite le texte de la question de cette variable.
+
+    **Résultat attendu :**
+
+    ```text
+    health_score_master
+    health_score
+    health_rating
+    How would you rate your general health?
+    ```
+
+    ??? success "Réponse"
+        ```python
+        current = v_master_hs
+        print(current.names[0].text)
+        while current.source_variable_references:
+            current = doc.find(current.source_variable_references[0].identifier)
+            print(current.names[0].text)
+
+        question = doc.find(current.question_references[0].identifier)
+        print(question.question_texts[0].text)
+        ```
+
+        La boucle s'arrête à `health_rating`, la variable de collecte. Il ne
+        reste que son lien de question à suivre.
 
 ---
 
 ## Quiz
 
-???+ question "Question 1 : Que suit source_variable_references ?"
-    **A.** De quelles questions provient une variable.
+???+ question "Question 1 (O1) : De quel fichier s'agit-il ?"
+    Un fichier contient seulement `respondent_id`, `age_group`,
+    `employment_status_code` et `health_score`, et il est prêt pour la
+    diffusion publique. De quel fichier s'agit-il ?
 
-    **B.** De quelles autres variables une variable dérivée a été calculée.
+    **A.** Le fichier de collecte.
 
-    **C.** Quelle liste de codes une variable utilise.
+    **B.** Le fichier de production.
 
-    **D.** À quel fichier de données une variable appartient.
+    **C.** Le questionnaire.
 
-    ??? success "Réponse"
-        **B.** `source_variable_references` est une liste d'objets
-        `Reference` pointant vers les variables utilisées pour
-        calculer une variable dérivée.
-
-???+ question "Question 2 : Comment lier une variable à sa question source ?"
-    **A.** `v.question = q`
-
-    **B.** `v.source_variable_references.append(q)`
-
-    **C.** Utiliser `doc.add_variable(name=..., question=q)`
-
-    **D.** `v.code_list = q`
+    **D.** Le fichier maître.
 
     ??? success "Réponse"
-        **C.** Le paramètre `question=` dans `doc.add_variable()` crée
-        le lien automatiquement via `question_references`.
+        **D.** Le fichier maître ne garde que les variables dérivées finales,
+        prêtes pour la diffusion. Le fichier de production contiendrait aussi
+        `age`, `gender` et `employed`.
 
-???+ question "Question 3 : Dans le modèle à trois fichiers, que contient le fichier de production ?"
-    **A.** Seulement les variables dérivées.
+???+ question "Question 2 (O2) : Quel appel convient à cette variable ?"
+    Une variable enregistre combien de nuits une personne a passées à
+    l'hôpital l'an dernier, de 0 à 365. Quel appel définit la bonne
+    représentation ?
 
-    **B.** Seulement les variables de collecte.
+    **A.** `v.set_numeric("Integer", low=0, high=365)`
 
-    **C.** Les variables de collecte et les variables dérivées.
+    **B.** `v.set_text()`
 
-    **D.** Seulement le questionnaire.
+    **C.** `v.set_coded(cl_nights)`, avec une catégorie pour chaque nombre possible
+
+    **D.** Aucun : un compte n'a pas besoin de représentation.
 
     ??? success "Réponse"
-        **C.** Le fichier de production a à la fois les variables de
-        collecte originales (avec références basées-sur) et les nouvelles
-        variables dérivées (avec références de variables sources).
+        **A.** Les valeurs sont des nombres entiers qu'on peut additionner et
+        dont on peut faire la moyenne : la représentation est donc numérique,
+        avec l'intervalle valide. Une liste de 366 catégories masquerait cela,
+        et du texte permettrait « trois » ou « quelques-unes ».
 
-???+ question "Question 4 : Une variable IMC est calculée à partir de la taille et du poids. Combien de source_variable_references a-t-elle ?"
+???+ question "Question 3 (O3) : Comment enregistrer que `smoker` provient de `q_smoke` ?"
+    Un script crée la variable avec `v_smoke = doc.add_variable(name="smoker")`.
+    Quelle modification enregistre que ses valeurs répondent à la question
+    `q_smoke` ?
+
+    **A.** `v_smoke.source_variable_references = [q_smoke.to_reference()]`
+
+    **B.** La créer avec `doc.add_variable(name="smoker", question=q_smoke)`.
+
+    **C.** `v_smoke.set_coded(q_smoke)`
+
+    **D.** `v_smoke.names.append(q_smoke)`
+
+    ??? success "Réponse"
+        **B.** Le paramètre `question=` ajoute le lien à `question_references`.
+        `source_variable_references` sert aux **variables** sources, pas aux
+        questions.
+
+???+ question "Question 4 (O4) : Une variable IMC est calculée à partir de la taille et du poids. Combien de source_variable_references a-t-elle ?"
     **A.** 0
 
     **B.** 1
@@ -608,30 +627,65 @@ Vous pouvez suivre n'importe quelle variable jusqu'à la question originale.
         **C.** L'IMC a 2 références de variables sources, une pour
         la taille et une pour le poids, car il est dérivé des deux.
 
-???+ question "Question 5 : Quel est l'objectif de la traçabilité des données ?"
-    **A.** Réduire la taille des fichiers.
+???+ question "Question 5 (O4) : Que suit source_variable_references ?"
+    **A.** De quelles questions provient une variable.
 
-    **B.** Retracer n'importe quelle variable jusqu'à la question et les données originales.
+    **B.** De quelles autres variables une variable dérivée a été calculée.
 
-    **C.** Supprimer les anciennes variables.
+    **C.** Quelle liste de codes une variable utilise.
 
-    **D.** Valider le schéma XML.
+    **D.** À quel fichier de données une variable appartient.
 
     ??? success "Réponse"
-        **B.** La traçabilité des données permet de suivre n'importe
-        quelle variable, même dans le fichier maître final, jusqu'à
-        la variable de collecte originale et la question qui l'a générée.
+        **B.** `source_variable_references` est une liste de références
+        pointant vers les variables utilisées pour calculer une variable
+        dérivée. Les questions vont dans `question_references`, et la liste de
+        codes dans la représentation.
+
+???+ question "Question 6 (O5) : Qu'affiche ce code ?"
+    `v_master_hs` est la variable `health_score_master` de l'exercice 5.
+
+    ```python
+    current = v_master_hs
+    while current.source_variable_references:
+        current = doc.find(current.source_variable_references[0].identifier)
+    print(current.names[0].text)
+    ```
+
+    **A.** `health_rating`
+
+    **B.** `health_score`
+
+    **C.** `health_score_master`
+
+    **D.** `How would you rate your general health?`
+
+    ??? success "Réponse"
+        **A.** La boucle suit `health_score_master` → `health_score` →
+        `health_rating`, et s'arrête là car `health_rating` n'a pas de variable
+        source. Elle affiche un nom de variable ; le texte de la question
+        demande une étape de plus par `question_references`.
+
+---
+
+## Faites le point
+
+- [ ] Je peux expliquer en deux ou trois phrases en quoi les fichiers de collecte, de production et maître diffèrent. (O1)
+- [ ] Je peux choisir une représentation pour une variable et la définir avec `set_numeric()`, `set_coded()` ou `set_text()`. (O2)
+- [ ] Je peux lier chaque variable de collecte à sa question source avec `question=`. (O3)
+- [ ] Je peux enregistrer les sources d'une variable dérivée dans `source_variable_references`, pour une source ou plusieurs. (O4)
+- [ ] Je peux retracer une variable du fichier maître jusqu'à sa question avec `doc.find()`. (O5)
 
 ---
 
 !!! tip "Notes pour l'instructeur"
     - Commencez avec l'analogie : « Pensez à une recette. Le fichier de collecte, ce sont les ingrédients bruts. Le fichier de production, c'est la cuisson. Le fichier maître, c'est le plat servi. La provenance, c'est la recette qui vous dit d'où vient chaque ingrédient. »
-    - Dessinez le pipeline à trois fichiers au tableau. Pour chaque variable, dessinez une flèche vers sa source. Demandez : « Pouvez-vous retracer cette variable maître jusqu'à la question originale ? »
-    - Le concept de `source_variable_references` vs `question_references` peut être déroutant. Clarifiez : `question_references` dit « qu'est-ce qui a été demandé ». `source_variable_references` dit « quelles données ont été utilisées pour calculer ceci ».
+    - Dessinez le pipeline à trois fichiers au tableau. Pour chaque variable, dessinez une flèche vers sa source. Demandez : « Pouvez-vous retracer cette variable maître jusqu'à la question originale ? » L'exercice 7 fait la même chose dans le code.
+    - Le concept de `source_variable_references` vs `question_references` peut être déroutant. Clarifiez : `question_references` dit « qu'est-ce qui a été demandé ». `source_variable_references` dit « quelles données ont été utilisées pour calculer ceci ». Les questions 3 et 5 du quiz vérifient la différence.
     - Le patron numérique-vers-codé (age → age_group) est la dérivation la plus courante dans les enquêtes nationales. Montrez une table de recodage réelle : « âge 0-15 = groupe 1, 16-24 = groupe 2, ... »
-    - Pour le personnel des INS : soulignez que cette traçabilité est ce que les auditeurs et chercheurs recherchent. « Si quelqu'un questionne un chiffre dans votre publication, pouvez-vous le retracer jusqu'aux données originales ? »
-    - L'exercice 5 (IMC depuis deux sources) enseigne la dérivation multi-sources. C'est courant : IMC = poids / taille², revenu du ménage = somme des revenus des membres, etc.
+    - Pour le personnel des instituts nationaux de statistique (INS) : soulignez que cette traçabilité est ce que les auditeurs et chercheurs recherchent. « Si quelqu'un questionne un chiffre dans votre publication, pouvez-vous le retracer jusqu'aux données originales ? »
+    - L'exercice 6 (IMC depuis deux sources) enseigne la dérivation multi-sources. C'est courant : IMC = poids / taille², revenu du ménage = somme des revenus des membres, etc.
 
 ---
 
-**Voir aussi :** [Module 10 : Flux de questionnaire](module-10-questionnaire-flows.md) | [Guide utilisateur : Ajouter des variables](../user-guide.md#ajouter-des-variables)
+**Voir aussi :** [Module 10 : Flux de questionnaire](module-10-questionnaire-flows.fr.md) | [Guide utilisateur : Ajouter des variables](../user-guide.fr.md#ajouter-des-variables)

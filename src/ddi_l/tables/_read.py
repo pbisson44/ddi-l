@@ -90,7 +90,7 @@ ZIP_NAME = "tables.zip"
 
 
 def upload_name(data: bytes) -> str:
-    """:data:`WORKBOOK_NAME` or :data:`ZIP_NAME`: what ``data`` holds.
+    """`WORKBOOK_NAME` or `ZIP_NAME`: what ``data`` holds.
 
     Both are zip archives; a workbook has ``xl/workbook.xml``.
     """

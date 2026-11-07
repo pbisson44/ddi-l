@@ -1,0 +1,21 @@
+# Organisation-specific tokens allowed in the scanned trees (see
+# tests/test_org_agnostic.py). One entry per line:
+#
+#     glob  token  # reason
+#
+# The glob is matched against the path from the repository root; "*" also
+# matches "/". The token is one of the guard's tokens, in lower case. An entry
+# that no longer matches anything fails the test, so remove it with the text.
+#
+# Existing uses predating the guard. Renaming the sample agency is a separate
+# cleanup; these keep the guard catching new occurrences meanwhile.
+src/ddi_l/examples/Quality_of_Life.xml  statcan             # agency of the third-party sample
+src/ddi_l/examples/Quality_of_Life.xml  statistics canada   # publisher of the third-party sample
+src/ddi_l/examples/Quality_of_Life.xml  statistique canada  # publisher of the third-party sample (FR)
+src/ddi_l/examples/Quality_of_Life.xml  aria                # a change note in the third-party sample
+docs/curriculum/*               statcan              # sample agency used throughout the course
+docs/curriculum/*               statistics canada    # course exercises naming a publisher
+docs/curriculum/*               statistique canada   # course exercises naming a publisher (FR)
+docs/curriculum/*               gc.ca                # sample agency used in the course
+docs/overrides/main.html        aria                 # WAI-ARIA, the accessibility standard
+src/ddi_l/schemas/readme.txt    statistics canada    # DDI Alliance credit for an XSD contributor

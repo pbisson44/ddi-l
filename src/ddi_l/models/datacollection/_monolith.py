@@ -36,6 +36,7 @@ from .._generated.datacollection import (
     SamplingPlanFields,
 )
 from ..base import (
+    _BOOLEAN_TOKENS,
     CodeValue,
     InternationalString,
     MaintainableBase,
@@ -44,14 +45,20 @@ from ..base import (
     UserAttributePair,
     UserID,
     VersionRationale,
+    _emit_typed_or_raw,
+    _parse_xs_boolean,
     append_intl_strings,
     apply_other_attributes,
     clone_element,
     collect_other_attributes,
+    identification_attributes,
+    intl_container,
     next_intl_group,
+    order_by_schema,
     preserve_unrecognized_children,
     preserves_source,
     qn,
+    restore_identification_attributes,
     should_validate_on_serialize,
 )
 
@@ -60,6 +67,7 @@ if TYPE_CHECKING:
     from ..methodology import Methodology
 
 __all__ = [
+    "Binding",
     "CollectionActivity",
     "CollectionEvent",
     "ComputationItem",
@@ -72,6 +80,7 @@ __all__ = [
     "GenerationInstruction",
     "GridDimension",
     "IfThenElse",
+    "InParameter",
     "Instruction",
     "InstructionGroup",
     "Instrument",
@@ -107,7 +116,7 @@ _INLINE_FRAGMENT_TYPES = {
 
 
 class VersionableInitData(MaintainableInitData, total=False):
-    """Initialization payload returned by :func:`_collect_versionable_common`."""
+    """Initialization payload returned by `_collect_versionable_common`."""
 
     user_ids: list[UserID]
     user_attribute_pairs: list[UserAttributePair]
@@ -134,6 +143,10 @@ def _maybe_generate_reference_urn(reference: Reference) -> str | None:
     by the identifiers that file uses; replacing them would break the link.
     """
     if reference._urn_layout is not None:
+        return None
+    if reference.type_of_object in ("InParameter", "OutParameter"):
+        # A parameter keeps the identifier it was given (only items get a
+        # generated one), so the reference names it as it is.
         return None
     canonical = reference._canonical_urn()
     if canonical is None:
@@ -200,7 +213,7 @@ def _normalize_reference_collections(
     | None = None,
     claimed_by: dict[str, tuple[str, str | None]] | None = None,
 ) -> None:
-    """Recursively normalise URNs for :class:`Reference` instances.
+    """Recursively normalise URNs for `Reference` instances.
 
     Raises:
         ModelValidationError: When a maintainable would be given a generated
@@ -704,9 +717,18 @@ class SourceReference:
 
 @dataclass
 class ControlConstructBase(VersionableMaintainableBase):
-    """Shared helpers for control-construct maintainables."""
+    """Shared helpers for control-construct maintainables.
+
+    ``in_parameters``, ``out_parameters`` and ``bindings`` hold the
+    construct's ``r:InParameter``, ``r:OutParameter`` and ``r:Binding``
+    children as `InParameter`, `OutParameter` and
+    `Binding`; a raw element appended to them is written as it is.
+    """
 
     construct_names: list[InternationalString] = field(default_factory=list)
+    in_parameters: list[InParameter | Element] = field(default_factory=list)
+    out_parameters: list[OutParameter | Element] = field(default_factory=list)
+    bindings: list[Binding | Element] = field(default_factory=list)
 
     @classmethod
     def _collect_control_common(
@@ -715,7 +737,12 @@ class ControlConstructBase(VersionableMaintainableBase):
         *,
         recognized_children: Iterable[str] | None = None,
     ) -> dict[str, Any]:
-        recognized = {qn(DATA_COLLECTION_NS, "ConstructName")}
+        recognized = {
+            qn(DATA_COLLECTION_NS, "ConstructName"),
+            qn(REUSABLE_NS, "InParameter"),
+            qn(REUSABLE_NS, "OutParameter"),
+            qn(REUSABLE_NS, "Binding"),
+        }
         if recognized_children:
             recognized.update(recognized_children)
         data: dict[str, Any] = dict(
@@ -725,6 +752,18 @@ class ControlConstructBase(VersionableMaintainableBase):
         for container in element.findall(qn(DATA_COLLECTION_NS, "ConstructName")):
             construct_names.extend(InternationalString.from_container(container))
         data["construct_names"] = construct_names
+        data["in_parameters"] = [
+            InParameter.from_xml(node)
+            for node in element.findall(qn(REUSABLE_NS, "InParameter"))
+        ]
+        data["out_parameters"] = [
+            OutParameter.from_xml(node)
+            for node in element.findall(qn(REUSABLE_NS, "OutParameter"))
+        ]
+        data["bindings"] = [
+            Binding.from_xml(node)
+            for node in element.findall(qn(REUSABLE_NS, "Binding"))
+        ]
         return data
 
     def _append_control_common(self, element: Element) -> None:
@@ -738,6 +777,10 @@ class ControlConstructBase(VersionableMaintainableBase):
                 self.construct_names,
                 child_tag="String",
             )
+        # ControlConstructType: ..., r:Description, r:InParameter,
+        # r:OutParameter, r:Binding, then each construct's own children.
+        for value in (*self.in_parameters, *self.out_parameters, *self.bindings):
+            element.append(_emit_typed_or_raw(value))
 
 
 @dataclass
@@ -1102,12 +1145,7 @@ class QuestionScheme(QuestionSchemeFields):
             fragment_type: type[QuestionMaintainableBase],
             fallback: Iterable[QuestionMaintainableBase],
         ) -> Iterable[QuestionMaintainableBase]:
-            if self.fragment_sequence:
-                for fragment in self.fragment_sequence:
-                    if isinstance(fragment, fragment_type):
-                        yield fragment
-                return
-            yield from fallback
+            yield from _in_read_order(self.fragment_sequence, fallback)
 
         fragment_groups: typing.Sequence[
             tuple[
@@ -1179,13 +1217,15 @@ class QuestionScheme(QuestionSchemeFields):
 
     def iter_fragments(self) -> Iterable[QuestionMaintainableBase]:
         """Iterate over all inline question fragments preserving their order."""
-        if self.fragment_sequence:
-            yield from self.fragment_sequence
-            return
-        yield from self.question_items
-        yield from self.question_grids
-        yield from self.question_blocks
-        yield from self.question_groups
+        yield from _in_read_order(
+            self.fragment_sequence,
+            [
+                *self.question_items,
+                *self.question_grids,
+                *self.question_blocks,
+                *self.question_groups,
+            ],
+        )
 
     def get_fragment(self, identifier: str) -> QuestionMaintainableBase | None:
         """Return the fragment with ``identifier`` when present."""
@@ -1193,6 +1233,21 @@ class QuestionScheme(QuestionSchemeFields):
             if fragment.identifier == identifier:
                 return fragment
         return None
+
+
+def _in_read_order(
+    read: list[QuestionMaintainableBase],
+    current: Iterable[QuestionMaintainableBase],
+) -> list[QuestionMaintainableBase]:
+    """The ``current`` items in the order they were ``read``, then any added since.
+
+    Items removed since they were read are left out.
+    """
+    current = list(current)
+    present = {id(item) for item in current}
+    ordered = [item for item in read if id(item) in present]
+    seen = {id(item) for item in ordered}
+    return ordered + [item for item in current if id(item) not in seen]
 
 
 def _extract_first_text(element: Element) -> str | None:
@@ -1782,6 +1837,11 @@ class Instruction(InstructionFields):
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "Instruction")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
+    # Read as InParameter once that model is defined (below); a raw element
+    # in the list is written as it is.
+    in_parameters: list[InParameter | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
     _TYPED_CHILDREN: ClassVar[dict[str, type]] = {
         "instruction_texts": DynamicText,
     }
@@ -2714,12 +2774,7 @@ class DataCollection(VersionableMaintainableBase):
                 fragment_type: type[QuestionMaintainableBase],
                 fallback: Iterable[QuestionMaintainableBase],
             ) -> Iterable[QuestionMaintainableBase]:
-                if self.question_fragments:
-                    for fragment in self.question_fragments:
-                        if isinstance(fragment, fragment_type):
-                            yield fragment
-                    return
-                yield from fallback
+                yield from _in_read_order(self.question_fragments, fallback)
 
             fragment_groups: typing.Sequence[
                 tuple[
@@ -2872,16 +2927,15 @@ class DataCollection(VersionableMaintainableBase):
         def _resolve(target: ResolveIdentifier) -> MaintainableBase | None:
             return resolve_fn(target)
 
-        fragments: list[QuestionMaintainableBase]
-        if self.question_fragments:
-            fragments = list(self.question_fragments)
-        else:
-            fragments = [
+        fragments = _in_read_order(
+            self.question_fragments,
+            [
                 *self.questions,
                 *self.question_grids,
                 *self.question_blocks,
                 *self.question_groups,
-            ]
+            ],
+        )
 
         results: list[QuestionMaintainableBase] = []
         seen: set[object] = set()
@@ -2927,10 +2981,39 @@ class DataCaptureDevelopment(DataCaptureDevelopmentFields):
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
 
 
-@preserves_source
+# r:ValueRepresentation and r:ValueRepresentationReference, the heads of the
+# substitution groups a parameter's representation comes from.
+_VALUE_REPRESENTATIONS = frozenset(
+    qn(REUSABLE_NS, name)
+    for name in (
+        "TextRepresentation",
+        "DateTimeRepresentation",
+        "NumericRepresentation",
+        "ExternalCategoryRepresentation",
+        "CodeRepresentation",
+        "ScaleRepresentation",
+        "GeographicLocationCodeRepresentation",
+        "GeographicStructureCodeRepresentation",
+        "TextRepresentationReference",
+        "NumericRepresentationReference",
+        "DateTimeRepresentationReference",
+        "ScaleRepresentationReference",
+    )
+)
+
+
 @dataclass
-class OutParameter:
-    """Representation of ``r:OutParameter`` definitions."""
+class _ParameterBase:
+    """The content of ``r:ParameterType``, shared by in and out parameters.
+
+    The children are ``r:ParameterName``, ``r:Alias``, ``r:Description``, a
+    representation (``r:TextRepresentation``, ``r:CodeRepresentation``...,
+    kept as an element) and ``r:DefaultValue``; ``isArray`` is an attribute.
+    Anything else is kept in ``other_elements``, and the attributes of
+    ``r:URN`` (``typeOfIdentifier``) and the rest of the identification are
+    kept. A description holding markup (XHTML) is written back as read while
+    that language's string is unchanged; editing it writes the text.
+    """
 
     urn: str | None = None
     agency: str | None = None
@@ -2940,72 +3023,300 @@ class OutParameter:
     representation: Element | None = None
     other_elements: list[Element] = field(default_factory=list)
     other_attributes: dict[str, str] = field(default_factory=dict)
+    parameter_names: list[InternationalString] = field(default_factory=list)
+    descriptions: list[InternationalString] = field(default_factory=list)
+    default_value: str | None = None
+    is_array: bool | None = None
+    _default_value_attributes: dict[str, str] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    _identification_attributes: dict[str, dict[str, str]] = field(
+        default_factory=dict, repr=False, compare=False
+    )
+    _is_array_lexical: str | None = field(default=None, repr=False, compare=False)
+
+    TAG: ClassVar[str] = ""
+    _ATTRIBUTES: ClassVar[tuple[str, ...]] = ("isArray",)
+
+    @classmethod
+    def _parse(cls, element: Element) -> dict[str, Any]:
+        if element.tag != cls.TAG:
+            local = cls.TAG.rsplit("}", 1)[-1]
+            raise ValueError(f"Expected a reusable:{local} element.")
+
+        def text(name: str) -> str | None:
+            node = element.find(qn(REUSABLE_NS, name))
+            return node.text if node is not None else None
+
+        recognized = {
+            qn(REUSABLE_NS, name)
+            for name in (
+                "URN",
+                "Agency",
+                "ID",
+                "Version",
+                "ParameterName",
+                "Alias",
+                "Description",
+                "DefaultValue",
+            )
+        }
+        representation = next(
+            (child for child in element if child.tag in _VALUE_REPRESENTATIONS), None
+        )
+        if representation is not None:
+            recognized.add(representation.tag)
+        names: list[InternationalString] = []
+        for container in element.findall(qn(REUSABLE_NS, "ParameterName")):
+            names.extend(InternationalString.from_container(container))
+        descriptions: list[InternationalString] = []
+        containers = element.findall(qn(REUSABLE_NS, "Description"))
+        for container in containers:
+            descriptions.extend(InternationalString.from_container(container))
+        default = element.find(qn(REUSABLE_NS, "DefaultValue"))
+        attributes = collect_other_attributes(element)
+        is_array = attributes.pop("isArray", None)
+        data: dict[str, Any] = {
+            "urn": text("URN"),
+            "agency": text("Agency"),
+            "identifier": text("ID"),
+            "version": text("Version"),
+            "alias": text("Alias"),
+            "representation": clone_element(representation)
+            if representation is not None
+            else None,
+            "other_elements": preserve_unrecognized_children(element, recognized),
+            "parameter_names": names,
+            "descriptions": descriptions,
+            # An empty DefaultValue is a default of "", not none.
+            "default_value": (default.text or "") if default is not None else None,
+            "is_array": None if is_array is None else _parse_xs_boolean(is_array),
+            "_default_value_attributes": dict(default.attrib)
+            if default is not None
+            else {},
+            "_identification_attributes": identification_attributes(element),
+            "_is_array_lexical": is_array,
+        }
+        for name in cls._ATTRIBUTES[1:]:
+            data[_ATTRIBUTE_FIELDS[name]] = attributes.pop(name, None)
+        data["other_attributes"] = attributes
+        return data
+
+    def _build(self) -> Element:
+        element = create_element(self.TAG)
+        for name, value in (
+            ("URN", self.urn),
+            ("Agency", self.agency),
+            ("ID", self.identifier),
+            ("Version", self.version),
+        ):
+            if value:
+                child = create_element(qn(REUSABLE_NS, name))
+                child.text = value
+                element.append(child)
+        restore_identification_attributes(element, self._identification_attributes)
+        append_intl_strings(
+            element,
+            qn(REUSABLE_NS, "ParameterName"),
+            self.parameter_names,
+            child_tag="String",
+        )
+        if self.alias is not None:
+            alias_el = create_element(qn(REUSABLE_NS, "Alias"))
+            alias_el.text = self.alias
+            element.append(alias_el)
+        if self.descriptions:
+            # ParameterType allows one r:Description, holding every language.
+            element.append(
+                intl_container(qn(REUSABLE_NS, "Description"), self.descriptions)
+            )
+        if self.representation is not None:
+            element.append(clone_element(self.representation))
+        if self.default_value is not None:
+            default = create_element(qn(REUSABLE_NS, "DefaultValue"))
+            default.text = self.default_value
+            apply_other_attributes(default, self._default_value_attributes)
+            element.append(default)
+        for child in self.other_elements:
+            element.append(clone_element(child))
+        # Content kept unmapped (r:UserID...) follows r:Version in the schema.
+        order_by_schema(element)
+        if self.is_array is not None:
+            # The spelling read ("1", " true ") while the value is the same.
+            lexical = self._is_array_lexical or ""
+            if _BOOLEAN_TOKENS.get(lexical.strip()) is not self.is_array:
+                lexical = "true" if self.is_array else "false"
+            element.set("isArray", lexical)
+        for name in self._ATTRIBUTES[1:]:
+            value = getattr(self, _ATTRIBUTE_FIELDS[name])
+            if value is not None:
+                element.set(name, value)
+        apply_other_attributes(element, self.other_attributes)
+        return element
+
+    def to_reference(self) -> Reference:
+        """A reference to this parameter, written without an ``r:URN``.
+
+        Raises:
+            ValueError: If the parameter has no agency, ID or version.
+        """
+        if not (self.agency and self.identifier and self.version):
+            raise ValueError(
+                "A parameter needs an agency, ID and version to be referenced."
+            )
+        return Reference(
+            type_of_object=self.TAG.rsplit("}", 1)[-1],
+            agency=self.agency,
+            identifier=self.identifier,
+            version=self.version,
+            _urn_layout="absent",
+        )
+
+
+_ATTRIBUTE_FIELDS = {"limitArrayIndex": "limit_array_index"}
+
+
+@preserves_source
+@dataclass
+class OutParameter(_ParameterBase):
+    """Representation of ``r:OutParameter``: a value a construct makes available.
+
+    A question construct's out parameter carries its answer; a parent
+    sequence's `Binding` passes it to another construct's
+    `InParameter`.
+    """
 
     TAG: ClassVar[str] = qn(REUSABLE_NS, "OutParameter")
 
     @classmethod
     def from_xml(cls, element: Element) -> OutParameter:
-        if element.tag != cls.TAG:
-            raise ValueError("Expected a reusable:OutParameter element.")
-        urn_el = element.find(qn(REUSABLE_NS, "URN"))
-        agency_el = element.find(qn(REUSABLE_NS, "Agency"))
-        identifier_el = element.find(qn(REUSABLE_NS, "ID"))
-        version_el = element.find(qn(REUSABLE_NS, "Version"))
-        alias_el = element.find(qn(REUSABLE_NS, "Alias"))
-        representation_el = element.find(qn(REUSABLE_NS, "CodeRepresentation"))
-        if representation_el is None:
-            representation_el = element.find(qn(REUSABLE_NS, "NumericRepresentation"))
-        recognized = {
-            qn(REUSABLE_NS, "URN"),
-            qn(REUSABLE_NS, "Agency"),
-            qn(REUSABLE_NS, "ID"),
-            qn(REUSABLE_NS, "Version"),
-            qn(REUSABLE_NS, "Alias"),
-        }
-        if representation_el is not None:
-            recognized.add(representation_el.tag)
-        extras = preserve_unrecognized_children(element, recognized)
+        return cls(**cls._parse(element))
+
+    def to_xml(self) -> Element:
+        return self._build()
+
+
+@preserves_source
+@dataclass
+class InParameter(_ParameterBase):
+    """Representation of ``r:InParameter``: a value a construct takes in.
+
+    A condition (``IfThenElse``, ``Loop``...) tests its in parameters, which a
+    parent sequence's `Binding` feeds from out parameters, such as a
+    question construct's answer. ``limit_array_index`` is the
+    ``limitArrayIndex`` attribute of an array parameter.
+    """
+
+    limit_array_index: str | None = None
+
+    TAG: ClassVar[str] = qn(REUSABLE_NS, "InParameter")
+    _ATTRIBUTES: ClassVar[tuple[str, ...]] = ("isArray", "limitArrayIndex")
+
+    @classmethod
+    def from_xml(cls, element: Element) -> InParameter:
+        return cls(**cls._parse(element))
+
+    def to_xml(self) -> Element:
+        return self._build()
+
+
+@preserves_source
+@dataclass
+class Binding:
+    """Representation of ``r:Binding``: one parameter feeding another.
+
+    ``source_parameter_reference`` names the parameter giving the value
+    (typically a question construct's `OutParameter`) and
+    ``target_parameter_reference`` the one receiving it (an
+    `InParameter`).
+    """
+
+    source_parameter_reference: Reference | None = None
+    target_parameter_reference: Reference | None = None
+    other_elements: list[Element] = field(default_factory=list)
+    other_attributes: dict[str, str] = field(default_factory=dict)
+
+    TAG: ClassVar[str] = qn(REUSABLE_NS, "Binding")
+
+    @classmethod
+    def between(
+        cls,
+        source: _ParameterBase | Reference,
+        target: _ParameterBase | Reference,
+        *,
+        late_bound: bool = False,
+    ) -> Binding:
+        """A binding from ``source`` to ``target``, parameters or references.
+
+        Args:
+            source: The parameter giving the value, or a reference to it.
+            target: The parameter receiving it, or a reference to it.
+            late_bound: Mark both references ``lateBound="true"``, so they
+                follow the latest version of their parameter (as Colectica
+                writes bindings).
+        """
+        references = []
+        for end in (source, target):
+            reference = end if isinstance(end, Reference) else end.to_reference()
+            if late_bound:
+                reference = replace(
+                    reference,
+                    other_attributes={
+                        **reference.other_attributes,
+                        "lateBound": "true",
+                    },
+                )
+            references.append(reference)
         return cls(
-            urn=urn_el.text if urn_el is not None else None,
-            agency=agency_el.text if agency_el is not None else None,
-            identifier=identifier_el.text if identifier_el is not None else None,
-            version=version_el.text if version_el is not None else None,
-            alias=alias_el.text if alias_el is not None else None,
-            representation=clone_element(representation_el)
-            if representation_el is not None
+            source_parameter_reference=references[0],
+            target_parameter_reference=references[1],
+        )
+
+    @classmethod
+    def from_xml(cls, element: Element) -> Binding:
+        if element.tag != cls.TAG:
+            raise ValueError("Expected a reusable:Binding element.")
+        source = element.find(qn(REUSABLE_NS, "SourceParameterReference"))
+        target = element.find(qn(REUSABLE_NS, "TargetParameterReference"))
+        return cls(
+            source_parameter_reference=Reference.from_xml(source)
+            if source is not None
             else None,
-            other_elements=extras,
+            target_parameter_reference=Reference.from_xml(target)
+            if target is not None
+            else None,
+            other_elements=preserve_unrecognized_children(
+                element,
+                {
+                    qn(REUSABLE_NS, "SourceParameterReference"),
+                    qn(REUSABLE_NS, "TargetParameterReference"),
+                },
+            ),
             other_attributes=collect_other_attributes(element),
         )
 
     def to_xml(self) -> Element:
         element = create_element(self.TAG)
-        if self.urn:
-            urn_el = create_element(qn(REUSABLE_NS, "URN"))
-            urn_el.text = self.urn
-            element.append(urn_el)
-        if self.agency:
-            agency_el = create_element(qn(REUSABLE_NS, "Agency"))
-            agency_el.text = self.agency
-            element.append(agency_el)
-        if self.identifier:
-            id_el = create_element(qn(REUSABLE_NS, "ID"))
-            id_el.text = self.identifier
-            element.append(id_el)
-        if self.version:
-            version_el = create_element(qn(REUSABLE_NS, "Version"))
-            version_el.text = self.version
-            element.append(version_el)
-        if self.alias is not None:
-            alias_el = create_element(qn(REUSABLE_NS, "Alias"))
-            alias_el.text = self.alias
-            element.append(alias_el)
-        if self.representation is not None:
-            element.append(clone_element(self.representation))
+        if self.source_parameter_reference is not None:
+            element.append(
+                self.source_parameter_reference.to_xml("SourceParameterReference")
+            )
+        if self.target_parameter_reference is not None:
+            element.append(
+                self.target_parameter_reference.to_xml("TargetParameterReference")
+            )
         for child in self.other_elements:
             element.append(clone_element(child))
         apply_other_attributes(element, self.other_attributes)
         return element
+
+
+# d:Instruction is defined above the parameter models; its r:InParameters
+# are read as InParameter like those of the constructs below.
+Instruction._TYPED_CHILDREN = {
+    **Instruction._TYPED_CHILDREN,
+    "in_parameters": InParameter,
+}
 
 
 @dataclass
@@ -3067,7 +3378,6 @@ class ConstructSequence:
 class Sequence(ControlConstructBase):
     """Maintainable representation of ``d:Sequence`` control constructs."""
 
-    out_parameters: list[OutParameter] = field(default_factory=list)
     type_of_sequence: str | None = None
     # Controlled-vocabulary attributes on d:TypeOfSequence.
     _type_of_sequence_attributes: dict[str, str] = field(
@@ -3075,7 +3385,6 @@ class Sequence(ControlConstructBase):
     )
     control_construct_references: list[Reference] = field(default_factory=list)
     construct_sequence: ConstructSequence | None = None
-    bindings: list[Element] = field(default_factory=list)
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "Sequence")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
@@ -3083,17 +3392,11 @@ class Sequence(ControlConstructBase):
     @classmethod
     def from_xml(cls, element: Element) -> Sequence:
         recognized = {
-            qn(REUSABLE_NS, "OutParameter"),
             qn(DATA_COLLECTION_NS, "TypeOfSequence"),
             qn(DATA_COLLECTION_NS, "ControlConstructReference"),
             qn(DATA_COLLECTION_NS, "ConstructSequence"),
-            qn(REUSABLE_NS, "Binding"),
         }
         data = cls._collect_control_common(element, recognized_children=recognized)
-        out_parameters = [
-            OutParameter.from_xml(node)
-            for node in element.findall(qn(REUSABLE_NS, "OutParameter"))
-        ]
         type_of_sequence_el = element.find(qn(DATA_COLLECTION_NS, "TypeOfSequence"))
         type_of_sequence = (
             type_of_sequence_el.text if type_of_sequence_el is not None else None
@@ -3115,9 +3418,6 @@ class Sequence(ControlConstructBase):
                 extra_constructs = [
                     clone_element(node) for node in construct_sequence_nodes[1:]
                 ]
-        bindings = [
-            clone_element(node) for node in element.findall(qn(REUSABLE_NS, "Binding"))
-        ]
         # TypeOfSequence repeats; the field holds the first, the rest are kept.
         extra_constructs.extend(
             clone_element(node)
@@ -3128,7 +3428,6 @@ class Sequence(ControlConstructBase):
             other_elements.extend(extra_constructs)
             data["other_elements"] = other_elements
         return cls(
-            out_parameters=out_parameters,
             type_of_sequence=type_of_sequence,
             _type_of_sequence_attributes=(
                 dict(type_of_sequence_el.attrib)
@@ -3137,19 +3436,14 @@ class Sequence(ControlConstructBase):
             ),
             control_construct_references=references,
             construct_sequence=construct_sequence,
-            bindings=bindings,
             **data,
         )
 
     def to_xml(self) -> Element:
         element = self._build_base_element()
-        self._append_control_common(element)
         # SequenceType: ... r:OutParameter, r:Binding, ..., TypeOfSequence,
         # ControlConstructReference, ConstructSequence.
-        for parameter in self.out_parameters:
-            element.append(parameter.to_xml())
-        for binding in self.bindings:
-            element.append(clone_element(binding))
+        self._append_control_common(element)
         if self.type_of_sequence is not None:
             type_el = create_element(qn(DATA_COLLECTION_NS, "TypeOfSequence"))
             type_el.text = self.type_of_sequence
@@ -3398,6 +3692,22 @@ class ComputationItem(ComputationItemFields):
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "ComputationItem")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
+    # Read as InParameter, OutParameter and Binding, as on the hand-written
+    # control constructs; a raw element in these lists is written as it is.
+    in_parameters: list[InParameter | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    out_parameters: list[OutParameter | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    bindings: list[Binding | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    _TYPED_CHILDREN: ClassVar[dict[str, type]] = {
+        "in_parameters": InParameter,
+        "out_parameters": OutParameter,
+        "bindings": Binding,
+    }
 
 
 @dataclass
@@ -3562,8 +3872,8 @@ def make_if_condition(
 ) -> Element:
     """Build a ``d:IfCondition`` element from a command expression.
 
-    This is the value expected by :attr:`IfThenElse.if_condition` and
-    :attr:`ElseIf.if_condition`. The result is a ``CommandCode`` carrying an
+    This is the value expected by `IfThenElse.if_condition` and
+    `ElseIf.if_condition`. The result is a ``CommandCode`` carrying an
     optional human-readable ``Description`` and a single ``Command`` whose
     ``CommandContent`` holds the expression (e.g. ``"age >= 16"``).
 
@@ -3796,3 +4106,19 @@ class QuestionConstruct(QuestionConstructFields):
 
     TAG: ClassVar[str] = qn(DATA_COLLECTION_NS, "QuestionConstruct")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("d")
+    # Read as InParameter, OutParameter and Binding, as on the hand-written
+    # control constructs; a raw element in these lists is written as it is.
+    in_parameters: list[InParameter | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    out_parameters: list[OutParameter | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    bindings: list[Binding | Element] = field(  # type: ignore[assignment]
+        default_factory=list
+    )
+    _TYPED_CHILDREN: ClassVar[dict[str, type]] = {
+        "in_parameters": InParameter,
+        "out_parameters": OutParameter,
+        "bindings": Binding,
+    }

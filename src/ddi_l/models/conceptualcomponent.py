@@ -10,7 +10,14 @@ from .._etree import Element, create_element
 from ..constants import CONCEPTUAL_COMPONENT_NS, REUSABLE_NS
 from ..namespaces import NamespaceBindings, build_namespace_map
 from ._generated.conceptualcomponent import ConceptualComponentFields
-from .base import MaintainableBase, Reference, clone_element, qn
+from .base import (
+    InternationalString,
+    MaintainableBase,
+    Reference,
+    append_intl_strings,
+    clone_element,
+    qn,
+)
 from .concept import Concept, ConceptualVariable, UnitType, Universe
 
 __all__ = ["ConceptualComponent"]
@@ -72,8 +79,10 @@ class ConceptualComponent(ConceptualComponentFields):
         conceptual_variable_tag = ConceptualVariable.TAG
         unit_type_scheme_tag = qn(CONCEPTUAL_COMPONENT_NS, "UnitTypeScheme")
         unit_type_tag = UnitType.TAG
+        module_name_tag = qn(CONCEPTUAL_COMPONENT_NS, "ConceptualComponentModuleName")
 
         recognized = {
+            module_name_tag,
             concept_scheme_tag,
             concept_tag,
             universe_scheme_tag,
@@ -154,8 +163,12 @@ class ConceptualComponent(ConceptualComponentFields):
                 qn(REUSABLE_NS, "GeographicStructureSchemeReference")
             )
         ]
+        module_names: list[InternationalString] = []
+        for container in element.findall(module_name_tag):
+            module_names.extend(InternationalString.from_container(container))
         data = cls._collect_common(element, recognized_children=recognized)
         return cls(
+            conceptual_component_module_names=module_names,
             concepts=concepts,
             universes=universes,
             conceptual_variables=conceptual_variables,
@@ -180,6 +193,13 @@ class ConceptualComponent(ConceptualComponentFields):
                 " a standalone ConceptualComponent element."
             )
         element = self._build_base_element()
+        # Placed before r:Label by the schema ordering every to_xml ends with.
+        append_intl_strings(
+            element,
+            qn(CONCEPTUAL_COMPONENT_NS, "ConceptualComponentModuleName"),
+            self.conceptual_component_module_names,
+            child_tag="String",
+        )
         # DDI 3.3 holds these only inside their schemes; written bare they are
         # invalid, so a scheme is created even when none was read.
         if self.concepts:

@@ -15,6 +15,7 @@ from ddi_l.document import (
 from ddi_l.models.base import Reference, qn
 from ddi_l.models.logicalproduct import Variable
 from ddi_l.models.study import StudyUnit
+from tests.helpers.marks import refers_outside
 
 # ---------------------------------------------------------------------------
 # _create_international_string
@@ -167,6 +168,7 @@ def test_document_iter_study_units():
     assert studies == []
 
 
+@refers_outside
 def test_document_add_study_unit():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(
@@ -187,6 +189,7 @@ def test_document_add_study_unit():
     assert len(studies) == 1
 
 
+@refers_outside
 def test_document_resolve_maintainable():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(
@@ -240,6 +243,7 @@ def test_document_resolve_bad_type_arg():
         doc.resolve(("a", "su1", "1.0"), type=str)  # type: ignore[arg-type]
 
 
+@refers_outside
 def test_document_resolve_by_reference():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(
@@ -263,6 +267,7 @@ def test_document_resolve_by_reference():
     assert isinstance(result, StudyUnit)
 
 
+@refers_outside
 def test_document_resolve_by_string():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(
@@ -296,6 +301,7 @@ def test_document_resolve_unsupported_type():
         doc.resolve(42)  # type: ignore[arg-type]
 
 
+@refers_outside
 def test_document_replace_maintainable():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(
@@ -329,6 +335,7 @@ def test_document_replace_maintainable():
     doc.replace_maintainable(su2)
 
 
+@refers_outside
 def test_document_remove_maintainable():
     doc = DDIDocument.create(agency="a", identifier="d1", version="1.0")
     su = StudyUnit(

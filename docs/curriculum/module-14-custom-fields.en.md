@@ -6,23 +6,30 @@ description: >-
 
 # Module 14: Custom fields: extend the standard for your organization
 
-!!! info "What you will learn"
-    - Understand why DDI is an **open, extensible standard**, and why that
-      matters.
-    - Add **organization-specific custom fields** that DDI has no built-in
-      element for.
-    - Use the standard's own extension point, `UserAttributePair`, so your
-      custom fields stay inside **valid DDI XML**.
-    - Attach organization-specific **external identifiers** with `UserID`.
-    - Back a custom field with a **controlled vocabulary** by referencing a code list.
-    - Design a **custom-field catalog** with naming conventions your whole team
-      follows.
-    - **Audit** a document to report which items carry your custom fields.
-    - Confirm that custom fields **round-trip**: they survive save and reopen.
+!!! info "Learning objectives"
+    By the end of this module, you can:
 
-**Prerequisites:** [Module 13: Custom properties, find, remove, and validate](module-13-properties-find-validate.md).
+    - **O1.** Add namespaced custom fields (keys such as
+      `myorg:retention_policy`) with `set_property()`: on the study for facts
+      about the whole dataset, and on a variable or question for facts about
+      that item.
+    - **O2.** Add an external identifier with `UserID`, and choose between a
+      `UserID` and a custom property for a given value.
+    - **O3.** Back a custom field with a controlled vocabulary: build a code
+      list and store its URN in a property.
+    - **O4.** Write a catalog of allowed keys and a function that refuses any
+      key that is not in it.
+    - **O5.** Write an audit that counts the questions and variables carrying
+      a field with your prefix.
+    - **O6.** Save and reopen a document, show that its custom fields survive,
+      and find the `UserAttributePair` that holds a field in the XML.
+
+**Prerequisites:** [Module 13](module-13-properties-find-validate.en.md).
 
 **Time:** 45 min self-paced / 55 min instructor-led.
+
+**New in this module:** `doc.study_unit`, `UserID`, `item.user_ids`,
+`CodeItem`, `r:UserAttributePair`.
 
 ---
 
@@ -38,12 +45,12 @@ has no built-in element for:
 | Custom field | Example value | Who uses it |
 | --- | --- | --- |
 | Retention policy | "destroy after 7 years" | Records management |
-| Security classification | "Protected B" | Information security |
+| Security classification | "Confidential" | Information security |
 | Data steward | "Data Governance Office" | Governance |
 | Source system | "CRM-2024" | Data engineering |
 | Internal catalogue number | "CAT-000734" | The archive |
 | Embargo date | "2026-01-01" | Dissemination |
-| Grant / project code | "SSHRC-435-2023" | Research administration |
+| Grant / project code | "GRANT-2023-435" | Research administration |
 
 Without a place to record these, teams end up keeping them in a **separate
 spreadsheet** that drifts out of sync with the data. The goal of this module is
@@ -78,7 +85,20 @@ of DDI XML:
 </r:UserAttributePair>
 ```
 
-That is the openness of the standard, made concrete.
+That is the openness of the standard, made concrete:
+
+```mermaid
+flowchart TD
+    STD["DDI standard\n(hundreds of built-in fields)"]
+    EXT["Extension points on every identifiable item:\nUserAttributePair (AttributeKey, AttributeValue)\nand UserID"]
+    ORG["Your custom fields\nmyorg:retention_policy, myorg:security_class\nas UserAttributePairs; CAT-000734 as a UserID"]
+    FILE["Still a valid DDI file\n(it validates against the DDI schema)"]
+
+    STD --> EXT
+    EXT --> ORG
+    ORG --> FILE
+    STD --> FILE
+```
 
 ## 3. Where custom fields can live
 
@@ -86,29 +106,30 @@ A custom field can be attached to **any** DDI item: a study, a question, a
 variable, a code list, anything. Set it at the level the field describes:
 
 - **Study level**: facts about the whole dataset (retention, security class).
+  `doc.study_unit` is the study itself.
 - **Item level**: facts about one variable or question (source system, quality
   flag).
 
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="Household Survey", agency="survey.gc.ca")
+doc = ddi.new_study(title="Household Survey", agency="survey.example.org")
 q_income = doc.add_question(text="What is your household income?")
 income = doc.add_variable(name="income", question=q_income)
 
 # Study-level custom fields describe the whole dataset
 study = doc.study_unit
 study.set_property("myorg:retention_policy", "destroy after 7 years")
-study.set_property("myorg:security_class", "Protected B")
+study.set_property("myorg:security_class", "Confidential")
 
 print(study.properties)
 # -> {'myorg:retention_policy': 'destroy after 7 years',
-#     'myorg:security_class': 'Protected B'}
+#     'myorg:security_class': 'Confidential'}
 ```
 
 ## 4. Add organization-specific fields
 
-You already met `set_property` in [Module 13](module-13-properties-find-validate.md).
+You already met `set_property` in [Module 13](module-13-properties-find-validate.en.md).
 Here we use it deliberately, with a **namespace prefix** on every key so your
 fields never collide with anyone else's:
 
@@ -123,7 +144,7 @@ print(income.get_property("myorg:source_system"))
 
 !!! tip "Namespace your keys"
     Prefix every custom key with a short organization tag, like `myorg:` or
-    `statcan:`. This is a convention, not a requirement, but it keeps *your*
+    `acme:`. This is a convention, not a requirement, but it keeps *your*
     fields distinct from a partner's fields if two DDI files are ever merged.
 
 ## 5. Custom fields round-trip: they survive save and reopen
@@ -142,6 +163,8 @@ print(reopened.variables[0].get_property("myorg:source_system"))
 Because they live inside standard DDI, another team using different software can
 open your file and still see `myorg:source_system`, even if their tool has no
 idea what it means. **Nothing is silently dropped.** That is interoperability.
+Open `household-survey.xml` in a text editor and search for `UserAttributePair`
+to see each field as the XML block of section 2.
 
 !!! tip "Keep editing after a save"
     `income` and `q_income` stay attached to `doc` after `doc.save()`, so you
@@ -165,14 +188,16 @@ print(f"{uid.type_of_user_id}: {uid.value}")
 ```
 
 Use `UserID` when the value **identifies** the item in another system, and a
-custom property (`set_property`) when the value **describes** it.
+custom property (`set_property`) when the value **describes** it. A quick
+test: if another system could look the item up by this value, it is an
+identifier.
 
 ## 7. A custom field backed by a controlled vocabulary (a code list)
 
 Free-text values are flexible but easy to get wrong ("validated", "Validated",
 "valid"). For a field that should take a fixed set of values, back it with a
 **code list**, a controlled vocabulary. First build the vocabulary (the same
-way you did in [Module 9](module-09-code-lists.md)), then have a custom field
+way you did in [Module 9](module-09-code-lists.en.md)), then have a custom field
 **reference** it. Passing a DDI item as the value stores its **URN**, a stable
 link to that code list.
 
@@ -232,7 +257,7 @@ trying to replace. Agree on a small **catalog** and apply it consistently.
 # A documented catalog your whole team shares
 CUSTOM_FIELDS = {
     "myorg:retention_policy": "How long to keep the data (records schedule).",
-    "myorg:security_class": "Security classification (e.g. Protected B).",
+    "myorg:security_class": "Security classification (e.g. Confidential).",
     "myorg:source_system": "The system the data was extracted from.",
     "myorg:quality_flag": "Data-quality status (see Quality Flag Codes).",
     "myorg:steward": "The team accountable for the item.",
@@ -242,7 +267,7 @@ CUSTOM_FIELDS = {
 # Apply a field only if it is in the catalog (a guard against typos)
 def set_catalog_field(item, key, value):
     if key not in CUSTOM_FIELDS:
-        raise KeyError(f"{key!r} is not in the custom-field catalog")
+        raise ValueError(f"{key!r} is not in the custom-field catalog")
     item.set_property(key, value)
 
 
@@ -288,25 +313,6 @@ print(f"Items with custom fields: {items_with_custom_fields(doc)}")
   as the definition that travels with it. Your file stays valid DDI, but only
   *your* catalog explains what `myorg:security_class` means.
 
-## 11. Summary: extend without breaking
-
-```mermaid
-flowchart TD
-    STD["DDI standard\n(hundreds of built-in fields)"]
-    EXT["Extension point:\nUserAttributePair / UserID"]
-    ORG["Your custom fields\nmyorg:retention_policy\nmyorg:security_class\nCAT-000734"]
-    FILE["Still a valid DDI file\n(round-trips through any DDI tool)"]
-
-    STD --> EXT
-    EXT --> ORG
-    ORG --> FILE
-    STD --> FILE
-```
-
-The standard gives you a rich set of built-in fields **and** an open door for
-the ones it does not have. You extend it for your organization's needs without
-forking the schema and without leaving valid DDI.
-
 ---
 
 !!! example "Scenario"
@@ -321,63 +327,48 @@ forking the schema and without leaving valid DDI.
 
 ## Exercises
 
-1. Create a study with an `income` question and variable. Set two study-level
-   custom fields: `myorg:retention_policy` = `"destroy after 7 years"` and
-   `myorg:security_class` = `"Protected B"`. Print the study's properties.
+1. **(O1)** Create a study with an `income` question and variable. Set two
+   study-level custom fields: `myorg:retention_policy` =
+   `"destroy after 7 years"` and `myorg:security_class` = `"Confidential"`.
+   Set one item-level field on the `income` variable: `myorg:source_system` =
+   `"CRM-2024"`. Print the study's properties, then the variable's source
+   system.
 
     **Expected output:**
 
     ```text
-    {'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Protected B'}
+    {'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Confidential'}
+    CRM-2024
     ```
 
     ??? success "Answer"
         ```python
         import ddi_l as ddi
 
-        doc = ddi.new_study(title="Household Survey", agency="survey.gc.ca")
+        doc = ddi.new_study(title="Household Survey", agency="survey.example.org")
         q_income = doc.add_question(text="What is your household income?")
         income = doc.add_variable(name="income", question=q_income)
 
         study = doc.study_unit
         study.set_property("myorg:retention_policy", "destroy after 7 years")
-        study.set_property("myorg:security_class", "Protected B")
+        study.set_property("myorg:security_class", "Confidential")
+        income.set_property("myorg:source_system", "CRM-2024")
 
         print(study.properties)
+        print(income.get_property("myorg:source_system"))  # -> CRM-2024
         ```
 
-2. Set `myorg:source_system` = `"CRM-2024"` on the `income` variable and
-   `myorg:steward` = `"Survey Methods"` on the question. Write an audit that
-   scans all questions and variables and counts how many carry a `myorg:` field.
-   Print the count.
+        The retention policy and the classification describe the whole
+        dataset, so they go on the study. The source system describes one
+        variable.
 
-    **Expected output:**
-
-    ```text
-    Items with custom fields: 2
-    ```
-
-    ??? success "Answer"
-        ```python
-        income.set_property("myorg:source_system", "CRM-2024")
-        q_income.set_property("myorg:steward", "Survey Methods")
-
-
-        def items_with_custom_fields(doc, prefix="myorg:"):
-            count = 0
-            for collection in (doc.questions, doc.variables):
-                for item in collection:
-                    if any(key.startswith(prefix) for key in item.properties):
-                        count += 1
-            return count
-
-
-        print(f"Items with custom fields: {items_with_custom_fields(doc)}")
-        ```
-
-3. Attach an organization-specific external identifier to the `income` variable:
-   a `UserID` with value `"CAT-000734"` and type `"InternalCatalogue"`. Print
-   it as `type: value`.
+2. **(O2)** Attach an organization-specific external identifier to the
+   `income` variable: a `UserID` with value `"CAT-000734"` and type
+   `"InternalCatalogue"`. Print it as `type: value`. Then, for each value
+   below, say whether it belongs in a `UserID` or in a custom property:
+   (a) `RM-2291`, the records-management system's number for this variable;
+   (b) `"validated"`, its quality status; (c) `"Data Governance Office"`, the
+   team accountable for it.
 
     **Expected output:**
 
@@ -392,33 +383,26 @@ forking the schema and without leaving valid DDI.
         income.user_ids.append(UserID(value="CAT-000734", type_of_user_id="InternalCatalogue"))
 
         uid = income.user_ids[0]
-        print(f"{uid.type_of_user_id}: {uid.value}")
+        print(f"{uid.type_of_user_id}: {uid.value}")  # -> InternalCatalogue: CAT-000734
         ```
 
-4. Save the document, reopen it with `ddi.open_ddi()`, and read
-   `myorg:source_system` back from the reopened variable to prove the custom
-   field round-trips.
+        (a) `UserID`: another system can look the variable up by this
+        number, so it identifies the item. (b) and (c) are custom
+        properties: they describe the item.
+
+3. **(O3)** Build a `Quality Flag Codes` code list with three codes
+   (`validated`, `provisional`, `suppressed`), a controlled vocabulary. Set
+   `myorg:quality_flag` = `"validated"` on the `income` variable, and set
+   `myorg:quality_flag_codes` to the code list object so the field
+   **references** that vocabulary. Print the flag, and whether the stored
+   reference is a URN (starts with `"urn:ddi:"`).
 
     **Expected output:**
 
     ```text
-    CRM-2024
+    validated
+    True
     ```
-
-    ??? success "Answer"
-        ```python
-        doc.save("household-survey.xml")
-
-        reopened = ddi.open_ddi("household-survey.xml")
-        print(reopened.variables[0].get_property("myorg:source_system"))
-        ```
-
-5. (Bonus) Build a `Quality Flag Codes` code list with three codes
-   (`validated`, `provisional`, `suppressed`), a controlled vocabulary. Set
-   `myorg:quality_flag` = `"validated"` on the `income` variable, and set
-   `myorg:quality_flag_codes` to the code list object so the field **references**
-   that vocabulary. Verify the stored reference is a URN (starts with
-   `"urn:ddi:"`).
 
     ??? success "Answer"
         ```python
@@ -447,7 +431,7 @@ forking the schema and without leaving valid DDI.
         income.set_property("myorg:quality_flag", "validated")
         income.set_property("myorg:quality_flag_codes", quality_codes)
 
-        print(income.get_property("myorg:quality_flag"))
+        print(income.get_property("myorg:quality_flag"))  # -> validated
         print(income.get_property("myorg:quality_flag_codes").startswith("urn:ddi:"))
         ```
 
@@ -455,78 +439,208 @@ forking the schema and without leaving valid DDI.
             Variables you hold remain the objects the document serializes, before
             and after `save()`.
 
+4. **(O4)** Write a catalog `CUSTOM_FIELDS` with three keys,
+   `myorg:source_system`, `myorg:quality_flag` and `myorg:steward`, each with
+   a one-line meaning. Write `set_catalog_field(item, key, value)`, which sets
+   the field only if the key is in the catalog and raises a `ValueError`
+   otherwise. Use it to set `myorg:steward` = `"Survey Methods"` on the
+   `income` variable and print the value. Then try the misspelt key
+   `myorg:stewart`, catch the error, and print its message.
+
+    **Expected output:**
+
+    ```text
+    Survey Methods
+    Refused: 'myorg:stewart' is not in the custom-field catalog
+    ```
+
+    ??? success "Answer"
+        ```python
+        CUSTOM_FIELDS = {
+            "myorg:source_system": "The system the data was extracted from.",
+            "myorg:quality_flag": "Data-quality status (see Quality Flag Codes).",
+            "myorg:steward": "The team accountable for the item.",
+        }
+
+
+        def set_catalog_field(item, key, value):
+            if key not in CUSTOM_FIELDS:
+                raise ValueError(f"{key!r} is not in the custom-field catalog")
+            item.set_property(key, value)
+
+
+        set_catalog_field(income, "myorg:steward", "Survey Methods")
+        print(income.get_property("myorg:steward"))  # -> Survey Methods
+
+        try:
+            set_catalog_field(income, "myorg:stewart", "Survey Methods")
+        except ValueError as error:
+            print(f"Refused: {error}")
+        # -> Refused: 'myorg:stewart' is not in the custom-field catalog
+        ```
+
+        Without the guard, the typo would create a second, misspelt field
+        that no audit or reader looks for.
+
+5. **(O5)** Set `myorg:steward` = `"Survey Methods"` on the income question.
+   Write an audit that scans all questions and variables and counts how many
+   carry a `myorg:` field. Print the count.
+
+    **Expected output:**
+
+    ```text
+    Items with custom fields: 2
+    ```
+
+    ??? success "Answer"
+        ```python
+        q_income.set_property("myorg:steward", "Survey Methods")
+
+
+        def items_with_custom_fields(doc, prefix="myorg:"):
+            count = 0
+            for collection in (doc.questions, doc.variables):
+                for item in collection:
+                    if any(key.startswith(prefix) for key in item.properties):
+                        count += 1
+            return count
+
+
+        print(f"Items with custom fields: {items_with_custom_fields(doc)}")
+        # -> Items with custom fields: 2
+        ```
+
+        The audit counts items, not fields: the `income` variable carries
+        several `myorg:` fields and counts once.
+
+6. **(O6)** Save the document, reopen it with `ddi.open_ddi()`, and read
+   `myorg:source_system` back from the reopened variable to prove the custom
+   field round-trips. Then read the saved file as text and check that it holds
+   an `r:AttributeKey` element with the key `myorg:source_system`.
+
+    **Expected output:**
+
+    ```text
+    CRM-2024
+    True
+    ```
+
+    ??? success "Answer"
+        ```python
+        from pathlib import Path
+
+        doc.save("household-survey.xml")
+
+        reopened = ddi.open_ddi("household-survey.xml")
+        print(reopened.variables[0].get_property("myorg:source_system"))  # -> CRM-2024
+
+        xml = Path("household-survey.xml").read_text(encoding="utf-8")
+        print("<r:AttributeKey>myorg:source_system</r:AttributeKey>" in xml)  # -> True
+        ```
+
+        The key sits in an `r:AttributeKey`, inside the `r:UserAttributePair`
+        that also holds its `r:AttributeValue`.
+
 ---
 
 ## Quiz
 
-???+ question "Q1: Why can you add custom fields to a DDI document?"
-    **A.** Because DDI ignores any element it does not recognize.
+???+ question "Question 1 (O1): Which call records that the whole dataset is classified Confidential?"
+    **A.** `income.set_property("myorg:security_class", "Confidential")`
 
-    **B.** Because DDI is an open, extensible standard with a built-in extension point.
+    **B.** `doc.study_unit.set_property("myorg:security_class", "Confidential")`
 
-    **C.** Because custom fields are stored in a separate file.
+    **C.** `q_income.set_property("security_class", "Confidential")`
 
-    **D.** You cannot: DDI only allows its built-in fields.
-
-    ??? success "Answer"
-        **B.** DDI is designed to be extended. `UserAttributePair` is a
-        standardized extension point, so your custom fields stay inside valid
-        DDI XML.
-
-???+ question "Q2: Which DDI element stores a custom key-value field?"
-    **A.** `Variable`
-
-    **B.** `UserAttributePair`
-
-    **C.** `CodeList`
-
-    **D.** `VersionRationale`
+    **D.** `doc.add_variable(name="myorg:security_class")`
 
     ??? success "Answer"
-        **B.** `set_property` writes an `r:UserAttributePair` with an
-        `AttributeKey` and an `AttributeValue`, the standard's extension point
-        for custom fields.
+        **B.** A fact about the whole dataset goes on the study,
+        `doc.study_unit`. A and C put it on one item (and C drops the
+        namespace prefix). D creates a variable, not a field.
 
-???+ question "Q3: What happens to custom fields when you save and reopen a file?"
-    **A.** They are dropped, because they are not standard.
+???+ question "Question 2 (O6): You save a document and search the XML for your key myorg:source_system. Where do you find it?"
+    **A.** In an `r:UserID` element.
 
-    **B.** They survive: they are written to the DDI XML and read straight back.
+    **B.** In the variable's `r:Label`.
 
-    **C.** They are converted into built-in fields.
+    **C.** In an `r:AttributeKey`, inside an `r:UserAttributePair`.
 
-    **D.** They are moved to a separate spreadsheet.
-
-    ??? success "Answer"
-        **B.** Because they live inside standard DDI, custom fields round-trip.
-        Any DDI-aware tool preserves them, even one that does not know what they
-        mean.
-
-???+ question "Q4: When should you use `UserID` instead of a custom property?"
-    **A.** When the value **identifies** the item in another system.
-
-    **B.** When the value is longer than 10 characters.
-
-    **C.** Never; `UserID` is deprecated.
-
-    **D.** Only for questions, never for variables.
+    **D.** Nowhere: custom fields are not saved.
 
     ??? success "Answer"
-        **A.** Use `UserID` (with a `type_of_user_id`) when the value is an
-        identifier from another system, such as an internal catalogue number.
-        Use a custom property when the value **describes** the item.
+        **C.** `set_property` writes an `r:UserAttributePair` with an
+        `r:AttributeKey` and an `r:AttributeValue`, the standard's extension
+        point for custom fields. That is why the field survives save and
+        reopen.
 
-???+ question "Q5: Why namespace custom keys like `myorg:retention_policy`?"
-    **A.** DDI requires a colon in every key.
+???+ question "Question 3 (O2): RM-2291 is the records-management system's number for a variable. Where do you record it?"
+    **A.** In a `UserID`, with a type such as `"RecordsManagement"`.
 
-    **B.** To keep your fields distinct so they never collide with another organization's fields.
+    **B.** In the variable's label.
 
-    **C.** To make the file smaller.
+    **C.** In a custom property, because every extra value is a property.
 
-    **D.** To hide the field from other tools.
+    **D.** In a separate spreadsheet.
 
     ??? success "Answer"
-        **B.** A namespace prefix is a convention that keeps your organization's
-        custom fields distinct, which matters if two DDI files are ever merged.
+        **A.** The value **identifies** the variable in another system, so it
+        is a `UserID`. Use a custom property when the value **describes** the
+        item.
+
+???+ question "Question 4 (O3): quality_codes is a code list. What does get_property return after this call?"
+    `income.set_property("myorg:quality_flag_codes", quality_codes)`
+
+    **A.** The `CodeList` object itself.
+
+    **B.** The string `"Quality Flag Codes"`.
+
+    **C.** The list `['validated', 'provisional', 'suppressed']`.
+
+    **D.** The code list's URN, a string that starts with `urn:ddi:`.
+
+    ??? success "Answer"
+        **D.** Passing a DDI item as the value stores its URN, a stable link
+        to the code list. Properties always hold strings.
+
+???+ question "Question 5 (O4): With the catalog guard of section 8, what does set_catalog_field(income, 'myorg:stewart', 'X') do?"
+    **A.** Sets `myorg:stewart` on `income`.
+
+    **B.** Corrects the key to `myorg:steward` and sets it.
+
+    **C.** Does nothing and says nothing.
+
+    **D.** Raises a `ValueError` and sets nothing.
+
+    ??? success "Answer"
+        **D.** The key is not in `CUSTOM_FIELDS`, so the function raises
+        before it calls `set_property`. The typo is caught instead of
+        creating a misspelt field.
+
+???+ question "Question 6 (O5): A question has no properties; variable v1 has myorg:a and myorg:b; variable v2 has other:flag. What does items_with_custom_fields(doc) return?"
+    **A.** 1
+
+    **B.** 2
+
+    **C.** 3
+
+    **D.** 0
+
+    ??? success "Answer"
+        **A.** Only `v1` has a key that starts with `myorg:`. The audit
+        counts items, not fields, so its two fields count once, and
+        `other:flag` does not match the prefix.
+
+---
+
+## Check yourself
+
+- [ ] I can add namespaced custom fields at the study level and at the item level, choosing the level each field describes. (O1)
+- [ ] I can add a `UserID` and choose between a `UserID` and a custom property for a value. (O2)
+- [ ] I can back a custom field with a code list by storing the list's URN in a property. (O3)
+- [ ] I can write a catalog of allowed keys and a function that refuses any other key. (O4)
+- [ ] I can write an audit that counts the items carrying my prefix. (O5)
+- [ ] I can show that custom fields survive save and reopen, and find their `UserAttributePair` in the XML. (O6)
 
 ---
 
@@ -536,18 +650,20 @@ forking the schema and without leaving valid DDI.
       Custom fields fix that by keeping it in the DDI.
     - Make the openness point explicitly: DDI gives you a *standardized* way to
       extend it. Show the `UserAttributePair` XML on screen so learners see the
-      custom field is still valid DDI, not a hack.
+      custom field is still valid DDI, not a hack. Exercise 6 has them find it
+      themselves.
     - Draw the line between Module 13 and this module: Module 13 taught the
       `set_property` *mechanics*; this module is about *governing* extensions for
       an organization: catalogs, namespaces, controlled values, auditing.
     - The `UserID` vs custom-property distinction (identify vs describe) is a
       common point of confusion. Give two quick examples of each.
-    - For NSO and archive staff: connect to real governance: records-retention
-      schedules, security classifications, data-steward assignments. These are
-      audited in practice, and Section 9's audit loop is how you report on them.
+    - For staff of statistical offices and archives: connect to real governance:
+      records-retention schedules, security classifications, data-steward
+      assignments. These are audited in practice, and Section 9's audit loop is
+      how you report on them.
     - Emphasize the one caution: do not reinvent built-in DDI. Custom fields are
       for genuine gaps, not for re-doing concepts, universes, or versioning.
 
 ---
 
-**See also:** [Module 13: Custom properties, find, remove, and validate](module-13-properties-find-validate.md) | [Module 15: Update and version](module-15-update-and-version.md) | [User guide: Custom properties](../user-guide.md)
+**See also:** [Module 13: Custom properties, find, remove, and validate](module-13-properties-find-validate.en.md) | [Module 15: Update and version](module-15-update-and-version.en.md) | [User guide: Custom properties](../user-guide.en.md)

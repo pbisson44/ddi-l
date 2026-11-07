@@ -8,7 +8,7 @@ description: >-
 
 Le paquet `ddi_l.models` fournit des dataclasses générées pour les types
 DDI 3.3. C'est la **couche avancée**. La plupart des utilisateurs devraient
-commencer avec l'[API CRUD simple](user-guide.md).
+commencer avec l'[API CRUD simple](user-guide.fr.md).
 
 !!! info "Quand utiliser la couche modèles"
     Utilisez les classes de modèles directement lorsque vous avez besoin d'un
@@ -77,6 +77,38 @@ ref = Reference(
 )
 ```
 
+## Paramètres et liaisons
+
+Une construction transmet des valeurs par des paramètres : l'`OutParameter`
+d'une construction de question porte sa réponse, et une condition (un
+`IfThenElse`, un `Loop`) teste ses `InParameter`. Un `Binding` sur la séquence
+qui contient les deux relie l'un à l'autre.
+
+```python
+from ddi_l.models import Binding, InParameter, OutParameter
+
+answer = OutParameter(
+    agency="example.org", identifier="q1-out", version="1", alias="Q1"
+)
+gate_input = InParameter(
+    agency="example.org", identifier="gate-in", version="1", alias="Q1"
+)
+binding = Binding.between(answer, gate_input, late_bound=True)
+
+reference = binding.target_parameter_reference
+print(reference.type_of_object, reference.identifier)
+```
+
+`IfThenElse`, `Loop`, `StatementItem` et `Sequence` gardent les leurs dans
+`in_parameters`, `out_parameters` et `bindings`, lus d'un fichier sous ces
+types, comme les modèles générés qui en ont (`ComputationItem`,
+`QuestionConstruct`, `Split`, `RepeatUntil`, ..., et les `in_parameters` d'une
+`Instruction`). Ces listes acceptent aussi un élément brut, écrit tel quel. Le
+`to_reference()` d'un paramètre et les références que construit
+`Binding.between()` n'ont pas d'`r:URN`, comme Colectica les écrit ;
+`late_bound=True` les marque `lateBound="true"`, pour qu'elles suivent la
+dernière version du paramètre.
+
 ## Modèles générés
 
 Les classes sous `ddi_l.models._generated/` sont générées automatiquement
@@ -87,5 +119,5 @@ régénérer :
 python -m codegen.generate_model_bases
 ```
 
-Consultez le [guide de développement](DEVELOPMENT.md) pour plus de détails sur
+Consultez le [guide de développement](DEVELOPMENT.fr.md) pour plus de détails sur
 le pipeline de génération.

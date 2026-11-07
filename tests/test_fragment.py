@@ -2,15 +2,17 @@ from pathlib import Path
 
 import pytest
 
-from ddi_l._etree import create_element
-from ddi_l.constants import REUSABLE_NS, STUDY_UNIT_NS
+from ddi_l._etree import create_element, fromstring
+from ddi_l.constants import INSTANCE_NS, REUSABLE_NS, STUDY_UNIT_NS
 from ddi_l.document import DDIFragment
-from ddi_l.examples.tests.fixtures.models.regenerate import (
+from ddi_l.io import read, write
+from ddi_l.models import Reference, StudyUnit, qn
+from tests import EXAMPLES_DIR
+from tests.helpers.marks import refers_outside
+from tests.helpers.regenerate_model_fixtures import (
     FIXTURE_DEFAULT_AGENCY,
     _fixture_identifier,
 )
-from ddi_l.io import read, write
-from ddi_l.models import Reference, StudyUnit, qn
 
 
 def fixture_identifier(seed: str, *, agency: str = FIXTURE_DEFAULT_AGENCY) -> str:
@@ -111,7 +113,7 @@ def test_quality_of_life_example_round_trip(tmp_path: Path, fixtures_dir: Path):
     Args:
         tmp_path: Temporary directory for writing the fragment copy.
     """
-    source = fixtures_dir.parent.parent / "Quality_of_Life.xml"
+    source = EXAMPLES_DIR / "Quality_of_Life.xml"
     document = read(source, validate=True)
     assert isinstance(document, DDIFragment)
 
@@ -131,6 +133,7 @@ def test_quality_of_life_example_round_trip(tmp_path: Path, fixtures_dir: Path):
     assert reparsed.to_dict() == document.to_dict()
 
 
+@refers_outside
 def test_fragment_create_serializes_and_round_trips():
     """Programmatic fragment creation serializes and round-trips cleanly."""
     fragment = DDIFragment.create()
@@ -160,8 +163,9 @@ def test_fragment_create_serializes_and_round_trips():
         if isinstance(xml_data, (bytes, bytearray))
         else xml_data
     )
-    assert "<TopLevelReference" in xml_text
-    assert "<Fragment" in xml_text
+    root = fromstring(xml_text.encode("utf-8"))
+    assert root.find(f"{{{INSTANCE_NS}}}TopLevelReference") is not None
+    assert root.find(f"{{{INSTANCE_NS}}}Fragment") is not None
 
     reference = fragment.get_top_level_reference()
     assert reference is not None
@@ -183,6 +187,7 @@ def test_fragment_create_serializes_and_round_trips():
     assert reparsed.to_dict() == snapshot
 
 
+@refers_outside
 def test_fragment_constructor_sets_reference_from_maintainable():
     """Constructing from maintainable seeds top-level reference and payloads."""
     study = StudyUnit(

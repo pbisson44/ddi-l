@@ -40,7 +40,8 @@ def test_version_bump_after_reopening_does_not_duplicate_the_study(tmp_path):
     original.save(first)
 
     reopened = ddi.open_ddi(first)
-    reopened.study_unit.increment_minor_version()
+    # New items start at the integer version "1"; dotted is opted into.
+    reopened.study_unit.increment_minor_version(allow_dotted=True)
     second = tmp_path / "v2.xml"
     reopened.save(second)
 
@@ -58,7 +59,7 @@ def test_a_version_rationale_is_schema_valid_and_round_trips(tmp_path):
     doc = ddi.new_study(title="Survey", agency="example.org")
     question = doc.add_question(text="Do you work from home?")
     for item in (doc.study_unit, question):
-        item.increment_minor_version()
+        item.increment_minor_version(allow_dotted=True)
         item.version_rationales.append(
             VersionRationale(
                 descriptions=[InternationalString(text="Reworded", lang="en")]
@@ -109,7 +110,7 @@ def test_a_multi_study_series_keeps_every_study_across_a_bump(tmp_path):
     """Extra studies in a series survive a version bump of the primary."""
     doc = ddi.new_study(title="Wave 1", agency="example.org")
     doc.add_study(title="Wave 2")
-    doc.study_unit.increment_minor_version()
+    doc.study_unit.increment_major_version()
 
     target = tmp_path / "series.xml"
     doc.save(target)
@@ -161,6 +162,24 @@ def test_validate_document_sees_unflushed_edits():
     report = validate_document(doc)
 
     assert report.to_dict()["schema_issues"] == []
+
+
+def test_validate_document_leaves_held_models_live(tmp_path):
+    """Validating must not detach models the caller already holds.
+
+    ``validate_document`` used to reach the XML through ``Document.inner``,
+    which releases the cached study, so an edit made afterwards to a model
+    obtained before validating was silently dropped on ``save()``.
+    """
+    doc = ddi.new_study(title="Test", agency="example.org")
+    study = doc.study_unit
+
+    validate_document(doc)
+    study.set_property("myorg:reviewed", "yes")
+    out = tmp_path / "study.xml"
+    doc.save(out)
+
+    assert "myorg:reviewed" in out.read_text(encoding="utf-8")
 
 
 def test_a_mistyped_filename_reports_the_missing_file(tmp_path):

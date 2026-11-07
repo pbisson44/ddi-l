@@ -1,0 +1,128 @@
+{
+  "spec": "pet-survey",
+  "version": "1",
+  "description": "A small bilingual survey about the pets of a household.",
+  "languages": [
+    "en",
+    "fr"
+  ],
+  "blaise": {
+    "empty": "EMPTY",
+    "refused": "REFUSAL",
+    "today": "SYSDATE"
+  },
+  "code_lists": {
+    "Species": {
+      "values": {
+        "1": {
+          "en": "Dog",
+          "fr": "Chien"
+        },
+        "2": {
+          "en": "Cat",
+          "fr": "Chat"
+        },
+        "3": {
+          "en": "Bird",
+          "fr": "Oiseau"
+        }
+      }
+    }
+  },
+  "imported_variables": [
+    {
+      "name": "OwnerName",
+      "type": "text",
+      "source": "register"
+    }
+  ],
+  "derived_variables": [
+    {
+      "name": "HasPets",
+      "type": "numeric",
+      "values": [
+        0,
+        1
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": "household",
+      "questions": [
+        {
+          "id": "PetCount",
+          "domain": {
+            "numeric": {
+              "min": 0,
+              "max": 20,
+              "decimals": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pets",
+      "gate": "PetCount > 0",
+      "statements": [
+        "PetsIntro"
+      ],
+      "questions": [
+        {
+          "id": "PetKind",
+          "domain": {
+            "code": {
+              "list": "Species"
+            }
+          }
+        },
+        {
+          "id": "PetName",
+          "domain": {
+            "text": {
+              "max_length": 50
+            }
+          },
+          "gate": "answered(PetKind)"
+        },
+        {
+          "id": "PetAge",
+          "domain": {
+            "numeric": {
+              "min": 0,
+              "max": 40,
+              "decimals": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "visits",
+      "required": false,
+      "questions": [
+        {
+          "id": "VisitDate",
+          "domain": {
+            "date": {
+              "type": "Date"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "edits": [
+    {
+      "id": "age_range",
+      "when": "PetAge > 30",
+      "module": "pets",
+      "message": {
+        "en": "Is the pet really over 30?",
+        "fr": "L’animal a-t-il vraiment plus de 30 ans ?"
+      },
+      "severity": "warning"
+    }
+  ]
+}

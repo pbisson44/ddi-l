@@ -27,6 +27,7 @@ from ._monolith import (
     # Internal but used by tests
     _REFERENCE_NAMESPACE,  # noqa: F401
     # Exported in __all__
+    Binding,
     CollectionActivity,
     CollectionEvent,
     ComputationItem,
@@ -40,6 +41,7 @@ from ._monolith import (
     GenerationInstruction,
     GridDimension,
     IfThenElse,
+    InParameter,
     Instruction,
     InstructionGroup,
     Instrument,
@@ -72,6 +74,7 @@ from ._monolith import (
 )
 
 __all__ = [
+    "Binding",
     "CollectionActivity",
     "CollectionEvent",
     "ComputationItem",
@@ -85,6 +88,7 @@ __all__ = [
     "GenerationInstruction",
     "GridDimension",
     "IfThenElse",
+    "InParameter",
     "Instruction",
     "InstructionGroup",
     "Instrument",

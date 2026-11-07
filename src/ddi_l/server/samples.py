@@ -1,7 +1,7 @@
 """The documents shown in the OpenAPI schema.
 
 Swagger's "Try it out" prefills its request box from these, so
-:data:`SAMPLE_XML` is a small, valid DDI Lifecycle 3.3 instance that passes
+`SAMPLE_XML` is a small, valid DDI Lifecycle 3.3 instance that passes
 schema validation and lint. The JSON and JSON-LD below are the service's own
 output for it; ``tests/test_server_examples.py`` checks all three against the
 running service, and the tables samples likewise.
@@ -188,7 +188,7 @@ def tables_zip(tables: dict[str, str]) -> bytes:
     return buffer.getvalue()
 
 
-#: What `POST /v1/tables/import` returns for :data:`SAMPLE_TABLES`. Only the
+#: What `POST /v1/tables/import` returns for `SAMPLE_TABLES`. Only the
 #: `versionDate` differs from one request to the next.
 SAMPLE_TABLES_FRAGMENT = """<?xml version="1.0" encoding="utf-8"?>
 <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:ddi="ddi:instance:3_3">
@@ -257,7 +257,7 @@ EXAMPLE_TABLES_FRAGMENT = Example(
         "From a zip of three CSV files: `settings.csv` (the agency), "
         "`concepts.csv` (AGE) and `variables.csv` (AGE, a numeric variable "
         "measuring that concept). Written as Colectica Designer writes an "
-        "export, so it imports into a Colectica repository."
+        "export, for importing into a Colectica repository."
     ),
     value=SAMPLE_TABLES_FRAGMENT,
 )

@@ -133,6 +133,11 @@ for v in doc.variables:
     print(f"  {v.identifier}")
 ```
 
+Save it again and the parts you did not change are written as they were
+read, byte for byte; only what you added or changed is laid out, with the
+file's own indentation. To lay the whole file out afresh, use
+`ddi.write_ddi(doc, "out.xml", layout="default")`.
+
 Pass `validate=True` to run schema validation on load:
 
 ```python
@@ -152,7 +157,7 @@ else:
     print("Document is valid!")
 ```
 
-For more validation options, see the [validation guide](validation.md).
+For more validation options, see the [validation guide](validation.en.md).
 
 ## Advanced: working with the model layer
 
@@ -171,4 +176,4 @@ var = Variable(
 )
 ```
 
-See the [models reference](models.md) for a complete list of available types.
+See the [models reference](models.en.md) for a complete list of available types.

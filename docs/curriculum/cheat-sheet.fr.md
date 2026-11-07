@@ -165,7 +165,7 @@ tagged = [x for x in doc.variables if any(k.startswith("myorg:") for k in x.prop
 ```
 
 Les champs personnalisés se sérialisent en `r:UserAttributePair` (et `r:UserID`),
-ce qui reste du DDI valide. Voir [Module 14](module-14-custom-fields.md).
+ce qui reste du DDI valide. Voir [Module 14](module-14-custom-fields.fr.md).
 
 ---
 
@@ -266,7 +266,7 @@ doc.add_item(Instrument, name="Instrument d'enquete")
 
 `Loop` fonctionne de la même façon (`doc.add_item(Loop, name="...")`), avec
 sa section répétée définie via `loop.control_construct_reference`. Voir le
-[Module 10](module-10-questionnaire-flows.md) pour l'exemple complet.
+[Module 10](module-10-questionnaire-flows.fr.md) pour l'exemple complet.
 
 ---
 
@@ -298,7 +298,7 @@ rl.add_data_item(income.to_reference(), start_position=3, width=8)
 Omettez les positions pour un fichier délimité (virgule/tabulation).
 
 Pour mettre à jour plusieurs variables à partir d'un nouveau fichier de données, en versionnant chaque changement, voir le
-[Module 15, section 8](module-15-update-and-version.md#8-mettre-a-jour-plusieurs-variables-a-partir-dun-nouveau-fichier-de-donnees).
+[Module 15, « Pour aller plus loin »](module-15-update-and-version.fr.md#mettre-a-jour-plusieurs-variables-a-partir-dun-nouveau-fichier-de-donnees).
 
 ---
 
@@ -467,7 +467,7 @@ linked.source_variable_references = [
 
 Les `source_variable_references` inter-études émettent un avertissement à
 l'enregistrement. C'est attendu pour le couplage. Voir
-[Module 12](module-12-data-linkage.md).
+[Module 12](module-12-data-linkage.fr.md).
 
 ---
 
@@ -533,6 +533,8 @@ Exécutez ces commandes dans votre terminal.
 | `ddi from-json fichier.json -o fichier.xml` | Convertir du JSON en DDI XML |
 | `ddi roundtrip in.xml -o out.xml` | Lire et réécrire (teste la fidélité) |
 | `ddi versions fichier.xml` | Afficher les informations de version du fichier |
+| `ddi spec validate spec.yaml` | Vérifier une spécification de questionnaire ([Module 16](module-16-advanced-questionnaire-spec.fr.md)) |
+| `ddi conform fichier.xml --spec spec.yaml` | Comparer un instrument à sa spécification |
 
 Le code de sortie `0` signifie succès. Le code de sortie `1` signifie échec.
 
@@ -788,7 +790,7 @@ q = doc.add_question(text="Quelle est votre adresse courriel ?")
 doc.add_variable(name="Courriel", question=q)
 
 study = doc.study_unit
-study.increment_minor_version()
+study.increment_minor_version(allow_dotted=True)
 study.version_rationales.append(
     VersionRationale(
         descriptions=[
@@ -815,8 +817,8 @@ done
 
 ## Pour en savoir plus
 
-- [Guide d'utilisation](../user-guide.md) : Parcours complet de l'API
-- [Guide de validation](../validation.md) : Détails sur le schéma et le linting
-- [Recettes CLI](../cli-recipes.md) : Tous les exemples en ligne de commande
-- [Référence des modèles](../models.md) : Couche de modèles avancée
-- [Modules de formation](index.md) : Programme pas à pas
+- [Guide d'utilisation](../user-guide.fr.md) : Parcours complet de l'API
+- [Guide de validation](../validation.fr.md) : Détails sur le schéma et le linting
+- [Recettes CLI](../cli-recipes.fr.md) : Tous les exemples en ligne de commande
+- [Référence des modèles](../models.fr.md) : Couche de modèles avancée
+- [Modules de formation](index.fr.md) : Programme pas à pas

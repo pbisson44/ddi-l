@@ -36,8 +36,8 @@ new DDI instances.
     ```
 
     The script rewrites both files and prints a confirmation that both payloads
-    validate. Without ``--output`` and ``--fragment-output`` it writes into the
-    installed package instead.
+    validate. Without ``--output`` and ``--fragment-output`` it writes both files
+    into the current folder.
 2. Inspect the refreshed instance and fragment XML outputs to see how the
    maintainables are packaged and how the validation messages describe the
    rebuild.

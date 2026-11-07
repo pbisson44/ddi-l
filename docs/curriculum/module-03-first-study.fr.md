@@ -6,19 +6,29 @@ description: >-
 
 # Module 3 : Créer votre première étude DDI
 
-!!! info "Ce que vous apprendrez"
-    - Créer une nouvelle étude DDI avec `ddi.new_study()`.
-    - Ajouter des questions d'enquête avec `doc.add_question()`.
-    - Lister les questions avec `doc.questions`.
-    - Sauvegarder l'étude dans un fichier XML avec `doc.save()`.
-    - Vérifier votre travail avec `doc.validate()` et `doc.lint()`.
+!!! info "Objectifs d'apprentissage"
+    À la fin de ce module, vous pouvez :
 
-**Prérequis :** [Module 2 : Préparer votre environnement Python](module-02-setup.md)
+    - **O1.** Écrire un script qui crée une étude avec `ddi.new_study()` et
+      y ajoute trois questions avec `doc.add_question()`.
+    - **O2.** Compter les questions d'une étude avec `len(doc.questions)` et
+      afficher l'identifiant de chaque question.
+    - **O3.** Sauvegarder l'étude dans un fichier XML avec `doc.save()` et
+      trouver le texte d'une question dans le fichier sauvegardé.
+    - **O4.** Ajouter une version française du texte et du libellé d'une
+      question existante, pour qu'une seule question contienne les deux
+      langues.
+    - **O5.** Vérifier une étude avec `doc.validate()` et `doc.lint()`, et
+      corriger les avertissements de lint jusqu'à ce que les deux ne
+      signalent plus rien.
+
+**Prérequis :** [Module 2](module-02-setup.fr.md)
 
 **Durée :** 30 min en autonomie / 45 min avec instructeur.
 
-**API enseignée :** `ddi.new_study()`, `doc.add_question()`, `doc.questions`,
-`doc.save()`, `doc.validate()`, `doc.lint()`
+**Nouveau dans ce module :** `ddi.new_study()`, `doc.add_question()`,
+`doc.questions`, `doc.save()`, `InternationalString`, `doc.validate()`,
+`doc.lint()`
 
 ---
 
@@ -55,7 +65,8 @@ Ce que cela fait :
 - `ddi.new_study()` crée un nouveau document DDI. Il renvoie un objet
   **Document**, que nous stockons dans la variable appelée `doc`.
 - `title=` définit le nom de l'étude.
-- `agency=` définit l'organisation responsable de l'étude.
+- `agency=` définit l'organisation responsable de l'étude. Il est
+  obligatoire : sans lui, `ddi.new_study()` lève une `TypeError`.
 
 ---
 
@@ -63,14 +74,21 @@ Ce que cela fait :
 
 Une **agency** (agence) est l'organisation responsable de l'étude. Ce peut
 être une université, un ministère, un institut de recherche ou tout groupe qui
-mène l'enquête. Exemples :
+mène l'enquête. Son **identifiant d'agence** figure dans chaque élément
+qu'elle crée, à côté de l'identifiant et de la version de l'élément : ensemble,
+ils nomment l'élément.
 
-- `"university.edu"` : une université
-- `"statistics.gc.ca"` : Statistique Canada
-- `"worldbank.org"` : La Banque mondiale
-
-La valeur de l'agence est généralement écrite sous forme de nom de domaine.
-Elle aide à identifier qui a créé le document.
+- **Enregistré.** Pour que deux organisations n'aient jamais le même
+  identifiant, chacune enregistre le sien dans le
+  [registre des identifiants d'agence DDI](https://ddialliance.org/ddi-agency-id-registry).
+  Elle peut ensuite ajouter des sous-agences après un point, par exemple une
+  par division.
+- **Format.** Des lettres, des chiffres et des traits d'union, en parties
+  reliées par des points, chaque partie d'au plus 63 caractères.
+  `doc.validate()` vérifie le format, pas l'enregistrement.
+- **Dans ce cours.** Les identifiants comme `"university.edu"` et
+  `"stats.example.org"` sont inventés. Dans un vrai document, utilisez
+  l'identifiant que votre organisation a enregistré.
 
 ---
 
@@ -112,8 +130,10 @@ from ddi_l.models.base import InternationalString
 q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))
 ```
 
-Maintenant `q1` contient le texte de la question en anglais et en français.
-Quand quelqu'un ouvre le fichier DDI, il peut voir les deux versions.
+Un `InternationalString` est un texte accompagné de son code de langue
+(`"en"`, `"fr"`, etc.). Maintenant `q1` contient le texte de la question en
+anglais et en français. Quand quelqu'un ouvre le fichier DDI, il peut voir
+les deux versions.
 
 L'argument `lang=` fonctionne sur toutes les méthodes `add_*` :
 `add_variable()`, `add_concept()`, `add_universe()` et `add_code_list()`.
@@ -184,7 +204,7 @@ Vous n'avez pas besoin de comprendre tout le XML. L'important est que
 `ddi-l` a transformé vos cinq lignes de Python en un document DDI complet
 et conforme à la norme.
 
-Voir aussi : [Guide utilisateur : Créer une étude](../user-guide.md#creer-une-etude)
+Voir aussi : [Guide utilisateur : Créer une étude](../user-guide.fr.md#creer-une-etude)
 
 ---
 
@@ -240,6 +260,13 @@ Résultat attendu :
 Constats de lint : 0
 ```
 
+Un libellé peut avoir plus d'une langue, comme le texte de la question.
+Ajoutez un libellé français à la même liste `labels` :
+
+```python
+q1.labels.append(InternationalString(text="Âge", lang="fr"))
+```
+
 Quand vous ajoutez un nouvel élément, vous pouvez lui donner un libellé tout
 de suite. Chaque méthode `add_*` accepte `label=` :
 
@@ -249,7 +276,7 @@ q4 = doc.add_question(text="Do you exercise every week?", label="Weekly exercise
 
 Les avertissements ne rendent pas un document invalide ; les erreurs de schéma,
 si. Vérifiez votre travail de cette façon à la fin de chaque module. Le
-[module 7](module-07-cli-validation.md) effectue les mêmes vérifications en
+[module 7](module-07-cli-validation.fr.md) effectue les mêmes vérifications en
 ligne de commande.
 
 ---
@@ -262,19 +289,25 @@ ligne de commande.
     sur l'âge, la santé et le sommeil. Vous allez utiliser `ddi-l` pour
     créer la documentation.
 
-**Exercice 1.** Créez une étude intitulée `"Student Well-Being Survey"` avec
-l'agence `"university.edu"`. Ajoutez trois questions :
+**Exercice 1 (O1, O2).** Créez une étude intitulée
+`"Student Well-Being Survey"` avec l'agence `"university.edu"`. Ajoutez trois
+questions :
 
 1. `"What is your age?"`
 2. `"How would you rate your health?"`
 3. `"How many hours do you sleep per night?"`
 
-Sauvegardez l'étude sous `well-being.xml`. Affichez le nombre de questions.
+Affichez le nombre de questions, puis l'identifiant de chaque question.
+Sauvegardez l'étude sous `well-being.xml`.
 
-Résultat attendu :
+Résultat attendu : `Questions: 3`, puis trois identifiants, un par ligne (les
+vôtres seront différents).
 
 ```text
 Questions: 3
+4f0c9a5e-...
+9b1d2e7c-...
+c3a8f610-...
 ```
 
 ??? success "Réponse"
@@ -287,13 +320,19 @@ Questions: 3
     q2 = doc.add_question(text="How would you rate your health?")
     q3 = doc.add_question(text="How many hours do you sleep per night?")
 
-    print(f"Questions: {len(doc.questions)}")
+    print(f"Questions: {len(doc.questions)}")  # -> Questions: 3
+    for q in doc.questions:
+        print(q.identifier)
+
     doc.save("well-being.xml")
     ```
 
-**Exercice 2.** Ouvrez `well-being.xml` dans un éditeur de texte. Pouvez-vous
-trouver le texte de votre première question dans le XML ? Notez la balise XML
-qui entoure le texte de la question.
+**Exercice 2 (O3).** Ouvrez `well-being.xml`, le fichier sauvegardé à
+l'exercice 1, dans un éditeur de texte. Trouvez le texte de votre première
+question dans le XML. Notez la balise XML qui entoure le texte de la
+question.
+
+Résultat attendu : le nom d'une balise XML.
 
 ??? success "Réponse"
     Le texte de la question se trouve dans un élément `<d:Text>`, à l'intérieur de
@@ -303,112 +342,208 @@ qui entoure le texte de la question.
     <d:Text xml:lang="en" isPlainText="true">What is your age?</d:Text>
     ```
 
-**Exercice 3.** Ajoutez une traduction française à la première question. Puis
-sauvegardez à nouveau le fichier et vérifiez dans le XML que les deux langues
-apparaissent.
+**Exercice 3 (O5).** Continuez à partir de l'exercice 1. Vérifiez l'étude
+avec `doc.validate()` et `doc.lint()`, et affichez le nombre de problèmes que
+chacune signale. Donnez ensuite un libellé anglais à chaque question
+(`"Age"`, `"Self-rated health"`, `"Hours of sleep"`), vérifiez de nouveau et
+sauvegardez.
+
+Résultat attendu :
+
+```text
+Problèmes de schéma : 0
+Constats de lint : 3
+Constats de lint : 0
+```
 
 ??? success "Réponse"
     ```python
     from ddi_l.models.base import InternationalString
 
-    q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))
+    print(f"Problèmes de schéma : {len(doc.validate())}")  # -> Problèmes de schéma : 0
+    print(f"Constats de lint : {len(doc.lint())}")  # -> Constats de lint : 3
+
+    q1.labels.append(InternationalString(text="Age", lang="en"))
+    q2.labels.append(InternationalString(text="Self-rated health", lang="en"))
+    q3.labels.append(InternationalString(text="Hours of sleep", lang="en"))
+
+    print(f"Constats de lint : {len(doc.lint())}")  # -> Constats de lint : 0
     doc.save("well-being.xml")
     ```
 
-    Ouvrez le XML. Vous devriez voir à la fois `xml:lang="en"` et `xml:lang="fr"`
-    pour la première question.
+    Les trois avertissements étaient « Maintainable element is missing a
+    label. », un par question. Un libellé corrige chacun d'eux.
+
+**Exercice 4 (O4).** Ajoutez le français à la première question : le texte
+`"Quel est votre âge ?"` et le libellé `"Âge"`. Ne créez pas de nouvelle
+question. Affichez le nombre de questions et le nombre de constats de lint,
+sauvegardez de nouveau le fichier et vérifiez dans le XML que les deux
+langues apparaissent.
+
+Résultat attendu :
+
+```text
+Questions: 3
+Constats de lint : 0
+```
+
+Dans le XML, la première question a des entrées `xml:lang="en"` et
+`xml:lang="fr"` pour son libellé comme pour son texte.
+
+??? success "Réponse"
+    ```python
+    q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))
+    q1.labels.append(InternationalString(text="Âge", lang="fr"))
+
+    print(f"Questions: {len(doc.questions)}")  # -> Questions: 3
+    print(f"Constats de lint : {len(doc.lint())}")  # -> Constats de lint : 0
+    doc.save("well-being.xml")
+    ```
+
+    Le nombre reste à 3, car les deux traductions appartiennent à `q1`. Dans
+    le XML, la première question se lit maintenant ainsi :
+
+    ```xml
+    <r:Label>
+      <r:Content xml:lang="en">Age</r:Content>
+      <r:Content xml:lang="fr">Âge</r:Content>
+    </r:Label>
+    <d:QuestionText>
+      <d:LiteralText>
+        <d:Text xml:lang="en" isPlainText="true">What is your age?</d:Text>
+      </d:LiteralText>
+      <d:LiteralText>
+        <d:Text xml:lang="fr">Quel est votre âge ?</d:Text>
+      </d:LiteralText>
+    </d:QuestionText>
+    ```
 
 ---
 
 ## Quiz
 
-???+ question "Question 1 : Que renvoie ddi.new_study() ?"
-    **A.** Une chaîne de texte XML.
+???+ question "Question 1 (O1) : Vous exécutez `doc = ddi.new_study(title='Sleep Survey')` et obtenez une TypeError. Pourquoi ?"
+    **A.** Le titre est trop court.
 
-    **B.** Un objet Document qui représente l'étude.
+    **B.** `agency=` manque. Chaque étude a besoin de l'organisation qui en
+    est responsable.
 
-    **C.** Une liste de questions.
+    **C.** Vous devez d'abord importer `InternationalString`.
 
-    **D.** Un fichier CSV.
-
-    ??? success "Réponse"
-        **B.** `ddi.new_study()` renvoie un objet Document. Vous utilisez cet
-        objet pour ajouter des questions, des variables et d'autres éléments
-        à l'étude.
-
-???+ question "Question 2 : Que fait doc.add_question() ?"
-    **A.** Elle envoie une question aux répondants de l'enquête.
-
-    **B.** Elle ajoute une question à l'étude et renvoie un objet question.
-
-    **C.** Elle affiche une question à l'écran.
-
-    **D.** Elle supprime une question de l'étude.
+    **D.** `new_study()` ne prend aucun argument.
 
     ??? success "Réponse"
-        **B.** `doc.add_question()` ajoute un nouvel élément question à
-        l'étude DDI. Elle renvoie l'objet question pour que vous puissiez
-        l'utiliser plus tard.
+        **B.** `ddi.new_study()` exige à la fois `title=` et `agency=`. Le
+        message d'erreur le dit : « missing 1 required keyword-only argument:
+        'agency' ».
 
-???+ question "Question 3 : Que fait doc.save() ?"
-    **A.** Elle envoie le fichier sur Internet.
+???+ question "Question 2 (O1) : Après `q1 = doc.add_question(text='What is your age?')`, qu'est-ce que `q1` ?"
+    **A.** La chaîne `"What is your age?"`.
 
-    **B.** Elle imprime le document sur papier.
+    **B.** Le nombre de questions de l'étude.
 
-    **C.** Elle écrit l'étude dans un fichier XML sur votre ordinateur.
+    **C.** Un objet question stocké dans l'étude, que vous pouvez utiliser
+    plus tard, par exemple pour le traduire ou pour y associer une variable.
 
-    **D.** Elle valide le document.
-
-    ??? success "Réponse"
-        **C.** `doc.save("filename.xml")` écrit le document DDI dans un
-        fichier XML dans votre dossier courant.
-
-???+ question "Question 4 : Comment ajouter une traduction française à une question ?"
-    **A.** `doc.add_question(text="...", lang="fr")`. Cela crée une
-    nouvelle question séparée en français.
-
-    **B.** Ajouter un `InternationalString` avec `lang="fr"` à la liste
-    `question_texts` de la question.
-
-    **C.** Changer la langue de la question avec `q.lang = "fr"`.
-
-    **D.** On ne peut pas stocker plus d'une langue dans DDI.
+    **D.** Le texte XML de la question.
 
     ??? success "Réponse"
-        **B.** Pour ajouter une traduction, ajoutez un `InternationalString`
-        avec la nouvelle langue à la liste `question_texts` de la question.
-        Les deux versions linguistiques sont stockées dans le même élément
-        question. L'option A créerait une toute nouvelle question, pas une
-        traduction d'une question existante.
+        **C.** `doc.add_question()` ajoute un élément question à l'étude et
+        renvoie cet objet question. Le garder dans une variable vous permet
+        de l'utiliser plus tard.
 
-???+ question "Question 5 : Comment compter les questions dans une étude ?"
-    **A.** `doc.count_questions()`
+???+ question "Question 3 (O2) : Une étude a trois questions. Vous en ajoutez une quatrième avec `doc.add_question()`, puis exécutez `print(len(doc.questions))`. Qu'est-ce qui s'affiche ?"
+    **A.** `4`
 
-    **B.** `len(doc.questions)`
+    **B.** `3`
 
-    **C.** `doc.questions.size()`
+    **C.** `1`
 
-    **D.** `print(doc)`
+    **D.** Une erreur, car `doc.questions` n'est pas une liste.
 
     ??? success "Réponse"
-        **B.** `doc.questions` vous donne la liste des questions, et `len()`
-        compte combien d'éléments se trouvent dans cette liste.
+        **A.** `doc.questions` est la liste de toutes les questions de
+        l'étude, et `len()` les compte : trois plus la nouvelle.
 
-???+ question "Question 6 : doc.validate() renvoie une liste vide, mais doc.lint() signale des avertissements. Le document est-il du DDI valide ?"
+???+ question "Question 4 (O3) : Vous ouvrez le fichier écrit par `doc.save('well-being.xml')`. Où trouvez-vous le texte de votre première question ?"
+    **A.** Dans un élément `<d:Text>` à l'intérieur de `<d:QuestionText>`.
+
+    **B.** Seulement dans le nom du fichier.
+
+    **C.** Dans l'élément `<r:Agency>`.
+
+    **D.** Nulle part : `save()` n'écrit que le titre de l'étude.
+
+    ??? success "Réponse"
+        **A.** `doc.save()` écrit toute l'étude, et le texte de chaque
+        question se trouve dans `<d:Text>`, à l'intérieur de
+        `<d:LiteralText>`, lui-même dans `<d:QuestionText>`.
+
+???+ question "Question 5 (O4) : Vous voulez la première question, `q1`, en anglais et en français. Quelle ligne le fait ?"
+    **A.** `doc.add_question(text="Quel est votre âge ?", lang="fr")`
+
+    **B.** `q1.lang = "fr"`
+
+    **C.** `q1.question_texts.append(InternationalString(text="Quel est votre âge ?", lang="fr"))`
+
+    **D.** Aucune : DDI ne peut pas stocker plus d'une langue dans une
+    question.
+
+    ??? success "Réponse"
+        **C.** Ajouter un `InternationalString` avec la nouvelle langue
+        stocke les deux versions dans le même élément question. L'option A
+        crée une toute nouvelle question séparée, pas une traduction de
+        `q1`.
+
+???+ question "Question 6 (O5) : `doc.validate()` renvoie une liste vide, mais `doc.lint()` signale des avertissements. Le document est-il du DDI valide ?"
     **A.** Non. Tout constat rend un document invalide.
 
-    **B.** Oui. La validation vérifie le schéma ; les avertissements de lint
+    **B.** Seulement après l'avoir enregistré.
+
+    **C.** Cela dépend de la langue des questions.
+
+    **D.** Oui. La validation vérifie le schéma ; les avertissements de lint
     signalent des problèmes de qualité, comme un libellé manquant, que le
     schéma autorise.
 
-    **C.** Seulement après l'avoir enregistré.
-
-    **D.** Cela dépend de la langue des questions.
-
     ??? success "Réponse"
-        **B.** Une liste vide renvoyée par `doc.validate()` signifie que le
+        **D.** Une liste vide renvoyée par `doc.validate()` signifie que le
         document respecte le schéma DDI. Les avertissements de lint méritent
         d'être corrigés, mais ils ne rendent pas le document invalide.
+
+???+ question "Question 7 (O5) : `doc.lint()` signale 'Maintainable element is missing a label.' une fois pour chacune de vos trois questions. Quelle modification fait disparaître les avertissements ?"
+    **A.** Sauvegarder de nouveau le document avec `doc.save()`.
+
+    **B.** Donner un libellé à chaque question, par exemple
+    `q1.labels.append(InternationalString(text="Age", lang="en"))`, ou
+    passer `label=` à l'appel de `doc.add_question()`.
+
+    **C.** Supprimer les questions et les ajouter de nouveau avec le même
+    code.
+
+    **D.** Appeler `doc.validate()` avant `doc.lint()`.
+
+    ??? success "Réponse"
+        **B.** L'avertissement nomme le problème : les questions n'ont pas
+        de libellé. Sauvegarder ou valider ne modifie pas le document, et
+        ajouter de nouveau les questions avec le même code ramène les mêmes
+        avertissements.
+
+---
+
+## Faites le point
+
+- [ ] Je peux écrire un script qui crée une étude avec `ddi.new_study()` et
+  y ajoute trois questions avec `doc.add_question()`. (O1)
+- [ ] Je peux compter les questions avec `len(doc.questions)` et afficher
+  l'identifiant de chaque question. (O2)
+- [ ] Je peux sauvegarder l'étude avec `doc.save()` et trouver le texte
+  d'une question dans le fichier XML. (O3)
+- [ ] Je peux ajouter une version française du texte et du libellé d'une
+  question existante sans créer de nouvelle question. (O4)
+- [ ] Je peux vérifier une étude avec `doc.validate()` et `doc.lint()` et
+  corriger les avertissements de lint jusqu'à ce que les deux ne signalent
+  plus rien. (O5)
 
 ---
 
@@ -423,10 +558,15 @@ apparaissent.
       autour des chaînes de caractères. Par exemple, ils tapent
       `text=What is your age?` au lieu de `text="What is your age?"`.
       Surveillez cela pendant les exercices.
+    - **Erreur courante :** À l'exercice 4, certains apprenants appellent
+      `doc.add_question(..., lang="fr")`. Demandez-leur d'afficher
+      `len(doc.questions)` : un total de 4 montre qu'ils ont créé une
+      deuxième question au lieu de traduire la première.
     - **Explorez le XML ensemble :** Ouvrez le fichier sauvegardé à l'écran
       et faites défiler. Montrez le texte de la question à l'intérieur des
       balises. Insistez sur le fait que les apprenants n'ont pas eu besoin
       d'écrire ce XML à la main.
     - **Activité d'approfondissement :** Demandez aux plus rapides d'ajouter
-      deux questions supplémentaires de leur choix et de sauvegarder à
+      deux questions supplémentaires de leur choix, chacune avec un
+      `label=`, puis de vérifier avec `doc.lint()` et de sauvegarder à
       nouveau le fichier.

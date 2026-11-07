@@ -67,6 +67,8 @@ from pathlib import Path
 
 import pytest
 
+from ddi_l.exceptions import DDIReferenceWarning
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = PROJECT_ROOT / "docs"
 
@@ -225,6 +227,16 @@ def _page_cases():
         yield pytest.param(page, marks=marks, id=str(page.relative_to(PROJECT_ROOT)))
 
 
+# Pages whose prose says a sample warns, and the warning it names. The page
+# fails if it no longer warns, so the prose stays true.
+_EXPECTED_WARNINGS: dict[str, type[Warning]] = {
+    # "When you save, ddi-l warns that a source variable is not in the
+    # current document. That is expected": it is in another study.
+    "docs/curriculum/module-12-data-linkage.en.md": DDIReferenceWarning,
+    "docs/curriculum/module-17-capstone.en.md": DDIReferenceWarning,
+}
+
+
 @pytest.mark.parametrize("page", list(_page_cases()))
 def test_documented_samples_execute(page: Path, tmp_path: Path) -> None:
     """Run every executable block on ``page`` in order, in a sandbox."""
@@ -237,36 +249,45 @@ def test_documented_samples_execute(page: Path, tmp_path: Path) -> None:
     namespace: dict[str, object] = {"__name__": "__ddi_docs_sample__"}
     original_cwd = Path.cwd()
     os.chdir(tmp_path)
+    expected = _EXPECTED_WARNINGS.get(str(page.relative_to(PROJECT_ROOT)))
     try:
-        for line, code in blocks:
-            location = f"{page.relative_to(PROJECT_ROOT)}:{line}"
-            captured = io.StringIO()
-            try:
-                # Samples print for the reader's benefit. That output is noise
-                # on success, but it is exactly what the `# ->` claims below are
-                # checked against.
-                with (
-                    contextlib.redirect_stdout(captured),
-                    contextlib.redirect_stderr(io.StringIO()),
-                ):
-                    exec(compile(code, location, "exec"), namespace)
-            except Exception as error:
-                raise AssertionError(
-                    f"documented sample at {location} raised "
-                    f"{type(error).__name__}: {error}\n\n"
-                    f"Fix the sample, or mark it with an HTML comment "
-                    f"'<!-- {_SKIP_MARKER} -->' immediately before the fence if "
-                    f"it is deliberately not runnable.\n\n{code}"
-                ) from error
-
-            printed = captured.getvalue()
-            for expected in _output_claims(code):
-                assert expected in printed, (
-                    f"documented sample at {location} claims it prints "
-                    f"{expected!r}, but it printed:\n{printed or '(nothing)'}"
-                )
+        with pytest.warns(expected) if expected else contextlib.nullcontext():
+            _run_blocks(page, blocks, namespace)
     finally:
         os.chdir(original_cwd)
         # `shutil` is imported for this: a sample may chdir into a directory it
         # created, and pytest cannot clean up a tree it cannot enter.
         shutil.rmtree(tmp_path, ignore_errors=True)
+
+
+def _run_blocks(
+    page: Path, blocks: list[tuple[int, str]], namespace: dict[str, object]
+) -> None:
+    """Execute ``blocks`` in order and check each one's ``# ->`` claims."""
+    for line, code in blocks:
+        location = f"{page.relative_to(PROJECT_ROOT)}:{line}"
+        captured = io.StringIO()
+        try:
+            # Samples print for the reader's benefit. That output is noise
+            # on success, but it is exactly what the `# ->` claims below are
+            # checked against.
+            with (
+                contextlib.redirect_stdout(captured),
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                exec(compile(code, location, "exec"), namespace)
+        except Exception as error:
+            raise AssertionError(
+                f"documented sample at {location} raised "
+                f"{type(error).__name__}: {error}\n\n"
+                f"Fix the sample, or mark it with an HTML comment "
+                f"'<!-- {_SKIP_MARKER} -->' immediately before the fence if "
+                f"it is deliberately not runnable.\n\n{code}"
+            ) from error
+
+        printed = captured.getvalue()
+        for claim in _output_claims(code):
+            assert claim in printed, (
+                f"documented sample at {location} claims it prints "
+                f"{claim!r}, but it printed:\n{printed or '(nothing)'}"
+            )

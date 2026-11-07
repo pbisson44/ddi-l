@@ -16,6 +16,7 @@ from ddi_l.document import DDIDocument
 from ddi_l.lint import (
     LintFinding,
     configure_lint,
+    iter_rule_metadata,
     register_profile,
     register_rule,
     reset_lint_configuration,
@@ -157,6 +158,13 @@ def test_lint_reports_missing_required_title_languages():
     findings = run_lint(document, rules=["ddi.citation.title.languages"])
 
     assert findings == []
+
+
+def test_citation_title_languages_is_registered_as_a_warning() -> None:
+    # The rules page and ``ddi lint --list-rules`` read the registered severity.
+    infos = {info.rule_id: info for info in iter_rule_metadata()}
+
+    assert infos["ddi.citation.title.languages"].severity == "warning"
 
 
 @pytest.mark.parametrize(

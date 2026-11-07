@@ -118,8 +118,6 @@ def main():
         print("   Validation passed (unexpected)")
     except ModelValidationError as e:
         print(f"   Validation failed (expected): {e}")
-    except Exception as e:
-        print(f"   Other error: {type(e).__name__}: {e}")
 
     # 5. Save and reload with validation
     print("\n5. Round-trip with validation:")
@@ -134,8 +132,6 @@ def main():
         print(f"   Loaded successfully! Questions: {len(doc2.questions)}")
     except DDIValidationError as e:
         print(f"   Validation error: {e}")
-    except Exception as e:
-        print(f"   Note: {type(e).__name__}: {str(e)[:80]}...")
 
     # 6. High-level validation function
     #

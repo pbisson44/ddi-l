@@ -10,6 +10,7 @@ import pytest
 import ddi_l as ddi
 from ddi_l import cli, operations
 from ddi_l.document import DDIDocument
+from tests import SAMPLES_DIR
 
 EARLIER_VERSIONS = ["minimal_instance_3_1.xml", "minimal_instance_3_2.xml"]
 
@@ -90,7 +91,7 @@ def test_to_jsonld_explains_the_version_limit(fixtures_dir: Path, capsys) -> Non
 
 
 def test_validate_source_honours_the_requested_version(fixtures_dir: Path) -> None:
-    data = (fixtures_dir / "minimal_instance.xml").read_bytes()
+    data = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
     as_declared = operations.validate_source(data, lint=False)
     as_3_2 = operations.validate_source(data, version="3.2", lint=False)
     assert as_declared.schema_issues == []

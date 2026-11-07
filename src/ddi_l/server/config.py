@@ -22,15 +22,20 @@ DEFAULT_REQUEST_TIMEOUT_SECONDS = 60.0
 # than cores adds memory without adding throughput.
 DEFAULT_MAX_CONCURRENT_JOBS = max(1, os.cpu_count() or 1)
 
+# Schema errors reported for one document; past it a warning says validation
+# stopped, so one malformed upload cannot build an unbounded report.
+DEFAULT_MAX_SCHEMA_ISSUES = 100
+
 
 @dataclass(frozen=True)
 class ServerConfig:
-    """Runtime limits and exposure settings for :func:`ddi_l.server.create_app`."""
+    """Runtime limits and exposure settings for `ddi_l.server.create_app`."""
 
     max_body_bytes: int = DEFAULT_MAX_BODY_BYTES
     request_timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS
     # Documents processed at once; further requests get 503 until one ends.
     max_concurrent_jobs: int = DEFAULT_MAX_CONCURRENT_JOBS
+    max_schema_issues: int = DEFAULT_MAX_SCHEMA_ISSUES
     # Load the default schema at startup so the first request does not pay
     # the multi-second load inside its timeout.
     preload_schema: bool = True
@@ -50,3 +55,5 @@ class ServerConfig:
             raise ValueError("request_timeout_seconds must be positive")
         if self.max_concurrent_jobs <= 0:
             raise ValueError("max_concurrent_jobs must be positive")
+        if self.max_schema_issues <= 0:
+            raise ValueError("max_schema_issues must be positive")

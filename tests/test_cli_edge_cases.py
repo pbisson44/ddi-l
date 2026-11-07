@@ -151,11 +151,19 @@ def test_severity_level_none():
 
 
 def test_severity_level_unknown():
-    """Exercise line 326: _severity_level with unknown string."""
+    """An unknown severity fails the gate rather than slipping past it."""
     from ddi_l.cli import _severity_level
 
-    result = _severity_level("info")
+    result = _severity_level("bogus")
     assert result == 2  # max
+
+
+def test_severity_level_info_never_reaches_the_default_gate():
+    """``info`` ranks below ``warning``, so the default gate ignores it."""
+    from ddi_l.cli import _SEVERITY_LEVELS, _severity_level
+
+    assert _severity_level("info") == 0
+    assert _severity_level("info") < _SEVERITY_LEVELS["warning"]
 
 
 def test_severity_level_warning():
@@ -443,3 +451,27 @@ def test_prepare_cli_source_no_validate(tmp_path):
     p.write_bytes(b"<root/>")
     result = _prepare_cli_source(p, validate=False)
     assert result == p
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["validate", "x.xml"],
+        ["tables", "template", "out"],
+        ["tables", "import", "t.xlsx"],
+        ["spec", "validate", "s.yaml"],
+        ["spec", "schema"],
+        ["spec", "example"],
+        ["conform", "x.xml", "--spec", "s.yaml"],
+        ["explain-condition", "x.xml", "id"],
+        ["versions"],
+        ["serve"],
+    ],
+)
+def test_every_command_accepts_debug(argv):
+    """``--debug`` re-raises unexpected errors; it must work on every command."""
+    from ddi_l.cli import build_parser
+
+    args = build_parser().parse_args([*argv, "--debug"])
+
+    assert args.debug is True

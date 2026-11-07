@@ -51,7 +51,7 @@ programmatically.
     echo the diagnostic JSON. When calling the Python helpers directly,
     `validation.validate_document(..., include_context=False)` offers the same
     protection. For redaction workflows, revisit the
-    [automation playbook's cautionary guidance](tutorials/automation-playbook.md#5-surface-findings-in-ci-dashboards).
+    [automation playbook's cautionary guidance](tutorials/automation-playbook.en.md#5-surface-findings-in-ci-dashboards).
 
 === "Failing run"
     ```bash
@@ -100,7 +100,7 @@ programmatically.
     ]
     ```
 
-Continue with the [Validate and lint DDI content](validation.md) guide for a
+Continue with the [Validate and lint DDI content](validation.en.md) guide for a
 deep dive into available lint rules, custom profiles, and advanced
 configuration options.
 
@@ -169,9 +169,28 @@ destination path instead of `-`. With `--validate`, the command mirrors
 `ddi validate` by returning exit code `1` and streaming JSON issues if the
 source is invalid.
 
-The [command-line automation playbook](tutorials/automation-playbook.md)
+The [command-line automation playbook](tutorials/automation-playbook.en.md)
 shows how to integrate round-tripping with conversion and packaging steps for a
 larger publishing pipeline.
+
+## Check a questionnaire with `ddi conform`
+
+`ddi conform` compares an instrument with a questionnaire spec, a YAML or
+JSON file listing its modules, questions, domains, gates and edits. It needs
+the `spec` extra (`pip install 'ddi-l[spec]'`).
+
+```bash
+ddi spec example > pet-survey.spec.yaml       # start from the example
+ddi spec validate pet-survey.spec.yaml
+ddi conform export.xml --spec pet-survey.spec.yaml --format table
+ddi conform export.xml --spec pet-survey.spec.yaml --module pets --fail-severity warning
+```
+
+It exits with 0 when no finding reaches `--fail-severity` (`error` by
+default), 1 when one does, and 2 when it cannot run (a spec that does not
+pass its checks, an unknown module). See
+[Check a questionnaire against a spec](spec-conformance.en.md) for the spec
+format and every rule.
 
 ## Export snapshots with `ddi to-json`
 
@@ -253,4 +272,4 @@ jobs:
 
 Augment the workflow with `ddi to-json` to publish machine-readable snapshots
 alongside XML outputs or hand control to a custom script as described in the
-[command-line automation playbook](tutorials/automation-playbook.md).
+[command-line automation playbook](tutorials/automation-playbook.en.md).

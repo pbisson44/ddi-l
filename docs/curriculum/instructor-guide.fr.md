@@ -19,16 +19,41 @@ Le programme fonctionne dans les deux modes :
   d'animation ci-dessous.
 - **Auto-formation** : Les apprenants lisent chaque module, suivent les
   exemples de code et vérifient leur travail avec les
-  [corrigés](answer-keys.md).
+  [corrigés](answer-keys.fr.md).
 
 ## Calendriers suggérés
 
-| Format | Modules | Durée totale |
-| -------- | --------- | -------------- |
-| Atelier d'une demi-journée (3,5 h) | 1-7 | Bases, y compris l'ouverture de fichiers et la validation |
-| Atelier d'une journée (6 h) | 1-10 | Bases + CSV vers DDI, listes de codes et flux de questionnaire |
-| Formation intensive de deux jours (11 h) | 1-16 | Programme complet avec projet de synthèse |
-| Auto-formation | 1 par séance | ~3 semaines à 30-45 min/séance |
+Les lignes d'atelier additionnent les durées avec instructeur que donnent les
+modules, et la ligne d'auto-formation leurs durées en autonomie, sans pauses
+ni installation. La [présentation du cours](index.fr.md#calendriers-suggeres)
+donne les deux totaux pour chaque format.
+
+| Format | Modules | Durée | Contenu |
+| -------- | --------- | -------------- | -------------- |
+| Atelier d'une demi-journée | 1-5 | 3 h 20 min | Ce que sont les métadonnées, installation, une première étude, variables, concepts et univers |
+| Atelier d'une journée | 1-9 | 6 h 30 min | Tout le niveau 1 (y compris l'ouverture de fichiers et la validation), CSV vers DDI et listes de codes |
+| Formation intensive de trois jours | 1-17 | 16 h, environ 5 h 20 min par jour | Programme complet avec projet de synthèse |
+| Auto-formation | Un module par séance | 12 h 20 min à 12 h 50 min | 17 séances de 20 à 90 min, environ 3 à 4 semaines |
+
+## Utiliser les objectifs d'apprentissage
+
+Chaque module commence par des objectifs d'apprentissage numérotés (O1, O2,
+...), indique sur chaque exercice et chaque question de quiz les objectifs
+qu'il met en pratique, et se termine par une liste **Faites le point**, une
+ligne par objectif. Servez-vous-en pour mener chaque séance :
+
+- **Ouvrez avec les objectifs.** Lisez les objectifs du module à voix haute,
+  ou affichez l'encadré, au début de la séance. Les apprenants savent alors
+  ce qu'ils sauront faire à la fin, et vous savez quoi vérifier.
+- **Choisissez les exercices par objectif.** Peu de temps ? Prenez un
+  exercice par objectif plutôt que les premiers de la liste. Si un apprenant
+  bute sur un objectif, donnez-lui un autre exercice qui porte le même
+  objectif.
+- **Terminez avec Faites le point comme billet de sortie.** Dans les cinq
+  dernières minutes, les apprenants cochent les lignes qu'ils maîtrisent.
+  Une ligne que beaucoup laissent vide vous dit quoi revoir au début de la
+  séance suivante. Au module 17, la grille et la présentation jouent le même
+  rôle.
 
 ## Liste de vérification pour la préparation
 
@@ -92,8 +117,8 @@ ou un conteneur préconfiguré avec tout installé.
 ### Module 5 : Concepts et univers
 
 - Utilisez un diagramme : Univers = « qui », Concept = « quoi »,
-  Variable = « comment c'est mesure », Question = « comment c'est
-  demande ».
+  Variable = « comment c'est mesuré », Question = « comment c'est
+  demandé ».
 - Durée : 40 min.
 
 ### Module 6 : Ouvrir et modifier des fichiers
@@ -102,7 +127,7 @@ ou un conteneur préconfiguré avec tout installé.
   enrichir → valider → enregistrer.
 - Durée : 40 min.
 
-### Module 7 : Validation en ligne de commande
+### Module 7 : Valider depuis la ligne de commande
 
 - Pour les publics d'INS, passez plus de temps sur la validation par lot
   et les codes de sortie.
@@ -161,9 +186,9 @@ ou un conteneur préconfiguré avec tout installé.
 - Soulignez que `source_variable_references` traversant les frontières
   d'étude est le coeur technique du couplage ; l'avertissement à
   l'enregistrement est attendu.
-- Pour le personnel des INS : reliez à ECDS/SDLE, B-LFE et LEBAF, et à la
-  gouvernance (couplages pré-approuvés vs examinés sous la Directive sur le
-  couplage de microdonnées).
+- Pour le personnel des INS : reliez à l'environnement de couplage et aux
+  règles d'approbation de leur propre organisation (par exemple, les
+  couplages pré-approuvés et ceux qui demandent un examen).
 - Terminez toujours un couplage par une dépersonnalisation et, souvent, des
   données synthétiques.
 - Durée : 75 min.
@@ -203,14 +228,33 @@ ou un conteneur préconfiguré avec tout installé.
   enquêtes de longue durée.
 - Montrez le XML avant et après le versionnage pour que les apprenants
   voient le numéro de version et la justification dans le fichier.
-- Durée : 50 min.
+- Durée : 75 min.
 
-### Module 16 : Projets de synthèse
+### Module 16 : Spécification avancée de questionnaires
 
-- Laissez les apprenants choisir leur parcours par profil. Dans un groupe
-  mixte, formez des équipes par rôle.
-- Prévoyez 90 min avec une courte présentation à la fin.
-- Évaluez avec la grille d'auto-évaluation du module.
+- Pour les rédacteurs de spécifications et le personnel d'INS qui passent
+  des maquettes d'écrans et des classeurs à une spécification à laquelle
+  les instruments sont comparés.
+- Mettez d'abord au tableau la table des réponses manquantes de la
+  section 2, et laissez les apprenants remplir la dernière ligne avant de
+  la montrer.
+- Insistez : un filtre gardé dans le code propre à l'outil est un résultat
+  correct, et un format non documenté ne se devine jamais : les opérateurs à
+  employer sont ceux qu'énumère la documentation de l'outil.
+- Durée : 90 min.
+
+### Module 17 : Projets de synthèse
+
+- Laissez les apprenants choisir leur piste selon leur profil. Dans un
+  groupe mixte, formez des équipes par rôle.
+- Demandez à voir le plan de chaque apprenant (objectif O1) avant qu'il
+  écrive du code.
+- Prévoyez 90 min avec les présentations de 5 minutes à la fin (O6). Les
+  pistes B et D consignent deux techniques chacune et sont les plus longues.
+- Notez avec la grille d'auto-évaluation du module : 80 points pour les
+  compétences communes à toutes les pistes, et 20 pour les techniques propres
+  à la piste (flux, traçabilité, couplage, champs personnalisés ou
+  spécification).
 
 ## Erreurs courantes dans tous les modules
 
@@ -218,10 +262,11 @@ ou un conteneur préconfiguré avec tout installé.
 | -------- | -------- | ------------ |
 | Oublier les guillemets autour des chaînes | 3 | Montrez le message d'erreur et expliquez |
 | Passer du texte au lieu d'un objet à `question=` | 4 | Montrez la différence entre `"age"` et `q1` |
-| Oublier d'importer Category/Instrument | 9 | Montrez la ligne d'import explicitement |
+| Oublier d'importer Category/Instrument | 9, 10 | Montrez la ligne d'import explicitement |
 | Confondre Question et QuestionConstruct | 10 | Question = contenu, QuestionConstruct = étape du flux |
 | Confondre question_references et source_variable_references | 11 | question_ref = ce qui a été demandé, source_var_ref = quelles données ont été utilisées |
 | Utiliser `find()` avec un nom au lieu d'un identifiant | 13 | Affichez `item.identifier` d'abord |
+| Écrire `not x > 30` quand on voulait `x <= 30` | 16 | Remplissez la table des réponses manquantes : ils diffèrent quand `x` n'a pas de réponse |
 | Ne pas valider avant d'enregistrer | À partir du 3 | Faites de la validation une habitude : toujours valider avant d'enregistrer |
 
 ## Adapter le cours à chaque public
@@ -231,16 +276,19 @@ ou un conteneur préconfiguré avec tout installé.
 | Étudiants universitaires | Modules 1 (motivation), 3-7 (bases et vérification du travail) | Section SQL du Module 8 |
 | Chercheurs | Modules 1, 4 et 5 (vocabulaire du DDI), 8 (flux CSV), 9-13 (listes de codes, flux, traçabilité, couplage, propriétés) | Module 2 s'ils utilisent déjà Python |
 | Archivistes | Modules 2-7 (Python, ouvrir/modifier, validation), 14 (champs personnalisés), 15 (versionnage) | Module 1 s'ils ont de l'expérience DDI |
-| Personnel d'INS | Modules 8-15 (flux complet), en particulier 10 (flux), 11 (traçabilité), 12 (couplage), 14 (champs personnalisés) | Modules 1 et 3 |
-| Développeurs qui automatisent les contrôles DDI | Modules 3 et 7, puis le [parcours automatisation](index.md#parcours-automatisation) | Modules 1, 4 et 5 |
+| Personnel d'INS | Modules 8-16 (flux complet), en particulier 10 (flux), 11 (traçabilité), 12 (couplage), 14 (champs personnalisés), 16 (spécification de questionnaires) | Modules 1 et 3 |
+| Développeurs qui automatisent les contrôles DDI | Modules 3 et 7, puis le [parcours automatisation](index.fr.md#parcours-automatisation) | Modules 1, 4 et 5 |
 
 ## Approche d'évaluation
 
-- **Quiz** (Modules 1-15) : Formatifs, pour vérifier la compréhension.
+- **Quiz** (Modules 1-16) : Formatifs, pour vérifier la compréhension.
   Passez les réponses en revue en groupe dans un cadre en classe.
-- **Projet de synthèse** (Module 16) : Sommatif, pour évaluer
-  l'ensemble des compétences. Utilisez la grille du module.
-- **Questions de réflexion** (Module 16) : Pas de bonne ou mauvaise
+- **Faites le point** (chaque module) : Un billet de sortie à la fin de
+  chaque séance. Voir [Utiliser les objectifs d'apprentissage](#utiliser-les-objectifs-dapprentissage).
+- **Projet de synthèse** (Module 17) : Sommatif. La grille note les six
+  objectifs du module sur un seul jeu de données, y compris le plan et la
+  présentation.
+- **Questions de réflexion** (Module 17) : Pas de bonne ou mauvaise
   réponse. Utilisez-les pour la discussion ou les commentaires écrits.
 
 ## Glossaire terminologique (EN / FR)
@@ -281,7 +329,7 @@ Après la dernière séance :
 
 ## Ressources supplémentaires
 
-- [Parcours automatisation](index.md#parcours-automatisation) : Un plan
+- [Parcours automatisation](index.fr.md#parcours-automatisation) : Un plan
   d'atelier pour les équipes qui automatisent la validation
-- [Corrigés](answer-keys.md) : Toutes les solutions et réponses aux quiz sur
+- [Corrigés](answer-keys.fr.md) : Toutes les solutions et réponses aux quiz sur
   une seule page

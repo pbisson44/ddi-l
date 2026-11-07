@@ -161,7 +161,7 @@ tagged = [x for x in doc.variables if any(k.startswith("myorg:") for k in x.prop
 ```
 
 Custom fields serialize to `r:UserAttributePair` (and `r:UserID`), which is still valid
-DDI. See [Module 14](module-14-custom-fields.md).
+DDI. See [Module 14](module-14-custom-fields.en.md).
 
 ---
 
@@ -258,7 +258,7 @@ doc.add_item(Instrument, name="Survey Instrument")
 
 `Loop` works the same way (`doc.add_item(Loop, name="...")`), with its
 repeated section set via `loop.control_construct_reference`. See
-[Module 10](module-10-questionnaire-flows.md) for the full worked example.
+[Module 10](module-10-questionnaire-flows.en.md) for the full worked example.
 
 ---
 
@@ -290,7 +290,7 @@ rl.add_data_item(income.to_reference(), start_position=3, width=8)
 Omit the positions for a delimited (comma/tab) file.
 
 To update many variables from a new data file, and version each change, see
-[Module 15, section 8](module-15-update-and-version.md#8-update-many-variables-from-a-new-data-file).
+[Module 15, "Going further"](module-15-update-and-version.en.md#update-many-variables-from-a-new-data-file).
 
 ---
 
@@ -461,7 +461,7 @@ linked.source_variable_references = [
 ```
 
 Cross-study `source_variable_references` warn on save. That is expected for
-linkage. See [Module 12](module-12-data-linkage.md).
+linkage. See [Module 12](module-12-data-linkage.en.md).
 
 ---
 
@@ -528,6 +528,8 @@ Run these in your terminal.
 | `ddi from-json file.json -o file.xml` | Convert JSON back to DDI XML |
 | `ddi roundtrip in.xml -o out.xml` | Read and re-write (tests fidelity) |
 | `ddi versions file.xml` | Show version info from the file |
+| `ddi spec validate spec.yaml` | Check a questionnaire spec ([Module 16](module-16-advanced-questionnaire-spec.en.md)) |
+| `ddi conform file.xml --spec spec.yaml` | Compare an instrument with its spec |
 
 Exit code `0` means success. Exit code `1` means failure.
 
@@ -778,7 +780,7 @@ q = doc.add_question(text="What is your email address?")
 doc.add_variable(name="Email", question=q)
 
 study = doc.study_unit
-study.increment_minor_version()
+study.increment_minor_version(allow_dotted=True)
 study.version_rationales.append(
     VersionRationale(
         descriptions=[InternationalString(text="Added email question for wave 2")]
@@ -803,8 +805,8 @@ done
 
 ## Where to learn more
 
-- [User guide](../user-guide.md): Full API walkthrough
-- [Validation guide](../validation.md): Schema and lint details
-- [CLI recipes](../cli-recipes.md): All command-line examples
-- [Models reference](../models.md): Advanced model layer
-- [Training modules](index.md): Step-by-step curriculum
+- [User guide](../user-guide.en.md): Full API walkthrough
+- [Validation guide](../validation.en.md): Schema and lint details
+- [CLI recipes](../cli-recipes.en.md): All command-line examples
+- [Models reference](../models.en.md): Advanced model layer
+- [Training modules](index.en.md): Step-by-step curriculum

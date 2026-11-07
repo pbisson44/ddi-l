@@ -442,14 +442,14 @@ COLECTICA_EXPORT = Path(__file__).parent / "fixtures" / "colectica_group_fragmen
 
 
 def test_roundtrip_returns_a_colectica_export_byte_for_byte(client):
-    """Without `?layout=colectica` every Colectica file looks changed."""
+    """A FragmentInstance comes back in Colectica's layout unless asked not to."""
     export = COLECTICA_EXPORT.read_bytes()
 
-    response = client.post("/v1/roundtrip?layout=colectica", content=export)
-
-    assert response.status_code == 200
-    assert response.content == export
-    assert client.post("/v1/roundtrip", content=export).content != export
+    for query in ("", "?layout=colectica"):
+        response = client.post(f"/v1/roundtrip{query}", content=export)
+        assert response.status_code == 200
+        assert response.content == export
+    assert client.post("/v1/roundtrip?layout=default", content=export).content != export
 
 
 def test_the_colectica_layout_is_for_fragments_only(client, document):
@@ -612,3 +612,65 @@ def test_the_tables_are_described(client):
     assert parent["references"] == "concepts"
     assert parent["multiple"] is True
     assert payload["settings"][0]["name"] == "agency"
+
+
+def test_validate_caps_the_schema_issues_it_returns():
+    from tests import SAMPLES_DIR
+
+    document = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
+    document = document.replace(b"</r:Title>", b"<r:Bogus/></r:Title>").replace(
+        b"</r:Citation>", b"</r:Citation><r:Bogus/>"
+    )
+    capped = ServerConfig(max_schema_issues=1)
+    with TestClient(app=create_app(capped)) as client:
+        payload = client.post("/v1/validate?lint=false", content=document).json()
+
+    issues = payload["schema_issues"]
+    assert [issue["severity"] for issue in issues] == ["error", "warning"]
+    assert not payload["valid"]
+    with TestClient(app=create_app()) as client:
+        payload = client.post("/v1/validate?lint=false", content=document).json()
+    assert [issue["severity"] for issue in payload["schema_issues"]] == [
+        "error",
+        "error",
+    ]
+
+
+def test_max_schema_issues_must_be_positive():
+    with pytest.raises(ValueError, match="max_schema_issues"):
+        ServerConfig(max_schema_issues=0)
+
+
+def test_lint_takes_a_configuration_and_rule_choices(client, document):
+    config = '{"allowed_agencies": ["other.agency"]}'
+
+    configured = client.post(
+        "/v1/lint", params={"lint_config": config}, content=document
+    ).json()
+    assert "ddi.agency.allowed" in {f["rule_id"] for f in configured["lint_findings"]}
+
+    only = client.post(
+        "/v1/lint",
+        params={"lint_config": config, "rule": ["ddi.agency.allowed"]},
+        content=document,
+    ).json()
+    assert {f["rule_id"] for f in only["lint_findings"]} == {"ddi.agency.allowed"}
+
+    skipped = client.post(
+        "/v1/lint",
+        params={"lint_config": config, "skip_rule": ["ddi.agency.allowed"]},
+        content=document,
+    ).json()
+    assert "ddi.agency.allowed" not in {f["rule_id"] for f in skipped["lint_findings"]}
+
+    validated = client.post(
+        "/v1/validate", params={"lint_config": config}, content=document
+    ).json()
+    assert "ddi.agency.allowed" in {f["rule_id"] for f in validated["lint_findings"]}
+
+
+@pytest.mark.parametrize("config", ["{", "[]", '{"no_such_option": true}'])
+def test_a_bad_lint_configuration_is_a_client_error(client, document, config):
+    response = client.post("/v1/lint", params={"lint_config": config}, content=document)
+
+    assert response.status_code == 400

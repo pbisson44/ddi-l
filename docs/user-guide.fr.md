@@ -128,6 +128,12 @@ print(f"Questions : {len(doc.questions)}")
 print(f"Variables : {len(doc.variables)}")
 ```
 
+Enregistré de nouveau, le fichier garde les parties que vous n'avez pas
+modifiées telles qu'elles ont été lues, octet pour octet ; seul ce que vous
+avez ajouté ou modifié est mis en forme, avec l'indentation du fichier. Pour
+remettre en forme tout le fichier, utilisez
+`ddi.write_ddi(doc, "sortie.xml", layout="default")`.
+
 Passez `validate=True` pour exécuter la validation de schéma au chargement :
 
 ```python
@@ -148,7 +154,7 @@ else:
 ```
 
 Pour plus d'options de validation, consultez le
-[guide de validation](validation.md).
+[guide de validation](validation.fr.md).
 
 ## Avancé : travailler avec la couche modèles
 
@@ -168,5 +174,5 @@ var = Variable(
 )
 ```
 
-Consultez la [référence des modèles](models.md) pour une liste complète des
+Consultez la [référence des modèles](models.fr.md) pour une liste complète des
 types disponibles.

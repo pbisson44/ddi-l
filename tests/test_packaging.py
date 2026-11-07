@@ -13,7 +13,7 @@ def test_examples_fixtures_accessible() -> None:
     assert examples.is_dir()
     assert examples.joinpath("Quality_of_Life.xml").is_file()
 
+    # The two samples the CLI recipes run.
     fixtures = examples.joinpath("tests", "fixtures")
-    assert fixtures.exists()  # type: ignore[attr-defined]
-    assert fixtures.is_dir()
     assert fixtures.joinpath("minimal_instance.xml").is_file()
+    assert fixtures.joinpath("invalid_instance_missing_id.xml").is_file()

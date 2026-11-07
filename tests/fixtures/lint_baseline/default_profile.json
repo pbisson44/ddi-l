@@ -1,0 +1,105 @@
+{
+  "src/ddi_l/examples/Quality_of_Life.xml": {
+    "count": 26,
+    "rules": {
+      "ddi.maintainable.labels:warning": 26
+    },
+    "sha256": "a03ae7571e969988a609bcdbde44f1a25f5378815500a620deeea47595d32879"
+  },
+  "src/ddi_l/examples/example_fragment.xml": {
+    "count": 7,
+    "rules": {
+      "ddi.maintainable.labels:warning": 7
+    },
+    "sha256": "b9ab65c016feef1f8ef4fe175a8044cbce61886f09f7c61a41dd51a44f12fc35"
+  },
+  "src/ddi_l/examples/example_instance.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "src/ddi_l/examples/tests/fixtures/invalid_instance_missing_id.xml": {
+    "count": 1,
+    "rules": {
+      "ddi.citation.present:error": 1
+    },
+    "sha256": "a559602d576b4dde63d2a08e406225d0495dee0563c74d4996c01ff288a7c39f"
+  },
+  "src/ddi_l/examples/tests/fixtures/minimal_instance.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/Canadian_Survey_on_Business_conditions.xml": {
+    "count": 4478,
+    "rules": {
+      "ddi.maintainable.labels:warning": 4478
+    },
+    "sha256": "31d0a50741eb3a34b90fed082305a81a18659fa9b9f65e71370efcffbe68b6c1"
+  },
+  "tests/fixtures/colectica_group_fragment.xml": {
+    "count": 81,
+    "rules": {
+      "ddi.maintainable.labels:warning": 81
+    },
+    "sha256": "b5a114258e9930d9757d94af21a296a5e12962a3a69a4d82a51103b28056560f"
+  },
+  "tests/fixtures/golden/example_instance.canonical.xml": {
+    "count": 43,
+    "rules": {
+      "ddi.maintainable.labels:warning": 43
+    },
+    "sha256": "20f09f6c469040dd7cc047a7a32c702341cc7cf22890774fcd727d4d53e83a88"
+  },
+  "tests/fixtures/golden/minimal_instance.canonical.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/golden/quality_of_life_instance.canonical.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/instances/example_instance.xml": {
+    "count": 43,
+    "rules": {
+      "ddi.maintainable.labels:warning": 43
+    },
+    "sha256": "20f09f6c469040dd7cc047a7a32c702341cc7cf22890774fcd727d4d53e83a88"
+  },
+  "tests/fixtures/instances/quality_of_life_instance.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/invalid_instance_3_1_missing_id.xml": {
+    "count": 1,
+    "rules": {
+      "ddi.citation.present:error": 1
+    },
+    "sha256": "a559602d576b4dde63d2a08e406225d0495dee0563c74d4996c01ff288a7c39f"
+  },
+  "tests/fixtures/invalid_instance_3_2_missing_id.xml": {
+    "count": 1,
+    "rules": {
+      "ddi.citation.present:error": 1
+    },
+    "sha256": "a559602d576b4dde63d2a08e406225d0495dee0563c74d4996c01ff288a7c39f"
+  },
+  "tests/fixtures/minimal_fragment.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/minimal_instance_3_1.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "tests/fixtures/minimal_instance_3_2.xml": {
+    "count": 0,
+    "rules": {},
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  }
+}

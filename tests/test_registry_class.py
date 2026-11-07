@@ -64,13 +64,13 @@ class TestRegisterDecorator:
         MaintainableRegistry.register(TAG_A)(_TypeA)
         assert _TypeA in received
 
-    def test_callback_exception_does_not_break_registration(self):
+    def test_callback_exception_propagates_after_registration(self):
         def bad_callback(cls):
             raise RuntimeError("boom")
 
         MaintainableRegistry.on_register(bad_callback)
-        # Should not raise
-        MaintainableRegistry.register(TAG_A)(_TypeA)
+        with pytest.raises(RuntimeError, match="boom"):
+            MaintainableRegistry.register(TAG_A)(_TypeA)
         assert MaintainableRegistry.get(TAG_A) is _TypeA
 
 
@@ -91,9 +91,10 @@ class TestRegisterClass:
         MaintainableRegistry.register_class(TAG_B, _TypeB)
         assert _TypeB in received
 
-    def test_callback_exception_ignored(self):
+    def test_callback_exception_propagates_after_registration(self):
         MaintainableRegistry.on_register(lambda cls: 1 / 0)
-        MaintainableRegistry.register_class(TAG_B, _TypeB)
+        with pytest.raises(ZeroDivisionError):
+            MaintainableRegistry.register_class(TAG_B, _TypeB)
         assert MaintainableRegistry.get(TAG_B) is _TypeB
 
 

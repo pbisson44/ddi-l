@@ -1,0 +1,57 @@
+# The spec pets_conform.ddi33.xml is checked against: see
+# build_pets_conform.py for the differences planted in the instrument.
+spec: pet-survey-conform
+version: "1"
+languages: [en, fr]
+blaise:
+  empty: EMPTY
+  refused: REFUSAL
+match:
+  edits: {attribute: kind, value: EditCheck, id: construct_name}
+  lookup_types: {Text: text, Integer: numeric}
+
+code_lists:
+  Species:
+    values:
+      1: {en: Dog, fr: Chien}
+      2: {en: Cat, fr: Chat}
+      3: {en: Bird, fr: Oiseau}
+
+imported_variables:
+  - {name: OwnerName, type: text}
+  - {name: OwnerAge, type: numeric}
+  - {name: OwnerPhone, type: text}
+derived_variables:
+  - {name: HasPets, type: numeric}
+
+modules:
+  - id: household
+    questions:
+      - id: PetCount
+        domain: {numeric: {min: 0, max: 20, decimals: 0}}
+
+  - id: pets
+    gate: PetCount > 0
+    statements: [PetsIntro]
+    questions:
+      - id: PetKind
+        domain: {code: {list: Species}}
+      - id: PetName
+        domain: {text: {max_length: 50}}
+        gate: answered(PetKind)
+      - id: PetAge
+        domain: {numeric: {min: 0, max: 40, decimals: 0}}
+
+  - id: visits
+    required: false
+    questions:
+      - id: VisitDate
+        domain: {date: {type: Date}}
+        gate: PetCount > 2
+
+edits:
+  - id: age_range
+    when: PetAge > 30
+    module: pets
+    message: {en: "Is the pet really over 30?"}
+    severity: warning

@@ -140,6 +140,20 @@ curl --data-binary @mon-etude.xml http://localhost:8000/v1/lint
 curl --data-binary @mon-etude.xml 'http://localhost:8000/v1/lint?profile=DDI_PROFILE_DEFAULT'
 ```
 
+Les options de `ddi lint` accompagnent la requête : `?rule=` (répété)
+n'exécute que ces règles, `?skip_rule=` écarte leurs constats, et
+`?lint_config=` prend l'objet JSON que lit `--lint-config`. Elles ne valent
+que pour cette requête ; `POST /v1/validate` accepte aussi `?lint_config=`.
+Une `FragmentInstance` est analysée comme un fragment, comme le fait
+`ddi lint`.
+
+```bash
+curl --data-binary @mon-etude.xml --get \
+  --data-urlencode 'lint_config={"allowed_agencies": ["example.org"]}' \
+  --data-urlencode 'skip_rule=ddi.citation.present' \
+  -X POST http://localhost:8000/v1/lint
+```
+
 ### Convertir
 
 ```bash
@@ -204,23 +218,26 @@ déjà, qui sont des IRI valides.
 
 La validation, l'analyse et la conversion en JSON acceptent une
 `FragmentInstance` Colectica comme une `DDIInstance`. Pour vérifier qu'un
-export survit à l'analyse, faites-lui faire l'aller-retour dans la mise en
-forme de Colectica : un export inchangé revient octet pour octet.
+export survit à l'analyse, faites-lui faire l'aller-retour : un fichier
+revient avec ses parties inchangées telles qu'elles ont été envoyées, et un
+export inchangé revient octet pour octet.
 
 ```bash
-curl --data-binary @export.xml 'http://localhost:8000/v1/roundtrip?layout=colectica' > retour.xml
+curl --data-binary @export.xml http://localhost:8000/v1/roundtrip > retour.xml
 cmp export.xml retour.xml && echo inchangé
 ```
 
-Sans `?layout=colectica`, la réponse est écrite dans la mise en forme de cette
-bibliothèque (sans indicateur d'ordre des octets, avec ses propres préfixes
-d'espaces de noms) : elle diffère de l'export même quand rien n'a été perdu.
-Voir [Travailler avec les exports Colectica](colectica.md).
+`?layout=default` écrit plutôt la mise en forme de cette bibliothèque (sans
+indicateur d'ordre des octets, avec ses propres préfixes d'espaces de noms),
+qui diffère de l'export même quand rien n'a été perdu. Une `DDIInstance`
+revient toujours dans la mise en forme de cette bibliothèque. `POST
+/v1/convert/xml` suit la même règle. Voir
+[Travailler avec les exports Colectica](colectica.fr.md).
 
 ### Charger des tableaux de métadonnées
 
 `/v1/tables/import` charge des métadonnées tenues dans des tableurs, disposées
-comme dans [Charger du DDI depuis des tableurs](spreadsheet-import.md) : un
+comme dans [Charger du DDI depuis des tableurs](spreadsheet-import.fr.md) : un
 classeur `.xlsx` avec une feuille par tableau, ou un `.zip` de fichiers CSV.
 Il répond par une `FragmentInstance` Colectica qui contient tous les éléments :
 
@@ -308,6 +325,10 @@ délibérément prudentes.
     traitement. Placez le service derrière un proxy inverse imposant ses propres
     délais et limites de débit, et dimensionnez le pool de workers pour votre
     document le plus volumineux, pas pour le document médian.
+
+`POST /v1/validate` signale chaque erreur de schéma jusqu'à
+`ServerConfig.max_schema_issues` (100 par défaut), puis un avertissement
+indiquant qu'il s'est arrêté.
 
 ## Intégration
 

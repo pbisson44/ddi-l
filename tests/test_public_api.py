@@ -15,6 +15,7 @@ from ddi_l.exceptions import (
     DDIReferenceError,
 )
 from ddi_l.models.base import Reference
+from tests import SAMPLES_DIR
 
 MALFORMED = "<DDIInstance xmlns='ddi:instance:3_3'>\n  <Broken>\n</DDIInstance>"
 
@@ -24,6 +25,16 @@ def test_removed_aliases_are_not_exported() -> None:
         assert name not in ddi.__all__
         with pytest.raises(AttributeError):
             getattr(ddi, name)
+
+
+def test_parameter_models_are_exported() -> None:
+    import ddi_l.models
+    import ddi_l.models.datacollection
+
+    for module in (ddi_l.models, ddi_l.models.datacollection):
+        for name in ("InParameter", "OutParameter", "Binding"):
+            assert name in module.__all__
+            assert getattr(module, name).__name__ == name
 
 
 def test_malformed_xml_raises_parse_error_with_position(tmp_path: Path) -> None:
@@ -92,14 +103,14 @@ def test_reprs_are_concise() -> None:
 
 
 def test_output_directory_with_a_single_input(fixtures_dir: Path, tmp_path: Path):
-    source = fixtures_dir / "minimal_instance.xml"
+    source = SAMPLES_DIR / "minimal_instance.xml"
     assert cli.main(["to-json", str(source), "--output", str(tmp_path)]) == 0
     written = tmp_path / "minimal_instance.json"
     assert json.loads(written.read_text(encoding="utf-8"))
 
 
 def test_cli_errors_are_not_quoted(fixtures_dir: Path, capsys) -> None:
-    source = fixtures_dir / "minimal_instance.xml"
+    source = SAMPLES_DIR / "minimal_instance.xml"
     assert cli.main(["lint", "--profile", "bogus", str(source)]) == 1
     assert capsys.readouterr().err.strip() == (
         "Error: Unknown lint profile requested: bogus"

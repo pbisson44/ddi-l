@@ -8,7 +8,7 @@ import types
 
 import pytest
 
-from tests import PACKAGE_FIXTURES_DIR
+from tests import SAMPLES_DIR
 
 
 def test_document_to_dict_without_qname_helper():
@@ -149,7 +149,7 @@ def test_document_to_dict_without_qname_helper():
         document_module = importlib.import_module("ddi_l.document")
         DDIDocument = document_module.DDIDocument
 
-        source = PACKAGE_FIXTURES_DIR / "minimal_instance.xml"
+        source = SAMPLES_DIR / "minimal_instance.xml"
         document = DDIDocument.from_xml(source)
         data = document.to_dict()
 
@@ -175,7 +175,7 @@ def test_document_to_dict_without_qname_helper():
         original_xmlschema = reloaded_schema_loader.xmlschema
         original_converter = reloaded_schema_loader.XMLSchemaConverter
         try:
-            reloaded_schema_loader.xmlschema = None
+            reloaded_schema_loader.xmlschema = None  # type: ignore[assignment]
             reloaded_schema_loader.XMLSchemaConverter = None
             fallback_data = reloaded_schema_loader.to_dict(
                 document.root, process_namespaces=True

@@ -65,6 +65,8 @@ class ChildElement:
     max_occurs: int | None  # None = unbounded
     is_reference: bool  # type is r:ReferenceType or derives from it
     documentation: str = ""
+    # Type is r:InternationalStringType or derives from it (r:NameType...).
+    is_international_string: bool = False
 
 
 @dataclass
@@ -148,6 +150,18 @@ _NOT_SET = object()  # Sentinel for "no parent cardinality override"
 
 
 _REFERENCE_TYPE = "{ddi:reusable:3_3}ReferenceType"
+_INTERNATIONAL_STRING_TYPE = "{ddi:reusable:3_3}InternationalStringType"
+
+
+def _derives_from(xsd_type: XsdType | None, qname: str) -> bool:
+    """Whether ``xsd_type`` is the type ``qname`` or derives from it."""
+    seen: set[int] = set()
+    while xsd_type is not None and id(xsd_type) not in seen:
+        seen.add(id(xsd_type))
+        if getattr(xsd_type, "name", None) == qname:
+            return True
+        xsd_type = getattr(xsd_type, "base_type", None)
+    return False
 
 
 def _is_reference_type(xsd_type: XsdType | None) -> bool:
@@ -157,13 +171,7 @@ def _is_reference_type(xsd_type: XsdType | None) -> bool:
     ``r:ExternalURNReference`` an ``xs:string``, and reading either as a DDI
     reference emptied them.
     """
-    seen: set[int] = set()
-    while xsd_type is not None and id(xsd_type) not in seen:
-        seen.add(id(xsd_type))
-        if getattr(xsd_type, "name", None) == _REFERENCE_TYPE:
-            return True
-        xsd_type = getattr(xsd_type, "base_type", None)
-    return False
+    return _derives_from(xsd_type, _REFERENCE_TYPE)
 
 
 def _walk_group_elements(
@@ -209,6 +217,9 @@ def _walk_group_elements(
                     max_occurs=elem_max,
                     is_reference=_is_reference_type(resolved.type),
                     documentation=doc[:200] if doc else "",
+                    is_international_string=_derives_from(
+                        resolved.type, _INTERNATIONAL_STRING_TYPE
+                    ),
                 )
             )
         elif isinstance(item, XsdGroup):
@@ -444,7 +455,15 @@ def collect_child_ranks(
             type_by_element.setdefault(component.name, key)
             if key not in ranks_by_type:
                 groups: list[list[str]] = []
-                walk(element_type.content, groups, None)
+                content = element_type.content
+                # A content model that is itself a repeating group (the
+                # mixed r:ContentType's XHTML, LevelReferenceType's pairs) is
+                # one rank: its children keep the order they are in.
+                if content.max_occurs is None or content.max_occurs > 1:
+                    groups.append([])
+                    walk(content, groups, 0)
+                else:
+                    walk(content, groups, None)
                 ranks_by_type[key] = [members for members in groups if members]
 
     return (

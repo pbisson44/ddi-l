@@ -9,7 +9,7 @@ description: >-
 # Modèles de tableurs
 
 Des modèles pour les tableaux décrits dans
-[Charger du DDI depuis des tableurs](spreadsheet-import.md). Chacun existe en
+[Charger du DDI depuis des tableurs](spreadsheet-import.fr.md). Chacun existe en
 classeur Excel (une feuille par tableau, plus une feuille README qui décrit
 chaque colonne) et en archive zip de fichiers CSV (un fichier par tableau,
 plus `README.txt`).

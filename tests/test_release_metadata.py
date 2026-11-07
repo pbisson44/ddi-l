@@ -35,6 +35,20 @@ def test_citation_version_matches_pyproject() -> None:
     )
 
 
+def test_ddi_l_native_has_ddi_l_s_version() -> None:
+    """ddi-l depends on ddi-l-native at its own version, in every form."""
+
+    def read(relative: str) -> dict:
+        return tomllib.loads((PROJECT_ROOT / relative).read_text(encoding="utf-8"))
+
+    version = _project_version()
+    assert read("native/pyproject.toml")["project"]["version"] == version
+    assert read("native/Cargo.toml")["package"]["version"] == version
+    assert read("native/fallback/pyproject.toml")["project"]["version"] == version
+    dependencies = read("pyproject.toml")["project"]["dependencies"]
+    assert f"ddi-l-native=={version}" in dependencies
+
+
 def test_citation_release_date_is_not_in_the_future() -> None:
     """`date-released` must describe a release that has happened.
 

@@ -189,46 +189,23 @@ def test_profile_result_as_dict():
 
 
 # ---------------------------------------------------------------------------
-# _allowed_agencies — line 347
+# _allowed_agencies
 # ---------------------------------------------------------------------------
 
 
-def test_allowed_agencies_from_set():
-    """Exercise line 347: fallback to ALLOWED_AGENCIES set."""
+def test_allowed_agencies_from_the_default():
+    """The rule reads the default configuration's allowed agencies."""
     from ddi_l.lint import (
-        ALLOWED_AGENCIES,
         LintConfiguration,
         _allowed_agencies,
         reset_lint_configuration,
         set_lint_configuration,
     )
 
+    set_lint_configuration(LintConfiguration(allowed_agencies=("fallback.agency",)))
+    assert _allowed_agencies() == ("fallback.agency",)
     reset_lint_configuration()
-    # Set config without allowed_agencies (None) to fall through to ALLOWED_AGENCIES
-    set_lint_configuration(LintConfiguration(allowed_agencies=None))
-    ALLOWED_AGENCIES.clear()
-    ALLOWED_AGENCIES.add("fallback.agency")
-    result = _allowed_agencies()
-    assert "fallback.agency" in result  # type: ignore[operator]
-    reset_lint_configuration()
-
-
-def test_allowed_agencies_empty_set():
-    """Exercise line 346: ALLOWED_AGENCIES empty returns None."""
-    from ddi_l.lint import (
-        ALLOWED_AGENCIES,
-        LintConfiguration,
-        _allowed_agencies,
-        reset_lint_configuration,
-        set_lint_configuration,
-    )
-
-    reset_lint_configuration()
-    set_lint_configuration(LintConfiguration(allowed_agencies=None))
-    ALLOWED_AGENCIES.clear()
-    result = _allowed_agencies()
-    assert result is None
-    reset_lint_configuration()
+    assert _allowed_agencies() is None
 
 
 # ---------------------------------------------------------------------------

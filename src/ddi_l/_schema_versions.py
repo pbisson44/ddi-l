@@ -7,7 +7,7 @@ from types import MappingProxyType
 from typing import TypedDict
 
 # Recorded release archive checksums are used to validate downloads performed by
-# :func:`ddi_l.schema_sync.update_schema_package`. Maintainers should refresh
+# `ddi_l.schema_sync.update_schema_package`. Maintainers should refresh
 # these values whenever a schema bundle is updated.
 SCHEMA_ARCHIVE_CHECKSUMS: Mapping[str, str] = MappingProxyType(
     {
@@ -111,7 +111,7 @@ def get_schema_release(version: str | None = None) -> SchemaRelease:
             ``None`` the bundled default version is returned.
 
     Raises:
-        KeyError: If ``version`` is not part of :data:`SUPPORTED_SCHEMA_VERSIONS`.
+        KeyError: If ``version`` is not part of `SUPPORTED_SCHEMA_VERSIONS`.
     """
     target_version = version or DEFAULT_SCHEMA_VERSION
     try:

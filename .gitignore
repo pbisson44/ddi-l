@@ -10,6 +10,9 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+native/target/
+native/python/ddi_l_native/*.so
+native/python/ddi_l_native/*.pyd
 
 # Virtual environments
 .venv/

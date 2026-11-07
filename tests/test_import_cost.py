@@ -18,12 +18,19 @@ def test_import_does_not_load_the_model_layer() -> None:
     loaded = _modules_loaded_by("import ddi_l")
     assert "ddi_l.models" not in loaded
     assert "xmlschema" not in loaded
+    assert not {"ddi_l.spec", "yaml", "jsonschema"} & loaded
 
 
 def test_cli_parser_does_not_load_the_model_layer() -> None:
     loaded = _modules_loaded_by("from ddi_l import cli; cli.build_parser()")
     assert "ddi_l.models" not in loaded
     assert "xmlschema" not in loaded
+    assert not {"ddi_l.spec", "yaml", "jsonschema"} & loaded
+
+
+def test_the_spec_language_loads_without_the_extra() -> None:
+    loaded = _modules_loaded_by("import ddi_l.spec")
+    assert not {"yaml", "jsonschema", "z3", "ddi_l.spec._smt"} & loaded
 
 
 def test_public_names_resolve_lazily() -> None:

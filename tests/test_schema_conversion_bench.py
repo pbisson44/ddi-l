@@ -9,9 +9,9 @@ from pathlib import Path
 
 import pytest
 
-from tests import PACKAGE_FIXTURES_DIR
+from tests import TEST_FIXTURES_DIR
 
-FIXTURE_PATH = PACKAGE_FIXTURES_DIR / "minimal_fragment.xml"
+FIXTURE_PATH = TEST_FIXTURES_DIR / "minimal_fragment.xml"
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 # The subprocess this test drives imports `benchmarks.schema_conversion_bench`.

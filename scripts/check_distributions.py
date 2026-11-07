@@ -26,8 +26,12 @@ REQUIRED_SDIST_PATHS = (
     "src/ddi_l/schemas/ddi/v3_3/instance_3_3.xsd",
     "src/ddi_l/schemas/readme.txt",
     "src/ddi_l/schemas/license.txt",
-    "src/ddi_l/examples/Quality_of_Life.xml",
     "src/ddi_l/examples/tests/fixtures/minimal_instance.xml",
+    "src/ddi_l/examples/Quality_of_Life.xml",
+    "tests/fixtures/models/study_unit_minimal.xml",
+    "src/ddi_l/spec/spec.schema.json",
+    "src/ddi_l/spec/examples/pet-survey.spec.yaml",
+    "src/ddi_l/spec/examples/pet-survey.spec.json",
     # A redistributor building from the sdist expects to be able to run the
     # suite, and the file we ask people to cite by has to travel with the
     # software it describes. poetry-core ships only the package by default, so
@@ -38,6 +42,11 @@ REQUIRED_SDIST_PATHS = (
     "codegen/coverage_audit.py",
     "Makefile",
     "uv.lock",
+    # The native core's sources, and uv.lock's path source: its stand-in.
+    "native/pyproject.toml",
+    "native/src/lib.rs",
+    "native/fallback/pyproject.toml",
+    "native/fallback/ddi_l_native/__init__.py",
     "CHANGELOG.md",
     "CITATION.cff",
     "CONTRIBUTING.md",
@@ -55,6 +64,9 @@ REQUIRED_WHEEL_PATHS = (
     ("ddi_l", "schemas", "license.txt"),
     ("ddi_l", "examples", "Quality_of_Life.xml"),
     ("ddi_l", "examples", "tests", "fixtures", "minimal_instance.xml"),
+    ("ddi_l", "spec", "spec.schema.json"),
+    ("ddi_l", "spec", "examples", "pet-survey.spec.yaml"),
+    ("ddi_l", "spec", "examples", "pet-survey.spec.json"),
     ("ddi_l", "py.typed"),
 )
 
@@ -129,6 +141,23 @@ def check_wheel(path: Path) -> list[str]:
         if unexpected:
             problems.append(f"unexpected top-level entries: {', '.join(unexpected)}")
 
+        # Test fixtures travel in the sdist only; the wheel keeps the two
+        # samples the CLI recipes run.
+        fixtures = "ddi_l/examples/tests/fixtures/"
+        extra = sorted(
+            name
+            for name in names
+            if name.startswith(fixtures)
+            and name.removeprefix(fixtures)
+            not in {
+                "__init__.py",
+                "minimal_instance.xml",
+                "invalid_instance_missing_id.xml",
+            }
+        )
+        if extra:
+            problems.append(f"test fixtures in wheel: {', '.join(extra[:5])}")
+
         if not any(name.endswith(".xsd") for name in names):
             problems.append("no .xsd files in wheel: offline validation would fail")
 
@@ -140,8 +169,9 @@ def main(argv: list[str]) -> int:
     dist_dir = Path(argv[1] if len(argv) > 1 else "dist")
 
     try:
-        sdist_path = next(dist_dir.glob("*.tar.gz"))
-        wheel_path = next(dist_dir.glob("*.whl"))
+        # ddi-l's own; dist/ also holds ddi-l-native's stand-in wheel.
+        sdist_path = next(dist_dir.glob("ddi_l-*.tar.gz"))
+        wheel_path = next(dist_dir.glob("ddi_l-*.whl"))
     except StopIteration:
         print(f"No sdist/wheel found in {dist_dir}/", file=sys.stderr)
         return 1

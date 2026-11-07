@@ -9,9 +9,15 @@ from __future__ import annotations
 import pytest
 
 pytest.importorskip("litestar", reason="requires the 'server' extra")
-# ...and the 'full' extra: the documented examples are lxml output (with
+# ...and the lxml backend: the documented examples are its output (with
 # `line` populated from `sourceline`), so whole payloads only match there.
 pytest.importorskip("lxml", reason="the documented examples are lxml-backend output")
+from ddi_l._etree import USING_LXML
+
+if not USING_LXML:
+    pytest.skip(
+        "the documented examples are lxml-backend output", allow_module_level=True
+    )
 
 from litestar.testing import TestClient
 
@@ -205,8 +211,8 @@ def test_query_parameters_are_documented_not_just_described(schema):
     }
     lint = {p["name"] for p in schema["paths"]["/v1/lint"]["post"]["parameters"]}
 
-    assert validate == {"version", "lint"}
-    assert lint == {"version", "profile"}
+    assert validate == {"version", "lint", "lint_config"}
+    assert lint == {"version", "profile", "rule", "skip_rule", "lint_config"}
 
 
 def test_every_response_the_schema_declares_carries_an_example(schema):

@@ -92,6 +92,7 @@ def test_apply_namespace_map_does_not_clone_without_lxml():
     if existing_pythonpath:
         python_paths.append(existing_pythonpath)
     env["PYTHONPATH"] = os.pathsep.join(python_paths)
+    env["DDI_L_XML_BACKEND"] = "stdlib"
 
     subprocess.run([sys.executable, "-c", script], check=True, env=env)
 

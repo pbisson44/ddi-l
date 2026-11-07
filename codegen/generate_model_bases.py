@@ -237,8 +237,16 @@ def _python_kind_for_child(child: ChildElement) -> str:
 
     if child.is_reference or type_name in ("ReferenceType", "SchemeReferenceType"):
         return "reference"
-    if child.local_name.endswith("Name") and (
-        type_name.endswith("NameType") or type_name == "NameType"
+    # A *Name of a *NameType derived from r:InternationalStringType (r:NameType
+    # and its kin): repeated r:String children. The derivation decides, as
+    # a:IndividualName is an IndividualNameType of structured parts
+    # (FirstGiven, LastFamily...). Other international strings (a:FullName,
+    # pr:AlternateName) stay raw elements: a single intl_string field keeps
+    # only its first string, and those may hold several languages.
+    if (
+        child.local_name.endswith("Name")
+        and type_name.endswith("NameType")
+        and child.is_international_string
     ):
         return "intl_string"
     if type_name in SIMPLE_TYPE_MAP:

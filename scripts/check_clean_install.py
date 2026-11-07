@@ -38,6 +38,27 @@ examples = resources.files("ddi_l").joinpath("examples")
 fixtures = examples.joinpath("tests", "fixtures")
 assert examples.joinpath("Quality_of_Life.xml").is_file()
 assert fixtures.joinpath("minimal_instance.xml").is_file()
+assert fixtures.joinpath("invalid_instance_missing_id.xml").is_file()
+# Test fixtures travel in the sdist, not the wheel.
+assert not fixtures.joinpath("models").is_dir()
+
+# The spec language needs no extra; reading a spec file does.
+from ddi_l.spec import compile_condition
+
+spec_files = resources.files("ddi_l.spec")
+assert spec_files.joinpath("spec.schema.json").is_file()
+assert spec_files.joinpath("examples", "pet-survey.spec.yaml").is_file()
+compiled = compile_condition("Pets > 0", subjects={"Pets": "urn:ddi:example.org:p:1"})
+assert compiled.fallback_reason is None, compiled
+
+# Only ddi-l-native's stand-in is installed, so ddi-l reads XML with the
+# standard library, as it does on a platform with no compiled wheel.
+from importlib.metadata import version
+
+from ddi_l import _etree
+
+assert _etree.BACKEND == "stdlib", _etree.BACKEND
+assert version("ddi-l-native") == version("ddi-l"), version("ddi-l-native")
 
 print("clean install: schemas resolve, validate() clean, examples present")
 """
@@ -47,9 +68,12 @@ def main(argv: list[str]) -> int:
     """Install the wheel from ``argv``'s dist directory and smoke-test it."""
     dist_dir = Path(argv[1] if len(argv) > 1 else "dist")
     try:
-        wheel_path = next(dist_dir.glob("*.whl")).resolve()
+        wheel_path = next(dist_dir.glob("ddi_l-*.whl")).resolve()
+        stand_in = next(dist_dir.glob("ddi_l_native-*-py3-none-any.whl")).resolve()
     except StopIteration:
-        print(f"No wheel found in {dist_dir}/", file=sys.stderr)
+        print(
+            f"No ddi-l or ddi-l-native stand-in wheel in {dist_dir}/", file=sys.stderr
+        )
         return 1
 
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -63,8 +87,11 @@ def main(argv: list[str]) -> int:
             [python_bin, "-m", "pip", "install", "--quiet", "--upgrade", "pip"],
             check=True,
         )
+        # The stand-in first, so the index's compiled ddi-l-native (or its
+        # absence, before a release) does not decide what this check runs.
         subprocess.run(
-            [python_bin, "-m", "pip", "install", "--quiet", wheel_path], check=True
+            [python_bin, "-m", "pip", "install", "--quiet", stand_in, wheel_path],
+            check=True,
         )
 
         # Run from a directory that is not the repository, so nothing can be
@@ -72,6 +99,19 @@ def main(argv: list[str]) -> int:
         subprocess.run([python_bin, "-c", SMOKE_TEST], check=True, cwd=tmp_dir)
 
         subprocess.run([venv_dir / scripts_dir / "ddi", "--version"], check=True)
+
+        # Without the spec extra, `ddi spec` says what to install.
+        spec_run = subprocess.run(
+            [venv_dir / scripts_dir / "ddi", "spec", "schema"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if spec_run.returncode != 1 or 'pip install "ddi-l[spec]"' not in (
+            spec_run.stderr
+        ):
+            print(f"`ddi spec` without the extra: {spec_run!r}", file=sys.stderr)
+            return 1
 
         stray = venv_dir / scripts_dir / "ddi-iterparse-bench"
         if stray.exists():

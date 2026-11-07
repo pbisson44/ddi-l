@@ -20,8 +20,7 @@ from ddi_l import schema_loader
 from ddi_l.schema_loader import Element
 
 EXAMPLES_DIR = SRC_PATH / "ddi_l" / "examples"
-PACKAGE_FIXTURES_DIR = EXAMPLES_DIR / "tests" / "fixtures"
-# Large benchmark-only inputs live under tests/fixtures/ rather than inside the
+# Test and benchmark inputs live under tests/fixtures/ rather than inside the
 # package, so they do not ship in the wheel.
 TEST_FIXTURES_DIR = PROJECT_ROOT / "tests" / "fixtures"
 
@@ -35,8 +34,8 @@ TARGET_FUNCTIONS = {
 DEFAULT_FIXTURE_PATHS: Sequence[Path] = (
     TEST_FIXTURES_DIR / "Canadian_Survey_on_Business_conditions.xml",
     EXAMPLES_DIR / "Quality_of_Life.xml",
-    PACKAGE_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
-    PACKAGE_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
+    TEST_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
+    TEST_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
 )
 
 

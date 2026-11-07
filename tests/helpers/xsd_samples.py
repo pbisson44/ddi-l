@@ -100,6 +100,11 @@ class _Builder:
                 return candidate
         return str(self._pick(values))
 
+    def _fixed_or_value(self, declaration: XsdElement, simple_type: Any) -> str | None:
+        if declaration.fixed is not None:
+            return str(declaration.fixed)
+        return self._value(simple_type, declaration.local_name)
+
     def element(self, declaration: XsdElement, depth: int) -> Element | None:
         if declaration.abstract:
             substitutes = sorted(
@@ -124,7 +129,7 @@ class _Builder:
             return None
         element = create_element(declaration.name)
         if not isinstance(element_type, XsdComplexType):
-            value = self._value(element_type, declaration.local_name)
+            value = self._fixed_or_value(declaration, element_type)
             if value is None:
                 return None
             element.text = value
@@ -146,14 +151,16 @@ class _Builder:
             element.set(name, value)
 
         if element_type.has_simple_content():
-            value = self._value(element_type.content, declaration.local_name)
+            value = self._fixed_or_value(declaration, element_type.content)
             if value is None:
                 return None
             element.text = value
             return element
         content = element_type.content
         if isinstance(content, XsdGroup):
-            children = self.group(content, depth + 1)
+            # As a particle, so a content model that must occur more than
+            # once (a choice with minOccurs="2") is built that many times.
+            children = self.particle(content, depth + 1)
             if children is None:
                 return None
             for child in children:

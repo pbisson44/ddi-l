@@ -12,7 +12,7 @@ CLI ou pipelines de données.
 
 !!! info "Prérequis"
     - Python 3.11+ avec `ddi-l` installé.
-    - Connaissance du [guide d'utilisation](../user-guide.md).
+    - Connaissance du [guide d'utilisation](../user-guide.fr.md).
 
 ## Lire et interroger des documents
 

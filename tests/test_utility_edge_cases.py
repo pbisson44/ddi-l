@@ -250,6 +250,8 @@ def test_apply_namespace_attributes_stdlib():
     child = create_element(qn(REUSABLE_NS, "ID"))
     root.append(child)
     _apply_namespace_attributes(root, {"r": REUSABLE_NS})
+    # A URI an element tag uses is declared by the serializer, not here.
+    assert "xmlns:r" not in root.attrib
     # Should set xmlns:r attribute but skip URIs used by element tags
 
 

@@ -139,6 +139,74 @@ def test_colectica_layout_requires_a_fragment() -> None:
         ddi.write_ddi(doc, layout="colectica")
 
 
+# Every way out writes a FragmentInstance as Colectica does, unless the
+# default layout is asked for; a DDIInstance keeps the default layout.
+
+
+def test_write_ddi_writes_a_fragment_as_colectica_does() -> None:
+    fragment = ddi.open_fragment(GROUP_EXPORT)
+
+    assert ddi.write_ddi(fragment) == GROUP_EXPORT.read_bytes()
+    assert ddi.write_ddi(fragment, layout="default") != GROUP_EXPORT.read_bytes()
+    # An option only the default layout has chooses that layout.
+    compact = ddi.write_ddi(fragment, pretty_print=False)
+    assert compact == ddi.write_ddi(fragment, pretty_print=False, layout="default")
+    bare = ddi.write_ddi(fragment, xml_declaration=False)
+    assert bare == ddi.write_ddi(fragment, xml_declaration=False, layout="default")
+    wide = ddi.write_ddi(fragment, encoding="utf-16")
+    assert wide == ddi.write_ddi(fragment, encoding="utf-16", layout="default")
+    # UTF-8 under another spelling is still UTF-8.
+    assert ddi.write_ddi(fragment, encoding="UTF8") == GROUP_EXPORT.read_bytes()
+
+
+def test_write_ddi_keeps_the_default_layout_for_an_instance() -> None:
+    doc = ddi.new_study(title="Survey", agency="example.org")
+
+    assert ddi.write_ddi(doc) == ddi.write_ddi(doc, layout="default")
+
+
+def test_fragment_to_xml_is_the_colectica_text() -> None:
+    fragment = ddi.open_fragment(GROUP_EXPORT)
+
+    assert fragment.to_xml() == GROUP_EXPORT.read_bytes().decode("utf-8-sig")
+
+
+def test_cli_from_json_labels_a_fragment_without_a_byte_order_mark(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    import json
+
+    from ddi_l import operations
+    from ddi_l.cli import main
+
+    source = tmp_path / "group.json"
+    source.write_text(
+        json.dumps(operations.to_json_payload(GROUP_EXPORT.read_bytes())),
+        encoding="utf-8",
+    )
+    assert main(["from-json", str(source), "--with-labels"]) == 0
+
+    (record,) = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    xml = next(
+        value for value in record.values() if isinstance(value, str) and "<" in value
+    )
+    assert xml.startswith('<?xml version="1.0" encoding="utf-8"?>')
+
+
+def test_cli_roundtrip_of_a_fragment_needs_no_layout(tmp_path: Path) -> None:
+    from ddi_l.cli import main
+
+    target = tmp_path / "out.xml"
+    assert main(["roundtrip", str(GROUP_EXPORT), "-o", str(target)]) == 0
+    assert target.read_bytes() == GROUP_EXPORT.read_bytes()
+
+    assert (
+        main(["roundtrip", str(GROUP_EXPORT), "--layout", "default", "-o", str(target)])
+        == 0
+    )
+    assert target.read_bytes() != GROUP_EXPORT.read_bytes()
+
+
 # ---------------------------------------------------------------------------
 # Working with items
 # ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ description: >-
 
 The `ddi_l.models` package provides generated dataclass wrappers for
 DDI 3.3 types. These are the **advanced layer**. Most users should start
-with the [simple CRUD API](user-guide.md) instead.
+with the [simple CRUD API](user-guide.en.md) instead.
 
 !!! info "When to use the model layer"
     Use the model classes directly when you need fine-grained control over
@@ -82,6 +82,38 @@ ref = Reference(
 )
 ```
 
+## Parameters and bindings
+
+A construct passes values through parameters: a question construct's
+`OutParameter` carries its answer, and a condition (an `IfThenElse`, a `Loop`)
+tests its `InParameter`s. A `Binding` on the sequence holding both feeds one
+into the other.
+
+```python
+from ddi_l.models import Binding, InParameter, OutParameter
+
+answer = OutParameter(
+    agency="example.org", identifier="q1-out", version="1", alias="Q1"
+)
+gate_input = InParameter(
+    agency="example.org", identifier="gate-in", version="1", alias="Q1"
+)
+binding = Binding.between(answer, gate_input, late_bound=True)
+
+reference = binding.target_parameter_reference
+print(reference.type_of_object, reference.identifier)
+```
+
+`IfThenElse`, `Loop`, `StatementItem` and `Sequence` hold theirs in
+`in_parameters`, `out_parameters` and `bindings`, read from a file as these
+types. So do the generated models that have them (`ComputationItem`,
+`QuestionConstruct`, `Split`, `RepeatUntil`, ..., and an `Instruction`'s
+`in_parameters`). These lists also take a raw element, written as it is. A
+parameter's
+`to_reference()` and the references `Binding.between()` builds carry no
+`r:URN`, as Colectica writes them; `late_bound=True` marks them
+`lateBound="true"`, so they follow the parameter's latest version.
+
 ## Generated models
 
 Model classes under `ddi_l.models._generated/` are auto-generated from
@@ -91,5 +123,5 @@ the DDI 3.3 XSD files. Do not edit them by hand. To regenerate:
 python -m codegen.generate_model_bases
 ```
 
-See the [development guide](DEVELOPMENT.md) for details on the codegen
+See the [development guide](DEVELOPMENT.en.md) for details on the codegen
 pipeline.

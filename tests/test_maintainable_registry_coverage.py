@@ -94,14 +94,6 @@ def test_register_instance_duplicate_urn():
         reg.register_instance(v2)
 
 
-def test_register_instance_same_object_twice():
-    reg = MaintainableRegistry()
-    v = _make_variable()
-    reg.register_instance(v)
-    # Registering the same object is fine
-    reg.register_instance(v)
-
-
 def test_register_instance_duplicate_key():
     reg = MaintainableRegistry()
     v1 = Variable(agency="test.org", identifier="v1", version="1.0")

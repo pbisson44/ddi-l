@@ -19,9 +19,9 @@ class Comparison(ComparisonFields):
     """Representation of ``cm:Comparison`` modules.
 
     A comparison records how items in different study units (or versions)
-    correspond. Add maps with :meth:`add_variable_map` and
-    :meth:`add_concept_map`; build one at the high level with
-    :meth:`ddi_l.document.Document.add_comparison`.
+    correspond. Add maps with `add_variable_map` and
+    `add_concept_map`; build one at the high level with
+    `ddi_l.document.Document.add_comparison`.
     """
 
     TAG: ClassVar[str] = qn(COMPARATIVE_NS, "Comparison")
@@ -177,7 +177,7 @@ class Comparison(ComparisonFields):
         ``item_pairs`` is a list of ``(source, target)`` reference pairs, one per
         ``ItemMap``. ``type_of_mapped_item`` names what is mapped (e.g.
         ``"Variable"``); ``source_scheme``/``target_scheme`` reference the mapped
-        schemes; ``correspondence`` is a map-level :meth:`correspondence`.
+        schemes; ``correspondence`` is a map-level `correspondence`.
         Returns the managed item map element.
         """
         managed_map = create_element(qn(COMPARATIVE_NS, "ManagedItemMap"))

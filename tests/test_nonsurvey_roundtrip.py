@@ -17,9 +17,10 @@ from ddi_l.constants import (
 )
 from ddi_l.models import StudyUnit, qn
 from ddi_l.namespace_utils import apply_namespace_map
-from tests import PACKAGE_FIXTURES_DIR
+from tests import TEST_FIXTURES_DIR
+from tests.helpers.marks import refers_outside
 
-FIXTURE_DIR = PACKAGE_FIXTURES_DIR / "models"
+FIXTURE_DIR = TEST_FIXTURES_DIR / "models"
 
 
 def _normalized(element: Element) -> str:
@@ -47,6 +48,7 @@ def _identifier(element: Element, path: str) -> str:
     "scenario",
     ["nonsurvey_admin", "nonsurvey_sensor"],
 )
+@refers_outside
 def test_study_unit_nonsurvey_round_trip(scenario: str) -> None:
     source = parse_xml(FIXTURE_DIR / f"study_unit_{scenario}.xml")
     study = StudyUnit.from_xml(source)

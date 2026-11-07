@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from collections.abc import Callable
 from typing import Any
 
@@ -55,7 +54,6 @@ _PYTHON_FUNCTIONS = {
     for name, func in _ORIGINAL_PYTHON_FUNCTIONS.items()
 }
 
-_ACTIVE_FUNCTIONS: dict[str, Callable[..., Any]] = _PYTHON_FUNCTIONS
 _PROXY_FUNCTIONS: dict[str, Callable[..., Any]] = {}
 
 
@@ -71,12 +69,12 @@ def _create_proxy(name: str) -> Callable[..., Any]:
 
         def _proxy(*args: Any, **kwargs: Any) -> Any:
             kwargs.setdefault("process_namespaces", True)
-            return _ACTIVE_FUNCTIONS[name](*args, **kwargs)
+            return _PYTHON_FUNCTIONS[name](*args, **kwargs)
 
     else:
 
         def _proxy(*args: Any, **kwargs: Any) -> Any:
-            return _ACTIVE_FUNCTIONS[name](*args, **kwargs)
+            return _PYTHON_FUNCTIONS[name](*args, **kwargs)
 
     if reference is not None:
         _proxy.__doc__ = reference.__doc__
@@ -84,35 +82,20 @@ def _create_proxy(name: str) -> Callable[..., Any]:
     return _proxy
 
 
-def _bind_exported_functions(functions: dict[str, Callable[..., Any]]) -> None:
-    global _ACTIVE_FUNCTIONS
-    _ACTIVE_FUNCTIONS = functions
-
-
 def get_available_conversion_backends() -> tuple[str, ...]:
     return ("python",)
 
 
 def set_conversion_backend(backend: str) -> None:
-    backend = backend.lower().strip()
-    if backend != "python":
+    """Check ``backend``: ``"python"``, the only one, changes nothing."""
+    if backend.lower().strip() != "python":
         raise RuntimeError("Only the pure Python conversion backend is available")
-    _bind_exported_functions(_PYTHON_FUNCTIONS)
-    _sync_conversion_module()
-    globals()["IMPLEMENTATION"] = backend
-
-    loader_module = sys.modules.get("ddi_l.schema_loader")
-    if loader_module is not None:
-        loader_module.CONVERSION_IMPLEMENTATION = IMPLEMENTATION  # type: ignore[attr-defined]
-        for _name in _EXPORTED_NAMES:
-            setattr(loader_module, _name, globals()[_name])
 
 
 for _export_name in _EXPORTED_NAMES:
     _PROXY_FUNCTIONS[_export_name] = _create_proxy(_export_name)
     globals()[_export_name] = _PROXY_FUNCTIONS[_export_name]
 
-_bind_exported_functions(_PYTHON_FUNCTIONS)
 _sync_conversion_module()
 
 IMPLEMENTATION: str = "python"

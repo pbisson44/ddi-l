@@ -1,12 +1,13 @@
 name: Mutation testing
 
-# Weekly and on demand, not a PR gate: the run takes tens of minutes, and
-# surviving mutants (many equivalent) need judgement rather than a threshold.
-# The report is uploaded as an artifact; real findings become tests.
+# Monthly and on demand, not on every PR: a full run takes hours of Actions
+# minutes. The same schedule fuzzes the native parser (see `fuzz-native`). It fails when a mutant survives that tests/mutation_baseline.txt
+# does not list, or when a listed one no longer survives (see
+# scripts/check_mutation.py).
 on:
   schedule:
-    # Mondays, 06:00 UTC.
-    - cron: "0 6 * * 1"
+    # The 1st of each month, 06:00 UTC.
+    - cron: "0 6 1 * *"
   workflow_dispatch:
     inputs:
       mutants:
@@ -23,15 +24,17 @@ permissions:
   contents: read
 
 env:
-  UV_VERSION: "0.9.7"
+  UV_VERSION: "0.13.7"
 
 jobs:
   mutation:
     name: Mutation testing
     runs-on: ubuntu-latest
-    # Generous: a full run is long by nature, and killing it halfway produces
-    # no report at all.
-    timeout-minutes: 180
+    # About 15,800 mutants: 100 minutes on four cores, so a few hours on a
+    # hosted runner (property tests draw 30 examples under mutmut, see
+    # tests/helpers/examples.py). 360 minutes is the most a hosted job may
+    # run; a run killed halfway leaves no result.
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v7
       - name: Install uv
@@ -45,16 +48,14 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked --group dev --extra full --extra server
       - name: Run mutmut
-        # Survivors are the point of the report, not a failure of the job.
-        run: uv run mutmut run ${{ inputs.mutants }} || true
-      - name: Summarise
-        run: |
-          uv run mutmut results > mutmut-results.txt 2>&1 || true
-          echo '### Surviving mutants' >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          grep -c 'survived' mutmut-results.txt >> "$GITHUB_STEP_SUMMARY" || true
-          grep 'survived' mutmut-results.txt | head -40 >> "$GITHUB_STEP_SUMMARY" || true
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+        run: uv run mutmut run ${{ inputs.mutants }}
+      - name: Compare with the baseline
+        # A run limited to some mutants leaves the rest unchecked.
+        if: inputs.mutants == ''
+        run: uv run python scripts/check_mutation.py | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Save the results
+        if: always()
+        run: uv run mutmut results > mutmut-results.txt
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v7
@@ -62,3 +63,32 @@ jobs:
           name: mutmut-results
           path: mutmut-results.txt
           if-no-files-found: warn
+
+  fuzz-native:
+    # Random and damaged XML through the native parser, checked against the
+    # standard library's: the same documents read, the same trees, the same
+    # documents refused (and a document type declaration always refused).
+    name: Fuzz the native parser
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: inputs.mutants == ''
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        # The real core over uv.lock's stand-in; `--no-sync` below keeps it.
+        run: |
+          uv sync --locked --group dev
+          uv pip install --reinstall-package ddi-l-native ./native
+      - name: Fuzz
+        env:
+          DDI_L_XML_BACKEND: native
+          DDI_L_FUZZ_EXAMPLES: "300000"
+        run: uv run --no-sync pytest tests/test_native.py -k "fuzzed or damaged" --no-cov -q

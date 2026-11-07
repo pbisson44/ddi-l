@@ -35,7 +35,7 @@ so the table separates them into three tiers.
     `from_xml()` and writing it with `to_xml()` returns it unchanged: same
     elements, attributes, text and order. The test suite checks this for every
     type against samples built from the XSD, and byte for byte against real
-    Colectica exports (see [Work with Colectica exports](colectica.md)).
+    Colectica exports (see [Work with Colectica exports](colectica.en.md)).
 
 ## Coverage by module
 
@@ -83,7 +83,7 @@ typed model instead. n/a means not applicable.
 `add_item()` / `items()` currently recognize 30 item types, including the
 full questionnaire-flow set (`QuestionConstruct`, `Sequence`, `IfThenElse`,
 `StatementItem`, `ComputationItem`, `Loop`; see
-[Module 10](curriculum/module-10-questionnaire-flows.md)), `PhysicalInstance`,
+[Module 10](curriculum/module-10-questionnaire-flows.en.md)), `PhysicalInstance`,
 `RecordLayout`, `DataRelationship`, and `NCube`. A physical instance describes
 one data file; a record layout maps variables to positions within it.
 

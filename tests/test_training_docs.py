@@ -11,13 +11,13 @@ from ddi_l.document import DDIDocument
 from ddi_l.lint import DDI_PROFILE_DEFAULT, run_profile
 from ddi_l.models.base import qn
 from ddi_l.validation import ValidationMessage, ValidationReport
-from tests import EXAMPLES_DIR, PACKAGE_FIXTURES_DIR
+from tests import EXAMPLES_DIR, TEST_FIXTURES_DIR
 
 
 def _resolve_example_instance() -> Path:
     candidates = [
         EXAMPLES_DIR / "example_instance.xml",
-        PACKAGE_FIXTURES_DIR / "instances" / "example_instance.xml",
+        TEST_FIXTURES_DIR / "instances" / "example_instance.xml",
     ]
     for candidate in candidates:
         if candidate.exists():

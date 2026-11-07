@@ -10,8 +10,8 @@ Generated from the docstrings in the source.
 
 This page covers the **public API**: what `import ddi_l` exposes and what
 semantic versioning applies to. For the wider model layer, see
-[Models reference](models.md) for the guided tour and
-[Schema coverage](schema-coverage.md) for what is supported at which level.
+[Models reference](models.en.md) for the guided tour and
+[Schema coverage](schema-coverage.en.md) for what is supported at which level.
 
 !!! info "Where to start"
     `new_study()` and `open_ddi()` return a [`Document`][ddi_l.document.Document],
@@ -38,7 +38,7 @@ semantic versioning applies to. For the wider model layer, see
 ## DDIFragment
 
 A `FragmentInstance`, such as a Colectica export. See
-[Work with Colectica exports](colectica.md).
+[Work with Colectica exports](colectica.en.md).
 
 ::: ddi_l.document.DDIFragment
     options:
@@ -54,7 +54,7 @@ A `FragmentInstance`, such as a Colectica export. See
 ## Spreadsheets
 
 Load a study's metadata (concepts, questions and the questionnaire flow, code
-lists, variables, data files and more) from CSV files or an Excel workbook. See [Load DDI from spreadsheets](spreadsheet-import.md).
+lists, variables, data files and more) from CSV files or an Excel workbook. See [Load DDI from spreadsheets](spreadsheet-import.en.md).
 
 ::: ddi_l.tables
     options:
@@ -109,6 +109,8 @@ lists, variables, data files and more) from CSV files or an Excel workbook. See 
 
 ::: ddi_l.lint.run_profile
 
+::: ddi_l.lint.lint_configuration
+
 ::: ddi_l.lint.configure_lint
 
 ::: ddi_l.lint.LintConfiguration
@@ -124,6 +126,113 @@ lists, variables, data files and more) from CSV files or an Excel workbook. See 
 ::: ddi_l.lint.register_rule
 
 ::: ddi_l.lint.register_profile
+
+## Editing a questionnaire
+
+`DDIFragment.revise()`, `move_construct()`, `insert_construct()`,
+`wrap_in_condition()`,
+`duplicate()` and `repair_shared_identifiables()` (above) return these.
+
+::: ddi_l.colectica_edit
+    options:
+      members:
+        - RevisionPlan
+        - RevisionStep
+        - EditResult
+        - RepairPlan
+        - RepairStep
+
+## Colectica conditions
+
+::: ddi_l.colectica_logic
+    options:
+      members:
+        - parse_condition
+        - parse_command
+        - serialize_condition
+        - write_condition
+        - render_synopsis
+        - explain_condition
+        - Condition
+        - LogicGroup
+        - Statement
+        - DataLookup
+        - DataLookupField
+        - NativeCondition
+        - ConditionExplanation
+        - GroupBool
+        - StmtBool
+        - Operator
+        - ConditionFormatError
+
+## Questionnaire specs
+
+Specs, the expression language of their gates and edits, its compilers to
+Colectica conditions, and the comparison of an instrument with a spec; see
+[Check a questionnaire against a spec](spec-conformance.en.md). Reading a spec
+needs the `spec` extra; `decide`, which tells whether two expressions hold
+for the same respondents, needs the `logic` extra.
+
+::: ddi_l.spec
+    options:
+      members:
+        - load_spec
+        - spec_from_data
+        - validate_spec
+        - spec_schema
+        - example_spec
+        - conform
+        - ConformReport
+        - ConformFinding
+        - ModuleResult
+        - ConformError
+        - parse_expression
+        - format_expression
+        - normalise
+        - equivalent
+        - ExpressionError
+        - decide
+        - Verdict
+        - evaluate
+        - Answer
+        - Example
+        - LogicDependencyError
+        - compile_condition
+        - CompiledCondition
+        - BlaiseDialect
+        - parse_blaise
+        - condition_to_expression
+        - UnverifiableConditionError
+        - Spec
+        - ModuleSpec
+        - QuestionSpec
+        - DomainSpec
+        - EditSpec
+        - VariableSpec
+        - MatchOptions
+        - SpecError
+        - SpecProblem
+        - SpecDependencyError
+        - SpecRule
+
+## Library-wide defaults
+
+`ddi.configure()` sets defaults for keywords the library's functions also
+take directly; the keyword always wins. `ddi.configured()` scopes a change to a
+`with` block, in the current thread or task only.
+
+::: ddi_l.config.configure
+
+::: ddi_l.config.configured
+
+::: ddi_l.config.get_configuration
+
+::: ddi_l.config.reset_configuration
+
+::: ddi_l.config.Configuration
+    options:
+      show_root_heading: true
+      heading_level: 3
 
 ## Exceptions
 

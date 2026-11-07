@@ -1,12 +1,12 @@
 """HTTP handlers.
 
 Every handler reads the request body, calls one function from
-:mod:`ddi_l.operations` in a worker thread, and returns its result, so the
+`ddi_l.operations` in a worker thread, and returns its result, so the
 API and the CLI share one implementation.
 
 The body is read with ``await request.body()`` because Litestar decodes a typed
 ``data`` parameter as JSON, and a DDI document is XML;
-:mod:`ddi_l.server.openapi` documents the request bodies instead. Query
+`ddi_l.server.openapi` documents the request bodies instead. Query
 parameters are declared in the signatures so they appear in Swagger.
 """
 
@@ -35,7 +35,7 @@ from litestar.status_codes import (
 
 from .. import __version__, operations
 from ..exceptions import DDIError
-from ..lint import ProfileResult
+from ..lint import LintConfiguration, ProfileResult
 from ..tables import TableImportError
 from .samples import (
     EXAMPLE_JSON_DOCUMENT,
@@ -153,6 +153,30 @@ VersionParam = Annotated[
 def _clean(version: str | None) -> str | None:
     """Treat `?version=` with no value as absent rather than as an empty version."""
     return version or None
+
+
+LintConfigParam = Annotated[
+    str | None,
+    QueryParameter(
+        name="lint_config",
+        required=False,
+        description=(
+            "Lint options for this request, as the JSON object `ddi lint "
+            '--lint-config` reads: `{"allowed_agencies": ["example.org"]}`. '
+            "Options left out keep their defaults."
+        ),
+    ),
+]
+
+
+def _lint_configuration(text: str | None) -> LintConfiguration | None:
+    """The `?lint_config=` options, or ``None``; bad ones are a client error."""
+    if not text:
+        return None
+    try:
+        return operations.parse_lint_configuration(text)
+    except ValueError as error:
+        raise ClientException(detail=_detail(error)) from error
 
 
 async def _body_bytes(request: Request) -> bytes:
@@ -360,6 +384,7 @@ async def validate(
             ),
         ),
     ] = True,
+    lint_config: LintConfigParam = None,
 ) -> ValidationResponse:
     """Validate an XML document against the DDI schema, with lint findings.
 
@@ -373,6 +398,8 @@ async def validate(
         data,
         version=_clean(version),
         lint=lint,
+        max_issues=request.app.state.ddi_config.max_schema_issues,
+        lint_configuration=_lint_configuration(lint_config),
     )
     payload = report.to_dict()
     return ValidationResponse(
@@ -413,6 +440,26 @@ async def lint(
             ),
         ),
     ] = None,
+    rule: Annotated[
+        list[str] | None,
+        QueryParameter(
+            name="rule",
+            required=False,
+            description=(
+                "Run only these rules instead of the default set; repeat it for "
+                "each. Ignored with `profile`."
+            ),
+        ),
+    ] = None,
+    skip_rule: Annotated[
+        list[str] | None,
+        QueryParameter(
+            name="skip_rule",
+            required=False,
+            description="Leave out the findings of these rules; repeat it for each.",
+        ),
+    ] = None,
+    lint_config: LintConfigParam = None,
 ) -> LintResponse | ProfileResponse:
     """Run lint rules over a document. ``?profile=NAME`` runs a named profile."""
     data = await _body_bytes(request)
@@ -422,6 +469,9 @@ async def lint(
         data,
         version=_clean(version),
         profile=_clean(profile),
+        rules=rule or None,
+        skip_rules=frozenset(skip_rule or ()),
+        configuration=_lint_configuration(lint_config),
     )
     if isinstance(result, ProfileResult):
         # A profile bundles schema validation with the rules, so it answers with
@@ -553,25 +603,25 @@ async def roundtrip(
     request: Request,
     version: VersionParam = None,
     layout: Annotated[
-        Literal["default", "colectica"],
+        Literal["default", "colectica"] | None,
         QueryParameter(
             name="layout",
             required=False,
             description=(
-                "`colectica` writes a FragmentInstance as Colectica Designer "
-                "does (UTF-8 with a byte-order mark, one item per fragment), "
-                "so an unchanged Colectica export comes back byte for byte. "
-                "Only for a FragmentInstance."
+                "Lay the whole file out: `colectica` writes a FragmentInstance "
+                "as Colectica Designer does (UTF-8 with a byte-order mark, "
+                "one item per fragment); `default` is this library's layout. "
+                "Left out, the file comes back as sent, byte for byte."
             ),
         ),
-    ] = "default",
+    ] = None,
 ) -> Response[bytes]:
     """Parse a document with the model layer and serialize it again.
 
     A smoke test for formatting, namespace and encoding problems introduced by
     hand-editing: if the response differs from what was sent, something in the
-    document did not survive a parse. Send a Colectica export with
-    `?layout=colectica` to compare it with what Colectica wrote.
+    document did not survive a parse. Without `layout`, the file comes back as
+    sent, byte for byte.
     """
     data = await _body_bytes(request)
     xml = await _run(

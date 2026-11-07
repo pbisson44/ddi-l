@@ -10,7 +10,7 @@ description: >-
     La référence de l'API est générée à partir des docstrings du code source,
     qui sont rédigées en anglais ; elle n'est donc pas traduite.
 
-    Le reste de la documentation (guides, tutoriels et les seize modules du
+    Le reste de la documentation (guides, tutoriels et les dix-sept modules du
     programme de formation) est disponible en français.
 
     [Consulter la référence de l'API (en anglais) →](https://pbisson44.github.io/ddi-l/latest/api/){ .md-button .md-button--primary }
@@ -25,13 +25,17 @@ fichier qui en contient plusieurs.
 
 `open_fragment()` ouvre une `FragmentInstance` (un export Colectica, par
 exemple) et renvoie un `DDIFragment` ; voir
-[Travailler avec les exports Colectica](colectica.md).
+[Travailler avec les exports Colectica](colectica.fr.md).
 
 `ddi_l.tables.load_tables()` charge les métadonnées d'une étude (concepts,
 questions et cheminement du questionnaire, listes de codes, variables,
 fichiers de données et plus) depuis des fichiers CSV ou un classeur Excel ; voir
-[Charger du DDI depuis des tableurs](spreadsheet-import.md).
+[Charger du DDI depuis des tableurs](spreadsheet-import.fr.md).
+
+`ddi_l.spec` lit les spécifications de questionnaire, compile leurs filtres
+en conditions Colectica et compare un instrument à une spécification ; voir
+[Vérifier un questionnaire par rapport à une spécification](spec-conformance.fr.md).
 
 Pour une présentation guidée de la couche de modèles, voir la
-[référence des modèles](models.md). Pour savoir ce qui est pris en charge et à
-quel niveau, voir la [couverture du schéma](schema-coverage.md).
+[référence des modèles](models.fr.md). Pour savoir ce qui est pris en charge et à
+quel niveau, voir la [couverture du schéma](schema-coverage.fr.md).

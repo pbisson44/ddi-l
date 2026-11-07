@@ -6,7 +6,7 @@ Install with the ``server`` extra::
 
 Nothing in this subpackage is imported by ``ddi_l/__init__.py``, so a plain
 install neither pays for it nor needs Litestar present. Importing it without the
-extra raises :class:`ImportError` with the install command.
+extra raises `ImportError` with the install command.
 """
 
 from __future__ import annotations

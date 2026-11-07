@@ -22,7 +22,7 @@ documents. It reads, validates and lints DDI 3.1, 3.2 and 3.3, and authors new
 documents in DDI 3.3.
 
 **[Documentation](https://pbisson44.github.io/ddi-l/)**: guides, a models
-reference, CLI recipes and a 16-module training curriculum, in English and
+reference, CLI recipes and a 17-module training curriculum, in English and
 French.
 
 ## Installation
@@ -31,11 +31,16 @@ French.
 pip install ddi-l     # or: uv add ddi-l
 ```
 
-Optional extras:
+That is all most people need: it includes the compiled XML core wherever a
+wheel exists (Linux x86_64 and aarch64, macOS, Windows x64) and stays pure
+Python elsewhere, without compiling anything. Each extra adds a feature; see
+[which extras you need](https://pbisson44.github.io/ddi-l/latest/installation/#extras-when-you-need-one).
 
 ```bash
-pip install 'ddi-l[full]'     # lxml: faster parsing and validation
+pip install 'ddi-l[spec]'     # questionnaire specs: `ddi spec`, `ddi conform`
+pip install 'ddi-l[logic]'    # exact gate comparison (the Z3 solver)
 pip install 'ddi-l[server]'   # HTTP API (see `ddi serve` below)
+pip install 'ddi-l[full]'     # lxml, where there is no native core
 ```
 
 The DDI 3.1, 3.2, and 3.3 XML Schemas are bundled with the package, so
@@ -139,6 +144,8 @@ ddi to-jsonld my-study.xml                   # Convert to JSON-LD (linked data)
 ddi from-json my-study.json -o my-study.xml  # Convert back from JSON
 ddi roundtrip my-study.xml -o out.xml        # Round-trip XML
 ddi versions                                 # List supported DDI schema versions
+ddi explain-condition export.xml ITEM-ID     # Explain a Colectica condition
+ddi conform export.xml --spec spec.yaml      # Compare with a spec (the 'spec' extra)
 ddi serve                                    # HTTP API (needs the 'server' extra)
 ```
 
@@ -202,7 +209,7 @@ While `0.x`, breaking changes land in minor versions and are called out in the
 
 ## Supported Python versions
 
-Python 3.11, 3.12, 3.13, and 3.14.
+Python 3.11, 3.12, 3.13, 3.14 and 3.15.
 
 ## Contributing
 
@@ -217,7 +224,7 @@ GitHub's "Cite this repository" button exports
 APA or BibTeX:
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.1.2) [Computer software].
+> documents* (Version 0.2.0) [Computer software].
 > <https://github.com/pbisson44/ddi-l>
 
 ## License
@@ -236,3 +243,11 @@ This package redistributes the official DDI Lifecycle XML Schemas (versions
 
 The MIT license above covers the `ddi-l` code only; it does not alter the
 terms under which the DDI schemas are provided.
+
+### Trademarks
+
+Colectica is a trademark of its owner. `ddi-l` names Colectica only to say
+which files it reads and writes; it is an independent project, not affiliated
+with or endorsed by Colectica. The formats it documents as Colectica's
+(the `FragmentInstance` layout, the condition JSON in `r:CommandContent`) are
+inferred, not taken from a Colectica specification.
