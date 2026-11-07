@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ddi-l"
-version = "0.1.2"
+version = "0.2.0"
 description = "Python toolkit for DDI Lifecycle XML: read, author, validate and lint DDI 3.1, 3.2 and 3.3"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -39,6 +39,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Topic :: Scientific/Engineering",
   "Topic :: Text Processing :: Markup :: XML",
   "Typing :: Typed",
@@ -48,6 +49,10 @@ dependencies = [
   "xmlschema>=2.4",
   "defusedxml>=0.7",
   "orjson>=3.9",
+  # The native XML core, at ddi-l's own version. A compiled wheel where one
+  # fits; elsewhere a pure-Python stand-in (native/fallback), and ddi-l uses
+  # lxml or the standard library. Nothing is ever compiled at install time.
+  "ddi-l-native==0.2.0",
 ]
 
 [project.urls]
@@ -66,6 +71,16 @@ server = [
     "litestar>=2.12,<3",
     "uvicorn[standard]>=0.30",
 ]
+# Questionnaire specs in YAML or JSON (ddi_l.spec, `ddi spec`, `ddi conform`).
+spec = [
+    "PyYAML>=6.0",
+    "jsonschema>=4.18",
+]
+# Deciding whether two gates hold for the same respondents (ddi_l.spec.decide);
+# equivalent, compile_condition and conform use it when it is installed.
+logic = [
+    "z3-solver>=4.13",
+]
 
 [dependency-groups]
 # Documentation site toolchain (a dependency group, not a published extra).
@@ -81,18 +96,33 @@ docs = [
   "mkdocstrings[python]>=0.26",
 ]
 
-# ruff and mypy are pinned exactly because new releases change what they
-# report; bump them deliberately.
+# ruff, mypy and mutmut are pinned exactly because new releases change what
+# they report (mutmut also renames mutants, which the baseline lists); bump
+# them deliberately.
 dev = [
   "build>=1.2",
   "hypothesis>=6.70",
-  "mutmut",
+  "mutmut==3.8.1",
   "mypy==2.3.0",
   "pytest>=7.0",
   "pytest-cov>=5.0",
+  # Runs the suite on every core (-n auto in addopts).
+  "pytest-xdist>=3.6",
   "rdflib>=7.0",
   "ruff==0.16.1",
+  # The spec extra, so every CI leg tests and type-checks ddi_l.spec.
+  "PyYAML>=6.0",
+  "jsonschema>=4.18",
+  "types-PyYAML",
+  "types-jsonschema",
+  # The logic extra, so every CI leg tests the solver.
+  "z3-solver>=4.13",
 ]
+
+# Developing in this repository, ddi-l-native is the pure-Python stand-in, so
+# no one needs Rust; the native core is built on request (docs/DEVELOPMENT).
+[tool.uv.sources]
+ddi-l-native = { path = "native/fallback" }
 
 [project.scripts]
 ddi = "ddi_l.cli:main"
@@ -107,6 +137,16 @@ include = [
   { path = "codegen", format = "sdist" },
   { path = "Makefile", format = "sdist" },
   { path = "uv.lock", format = "sdist" },
+  # The native core's sources, and the stand-in uv.lock installs.
+  { path = "native/Cargo.toml", format = "sdist" },
+  { path = "native/Cargo.lock", format = "sdist" },
+  { path = "native/pyproject.toml", format = "sdist" },
+  { path = "native/README.md", format = "sdist" },
+  { path = "native/src/*.rs", format = "sdist" },
+  { path = "native/python/ddi_l_native/__init__.py", format = "sdist" },
+  { path = "native/fallback/pyproject.toml", format = "sdist" },
+  { path = "native/fallback/README.md", format = "sdist" },
+  { path = "native/fallback/ddi_l_native/__init__.py", format = "sdist" },
   { path = "CHANGELOG.md", format = "sdist" },
   { path = "CITATION.cff", format = "sdist" },
   { path = "CONTRIBUTING.md", format = "sdist" },
@@ -156,23 +196,48 @@ exclude = [
     "hooks/",
 ]
 
+# The fixture generator, moved out of src/ddi_l/examples/, which mypy skips;
+# tests import it, so it is checked unless told otherwise.
+[[tool.mypy.overrides]]
+module = "tests.helpers.regenerate_model_fixtures"
+ignore_errors = true
+
+# z3-solver ships no type information.
+[[tool.mypy.overrides]]
+module = "z3"
+ignore_missing_imports = true
+
+# The native extension is untyped (and only a stand-in in this repository);
+# ddi_l types its elements by the protocol in _etree.pyi.
+[[tool.mypy.overrides]]
+module = "ddi_l_native"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # The repository root only, so `tests.helpers` and `codegen` import. `src`
 # is left off so tests run against the installed package
 # (`uv sync --group dev`).
 pythonpath = ["."]
-addopts = "--cov=ddi_l --cov-report=term-missing"
+# Every core (pytest-xdist); pass -n 0 to run in one process (for --pdb).
+addopts = "-n auto --cov=ddi_l --cov-report=term-missing"
 markers = [
     # Deselect with `-m "not docs"`; CI runs them in a dedicated job.
     "docs: executes the samples embedded in the documentation",
+]
+filterwarnings = [
+    # A test whose items refer to items outside the document says so, with
+    # `pytest.warns` or a filterwarnings mark; any other one fails.
+    "error::ddi_l.exceptions.DDIReferenceWarning",
+    # rdflib 7's own JSON-LD parser builds its deprecated ConjunctiveGraph
+    # whatever graph it is given; nothing ddi-l or a test can change.
+    "ignore:ConjunctiveGraph is deprecated:DeprecationWarning:rdflib.plugins.parsers.jsonld",
 ]
 
 [tool.coverage.run]
 source = ["ddi_l"]
 omit = [
     "src/ddi_l/examples/build_and_validate.py",
-    "src/ddi_l/examples/tests/fixtures/models/regenerate.py",
     "src/ddi_l/models/_generated/dataset.py",
     "src/ddi_l/models/_generated/ddiprofile.py",
     "src/ddi_l/models/_generated/instance.py",
@@ -199,25 +264,66 @@ source_paths = ["src/ddi_l"]
 # Tests import codegen, which mutmut does not copy by default.
 also_copy = ["codegen"]
 only_mutate = [
-  "src/ddi_l/lint.py",
+  "src/ddi_l/_facts.py",
+  "src/ddi_l/_incremental.py",
+  "src/ddi_l/colectica_edit.py",
+  "src/ddi_l/colectica_lint.py",
+  "src/ddi_l/colectica_logic.py",
   "src/ddi_l/io.py",
+  "src/ddi_l/lint.py",
   "src/ddi_l/operations.py",
   "src/ddi_l/schema_loader/_conversion.py",
+  "src/ddi_l/spec/_instrument.py",
+  "src/ddi_l/spec/_routing.py",
+  "src/ddi_l/spec/_smt.py",
+  "src/ddi_l/spec/compile.py",
+  "src/ddi_l/spec/conform.py",
+  "src/ddi_l/spec/expression.py",
+  "src/ddi_l/spec/semantics.py",
+  "src/ddi_l/validation.py",
 ]
 do_not_mutate = [
   "src/ddi_l/models/_generated/*",
   "src/ddi_l/schemas/*",
 ]
-pytest_add_cli_args = ["--no-cov", "-q", "-p", "no:cacheprovider"]
+# -n 0: mutmut runs the tests in its own processes, one mutant at a time.
+pytest_add_cli_args = ["--no-cov", "-n", "0", "-q", "-p", "no:cacheprovider"]
 # Only the tests that exercise the mutated modules.
 pytest_add_cli_args_test_selection = [
   "tests/test_lint.py",
   "tests/test_lint_edge_cases.py",
+  # Pins every rule's output on the fixtures.
+  "tests/test_lint_default_pinned.py",
+  "tests/test_colectica_part_a.py",
   "tests/test_io.py",
   "tests/test_io_coverage.py",
+  "tests/test_inline_xhtml_space.py",
   "tests/test_conversion_coverage.py",
   "tests/test_conversion_runtime.py",
   "tests/test_document_dict_roundtrip.py",
   "tests/test_backend_parity.py",
   "tests/test_validation.py",
+  "tests/test_spec_expression.py",
+  "tests/test_spec_compile.py",
+  "tests/test_spec_conform.py",
+  "tests/test_spec_semantics.py",
+  "tests/test_instrument_paths.py",
+  "tests/test_facts.py",
+  "tests/test_flow_walks.py",
+  "tests/test_lint_configuration.py",
+  "tests/test_xml_security.py",
+  "tests/test_colectica_edit.py",
+  "tests/test_revise_oracle.py",
+  "tests/test_incremental.py",
+  "tests/test_routing.py",
+  "tests/test_colectica_fragment.py",
+  "tests/test_colectica_lint.py",
+  "tests/test_colectica_logic.py",
+  "tests/test_validation_coverage.py",
+  "tests/test_validations.py",
+  # operations.py is mostly reached through the HTTP API and the CLI.
+  "tests/test_operations.py",
+  "tests/test_jsonld.py",
+  "tests/test_server.py",
+  "tests/test_version_detection.py",
 ]

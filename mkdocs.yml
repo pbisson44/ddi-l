@@ -1,5 +1,8 @@
 site_name: "ddi-l: DDI Lifecycle"
 site_description: Reference and tutorials for the ddi-l toolkit.
+copyright: >-
+  ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an
+  independent project, not affiliated with or endorsed by Colectica.
 site_url: https://pbisson44.github.io/ddi-l/
 repo_url: https://github.com/pbisson44/ddi-l
 repo_name: pbisson44/ddi-l
@@ -37,17 +40,21 @@ nav:
       - "Module 13: Properties, find, and validate": curriculum/module-13-properties-find-validate.md
       - "Module 14: Custom fields": curriculum/module-14-custom-fields.md
       - "Module 15: Update and version": curriculum/module-15-update-and-version.md
-      - "Module 16: Capstone projects": curriculum/module-16-capstone.md
+      - "Module 16: Advanced questionnaire specification": curriculum/module-16-advanced-questionnaire-spec.md
+      - "Module 17: Capstone projects": curriculum/module-17-capstone.md
       - Instructor guide: curriculum/instructor-guide.md
       - Cheat sheet: curriculum/cheat-sheet.md
       - Answer keys: curriculum/answer-keys.md
   - How-to guides:
       - Validate and lint DDI content: validation.md
+      - Lint rule reference: lint-rules.md
       - Use the command line: cli-recipes.md
       - Automate validation in CI: tutorials/automation-playbook.md
       - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
       - Reuse fragments: tutorials/fragment-reuse-lab.md
       - Work with Colectica exports: colectica.md
+      - Work with other tools: interoperability.md
+      - Check a questionnaire against a spec: spec-conformance.md
       - Load DDI from spreadsheets: spreadsheet-import.md
       - Spreadsheet templates: spreadsheet-templates.md
       - Move between XML and objects: tutorials/xml-to-objects.md
@@ -187,17 +194,21 @@ plugins:
                 - "Module 13: Properties, find, and validate": curriculum/module-13-properties-find-validate.md
                 - "Module 14: Custom fields": curriculum/module-14-custom-fields.md
                 - "Module 15: Update and version": curriculum/module-15-update-and-version.md
-                - "Module 16: Capstone projects": curriculum/module-16-capstone.md
+                - "Module 16: Advanced questionnaire specification": curriculum/module-16-advanced-questionnaire-spec.md
+                - "Module 17: Capstone projects": curriculum/module-17-capstone.md
                 - Instructor guide: curriculum/instructor-guide.md
                 - Cheat sheet: curriculum/cheat-sheet.md
                 - Answer keys: curriculum/answer-keys.md
             - How-to guides:
                 - Validate and lint DDI content: validation.md
+                - Lint rule reference: lint-rules.md
                 - Use the command line: cli-recipes.md
                 - Automate validation in CI: tutorials/automation-playbook.md
                 - Troubleshoot schema errors: tutorials/schema-troubleshooting-clinic.md
                 - Reuse fragments: tutorials/fragment-reuse-lab.md
                 - Work with Colectica exports: colectica.md
+                - Work with other tools: interoperability.md
+                - Check a questionnaire against a spec: spec-conformance.md
                 - Load DDI from spreadsheets: spreadsheet-import.md
                 - Spreadsheet templates: spreadsheet-templates.md
                 - Move between XML and objects: tutorials/xml-to-objects.md
@@ -240,6 +251,9 @@ plugins:
             outdated_link_label: View the latest version
         - locale: fr
           name: "Fran\xE7ais"
+          copyright: "ddi-l est publi\xE9 sous licence MIT. Colectica est une marque de son
+            propri\xE9taire\xA0; ddi-l est un projet ind\xE9pendant, sans lien avec Colectica et non
+            approuv\xE9 par elle."
           nav:
             - Accueil:
                 - index.md
@@ -261,17 +275,21 @@ plugins:
                 - "Module 13 : Propri\xE9t\xE9s, recherche et validation": curriculum/module-13-properties-find-validate.md
                 - "Module 14 : Champs personnalis\xE9s": curriculum/module-14-custom-fields.md
                 - "Module 15 : Mise \xE0 jour et versionnage": curriculum/module-15-update-and-version.md
-                - "Module 16 : Projets de synth\xE8se": curriculum/module-16-capstone.md
+                - "Module 16 : Sp\xE9cification avanc\xE9e de questionnaires": curriculum/module-16-advanced-questionnaire-spec.md
+                - "Module 17 : Projets de synth\xE8se": curriculum/module-17-capstone.md
                 - "Guide de l’instructeur": curriculum/instructor-guide.md
                 - "Aide-m\xE9moire": curriculum/cheat-sheet.md
                 - "Corrig\xE9s": curriculum/answer-keys.md
             - Guides pratiques:
                 - Valider et analyser le contenu DDI: validation.md
+                - "R\xE9f\xE9rence des r\xE8gles lint": lint-rules.md
                 - Utiliser la ligne de commande: cli-recipes.md
                 - Automatiser la validation en CI: tutorials/automation-playbook.md
                 - "D\xE9panner les erreurs de sch\xE9ma": tutorials/schema-troubleshooting-clinic.md
                 - "R\xE9utiliser des fragments": tutorials/fragment-reuse-lab.md
                 - Travailler avec les exports Colectica: colectica.md
+                - Travailler avec d'autres outils: interoperability.md
+                - "V\xE9rifier un questionnaire par rapport \xE0 une sp\xE9cification": spec-conformance.md
                 - Charger du DDI depuis des tableurs: spreadsheet-import.md
                 - Modèles de tableurs: spreadsheet-templates.md
                 - Passer du XML aux objets: tutorials/xml-to-objects.md
@@ -342,6 +360,7 @@ hooks:
   - hooks/version_selector.py
   - hooks/quiet_i18n_logs.py
   - hooks/answer_keys.py
+  - hooks/lint_rules.py
 extra_css:
   - assets/stylesheets/palette.css
   - assets/stylesheets/accessibility.css
@@ -368,3 +387,7 @@ extra:
     high-contrast: High contrast
   outdated_message: "You're viewing documentation for an <strong>older version</strong>."
   outdated_link_label: View the latest version
+
+# A link to a heading that does not exist fails the strict build.
+validation:
+  anchors: warn

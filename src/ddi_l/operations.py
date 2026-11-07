@@ -8,15 +8,22 @@ Everything here takes bytes or plain Python objects and returns objects
 from __future__ import annotations
 
 import io
+import json
 import zipfile
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from typing import TYPE_CHECKING, Any
 
 from . import schema_loader
 from ._schema_versions import DEFAULT_SCHEMA_VERSION, SUPPORTED_SCHEMA_VERSIONS
 from .constants import get_namespace_set
 from .io import read, write
-from .lint import ProfileResult, run_lint, run_profile
+from .lint import (
+    LintConfiguration,
+    ProfileResult,
+    lint_configuration,
+    run_lint,
+    run_profile,
+)
 from .models.base import qn
 from .schema_loader._versions import detect_version_from_element
 from .validation import ValidationReport, validate_document, validate_fragment
@@ -42,10 +49,10 @@ __all__ = [
     "wrap_element",
 ]
 
-#: Output layouts :func:`roundtrip_source` writes.
+#: Output layouts `roundtrip_source` writes.
 LAYOUTS = ("default", "colectica")
 
-#: Formats :func:`tables_template` writes, with their media types.
+#: Formats `tables_template` writes, with their media types.
 TEMPLATE_FORMATS = {
     "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "zip": "application/zip",
@@ -59,7 +66,7 @@ def wrap_element(element: schema_loader.Element) -> DDIDocument | DDIFragment:
         element: Root XML element generated from JSON input.
 
     Returns:
-        :class:`DDIDocument` or :class:`DDIFragment` depending on the root tag.
+        `DDIDocument` or `DDIFragment` depending on the root tag.
 
     Raises:
         ValueError: When the element is not a valid DDI instance or fragment root.
@@ -146,7 +153,12 @@ def coerce_json_payload(payload: dict, *, version: str | None = None) -> dict:
 
 
 def validate_source(
-    data: bytes, *, version: str | None = None, lint: bool = True
+    data: bytes,
+    *,
+    version: str | None = None,
+    lint: bool = True,
+    max_issues: int | None = None,
+    lint_configuration: LintConfiguration | None = None,
 ) -> ValidationReport:
     """Validate a DDI document held in memory.
 
@@ -155,9 +167,12 @@ def validate_source(
         version: DDI schema version to validate against, or ``None`` for the
             version declared by the document.
         lint: Whether to include lint findings alongside schema issues.
+        max_issues: Schema errors to report at most; ``None`` reports them
+            all.
+        lint_configuration: The lint configuration for this call.
 
     Returns:
-        A :class:`~ddi_l.validation.ValidationReport`, whose ``to_dict()`` is
+        A `ValidationReport`, whose ``to_dict()`` is
         already the shape an API response wants.
     """
     from .document import DDIFragment
@@ -166,43 +181,92 @@ def validate_source(
     # A FragmentInstance has no instance-level Agency or Citation and may
     # reference items outside itself, so it is validated as a fragment.
     if isinstance(document, DDIFragment):
-        return validate_fragment(document, include_lint=lint, version=version)
-    return validate_document(document, include_lint=lint, version=version)
+        return validate_fragment(
+            document,
+            include_lint=lint,
+            version=version,
+            max_schema_issues=max_issues,
+            lint_configuration=lint_configuration,
+        )
+    return validate_document(
+        document,
+        include_lint=lint,
+        version=version,
+        max_schema_issues=max_issues,
+        lint_configuration=lint_configuration,
+    )
 
 
 def lint_source(
-    data: bytes, *, version: str | None = None, profile: str | None = None
+    data: bytes,
+    *,
+    version: str | None = None,
+    profile: str | None = None,
+    rules: Sequence[str] | None = None,
+    skip_rules: Collection[str] = (),
+    configuration: LintConfiguration | None = None,
 ) -> list[LintFinding] | ProfileResult:
-    """Lint a DDI document held in memory.
+    """Lint a DDI document held in memory, as `ddi lint` does.
+
+    A fragment is linted as a fragment.
 
     Args:
         data: The XML document as bytes.
         version: DDI schema version, or ``None`` to detect it.
-        profile: Named lint profile to run; ``None`` runs the default rule set.
+        profile: Named lint profile to run; ``None`` runs ``rules``.
+        rules: Rule identifiers to run when no profile is named; ``None``
+            runs the default rule set.
+        skip_rules: Rule identifiers whose findings are left out.
+        configuration: The lint configuration for this call, from
+            `parse_lint_configuration` or `ddi_l.lint.lint_configuration`.
 
     Returns:
-        A list of :class:`~ddi_l.lint.LintFinding` when no profile is named, or
-        a :class:`~ddi_l.lint.ProfileResult` when one is.
+        A list of `LintFinding` when no profile is named, or
+        a `ProfileResult` when one is.
     """
-    from .document import DDIFragment
-
     document = read(data, version=version)
-    if isinstance(document, DDIFragment):
-        # `run_lint` takes a DDIInstance. `validate_fragment` already knows how
-        # to wrap a fragment in the container the rules expect, so route through
-        # it rather than building a second one here.
-        report = validate_fragment(document, include_lint=True, lint_profile=profile)
-        if profile is not None:
-            # A profile request returns a ProfileResult for fragments too, so the
-            # response shape and the schema issues match those of an instance.
-            return ProfileResult(
-                schema_issues=report.schema_issues,
-                lint_findings=report.lint_findings,
-            )
-        return report.lint_findings
     if profile is not None:
-        return run_profile(document, profile)
-    return run_lint(document)
+        result = run_profile(
+            document, profile, version=version, configuration=configuration
+        )
+        return ProfileResult(
+            schema_issues=result.schema_issues,
+            lint_findings=_kept(result.lint_findings, skip_rules),
+        )
+    findings = run_lint(document, rules=rules, configuration=configuration)
+    return _kept(findings, skip_rules)
+
+
+def _kept(
+    findings: Sequence[LintFinding], skip_rules: Collection[str]
+) -> list[LintFinding]:
+    """``findings`` without those of the rules in ``skip_rules``."""
+    return [finding for finding in findings if finding.rule_id not in skip_rules]
+
+
+def parse_lint_configuration(text: str) -> LintConfiguration:
+    """Read a lint configuration from JSON text, as `ddi lint --lint-config`.
+
+    The text is an object whose keys are `ddi_l.lint.LintConfiguration`
+    fields; options it leaves out keep their defaults.
+
+    Raises:
+        ValueError: If the text is not a JSON object of known, valid options.
+    """
+    try:
+        options = json.loads(text)
+    except json.JSONDecodeError as error:
+        raise ValueError(f"The lint configuration is not JSON: {error}") from None
+    if not isinstance(options, dict):
+        raise ValueError("The lint configuration must be a JSON object.")
+    options = {
+        key: tuple(value) if isinstance(value, list) else value
+        for key, value in options.items()
+    }
+    try:
+        return lint_configuration(**options)
+    except TypeError as error:
+        raise ValueError(str(error)) from None
 
 
 def to_json_payload(data: bytes, *, version: str | None = None) -> dict[str, Any]:
@@ -214,14 +278,14 @@ def to_json_payload(data: bytes, *, version: str | None = None) -> dict[str, Any
 def to_jsonld_payload(data: bytes, *, version: str | None = None) -> dict[str, Any]:
     """Convert a DDI document to JSON-LD using the Disco vocabulary.
 
-    Unlike :func:`to_json_payload`, this is a *semantic* rendering rather than a
+    Unlike `to_json_payload`, this is a *semantic* rendering rather than a
     transcription of the XML tree: it maps studies, variables, questions and
     universes onto DDI-RDF Discovery terms so the result is linked data.
 
     That makes it deliberately lossy and one-way: Disco covers a discovery
     subset of DDI-L and its specification states the reverse transformation "is
-    not intended". Use :func:`to_json_payload` when the payload has to convert
-    back into XML. See :mod:`ddi_l.jsonld`.
+    not intended". Use `to_json_payload` when the payload has to convert
+    back into XML. See `ddi_l.jsonld`.
     """
     from .document import DDIFragment, Document
     from .jsonld import to_jsonld
@@ -244,7 +308,7 @@ def from_json_payload(payload: dict, *, version: str | None = None) -> bytes:
 
 
 def roundtrip_source(
-    data: bytes, *, version: str | None = None, layout: str = "default"
+    data: bytes, *, version: str | None = None, layout: str | None = None
 ) -> bytes:
     """Parse a document with the model layer and re-serialize it.
 
@@ -254,9 +318,10 @@ def roundtrip_source(
     Args:
         data: The XML document as bytes.
         version: DDI schema version, or ``None`` to detect it.
-        layout: ``"default"``, or ``"colectica"`` to write a
-            ``FragmentInstance`` the way Colectica Designer does, so an
-            unchanged export comes back byte for byte.
+        layout: Lay the whole document out: ``"colectica"`` writes a
+            ``FragmentInstance`` the way Colectica Designer does;
+            ``"default"`` is this library's layout. ``None`` (default)
+            writes the unchanged parts as they were sent, byte for byte.
 
     Raises:
         ValueError: ``layout`` is unknown, or is ``"colectica"`` for a
@@ -264,7 +329,7 @@ def roundtrip_source(
     """
     from .document import DDIFragment
 
-    if layout not in LAYOUTS:
+    if layout is not None and layout not in LAYOUTS:
         raise ValueError(
             f"Unknown layout {layout!r}; expected 'default' or 'colectica'."
         )

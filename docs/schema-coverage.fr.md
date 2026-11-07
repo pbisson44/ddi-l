@@ -39,7 +39,7 @@ trois choses différentes, alors le tableau les sépare en trois niveaux.
     éléments, attributs, texte et ordre. La suite de tests le vérifie pour
     chaque type sur des échantillons construits à partir du XSD, et octet pour
     octet sur de vrais exports Colectica (voir
-    [Travailler avec les exports Colectica](colectica.md)).
+    [Travailler avec les exports Colectica](colectica.fr.md)).
 
 ## Couverture par module
 
@@ -83,7 +83,7 @@ objet.
 `add_item()` / `items()` reconnaissent actuellement 30 types d'éléments, y
 compris l'ensemble complet du flux de questionnaire (`QuestionConstruct`,
 `Sequence`, `IfThenElse`, `StatementItem`, `ComputationItem`, `Loop` ; voir le
-[Module 10](curriculum/module-10-questionnaire-flows.md)), `PhysicalInstance`,
+[Module 10](curriculum/module-10-questionnaire-flows.fr.md)), `PhysicalInstance`,
 `RecordLayout`, `DataRelationship` et `NCube`. Une instance physique décrit un
 fichier de données ; une disposition d'enregistrements associe les variables
 à des positions dans ce fichier :

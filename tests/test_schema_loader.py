@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import xmlschema
 
 from ddi_l import schema_loader
 from ddi_l._schema_versions import (
@@ -14,6 +15,7 @@ from ddi_l._schema_versions import (
     iter_schema_versions,
 )
 from ddi_l.schema_loader import SchemaValidationError
+from tests import SAMPLES_DIR
 
 
 @pytest.fixture(scope="module")
@@ -47,11 +49,13 @@ def test_public_exports_are_explicit_and_public():
         "get_available_conversion_backends",
         "get_available_validation_backends",
         "get_schema",
+        "get_validation_backend",
         "qname_to_clark_notation",
         "set_conversion_backend",
         "set_validation_backend",
         "to_dict",
         "validate",
+        "validation_backend",
         "xmlschema",
     }
 
@@ -70,8 +74,6 @@ def test_schema_resource_available_and_uses_xmlschema_when_present(
     version: str,
 ) -> None:
     """XMLSchema backend loads packaged schema resources when available."""
-
-    xmlschema = pytest.importorskip("xmlschema")
 
     release = get_schema_release(version)
     resource = resources.files("ddi_l.schemas")
@@ -92,7 +94,7 @@ def test_schema_resource_available_and_uses_xmlschema_when_present(
 
 def test_validate_accepts_valid_instance(schema_fixtures: Path):
     """validate accepts valid instances from disk paths."""
-    valid_path = schema_fixtures / "minimal_instance.xml"
+    valid_path = SAMPLES_DIR / "minimal_instance.xml"
     schema_loader.validate(valid_path)
 
 
@@ -103,7 +105,7 @@ def test_validate_reports_unsupported_version_override(schema_fixtures: Path):
 
     with pytest.raises(SchemaValidationError) as excinfo:
         schema_loader.validate(
-            schema_fixtures / "minimal_instance.xml", version=unsupported_version
+            SAMPLES_DIR / "minimal_instance.xml", version=unsupported_version
         )
 
     issue = excinfo.value.issues[0]
@@ -120,7 +122,7 @@ def test_validate_returns_issue_when_suppressed_for_unsupported_version(
     unsupported_version = "0.9"
 
     issues = schema_loader.validate(
-        schema_fixtures / "minimal_instance.xml",
+        SAMPLES_DIR / "minimal_instance.xml",
         version=unsupported_version,
         raise_error=False,
     )
@@ -152,7 +154,7 @@ def test_validate_detects_version_from_namespace(
 
 def test_validate_rejects_invalid_instance(schema_fixtures: Path):
     """validate raises SchemaValidationError for invalid files."""
-    invalid_path = schema_fixtures / "invalid_instance_missing_id.xml"
+    invalid_path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     with pytest.raises(SchemaValidationError) as excinfo:
         schema_loader.validate(invalid_path)
     issue = excinfo.value.issues[0]
@@ -184,45 +186,15 @@ def test_validate_detects_version_for_invalid_documents(
         schema_loader.clear_schema_cache()
 
 
-def test_validate_rejects_invalid_instance_with_fallback(
-    schema_fixtures: Path, monkeypatch
-):
-    """Fallback schema also surfaces structured validation errors.
-
-    Args:
-        monkeypatch: Fixture patching xmlschema availability for fallback.
-    """
-    monkeypatch.setattr(schema_loader, "xmlschema", None)
-    schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-    try:
-        schema = schema_loader.get_schema()
-        assert isinstance(schema, schema_loader._FallbackSchema)
-
-        invalid_path = schema_fixtures / "invalid_instance_missing_id.xml"
-        with pytest.raises(SchemaValidationError) as excinfo:
-            schema_loader.validate(invalid_path)
-        issue = excinfo.value.issues[0]
-        assert issue.xpath.endswith("DDIInstance")  # type: ignore[union-attr]
-        assert "Missing required" in issue.message
-        payload = issue.to_dict()
-        assert payload["line"] == issue.line
-        assert payload["column"] == issue.column
-    finally:
-        schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-
 def test_validate_accepts_xml_string(schema_fixtures: Path):
     """validate accepts XML strings in addition to file paths."""
-    xml_string = (schema_fixtures / "minimal_instance.xml").read_text(encoding="utf-8")
+    xml_string = (SAMPLES_DIR / "minimal_instance.xml").read_text(encoding="utf-8")
     schema_loader.validate(xml_string)
 
 
 def test_validate_accepts_stream_input(schema_fixtures: Path):
     """validate accepts file-like streams while using xmlschema backend."""
-    xml_bytes = (schema_fixtures / "minimal_instance.xml").read_bytes()
-
-    xmlschema = pytest.importorskip("xmlschema")
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
 
     schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
     try:
@@ -233,33 +205,10 @@ def test_validate_accepts_stream_input(schema_fixtures: Path):
         schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
 
 
-def test_validate_accepts_stream_input_with_fallback(
-    schema_fixtures: Path, monkeypatch
-):
-    """Fallback schema validates stream inputs when xmlschema is unavailable.
-
-    Args:
-        monkeypatch: Fixture patching xmlschema availability for fallback.
-    """
-    monkeypatch.setattr(schema_loader, "xmlschema", None)
-    schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-    try:
-        schema = schema_loader.get_schema()
-        assert isinstance(schema, schema_loader._FallbackSchema)
-
-        xml_bytes = (schema_fixtures / "minimal_instance.xml").read_bytes()
-        schema_loader.validate(io.BytesIO(xml_bytes))
-    finally:
-        schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-
 def test_validate_reports_coordinates_with_xmlschema(
     schema_fixtures: Path, monkeypatch
 ):
     """xmlschema-backed validation attaches location metadata when provided."""
-
-    xmlschema = pytest.importorskip("xmlschema")
 
     schema_loader.clear_schema_cache()
     try:
@@ -308,7 +257,10 @@ def test_validate_reports_coordinates_with_xmlschema(
             "ddi_l.schema_loader._libxml2.is_valid", lambda *_a, **_k: False
         )
         with pytest.raises(SchemaValidationError) as excinfo:
-            schema_loader.validate(schema_fixtures / "minimal_instance.xml")
+            # The xmlschema path: a native or libxml2 check never asks it.
+            schema_loader.validate(
+                SAMPLES_DIR / "minimal_instance.xml", backend="python"
+            )
 
         issue = excinfo.value.issues[0]
         assert issue.line == 42
@@ -318,93 +270,6 @@ def test_validate_reports_coordinates_with_xmlschema(
         assert payload["column"] == 7
     finally:
         schema_loader.clear_schema_cache()
-
-
-def test_validate_reports_coordinates_with_fallback(schema_fixtures: Path, monkeypatch):
-    """Fallback schema propagates coordinates from validation errors."""
-
-    monkeypatch.setattr(schema_loader, "xmlschema", None)
-    schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-    try:
-        schema = schema_loader.get_schema()
-        assert isinstance(schema, schema_loader._FallbackSchema)
-
-        class DummyValidationError(Exception):
-            def __init__(
-                self,
-                message: str,
-                elem=None,
-                xpath: str | None = None,
-                *,
-                line: int | None = None,
-                column: int | None = None,
-            ) -> None:
-                super().__init__(message)
-                self.reason = message
-                self.elem = elem
-                self.obj = elem
-                self.path = xpath
-                self.line = line
-                self.column = column
-                if line is not None and column is not None:
-                    self.position = (line, column)
-
-        def fake_validate(node):
-            raise DummyValidationError(
-                "boom", elem=node, xpath="/Fake", line=21, column=3
-            )
-
-        monkeypatch.setattr(
-            schema_loader, "XMLSchemaValidationError", DummyValidationError
-        )
-        monkeypatch.setattr(schema, "validate", fake_validate)
-
-        # The document is valid, so the libxml2 fast path would accept it
-        # before the patched full validator runs; this test is about the
-        # latter. (Without this it passed only after a test that switched the
-        # validation backend.)
-        monkeypatch.setattr(
-            "ddi_l.schema_loader._libxml2.is_valid", lambda *_a, **_k: False
-        )
-        with pytest.raises(SchemaValidationError) as excinfo:
-            schema_loader.validate(schema_fixtures / "minimal_instance.xml")
-
-        issue = excinfo.value.issues[0]
-        assert issue.line == 21
-        assert issue.column == 3
-        payload = issue.to_dict()
-        assert payload["line"] == 21
-        assert payload["column"] == 3
-    finally:
-        schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-
-def test_validate_returns_structured_issue_without_raising(
-    schema_fixtures: Path, monkeypatch
-):
-    """validate returns structured issues when raise_error=False.
-
-    Args:
-        monkeypatch: Fixture patching xmlschema availability for fallback.
-    """
-    monkeypatch.setattr(schema_loader, "xmlschema", None)
-    schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-    try:
-        schema = schema_loader.get_schema()
-        assert isinstance(schema, schema_loader._FallbackSchema)
-
-        invalid_path = schema_fixtures / "invalid_instance_missing_id.xml"
-        issues = schema_loader.validate(invalid_path, raise_error=False)
-        assert issues, "Expected validation issues"
-        issue = issues[0]
-        assert "Missing required identification" in issue.message
-        assert issue.xpath.endswith("DDIInstance")  # type: ignore[union-attr]
-        assert issue.context and "DDIInstance" in issue.context
-        assert issue.severity == "error"
-    finally:
-        schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
 
 
 def test_validate_returns_structured_issue_with_xmlschema(monkeypatch):
@@ -465,7 +330,7 @@ def test_validate_returns_structured_issue_with_xmlschema(monkeypatch):
     monkeypatch.setattr(schema_loader, "XMLSchemaValidationError", FakeXMLSchemaError)
     monkeypatch.setattr(schema_loader, "get_schema", _SchemaFactory(FakeSchema()))
 
-    issues = schema_loader.validate(fake_root, raise_error=False)
+    issues = schema_loader.validate(fake_root, raise_error=False, backend="python")
     assert issues
     issue = issues[0]
     assert issue.message == "Fake xmlschema validation error"
@@ -506,19 +371,6 @@ def test_fallback_validation_surfaces_reference_warnings(monkeypatch):
         assert any("TypeOfObject" in message for message in warning_messages)
     finally:
         schema_loader.get_schema.cache_clear()  # type: ignore[attr-defined]
-
-
-def test_fallback_schema_to_dict_preserves_attributes():
-    """Fallback schema to_dict retains XML attributes like xml:lang."""
-    schema = schema_loader._FallbackSchema(
-        Path("."), version=schema_loader.SCHEMA_VERSION
-    )
-    element = schema_loader.fromstring("<Value xml:lang='en'>Hello</Value>")
-
-    result = schema.to_dict(element)
-
-    assert result["@{http://www.w3.org/XML/1998/namespace}lang"] == "en"
-    assert result["#text"] == "Hello"
 
 
 def test_to_dict_recovers_from_empty_xmlschema_payload(monkeypatch):
@@ -714,3 +566,69 @@ def test_to_dict_logs_xmlschema_validation_errors(monkeypatch, caplog):
     assert any(
         "xmlschema returned validation errors" in message for message in caplog.messages
     ), "Expected xmlschema validation error log entry"
+
+
+def test_missing_packaged_schema_raises(monkeypatch):
+    # A broken install must fail loudly, not validate against a near-empty
+    # stand-in schema.
+    from ddi_l.schema_loader import _cache
+
+    missing = resources.files("ddi_l") / "no-such-schema.xsd"
+    monkeypatch.setattr(_cache, "_schema_resource", lambda version: missing)
+    schema_loader.clear_schema_cache()
+    try:
+        with pytest.raises(FileNotFoundError, match="schema"):
+            schema_loader.get_schema(schema_loader.SCHEMA_VERSION)
+    finally:
+        schema_loader.clear_schema_cache()
+
+
+def test_unreadable_schema_raises(monkeypatch):
+    import xmlschema
+
+    def _refuse(path):
+        raise OSError("cannot read the schema")
+
+    monkeypatch.setattr(xmlschema, "XMLSchema", _refuse)
+    schema_loader.clear_schema_cache()
+    try:
+        with pytest.raises(OSError, match="cannot read the schema"):
+            schema_loader.get_schema(schema_loader.SCHEMA_VERSION)
+    finally:
+        schema_loader.clear_schema_cache()
+
+
+def _two_schema_errors() -> bytes:
+    """The minimal instance with a stray element in two places."""
+    xml = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
+    return xml.replace(b"</r:Title>", b"<r:Bogus/></r:Title>").replace(
+        b"</r:Citation>", b"</r:Citation><r:Bogus/>"
+    )
+
+
+def test_validate_reports_every_schema_error():
+    issues = schema_loader.validate(_two_schema_errors(), raise_error=False)
+
+    assert [issue.severity for issue in issues] == ["error", "error"]
+    assert all("Bogus" in issue.message for issue in issues)
+
+    with pytest.raises(SchemaValidationError) as raised:
+        schema_loader.validate(_two_schema_errors())
+    assert len(raised.value.issues) == 2
+
+
+def test_validate_stops_at_max_issues():
+    issues = schema_loader.validate(
+        _two_schema_errors(), raise_error=False, max_issues=1
+    )
+
+    assert [issue.severity for issue in issues] == ["error", "warning"]
+    assert issues[1].message == (
+        "Schema validation stopped after 1 error; there may be more."
+    )
+
+
+@pytest.mark.parametrize("max_issues", [0, -1])
+def test_validate_refuses_a_cap_below_one(max_issues):
+    with pytest.raises(ValueError, match="max_issues"):
+        schema_loader.validate(_two_schema_errors(), max_issues=max_issues)

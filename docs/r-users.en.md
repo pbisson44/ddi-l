@@ -13,7 +13,7 @@ both directions, so there is no separate R package to install and every
 feature of `ddi-l` is available.
 
 This page shows the R equivalents of the common tasks. The Python
-[User guide](user-guide.md) covers each feature in more depth; the calls are
+[User guide](user-guide.en.md) covers each feature in more depth; the calls are
 the same, with `$` in place of `.`.
 
 ## Setup
@@ -156,7 +156,7 @@ py_last_error()$type
 # -> "DDIParseError"
 ```
 
-See [Validation](validation.md) for the full list of exception types.
+See [Validation](validation.en.md) for the full list of exception types.
 
 ## JSON and linked data
 

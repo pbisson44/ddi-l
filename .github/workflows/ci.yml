@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 env:
-  UV_VERSION: "0.9.7"
+  UV_VERSION: "0.13.7"
 
 jobs:
   tests:
@@ -22,7 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        # On PRs, the oldest and newest Python; pushes to main test all five.
+        python-version: ${{ fromJSON(github.event_name == 'pull_request' && '["3.11", "3.15"]' || '["3.11", "3.12", "3.13", "3.14", "3.15"]') }}
         backend:
           - stdlib
           - lxml
@@ -55,23 +56,75 @@ jobs:
           assert hasattr(etree, "LXML_VERSION"), f"not the real lxml.etree: {etree!r}"
           print("real lxml:", lxml.__file__, etree.LXML_VERSION)
           PY
-      - name: Scan dependencies for vulnerabilities
-        # Audit the locked dependency set; `--no-emit-project` leaves out
-        # ddi-l itself.
-        run: |
-          uv export --frozen --no-emit-project --all-extras --group dev --group docs \
-            --format requirements-txt > /tmp/requirements-audit.txt
-          uv run --with pip-audit pip-audit --strict -r /tmp/requirements-audit.txt
-      - name: Check formatting
-        run: uv run ruff format --check .
-      - name: Run Ruff
-        run: uv run ruff check .
       # mypy runs once, in the `types` job.
       - name: Run pytest
         # Documented samples run in their own job (they need the server extra).
         run: uv run pytest -m "not docs"
       - name: Assert the test run left the tree clean
         run: git diff --exit-code
+
+  native:
+    # The native core, built from native/: the Rust checks, then the whole
+    # suite on the native backend (lxml installed too, to check it comes first).
+    name: Native core (Rust)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Check formatting and lints
+        working-directory: native
+        run: |
+          cargo fmt --check
+          cargo clippy --all-targets -- -D warnings
+      - name: Install dependencies
+        # uv.lock installs ddi-l-native's pure-Python stand-in; the real core
+        # is built over it, and `--no-sync` below keeps it there.
+        run: |
+          uv sync --locked --group dev --extra full
+          uv pip install --reinstall-package ddi-l-native ./native
+      - name: Run pytest on the native backend
+        env:
+          DDI_L_XML_BACKEND: native
+        run: uv run --no-sync pytest -m "not docs" --no-cov
+      - name: Assert the test run left the tree clean
+        run: git diff --exit-code
+
+  lint:
+    name: Lint and audit
+    runs-on: ubuntu-latest
+    # Once, not on every leg of the test matrix: the results do not depend on
+    # the Python version or the XML backend.
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Set up Python
+        run: uv python install 3.12
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+      - name: Check formatting
+        run: uv run ruff format --check .
+      - name: Run Ruff
+        run: uv run ruff check .
+      - name: Scan dependencies for vulnerabilities
+        # Audit the locked dependency set; `--no-emit-project` leaves out
+        # ddi-l itself.
+        run: |
+          uv export --frozen --no-emit-project --no-emit-package ddi-l-native \
+            --all-extras --group dev --group docs \
+            --format requirements-txt > /tmp/requirements-audit.txt
+          uv run --with pip-audit pip-audit --strict -r /tmp/requirements-audit.txt
 
   types:
     name: Type check
@@ -89,6 +142,8 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
       - name: Install dependencies
+        # ddi-l-native is its stand-in here: the compiled module is typed by
+        # _etree.pyi.
         run: uv sync --locked --group dev --all-extras
       - name: Run mypy
         run: uv run mypy src tests

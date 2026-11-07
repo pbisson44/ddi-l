@@ -35,8 +35,8 @@ Cet atelier prolonge le script de reconstruction de fragments dans ``ddi_l.examp
     ```
 
     Le script réécrit les deux fichiers et confirme que les deux charges utiles
-    sont valides. Sans ``--output`` ni ``--fragment-output``, il écrit dans le
-    paquet installé.
+    sont valides. Sans ``--output`` ni ``--fragment-output``, il écrit les deux
+    fichiers dans le dossier courant.
 2. Inspectez les sorties XML régénérées de l'instance et du fragment pour voir
    comment les maintainables sont empaquetés et comment les messages de
    validation décrivent la reconstruction.

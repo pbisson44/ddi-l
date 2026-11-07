@@ -43,6 +43,24 @@ else:
     print("Document is valid!")
 ```
 
+### How schema validation runs
+
+Every error is reported, with the same message and path whichever way it
+runs. `schema_loader.validate(..., backend=...)` picks the way for one call;
+the best available is the default:
+
+- **`native`**, on the [native backend](installation.en.md#xml-backends): one
+  pass over the document checks it against a compiled form of the schema.
+  A valid document is done; xmlschema is not even loaded. For each element
+  that may be wrong, xmlschema checks that element alone and words its
+  errors, which also carry the line the element starts on. On a 9 MB
+  export: 0.09 s when it is valid, 0.13 s with an error (2.6 s on the first
+  call, which loads xmlschema).
+- **`lxml`**, with lxml installed: libxml2 confirms a valid document quickly;
+  if it finds a problem, xmlschema validates the whole document again to
+  report it (6.5 s with one error on the same export).
+- **`python`**: xmlschema validates the whole document.
+
 ## High-level validation
 
 The `ddi_l.validation` module provides `validate_document()` for combined
@@ -91,6 +109,33 @@ for f in findings:
     print(f"[{f.severity}] {f.message}")
 ```
 
+Without `rules=`, `run_lint()` runs the default profile, `DDI_PROFILE_DEFAULT`.
+`run_profile(doc, name)` runs a named profile instead; `ddi lint
+--list-profiles` lists them.
+
+| Rule | Severity | Reports |
+| --- | --- | --- |
+| `ddi.agency.allowed` | error | A missing agency, or one outside the configured allow-list |
+| `ddi.citation.present` | error | A `DDIInstance` without a citation |
+| `ddi.citation.title.present` | error | A citation without a title |
+| `ddi.citation.title.languages` | warning | A citation title missing a required language |
+| `ddi.maintainable.labels` | warning | An item without an `r:Label` |
+| `ddi.reference.integrity` | error (warning in a fragment) | A reference whose item is not in the file |
+| `ddi.reference.version` | warning | A reference whose item is in the file, but not at the version named |
+| `ddi.reference.provenance-external` | info | A `BasedOn` or user-attribute reference to an item outside the file |
+| `colectica.maintainable.labels` | warning | An item with no label or name with text (`colectica-questionnaire` profile only) |
+
+Every finding has one of three severities: `error`, `warning` or `info`.
+`info` reports something worth knowing that is not a defect, and never fails
+`ddi lint` unless you pass `--fail-severity info`. A rule that yields any
+other severity raises `ValueError`.
+
+A rule you add with `register_rule()` joins the default profile unless you
+pass `default=False`, for a rule meant only for a named profile. The
+`colectica-questionnaire` profile is for Colectica exports; see
+[Work with Colectica exports](colectica.en.md#lint-an-export). The
+[lint rule reference](lint-rules.en.md) lists every rule.
+
 ## CLI validation
 
 From the command line:
@@ -98,8 +143,13 @@ From the command line:
 ```bash
 ddi validate my-study.xml              # Schema validation
 ddi lint my-study.xml                  # Lint checks
+ddi lint export.xml --profile colectica-questionnaire
+ddi lint my-study.xml --fail-severity warning   # Fail on warnings too
 ddi validate *.xml                     # Validate multiple files
 ```
+
+`ddi lint` exits non-zero when a finding reaches `--fail-severity`: `error`
+(the default), `warning` or `info`.
 
 The output is JSON with `message`, `xpath`, and `context` fields for each
 issue found.

@@ -36,6 +36,8 @@ from typing import (
 )
 
 from .._etree import Element, create_element
+from .._whitespace import without_indentation as _without_indentation
+from .._whitespace import xhtml_text
 from ..constants import REUSABLE_NS, XML_NS
 from ..exceptions import DDIParseError, ModelValidationError
 from ..namespaces import canonicalize_prefixes
@@ -95,18 +97,6 @@ def _is_reusable(element: Element, local_name: str) -> bool:
         and tag.startswith("{ddi:reusable:")
         and tag.rsplit("}", 1)[1] == local_name
     )
-
-
-def _reusable_children(container: Element, local_name: str) -> list[Element]:
-    """Return ``container``'s ``r:<local_name>`` children in any DDI 3.x version."""
-    matches = []
-    for child in container:
-        tag = child.tag
-        if not isinstance(tag, str) or not tag.startswith("{ddi:reusable:"):
-            continue
-        if tag.rsplit("}", 1)[1] == local_name:
-            matches.append(child)
-    return matches
 
 
 def _collect_scheme_labels(element: Element) -> dict[str, list[InternationalString]]:
@@ -306,8 +296,8 @@ def collect_other_attributes(element: Element) -> dict[str, str]:
     """Capture an element's attributes for round-trip preservation.
 
     Value-type wrappers (which are not ``MaintainableBase`` subclasses) call
-    this in ``from_xml`` and pair it with :func:`apply_other_attributes` in
-    ``to_xml``. Every attribute is captured; :func:`apply_other_attributes`
+    this in ``from_xml`` and pair it with `apply_other_attributes` in
+    ``to_xml``. Every attribute is captured; `apply_other_attributes`
     re-applies only those the wrapper did not already emit, so mapped
     attributes are never duplicated or clobbered.
     """
@@ -414,12 +404,21 @@ def _emit_field_value(
     ns = xml_tag[1 : xml_tag.index("}")] if xml_tag.startswith("{") else None
 
     if kind == "intl_string" and not is_typed:
-        append_intl_strings(parent, xml_tag, cast("list[InternationalString]", items))
+        # Every "intl_string" field is an ``...Name`` element whose type derives
+        # from r:InternationalStringType, which holds r:String and nothing else.
+        # A string built in code defaults to r:Content, which is right for
+        # r:Label and r:Description (written elsewhere), so the tag is forced.
+        append_intl_strings(
+            parent,
+            xml_tag,
+            cast("list[InternationalString]", items),
+            child_tag="String",
+        )
         return
 
     for item in items:  # type: ignore[attr-defined]
         if is_typed:
-            parent.append(item.to_xml())
+            parent.append(_emit_typed_or_raw(item))
         elif kind == "reference":
             parent.append(item.to_xml(local_name, namespace=ns))
         elif kind == "code_value":
@@ -441,7 +440,9 @@ def _emit_field_value(
                 el.text = item
                 parent.append(el)
             else:
-                parent.append(clone_element(item))
+                # A typed value (an InParameter in ``in_parameters``) is
+                # accepted beside raw elements.
+                parent.append(_emit_typed_or_raw(item))
 
 
 def _convert_text(text: str | None, kind: str) -> object:
@@ -511,7 +512,7 @@ def identification_attributes(element: Element) -> dict[str, dict[str, str]]:
 
     ``typeOfIdentifier`` on a URN is the usual one. Value wrappers that rebuild
     their identification from text pair this with
-    :func:`restore_identification_attributes`.
+    `restore_identification_attributes`.
     """
     found: dict[str, dict[str, str]] = {}
     for local in ("URN", "Agency", "ID", "Version"):
@@ -524,7 +525,7 @@ def identification_attributes(element: Element) -> dict[str, dict[str, str]]:
 def restore_identification_attributes(
     element: Element, attributes: dict[str, dict[str, str]]
 ) -> None:
-    """Put back attributes captured by :func:`identification_attributes`."""
+    """Put back attributes captured by `identification_attributes`."""
     for tag, values in attributes.items():
         child = element.find(tag)
         if child is not None:
@@ -568,6 +569,10 @@ def build_identification_elements(
 class InternationalString:
     """Multi-language text content for DDI elements.
 
+    A string read with XHTML markup (an ``r:Content`` is mixed content) holds
+    its whole text, with blocks (``<p>``, ``<li>``...) apart, and is written
+    back as read until a field changes.
+
     Attributes:
         text: The string content.
         lang: ISO 639 language code (e.g., "en", "fr").
@@ -597,6 +602,10 @@ class InternationalString:
     _container_extras: list[tuple[int, Element]] = field(
         default_factory=list, repr=False, compare=False
     )
+    # A string read with markup (XHTML in an r:Content) is written back as
+    # read while its public fields are as read: ``text`` holds only its text.
+    _source: Element | None = field(default=None, repr=False, compare=False)
+    _source_state: object = field(default=None, repr=False, compare=False)
 
     def __repr__(self) -> str:
         if self.lang is None:
@@ -613,13 +622,13 @@ class InternationalString:
             results.append(cls._from_node(container, container.text.strip(), "Content"))
 
         # Any DDI release's reusable namespace: 3.1 and 3.2 documents are read
-        # too, as _reusable_children matches them.
+        # too, as _is_reusable matches them.
         extras: list[tuple[int, Element]] = []
         for index, child in enumerate(container):
             if _is_reusable(child, "Content"):
-                results.append(cls._from_node(child, child.text or "", "Content"))
+                results.append(cls._from_string_element(child, "Content"))
             elif _is_reusable(child, "String"):
-                results.append(cls._from_node(child, child.text or "", "String"))
+                results.append(cls._from_string_element(child, "String"))
             elif isinstance(child.tag, str):
                 extras.append((index, clone_element(child)))
 
@@ -631,9 +640,36 @@ class InternationalString:
             results[0]._container_extras = extras
         return results
 
+    @classmethod
+    def _from_string_element(
+        cls, child: Element, child_tag: str
+    ) -> InternationalString:
+        """Read an ``r:Content`` or ``r:String``, markup and all."""
+        if not any(isinstance(node.tag, str) for node in child):
+            return cls._from_node(child, child.text or "", child_tag)
+        source = _without_indentation(clone_element(child))
+        source.tail = None
+        string = cls._from_node(child, xhtml_text(source), child_tag)
+        string._source = source
+        string._source_state = _value_state(string)
+        return string
+
     def to_child(self, child_tag: str | None = None) -> Element:
-        """Create a child element containing this text."""
+        """Create a child element containing this text.
+
+        A string read with markup is written as read while unchanged and
+        asked for under the tag it was read with.
+        """
         tag = child_tag or self.child_tag
+        source = self._source
+        if (
+            source is not None
+            and source.tag.rsplit("}", 1)[-1] == tag
+            and _value_state(self) == self._source_state
+        ):
+            element = clone_element(source)
+            element.tag = qn(REUSABLE_NS, tag)
+            return element
         element = create_element(qn(REUSABLE_NS, tag))
         element.text = self.text
 
@@ -720,13 +756,19 @@ def next_intl_group() -> int:
 
 
 def _joins_group(group: list[InternationalString], item: InternationalString) -> bool:
-    """Whether ``item`` belongs in the same container as ``group``."""
+    """Whether ``item`` belongs in the same container as ``group``.
+
+    Strings read from a file keep the containers they were read in. A string
+    built in code joins the container before it when that container has no
+    string in its language yet, whether the container was built in code or
+    read: an ``fr`` name added to a name read in ``en`` makes one bilingual
+    name, as DDI intends and Colectica writes, while a second ``en`` string
+    starts a new container. Every container written this way (``r:Label``,
+    every ``...Name``) repeats its string child, so either is valid.
+    """
     first = group[0]
-    if item._group is not None or first._group is not None:
+    if item._group is not None:
         return item._group == first._group
-    # Built in code: one container per language set, so ``en`` and ``fr``
-    # versions of a label share an ``r:Label`` (as DDI intends and Colectica
-    # writes), while a second ``en`` string starts a new one.
     return item.lang is not None and all(
         other.lang is not None and other.lang != item.lang for other in group
     )
@@ -1415,19 +1457,6 @@ def _value_state(value: object) -> object:
     return value
 
 
-def _without_indentation(element: Element) -> Element:
-    """Drop whitespace-only text around child elements (pretty-printing).
-
-    Text of a leaf is content and is kept, even when it is only spaces.
-    """
-    for node in element.iter():
-        if len(node) and node.text is not None and not node.text.strip():
-            node.text = None
-        if node is not element and node.tail is not None and not node.tail.strip():
-            node.tail = None
-    return element
-
-
 WrapperT = TypeVar("WrapperT", bound=type)
 
 
@@ -1508,6 +1537,11 @@ class MaintainableInitData(TypedDict, total=False):
 # ============================================================================
 
 T = TypeVar("T", bound="MaintainableBase")
+
+
+# ``responsibility=`` left out: use the configured default. Distinct from an
+# explicit ``None``, which records no responsibility whatever is configured.
+_DEFAULT_RESPONSIBILITY: Any = object()
 
 
 @dataclass
@@ -1902,7 +1936,7 @@ class MaintainableBase:
     ) -> list[ReferenceWarning]:
         """Check that Reference fields point to objects in *context*.
 
-        Inspects all dataclass fields holding :class:`Reference` values
+        Inspects all dataclass fields holding `Reference` values
         (including lists of references).  Subclasses may override to add
         domain-specific checks.
 
@@ -1952,15 +1986,15 @@ class MaintainableBase:
     ) -> list[ReferenceWarning]:
         """Recursively validate references across the entire object tree.
 
-        Builds a :class:`ValidationContext` from this object (unless one is
-        supplied), then walks every :class:`MaintainableBase` descendant and
+        Builds a `ValidationContext` from this object (unless one is
+        supplied), then walks every `MaintainableBase` descendant and
         collects reference warnings.
 
         Args:
             context: Pre-built context, or ``None`` to auto-build one.
 
         Returns:
-            Aggregated list of :class:`ReferenceWarning` from all descendants.
+            Aggregated list of `ReferenceWarning` from all descendants.
         """
         import dataclasses as _dc
 
@@ -2073,8 +2107,33 @@ class MaintainableBase:
         else:
             self.other_attributes["versionDate"] = value
 
-    def _increment_version_component(self, component_index: int) -> None:
-        """Increment a specific version component."""
+    def _increment_version_component(
+        self,
+        component_index: int,
+        *,
+        touch: bool = True,
+        responsibility: str | None = _DEFAULT_RESPONSIBILITY,
+        allow_dotted: bool = False,
+    ) -> None:
+        """Increment a specific version component.
+
+        Args:
+            component_index: 0 for major, 1 for minor, 2 for the subversion.
+            touch: Refresh ``versionDate`` to now (Colectica's format), when
+                the item has one. An item without one is left without.
+            responsibility: Recorded as ``r:VersionResponsibility``; by
+                default the one set with `ddi_l.configure`, if any.
+                ``None`` records none, whatever is configured.
+            allow_dotted: Allow a minor or subversion increment on an item
+                whose version is a single integer, which adds a component
+                (``"6"`` becomes ``"6.1"``).
+
+        Raises:
+            ModelValidationError: If the item has no version, or a component
+                is not numeric.
+            DDIModelError: If a minor or subversion increment would add a
+                component to an integer version and ``allow_dotted`` is false.
+        """
         if not self.version:
             raise ModelValidationError(
                 f"{type(self).__name__} does not have a version set.",
@@ -2091,6 +2150,19 @@ class MaintainableBase:
                 )
             int_segments.append(int(raw))
 
+        # An item keeps the versioning scheme it has. Some tools (Colectica,
+        # for one) number versions with integers; turning "6" into "6.1"
+        # writes a version they cannot read back.
+        if component_index > 0 and len(int_segments) == 1 and not allow_dotted:
+            from ..exceptions import DDIModelError
+
+            raise DDIModelError(
+                f"{type(self).__name__} {self.identifier or ''} uses integer "
+                f"versions ({self.version!r}); a minor or subversion increment "
+                "would make it dotted. Use increment_major_version(), or pass "
+                "allow_dotted=True."
+            )
+
         while len(int_segments) <= component_index:
             int_segments.append(0)
 
@@ -2106,17 +2178,82 @@ class MaintainableBase:
         if self.urn and self.urn.endswith(f":{old_version}"):
             self.urn = f"{self.urn[: -len(old_version)]}{self.version}"
 
-    def increment_major_version(self) -> None:
-        """Increment the major (first) version component."""
-        self._increment_version_component(0)
+        if touch and self.version_date is not None:
+            from ..colectica import colectica_timestamp
 
-    def increment_minor_version(self) -> None:
-        """Increment the minor (second) version component."""
-        self._increment_version_component(1)
+            self.version_date = colectica_timestamp()
+        if responsibility is _DEFAULT_RESPONSIBILITY:
+            from ..config import get_configuration
 
-    def increment_subversion(self) -> None:
-        """Increment the patch (third) version component."""
-        self._increment_version_component(2)
+            responsibility = get_configuration().version_responsibility
+        if isinstance(responsibility, str):
+            self.version_responsibility = responsibility
+
+    def increment_major_version(
+        self,
+        *,
+        touch: bool = True,
+        responsibility: str | None = _DEFAULT_RESPONSIBILITY,
+    ) -> None:
+        """Increment the major (first) version component.
+
+        Args:
+            touch: Refresh ``versionDate`` to now, when the item has one.
+            responsibility: Recorded as ``r:VersionResponsibility``; by
+                default the one set with `ddi_l.configure`, if any.
+                ``None`` records none, whatever is configured.
+        """
+        self._increment_version_component(0, touch=touch, responsibility=responsibility)
+
+    def increment_minor_version(
+        self,
+        *,
+        touch: bool = True,
+        responsibility: str | None = _DEFAULT_RESPONSIBILITY,
+        allow_dotted: bool = False,
+    ) -> None:
+        """Increment the minor (second) version component.
+
+        Args:
+            touch: Refresh ``versionDate`` to now, when the item has one.
+            responsibility: Recorded as ``r:VersionResponsibility``; by
+                default the one set with `ddi_l.configure`, if any.
+                ``None`` records none, whatever is configured.
+            allow_dotted: Allow turning an integer version (``"6"``) into a
+                dotted one (``"6.1"``).
+
+        Raises:
+            DDIModelError: If the version is a single integer and
+                ``allow_dotted`` is false.
+        """
+        self._increment_version_component(
+            1, touch=touch, responsibility=responsibility, allow_dotted=allow_dotted
+        )
+
+    def increment_subversion(
+        self,
+        *,
+        touch: bool = True,
+        responsibility: str | None = _DEFAULT_RESPONSIBILITY,
+        allow_dotted: bool = False,
+    ) -> None:
+        """Increment the patch (third) version component.
+
+        Args:
+            touch: Refresh ``versionDate`` to now, when the item has one.
+            responsibility: Recorded as ``r:VersionResponsibility``; by
+                default the one set with `ddi_l.configure`, if any.
+                ``None`` records none, whatever is configured.
+            allow_dotted: Allow turning an integer version (``"6"``) into a
+                dotted one (``"6.0.1"``).
+
+        Raises:
+            DDIModelError: If the version is a single integer and
+                ``allow_dotted`` is false.
+        """
+        self._increment_version_component(
+            2, touch=touch, responsibility=responsibility, allow_dotted=allow_dotted
+        )
 
     # ========== Child Identification Propagation ==========
 
@@ -2223,7 +2360,7 @@ class MaintainableBase:
 
         Scheme wrappers (``ConceptScheme``, ``QuestionScheme``,
         ``CategoryScheme`` and so on) are created when the containing model is
-        serialized; :meth:`set_scheme_label` is how they get a label. Nothing is
+        serialized; `set_scheme_label` is how they get a label. Nothing is
         emitted for a scheme the schema gives no ``r:Label`` slot.
         """
         if not self.scheme_labels:
@@ -2836,7 +2973,7 @@ class MaintainableBase:
     ) -> None:
         """Set a custom property on this item.
 
-        If ``value`` is a :class:`MaintainableBase` or :class:`Reference`,
+        If ``value`` is a `MaintainableBase` or `Reference`,
         the stored value is its URN (useful for linking to a code list or
         other controlled vocabulary).
 
@@ -2878,7 +3015,7 @@ class MaintainableBase:
         """Convert this maintainable to a nested mapping via XML.
 
         The returned dict is keyed by the Clark-notation tag of this object
-        so that :meth:`from_dict` can reconstruct it unambiguously.
+        so that `from_dict` can reconstruct it unambiguously.
 
         Returns:
             dict: Mapping suitable for JSON serialisation.
@@ -2894,7 +3031,7 @@ class MaintainableBase:
         """Create an instance from its mapping representation.
 
         Args:
-            data: Mapping previously produced by :meth:`to_dict`.  May be
+            data: Mapping previously produced by `to_dict`.  May be
                 a tag-wrapped ``{TAG: {...}}`` dict or a flat inner dict.
 
         Returns:
@@ -3033,7 +3170,6 @@ class MaintainableBase:
 
     # Live views of MaintainableRegistry for code that inspects the class.
     _TAG_REGISTRY: ClassVar[dict] = MaintainableRegistry._tag_to_class
-    _REGISTERED_TYPES: ClassVar[list] = MaintainableRegistry._registered_types
 
 
 def _element_repr(el: Element) -> str:
@@ -3059,7 +3195,7 @@ class ReferenceWarning:
         source_type: Class name of the object containing the reference.
         source_identifier: Identifier of that object.
         field_name: The Python field holding the reference.
-        reference: The unresolved :class:`Reference`.
+        reference: The unresolved `Reference`.
         message: Human-readable description.
     """
 
@@ -3074,7 +3210,7 @@ class ValidationContext:
     """Registry of known objects used to validate references at serialization time.
 
     Build a context from a top-level maintainable (e.g. ``StudyUnit``)
-    and pass it to :meth:`MaintainableBase.validate_references` to
+    and pass it to `MaintainableBase.validate_references` to
     check that all ``Reference`` fields point to objects that exist
     within the document.
 
@@ -3148,7 +3284,7 @@ class ValidationContext:
     def from_maintainable(cls, root: MaintainableBase) -> ValidationContext:
         """Build a context by recursively walking *root*.
 
-        Registers every :class:`MaintainableBase` descendant.
+        Registers every `MaintainableBase` descendant.
         """
         ctx = cls()
         cls._walk(root, ctx)

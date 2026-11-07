@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import sys
 from collections.abc import Callable, Collection, Iterator, Mapping, Sequence
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from typing import (
     Any,
@@ -14,7 +15,7 @@ from .._etree import Element
 from .._schema_versions import SUPPORTED_SCHEMA_VERSIONS
 from ..constants import get_namespace_set
 from ..exceptions import DDIValidationError
-from . import _libxml2
+from . import _libxml2, _native_validation
 from ._conversion import _coerce_element
 from ._namespaces import (
     _build_xpath_from_tree as _build_xpath_from_tree_python,
@@ -34,10 +35,8 @@ from ._preflight import (
 )
 from ._versions import detect_version_from_element, normalize_version
 
-_GATHER_NAMESPACES_FUNC = _gather_namespaces_python
-_BUILD_XPATH_FROM_TREE_FUNC = _build_xpath_from_tree_python
-
-_KNOWN_TYPE_NAMES_CACHE: set[str] | None = None
+# The maintainable type names, read once from the model registry.
+_KNOWN_TYPE_NAMES_CACHE: dict[str, frozenset[str]] = {}
 _FRAGMENT_GAP_CACHE: dict[str, tuple[frozenset[str], frozenset[tuple[str, str]]]] = {}
 
 
@@ -69,7 +68,7 @@ class SchemaValidationIssue:
 class SchemaValidationError(DDIValidationError):
     """Raised when schema validation fails and details are available.
 
-    A :class:`~ddi_l.exceptions.DDIValidationError`, raised for example by
+    A `DDIValidationError`, raised for example by
     ``open_ddi(..., validate=True)``.
     """
 
@@ -112,7 +111,7 @@ def _build_validation_issue(
     severity: str = "error",
     include_context: bool = True,
 ) -> SchemaValidationIssue:
-    namespaces = _GATHER_NAMESPACES_FUNC(root, schema)
+    namespaces = _gather_namespaces_python(root, schema)
     node: Element | None = getattr(error, "elem", None)
     if node is None:
         candidate = getattr(error, "obj", None)
@@ -167,7 +166,7 @@ def _build_validation_issue(
         raw_path = getattr(error, "xpath", None)
         xpath = str(raw_path) if raw_path else None
     if not xpath and node is not None:
-        xpath = _BUILD_XPATH_FROM_TREE_FUNC(root, node, namespaces)
+        xpath = _build_xpath_from_tree_python(root, node, namespaces)
     if not xpath:
         xpath = f"/{_format_tag(root.tag, namespaces)}"
 
@@ -259,14 +258,13 @@ def _clear_fragment_gap_cache() -> None:
 
 def _clear_known_type_name_cache() -> None:
     """Reset the cached maintainable type names."""
-    global _KNOWN_TYPE_NAMES_CACHE
-    _KNOWN_TYPE_NAMES_CACHE = None
+    _KNOWN_TYPE_NAMES_CACHE.clear()
 
 
 def _resolve_known_type_names() -> set[str]:
-    global _KNOWN_TYPE_NAMES_CACHE
-    if _KNOWN_TYPE_NAMES_CACHE is not None:
-        return set(_KNOWN_TYPE_NAMES_CACHE)
+    cached = _KNOWN_TYPE_NAMES_CACHE.get("names")
+    if cached is not None:
+        return set(cached)
     try:  # pragma: no cover - import guarded for circular dependency
         from ..models.base import MaintainableBase
     except (
@@ -275,7 +273,7 @@ def _resolve_known_type_names() -> set[str]:
         names: set[str] = set()
     else:
         names = {_local_name(tag) for tag in MaintainableBase._TAG_REGISTRY}
-    _KNOWN_TYPE_NAMES_CACHE = set(names)
+    _KNOWN_TYPE_NAMES_CACHE["names"] = frozenset(names)
     return set(names)
 
 
@@ -408,17 +406,6 @@ def _collect_structural_warnings_python(
     return warnings
 
 
-_COLLECT_STRUCTURAL_WARNINGS_FUNC: Callable[..., list[SchemaValidationIssue]] = (
-    _collect_structural_warnings_python
-)
-
-_PYTHON_VALIDATION_FUNCTIONS: dict[str, Callable[..., Any]] = {
-    "gather_namespaces": _gather_namespaces_python,
-    "build_xpath_from_tree": _build_xpath_from_tree_python,
-    "collect_structural_warnings": _collect_structural_warnings_python,
-}
-
-
 def _collect_structural_warnings(
     root: Element,
     *,
@@ -426,7 +413,7 @@ def _collect_structural_warnings(
     reusable_namespace: str,
     include_context: bool,
 ) -> list[SchemaValidationIssue]:
-    return _COLLECT_STRUCTURAL_WARNINGS_FUNC(
+    return _collect_structural_warnings_python(
         root,
         schema=schema,
         reusable_namespace=reusable_namespace,
@@ -510,18 +497,37 @@ def validate(
     raise_error: bool = True,
     version: str | None = None,
     include_context: bool = True,
+    max_issues: int | None = None,
+    backend: str | None = None,
 ) -> list[SchemaValidationIssue]:
     """Validate a document against the cached schema.
+
+    Every schema error is reported, in document order, then the warnings.
+    An error found before the schema is read (a missing identification, an
+    unsupported version) is reported alone.
 
     Args:
         document: XML document or compatible object to validate.
         raise_error: When ``True`` (the default), raise a
-            :class:`SchemaValidationError` if issues are found.
+            `SchemaValidationError` if issues are found.
         version: Optional schema version override.
         include_context: ``False`` omits the contextual snippet from each
             reported issue to avoid leaking sensitive data.
+        max_issues: Stop after this many schema errors and add a warning
+            saying so; ``None`` reports them all.
+        backend: ``"python"``, ``"lxml"`` or ``"native"`` (see
+            `get_available_validation_backends`); ``None`` uses
+            `get_validation_backend`. The issues are the same on each.
+
+    Raises:
+        ValueError: If ``max_issues`` is below one, or ``backend`` is not
+            available.
     """
     from . import get_schema as _get_schema
+
+    if max_issues is not None and max_issues < 1:
+        raise ValueError(f"max_issues must be at least 1, not {max_issues}.")
+    backend = _checked_backend(backend) if backend else get_validation_backend()
 
     root = _coerce_element(document)
     detected_version = version or detect_version_from_element(root)
@@ -581,19 +587,45 @@ def validate(
             raise SchemaValidationError(issues) from None
         return issues
 
-    if IMPLEMENTATION == "lxml" and _libxml2.is_valid(root, target_version):
+    if backend == "lxml" and _libxml2.is_valid(root, target_version):
         return preflight_warnings
+    schema_errors = _schema_errors(schema, root, validation_error_cls)
+    if backend == "native":
+        flagged = _native_validation.unflagged(root, target_version)
+        if flagged == []:
+            return preflight_warnings
+        if flagged is not None:
+            schema_errors = _native_validation.schema_errors(
+                _get_schema(target_version), root, target_version, flagged
+            )
 
     # A known gap is checked for identification and passed over; validation
-    # then goes on, so a gap early in a fragment no longer hides an error in
-    # a later one.
-    for exc in _schema_errors(schema, root, validation_error_cls):
+    # then goes on, so a gap early in a fragment does not hide an error in a
+    # later one.
+    errors: list[SchemaValidationIssue] = []
+    parents: dict[int, Element] = {}
+    for exc in schema_errors:
+        if max_issues is not None and len(errors) == max_issues:
+            noun = "error" if max_issues == 1 else "errors"
+            errors.append(
+                SchemaValidationIssue(
+                    message=(
+                        f"Schema validation stopped after {max_issues} {noun}; "
+                        "there may be more."
+                    ),
+                    xpath=None,
+                    context=None,
+                    severity="warning",
+                )
+            )
+            break
         gap_child = (
             _identify_fragment_schema_gap(
                 exc,
                 root=root,
                 fragment_gap_tags=fragment_gap_tags,
                 fragment_child_gaps=fragment_child_gaps,
+                parents=parents,
             )
             if is_fragment_document
             else None
@@ -608,33 +640,29 @@ def validate(
                     gap_child, reusable_namespace=reusable_namespace
                 )
             except _PreflightValidationError as identification_error:
-                issue = _build_validation_issue(
-                    identification_error,
-                    root=root,
-                    schema=schema,
-                    include_context=include_context,
+                errors.append(
+                    _build_validation_issue(
+                        identification_error,
+                        root=root,
+                        schema=schema,
+                        include_context=include_context,
+                    )
                 )
-                issues = [issue, *preflight_warnings]
-                if raise_error:
-                    raise SchemaValidationError(issues) from None
-                return issues
             continue
 
-        issue = _build_validation_issue(
-            exc,
-            root=root,
-            schema=schema,
-            include_context=include_context,
+        errors.append(
+            _build_validation_issue(
+                exc,
+                root=root,
+                schema=schema,
+                include_context=include_context,
+            )
         )
-        issues = [issue, *preflight_warnings]
-        if raise_error:
-            raise SchemaValidationError(issues) from None
-        return issues
 
-    if preflight_warnings:
-        return preflight_warnings
-
-    return []
+    issues = [*errors, *preflight_warnings]
+    if errors and raise_error:
+        raise SchemaValidationError(issues) from None
+    return issues
 
 
 def _schema_errors(
@@ -661,6 +689,7 @@ def _identify_fragment_schema_gap(
     root: Element,
     fragment_gap_tags: Collection[str],
     fragment_child_gaps: Collection[tuple[str, str]],
+    parents: dict[int, Element] | None = None,
 ) -> Element | None:
     """Return the fragment child associated with a known schema gap if present.
 
@@ -697,7 +726,7 @@ def _identify_fragment_schema_gap(
     for element in (invalid_child, candidate):
         if not isinstance(element, Element):
             continue
-        ancestor = _find_gap_ancestor(root, element, extension_tags)
+        ancestor = _find_gap_ancestor(root, element, extension_tags, parents)
         if ancestor is not None:
             return ancestor
 
@@ -722,21 +751,27 @@ def _is_extension(tag: object) -> bool:
 
 
 def _find_gap_ancestor(
-    root: Element, target: Element, fragment_gap_tags: Collection[str]
+    root: Element,
+    target: Element,
+    fragment_gap_tags: Collection[str],
+    parents: dict[int, Element] | None = None,
 ) -> Element | None:
     """Return the nearest ancestor of ``target`` carrying a gap tag.
 
     ``target`` itself counts. Ancestry is resolved by walking ``root`` because
     stdlib elements have no parent pointer, which keeps this identical across
-    both XML backends.
+    both XML backends. ``parents``, empty or filled by an earlier call on the
+    same ``root``, keeps that walk to one per validation.
     """
     if target.tag in fragment_gap_tags:
         return target
 
-    parents: dict[int, Element] = {}
-    for parent in root.iter():
-        for child in parent:
-            parents[id(child)] = parent
+    if parents is None:
+        parents = {}
+    if not parents:
+        for parent in root.iter():
+            for child in parent:
+                parents[id(child)] = parent
 
     current: Element | None = parents.get(id(target))
     while current is not None:
@@ -746,46 +781,62 @@ def _find_gap_ancestor(
     return None
 
 
-def _bind_validation_functions(functions: dict[str, Callable[..., Any]]) -> None:
-    global _GATHER_NAMESPACES_FUNC
-    global _BUILD_XPATH_FROM_TREE_FUNC
-    global _COLLECT_STRUCTURAL_WARNINGS_FUNC
-
-    _GATHER_NAMESPACES_FUNC = functions["gather_namespaces"]
-    _BUILD_XPATH_FROM_TREE_FUNC = functions["build_xpath_from_tree"]
-    _COLLECT_STRUCTURAL_WARNINGS_FUNC = functions["collect_structural_warnings"]
-
-
-def _apply_validation_backend(backend: str) -> None:
-    backend = backend.lower()
-    if backend not in get_available_validation_backends():
-        raise ValueError(f"Unsupported backend: {backend}")
-
-    _bind_validation_functions(_PYTHON_VALIDATION_FUNCTIONS)
-    globals()["IMPLEMENTATION"] = backend
-
-
 def get_available_validation_backends() -> tuple[str, ...]:
-    """Return the validation backends usable in this environment.
+    """Return the validation backends usable in this environment, best last.
 
     ``python`` validates with xmlschema. ``lxml`` (with the ``full`` extra)
     first checks the document with libxml2 and only runs xmlschema when that
-    check fails, so the issues reported are the same on both backends.
+    check fails. ``native`` (on the native XML backend) checks the document
+    in one pass and has xmlschema word the errors of each element it flags.
+    The issues reported are the same on every backend.
     """
-    return ("python", "lxml") if _libxml2.available() else ("python",)
+    found = ["python"]
+    if _libxml2.available():
+        found.append("lxml")
+    if _native_validation.available():
+        found.append("native")
+    return tuple(found)
+
+
+def _checked_backend(backend: str) -> str:
+    name = backend.lower().strip()
+    if name not in get_available_validation_backends():
+        raise ValueError(f"Unsupported validation backend: {backend}")
+    return name
+
+
+# The best backend this environment has, chosen at import.
+IMPLEMENTATION: str = get_available_validation_backends()[-1]
+# The application default, which only `set_validation_backend` changes.
+_DEFAULT_BACKEND = IMPLEMENTATION
+_SCOPED_BACKEND: ContextVar[str | None] = ContextVar(
+    "ddi_l_validation_backend", default=None
+)
+
+
+def get_validation_backend() -> str:
+    """Return the backend `validate` uses when given none.
+
+    That is the one a `validation_backend` block in this thread or task set,
+    else the application default.
+    """
+    return _SCOPED_BACKEND.get() or _DEFAULT_BACKEND
 
 
 def set_validation_backend(backend: str) -> None:
-    backend = backend.lower().strip()
-    _apply_validation_backend(backend)
-    loader_module = sys.modules.get("ddi_l.schema_loader")
-    if loader_module is not None:
-        loader_module.VALIDATION_IMPLEMENTATION = IMPLEMENTATION  # type: ignore[attr-defined]
+    """Make ``backend`` the application default for `validate`."""
+    global _DEFAULT_BACKEND
+    _DEFAULT_BACKEND = _checked_backend(backend)
 
 
-IMPLEMENTATION: str = "python"
-_default_backend = "lxml" if _libxml2.available() else "python"
-_apply_validation_backend(_default_backend)
+@contextmanager
+def validation_backend(backend: str) -> Iterator[str]:
+    """Use ``backend`` in the ``with`` block, in this thread or task only."""
+    token = _SCOPED_BACKEND.set(_checked_backend(backend))
+    try:
+        yield _SCOPED_BACKEND.get() or backend
+    finally:
+        _SCOPED_BACKEND.reset(token)
 
 
 __all__ = [
@@ -793,6 +844,8 @@ __all__ = [
     "SchemaValidationError",
     "SchemaValidationIssue",
     "get_available_validation_backends",
+    "get_validation_backend",
     "set_validation_backend",
     "validate",
+    "validation_backend",
 ]

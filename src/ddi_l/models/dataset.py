@@ -30,8 +30,8 @@ __all__ = ["DataSet"]
 class DataSet:
     """Inline data: variable values stored directly in the DDI document.
 
-    Build one with :meth:`ddi_l.document.Document.add_dataset` and add values
-    with :meth:`add_item_value`.
+    Build one with `ddi_l.document.Document.add_dataset` and add values
+    with `add_item_value`.
     """
 
     agency: str | None = None
@@ -70,13 +70,13 @@ class DataSet:
         return item_value
 
     def set_variable_order(self, variable_references: list[Reference]) -> None:
-        """Set the column order for :meth:`add_record` (a ``RecordSet``)."""
+        """Set the column order for `add_record` (a ``RecordSet``)."""
         self.variable_order = list(variable_references)
 
     def add_record(self, values: list[str]) -> Element:
         """Add one record (a row of values) to a ``RecordSet``. Returns it.
 
-        Values are positional, matching :meth:`set_variable_order`.
+        Values are positional, matching `set_variable_order`.
         """
         record = create_element(qn(DATASET_NS, "Record"))
         for value in values:

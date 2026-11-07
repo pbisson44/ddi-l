@@ -132,6 +132,19 @@ curl --data-binary @my-study.xml http://localhost:8000/v1/lint
 curl --data-binary @my-study.xml 'http://localhost:8000/v1/lint?profile=DDI_PROFILE_DEFAULT'
 ```
 
+The options `ddi lint` takes travel with the request: `?rule=` (repeated)
+runs only those rules, `?skip_rule=` leaves out their findings, and
+`?lint_config=` takes the JSON object `--lint-config` reads. They apply to
+that request alone; `POST /v1/validate` takes `?lint_config=` too. A
+`FragmentInstance` is linted as a fragment, as `ddi lint` does.
+
+```bash
+curl --data-binary @my-study.xml --get \
+  --data-urlencode 'lint_config={"allowed_agencies": ["example.org"]}' \
+  --data-urlencode 'skip_rule=ddi.citation.present' \
+  -X POST http://localhost:8000/v1/lint
+```
+
 ### Convert
 
 ```bash
@@ -192,21 +205,24 @@ the DDI URNs the library already mints, which are valid IRIs.
 
 Validate, lint and the JSON conversion take a Colectica `FragmentInstance` as
 they take a `DDIInstance`. To check that an export survives a parse, round-trip
-it in Colectica's own layout, so an unchanged export comes back byte for byte:
+it: a file comes back with its unchanged parts as they were posted, so an
+unchanged export comes back byte for byte:
 
 ```bash
-curl --data-binary @export.xml 'http://localhost:8000/v1/roundtrip?layout=colectica' > back.xml
+curl --data-binary @export.xml http://localhost:8000/v1/roundtrip > back.xml
 cmp export.xml back.xml && echo unchanged
 ```
 
-Without `?layout=colectica`, the response is written in this library's layout
-(no byte-order mark, its own namespace prefixes), so it differs from the export
-even when nothing was lost. See [Work with Colectica exports](colectica.md).
+`?layout=default` writes this library's layout instead (no byte-order mark, its
+own namespace prefixes), which differs from the export even when nothing was
+lost. A `DDIInstance` always comes back in this library's layout. `POST
+/v1/convert/xml` follows the same rule. See
+[Work with Colectica exports](colectica.en.md).
 
 ### Load metadata tables
 
 `/v1/tables/import` loads metadata kept in spreadsheets, laid out as in
-[Load DDI from spreadsheets](spreadsheet-import.md): an `.xlsx` workbook with
+[Load DDI from spreadsheets](spreadsheet-import.en.md): an `.xlsx` workbook with
 one sheet per table, or a `.zip` of CSV files. It answers with a Colectica
 `FragmentInstance` holding every item:
 
@@ -289,6 +305,10 @@ reaches the port, so the defaults are deliberately conservative.
     behind a reverse proxy that enforces its own timeouts and rate limits, and
     size the worker pool for your largest expected document, not your median
     one.
+
+`POST /v1/validate` reports every schema error up to
+`ServerConfig.max_schema_issues` (100 by default), then a warning that it
+stopped.
 
 ## Embedding it
 

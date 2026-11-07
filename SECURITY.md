@@ -6,7 +6,8 @@ Security fixes are applied to the latest released version of `ddi-l`.
 
 | Version | Supported |
 |---------|-----------|
-| 0.1.x   | Yes       |
+| 0.2.x   | Yes       |
+| 0.1.x   | Until 0.2.0 is released |
 
 ## Reporting a vulnerability
 
@@ -27,8 +28,12 @@ Please do not disclose the issue publicly until a fix is available.
 `ddi-l` parses XML from sources the calling application may not control, so
 untrusted input is an expected condition rather than an edge case.
 
-- XML parsing goes through `defusedxml`, which rejects entity-expansion
-  ("billion laughs"), external-entity (XXE), and DTD-retrieval attacks.
+- XML parsing refuses any document type declaration, so entity expansion
+  ("billion laughs"), external entities (XXE) and DTD retrieval never happen.
+  With lxml the parser also resolves no entities and opens no network
+  connection; without it, parsing goes through `defusedxml` with DTDs
+  forbidden. `read_ddi` and `iterparse_ddi` apply the same rules, and
+  `iterparse_ddi` refuses options that would relax them.
 - Schema validation resolves only the XSDs bundled inside the package; it does
   not fetch schemas over the network at validation time.
 - `ddi_l.schema_sync` is the one component that performs network I/O, and only

@@ -12,7 +12,7 @@ Thanks for helping improve `ddi-l`! Two documents cover contributing:
   on GitHub is the short version: set up, run the checks, open a pull request.
   Start there.
 - This guide is the in-depth reference behind it: the architecture, the
-  XSD-driven code generator, adding a DDI version, the two XML backends, the
+  XSD-driven code generator, adding a DDI version, the XML backends, the
   documentation toolchain, and the release process.
 
 ## Set up your environment
@@ -27,6 +27,11 @@ uv sync --group dev --extra full # ...plus the optional lxml backend
 uv sync --group docs             # Documentation toolchain
 ```
 
+`uv.lock` installs `ddi-l-native` as its pure-Python stand-in
+(`native/fallback/`), so none of these needs Rust, and tests run on lxml or
+the standard library. [The XML backends](#the-xml-backends) says how to build
+and test the native core.
+
 Prefix commands with `uv run` (`uv run pytest`), or activate the environment
 with `source .venv/bin/activate`.
 
@@ -39,7 +44,7 @@ If you prefer plain pip:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e '.[full]' --group dev   # pip 25.1+ reads dependency groups
+pip install -e '.[full]' ./native/fallback --group dev   # pip 25.1+ reads groups
 ```
 
 ## Quality gates
@@ -54,6 +59,9 @@ uv run pytest                  # Tests (target: 90% coverage)
 uvx pip-audit --strict         # Dependency vulnerability scan
 git diff --exit-code           # A test run must not modify tracked files
 ```
+
+`pytest` runs on every core (`-n auto`, pytest-xdist); pass `-n 0` to run in
+one process, as `--pdb` needs.
 
 `ruff` and `mypy` are pinned to exact versions in the `dev` group. A new
 release of either can change what counts as a violation, so the pin is what
@@ -75,36 +83,49 @@ wheel into a clean virtualenv and validates a document with it.
 ### Mutation testing
 
 Coverage says a line ran. It does not say a test would notice if the line were
-wrong, and the difference matters most in the small predicates that decide
-whether a language tag matches or a namespace is used. `mutmut` answers the
-second question by changing the code and checking whether the suite complains:
+wrong. `mutmut` checks that: it makes small changes to the code ("mutants"),
+runs the tests, and reports each change no test noticed (a "survivor").
 
 ```bash
-uv run mutmut run                       # everything in scope
+make mutation                           # mutmut run, then the baseline check
 uv run mutmut results                   # what survived
 uv run mutmut show <mutant-name>        # the diff for one survivor
 uv run mutmut run <mutant-name>         # re-check one after adding a test
 ```
 
-Scope is set in `[tool.mutmut]` in `pyproject.toml` and is deliberately narrow:
-four modules of hand-written decision logic, not the generated dataclasses or
-the XML plumbing, whose mutants are overwhelmingly equivalent. Widen it when
-you add a module with real branching.
+**Scope.** `[tool.mutmut]` in `pyproject.toml` lists seventeen modules with real
+branching: lint, the fact base its rules share and what incremental lint
+keeps, the Colectica rules, the condition reader and editor, the spec
+language with its evaluator and solver encoding, conformance with its
+instrument index, the reachability of a flow, validation, I/O and
+conversion. Not the generated models, whose mutants are almost all equivalent.
 
-**It is not part of the PR gate**, and `.github/workflows/mutation.yml` says
-why at length: a scoped run is ~2,200 mutants and tens of minutes, survivors
-need judgement a threshold cannot supply, and results differ between the two
-XML backends. It runs weekly and on demand, and the report is something to
-read rather than a status to satisfy.
+**The gate.** `tests/mutation_baseline.txt` lists the known survivors.
+`scripts/check_mutation.py` fails when a mutant survives that the list does
+not name, and when a listed one no longer survives, so the list only shrinks.
+`.github/workflows/mutation.yml` runs both monthly (on the 1st) and on demand;
+a full run takes hours, so it is not run on every PR.
 
-Reading survivors is the skill. Some are real:
-`test_tree_uses_namespace_looks_at_tags_and_attributes` exists because
-mutating that helper to always answer "no" left the whole suite green, which
-meant nothing checked that a document *using* `xsi:schemaLocation` keeps its
-declaration. Others cannot be killed and should not be: `getattr(node,
-"nsmap", )` behaves exactly like `getattr(node, "nsmap", None)` when every node
-has the attribute. Fix the first kind by writing the missing test; leave the
-second kind alone.
+**Examples.** Under mutmut, each property test draws at most 30 examples, the
+same ones on every run (`tests/helpers/examples.py`): it runs once for each
+mutant it covers, and a mutant must be caught on every run or on none. The
+suite itself draws 300.
+
+**When the check fails on a new survivor**, run `mutmut show <name>` and decide:
+
+- **A real gap**: a test would catch a bug like this one. Write that test.
+- **Equivalent**: no test can tell the mutant from the original, such as
+  `getattr(node, "nsmap", )` in place of `getattr(node, "nsmap", None)`. Add the
+  name to the baseline with `# equivalent:` and the reason.
+- **Stdlib backend only**: the run uses lxml, so a change to code only the
+  standard-library backend runs survives. Add `# stdlib backend only:` and why.
+- **Native backend only**: likewise for code only the native backend runs,
+  such as what incremental lint keeps (`ddi_l/_incremental.py`); its tests run
+  on the native backend. Add `# native backend only:` and why.
+
+Changing a function renumbers its mutants. After such a change, run
+`uv run python scripts/check_mutation.py --update`, which keeps the reasons of
+the entries still there, and read the diff of the baseline.
 
 ## Coding standards
 
@@ -222,7 +243,7 @@ This path is well-trodden; 3.1 and 3.2 were both added this way.
    version. It is not automatic and it is not free: regenerating against a new
    XSD changes `_FIELD_XML_MAP`, `_ATTR_XML_MAP` and `_ELEMENT_ORDER`, which
    changes serialized output, which invalidates every golden fixture under
-   `src/ddi_l/examples/tests/fixtures/`. Treat it as a breaking change.
+   `tests/fixtures/`. Treat it as a breaking change.
 
 ### Path B: DDI 4.0
 
@@ -351,7 +372,6 @@ namespace and the schema filename.
 src/ddi_l/
   __init__.py                # Public API: new_study, open_ddi, Document
   document.py                # Document, DDIDocument, DDIFragment, StudyCursor
-  _document_mixins.py        # Document behaviour split out by concern
   _document_maintainables.py # Maintainable lookup / attachment helpers
   _document_namespaces.py    # Namespace handling for Document
   models/
@@ -379,22 +399,63 @@ Supporting directories outside the package: `codegen/` (build-time generators),
 `tests/`, `benchmarks/`, `demo/`, and `docs/`. None of these are packaged, so
 nothing in them may back a console script or be imported at runtime.
 
-## The two XML backends
+## The XML backends
 
-`lxml` is an optional accelerator installed with `ddi-l[full]`. Whether it is
-present must not change what `ddi-l` means by a document, and there is a real
-difference in how the two resolve prefixes that is worth understanding before
-touching serialization:
+`lxml` is an optional accelerator installed with `ddi-l[full]`, and the
+native core (`native/`, the `ddi-l-native` wheel `ddi-l` depends on) another.
+Whether either is present must not change what `ddi-l` means by a document.
+`DDI_L_XML_BACKEND=native|lxml|stdlib` picks the backend for a test run.
+
+`ddi-l-native` is published twice at each version: compiled wheels for the
+platforms in `.github/workflows/publish.yml`, and a pure-Python stand-in
+(`native/fallback/`) that pip takes anywhere else. Importing the stand-in
+raises `ModuleNotFoundError`, so `ddi-l` falls back to lxml or the standard
+library and installing it never compiles Rust. `uv.lock` installs the
+stand-in; build the real core over it (Rust, and on Windows Visual Studio
+Build Tools with the C++ workload), then run with `--no-sync`, since `uv sync`
+and `uv run` put the stand-in back:
+
+```bash
+DDI_L_XML_BACKEND=lxml uv run pytest
+uv pip install --reinstall-package ddi-l-native ./native
+DDI_L_XML_BACKEND=native uv run --no-sync pytest --no-cov
+```
+
+Native elements behave like the standard library's, so the native backend
+shares the stdlib backend's helpers in `ddi_l/_etree.py` and only parses
+differently. The pure-Python code is the reference: `tests/test_native.py`
+checks the parser against the standard library's (and fuzzes it), and the
+native digests and source index against `ddi_l/_lossless.py`.
+
+The Rust code lives in `native/`. After changing it, rebuild the extension
+and run its checks:
+
+```bash
+uv pip install --reinstall-package ddi-l-native ./native
+cd native && cargo fmt --check && cargo clippy --all-targets -- -D warnings
+```
+
+On the native backend, what lint and `revise` read from an element is kept
+under its content digest (`ddi_l/_incremental.py`), so a later call reads
+again only what changed. A reader passed to `per_element` or `per_chunk`
+must depend on the element alone. A rule in `_PER_ITEM`
+(`ddi_l/colectica_lint.py`) must report about an item from that item alone,
+through `_Context.finding`. `tests/test_incremental.py` checks, after random
+edits, that each run reports what a run that reads everything reports.
+
+There is a real difference in how stdlib and lxml resolve prefixes that is
+worth understanding before touching serialization:
 
 - **stdlib `ElementTree`** resolves prefixes at *serialization* time, from a
-  process-global registry. A prefix registered while writing one document
-  affects every later one in the same process.
+  registry. ddi-l keeps that registry itself, per thread or task (it never
+  writes ElementTree's process-wide one), so a prefix registered while
+  building one document affects every later one in the same thread.
 - **`lxml`** resolves from each element's `nsmap`, which is **fixed when the
   element is created**. It cannot be rebound in place, which is why
   `apply_namespace_map()` returns a root rather than mutating one.
 
 This asymmetry is the most common source of backend-specific behaviour, so
-run the suite on both backends when changing serialization.
+run the suite on every backend when changing serialization.
 
 ### What is guaranteed
 
@@ -446,9 +507,9 @@ Prefer the `make` targets over calling `mkdocs` directly: they set
 advisory from the Material for MkDocs authors about MkDocs 2.0.
 
 The logo, favicon and their usage rules are described in
-[branding assets](assets/README.md).
+[branding assets](assets/README.en.md).
 
-The curriculum's [answer keys](curriculum/answer-keys.md) page is generated
+The curriculum's [answer keys](curriculum/answer-keys.en.md) page is generated
 by `hooks/answer_keys.py` from the `??? success` answers in each module. Add
 or change an answer in the module, never on the answer-key page.
 
@@ -512,16 +573,32 @@ token), with PEP 740 attestations.
 
 1. On [PyPI](https://pypi.org/manage/account/publishing/) and
    [TestPyPI](https://test.pypi.org/manage/account/publishing/), add a pending
-   trusted publisher for project `ddi-l`: owner `pbisson44`, repository `ddi`,
-   workflow `publish.yml`, environment `pypi` (TestPyPI: `testpypi`).
+   trusted publisher for each of the projects `ddi-l` and `ddi-l-native`:
+   owner `pbisson44`, repository `ddi`, workflow `publish.yml`, environment
+   `pypi` (TestPyPI: `testpypi`).
 2. In the GitHub repository settings, create the `pypi` and `testpypi`
    environments. Protect `pypi` with required reviewers.
 
 ### Each release
 
-1. Set the version in `pyproject.toml` and `CITATION.cff`, and set
-   `date-released` in `CITATION.cff` to the release date.
-   `tests/test_release_metadata.py` checks that they agree.
+1. Set the version and the release date with one command:
+
+    ```bash
+    uv run python scripts/set_version.py 0.3.0 --date 2027-01-15
+    # or: patch, minor, major instead of the version; --date defaults to today
+    ```
+
+    ddi-l and ddi-l-native share one version. The script writes it in
+    `pyproject.toml` (with the `ddi-l-native==X.Y.Z` dependency),
+    `native/pyproject.toml`, `native/Cargo.toml`, `native/Cargo.lock`,
+    `native/fallback/pyproject.toml`, `CITATION.cff`, the citations in the
+    README and on the home page, and the "(unreleased)" heading of the
+    release notes; it sets `date-released` and the citations' year, then runs
+    `uv lock`. It writes nothing unless every file matches. When it starts a
+    new series, add it to the table in `SECURITY.md`; the script says so.
+    `tests/test_release_metadata.py` and the publish workflow refuse a
+    release where the versions differ, and `tests/test_set_version.py` fails
+    when another file starts stating the version.
 2. Date the heading in `docs/release-notes.en.md` and `docs/release-notes.fr.md`.
 3. Run the local gate: `uv run make release-check` and the full test suite.
 4. Dry run: trigger **Publish to PyPI** from the Actions tab with target

@@ -61,12 +61,13 @@ from ddi_l.models import (
     qn,
 )
 from ddi_l.models.datacollection import _REFERENCE_NAMESPACE
-from tests import PACKAGE_FIXTURES_DIR
+from tests import SAMPLES_DIR, TEST_FIXTURES_DIR
+from tests.helpers.marks import refers_outside
 from tests.helpers.synthetic_maintainable import synthetic_maintainable
 
-FIXTURE_PATH = PACKAGE_FIXTURES_DIR / "minimal_instance.xml"
-FRAGMENT_FIXTURE_PATH = PACKAGE_FIXTURES_DIR / "minimal_fragment.xml"
-MODEL_FIXTURE_DIR = PACKAGE_FIXTURES_DIR / "models"
+FIXTURE_PATH = SAMPLES_DIR / "minimal_instance.xml"
+FRAGMENT_FIXTURE_PATH = TEST_FIXTURES_DIR / "minimal_fragment.xml"
+MODEL_FIXTURE_DIR = TEST_FIXTURES_DIR / "models"
 
 
 READ_PAYLOADS = [
@@ -266,6 +267,7 @@ def test_read_and_write_fragment_documents(tmp_path: Path):
     assert isinstance(reparsed, DDIFragment)
 
 
+@refers_outside
 def test_iterparse_ddi_streams_maintainables(tmp_path: Path):
     """iterparse_ddi yields maintainables from streamed documents.
 
@@ -458,6 +460,7 @@ def test_iterparse_ddi_detects_newly_registered_maintainables() -> None:
         assert any(isinstance(item, SyntheticMaintainable) for item in parsed)
 
 
+@refers_outside
 def test_iterparse_ddi_prunes_processed_nodes():
     """Streaming parser prunes processed nodes to bound memory usage."""
     document = DDIDocument.create(
@@ -715,7 +718,7 @@ def test_write_value_error_includes_xpath(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(io_module, "_emit_xml", explode)
 
     with pytest.raises(DDIWriteError) as excinfo:
-        write_ddi(document)
+        write_ddi(document, layout="default")
 
     message = str(excinfo.value)
     assert "/DDIInstance" in message

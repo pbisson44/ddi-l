@@ -7,7 +7,7 @@ from collections.abc import Iterable
 import pytest
 
 pytest.importorskip("hypothesis")
-from hypothesis import HealthCheck, given, settings
+from hypothesis import given
 from hypothesis import strategies as st
 
 from ddi_l import schema_loader
@@ -17,6 +17,7 @@ from ddi_l.document import DDIDocument
 from ddi_l.exceptions import DDIParseError
 from ddi_l.models.datacollection import DataCollection
 from ddi_l.schema_loader import SchemaValidationError
+from tests.helpers.examples import examples
 
 BASE_INSTANCE = (
     textwrap.dedent(
@@ -154,7 +155,7 @@ def _collect_data_collection_elements(xml: str) -> Iterable[tuple[str, str]]:
             yield namespace, tostring(element, pretty_print=False)
 
 
-@settings(max_examples=25, deadline=None, suppress_health_check=[HealthCheck.too_slow])
+@examples(25)
 @given(mutated_instances())
 def test_mutated_payloads_surface_structured_errors(payload: dict[str, object]) -> None:
     """Mutated payloads raise structured errors and reveal missing fields.

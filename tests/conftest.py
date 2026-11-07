@@ -9,8 +9,22 @@ from importlib import resources
 from pathlib import Path
 
 import pytest
+from hypothesis import settings
 
+from tests import TEST_FIXTURES_DIR
 from tests.helpers import maintainable_fixtures
+from tests.helpers.examples import MUTATION_EXAMPLES, UNDER_MUTATION
+
+if UNDER_MUTATION:
+    # Fewer examples, the same on every run: see tests/helpers/examples.py.
+    settings.register_profile(
+        "mutation",
+        max_examples=MUTATION_EXAMPLES,
+        derandomize=True,
+        database=None,
+        deadline=None,
+    )
+    settings.load_profile("mutation")
 
 _DEFAULT_LEVEL = os.getenv("PYTEST_LOG_LEVEL", "INFO").upper()
 _LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
@@ -29,10 +43,10 @@ def examples_dir() -> Iterator[Path]:
 
 
 @pytest.fixture(scope="session")
-def fixtures_dir(examples_dir: Path) -> Path:
-    """Return the directory containing XML fixtures bundled with the package."""
+def fixtures_dir() -> Path:
+    """Return the directory of the suite's XML fixtures."""
 
-    return examples_dir / "tests" / "fixtures"
+    return TEST_FIXTURES_DIR
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -68,6 +82,26 @@ def restore_lint_registries() -> Iterator[None]:
         lint._REGISTRY.update(rules)
         lint._PROFILE_REGISTRY.clear()
         lint._PROFILE_REGISTRY.update(profiles)
+
+
+@pytest.fixture(autouse=True)
+def restore_library_configuration() -> Iterator[None]:
+    """Reset ``ddi_l.configure()`` and the lint configuration around every test.
+
+    Both are process-wide, so a test that sets a default version
+    responsibility, or a ``ddi lint`` option such as ``--required-language``,
+    would otherwise leak it into every test after it.
+    """
+    from ddi_l.config import reset_configuration
+    from ddi_l.lint import reset_lint_configuration
+
+    reset_configuration()
+    reset_lint_configuration()
+    try:
+        yield
+    finally:
+        reset_configuration()
+        reset_lint_configuration()
 
 
 def _configure_root_logger(level_name: str) -> None:
@@ -118,6 +152,8 @@ def _resolve_error_log_path(config: pytest.Config) -> Path:
 def pytest_configure(config: pytest.Config) -> None:
     """Prepare the error log location before the test session starts."""
 
+    if hasattr(config, "workerinput"):
+        return  # an xdist worker: the controller keeps the log
     path = _resolve_error_log_path(config)
     setattr(config, _ERROR_LOG_CONFIG_KEY, path)
     if path.exists():

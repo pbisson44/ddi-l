@@ -162,9 +162,9 @@ def test_operations_renders_jsonld_from_bytes(document, tmp_path):
 
 def test_a_fragment_is_refused_with_a_reason(tmp_path):
     """A FragmentInstance has no study, and Disco is a study-centred vocabulary."""
-    from tests import PACKAGE_FIXTURES_DIR
+    from tests import TEST_FIXTURES_DIR
 
-    fragment = (PACKAGE_FIXTURES_DIR / "minimal_fragment.xml").read_bytes()
+    fragment = (TEST_FIXTURES_DIR / "minimal_fragment.xml").read_bytes()
 
     with pytest.raises(ValueError, match="FragmentInstance"):
         operations.to_jsonld_payload(fragment)
@@ -177,9 +177,9 @@ def test_a_profiled_fragment_returns_a_profile_result():
     `ProfileResult`, including its schema issues.
     """
     from ddi_l.lint import ProfileResult
-    from tests import PACKAGE_FIXTURES_DIR
+    from tests import TEST_FIXTURES_DIR
 
-    fragment = (PACKAGE_FIXTURES_DIR / "minimal_fragment.xml").read_bytes()
+    fragment = (TEST_FIXTURES_DIR / "minimal_fragment.xml").read_bytes()
 
     profiled = operations.lint_source(fragment, profile="DDI_PROFILE_DEFAULT")
     assert isinstance(profiled, ProfileResult)

@@ -14,10 +14,10 @@ as long as they follow the layout on this page: one table per kind of item,
 with rows that point at each other by `id`.
 
 The tables can be a folder of CSV files, the same zipped, or one Excel
-workbook with a sheet per table. The result is a Colectica `FragmentInstance` ready to import into a
-repository, or a DDI study.
+workbook with a sheet per table. The result is a `FragmentInstance` laid out as Colectica Designer writes
+one, or a DDI study.
 
-Start from a template: the [spreadsheet templates](spreadsheet-templates.md)
+Start from a template: the [spreadsheet templates](spreadsheet-templates.en.md)
 page has blank tables and a filled-in bilingual example, as CSV files and as
 an Excel workbook.
 
@@ -51,58 +51,110 @@ then add those to the typed models in Python, or in Colectica.
 ## How the tables fit together
 
 A column that points at another table holds that table's `id`s. The diagrams
-show the links, one area at a time.
+show every link, one area at a time. A crow's foot marks the side that can
+have many rows; a column that holds several ids (`a|b`) makes a many-to-many
+link. In DDI each link is a reference, such as a variable's
+`r:QuestionReference` or a universe's `r:DefiningConceptReference`.
 
-Concepts, codes and variables:
+Concepts, universes and codes, and the variables they define:
 
 ```mermaid
 erDiagram
-    concepts ||--o{ concepts : "parent"
-    concepts ||--o{ universes : "concept"
-    concepts ||--o{ unit_types : "concept"
-    concepts ||--o{ conceptual_variables : "concept"
-    unit_types ||--o{ conceptual_variables : "unit_type"
-    conceptual_variables ||--o{ represented_variables : "conceptual_variable"
+    concepts }o--o{ concepts : "parent"
+    concepts |o--o{ universes : "concept"
+    concepts |o--o{ unit_types : "concept"
+    concepts |o--o{ conceptual_variables : "concept"
+    universes }o--o{ conceptual_variables : "universe"
+    unit_types |o--o{ conceptual_variables : "unit_type"
+    concepts |o--o{ represented_variables : "concept"
+    unit_types |o--o{ represented_variables : "unit_type"
+    conceptual_variables |o--o{ represented_variables : "conceptual_variable"
+    code_lists |o--o{ represented_variables : "code_list"
     code_lists ||--o{ codes : "code_list"
-    code_lists ||--o{ represented_variables : "code_list"
-    represented_variables ||--o{ variables : "represented_variable"
-    universes }o--o{ variables : "universe"
-    variable_groups }o--o{ variables : "group"
-    datasets }o--o{ variables : "dataset"
-    variables }o--o{ ncubes : "dimensions"
+    codes |o--o{ codes : "parent"
 ```
 
-Questions and the questionnaire:
+Variables, their groups, data files and n-cubes:
 
 ```mermaid
 erDiagram
-    instructions }o--o{ questions : "instruction"
-    code_lists ||--o{ questions : "code_list"
+    concepts |o--o{ variables : "concept"
+    universes }o--o{ variables : "universe"
+    unit_types |o--o{ variables : "unit_type"
+    code_lists |o--o{ variables : "code_list"
+    conceptual_variables |o--o{ variables : "conceptual_variable"
+    represented_variables |o--o{ variables : "represented_variable"
+    questions }o--o{ variables : "question"
+    datasets }o--o{ variables : "dataset"
+    variable_groups }o--o{ variables : "group"
+    variable_groups |o--o{ variable_groups : "parent"
+    concepts |o--o{ variable_groups : "concept"
+    universes }o--o{ variable_groups : "universe"
+    variables }o--o{ ncubes : "dimensions"
+    universes }o--o{ ncubes : "universe"
+```
+
+Questions, grids, blocks and groups:
+
+```mermaid
+erDiagram
     questions ||--o{ question_texts : "question"
-    code_lists ||--o{ question_grids : "rows, columns"
+    concepts |o--o{ questions : "concept"
+    code_lists |o--o{ questions : "code_list"
+    instructions }o--o{ questions : "instruction"
+    question_groups }o--o{ questions : "group"
+    concepts |o--o{ question_grids : "concept"
+    code_lists |o--o{ question_grids : "rows, columns, code_list"
+    instructions }o--o{ question_grids : "instruction"
+    question_groups }o--o{ question_grids : "group"
     questions }o--o{ question_blocks : "questions"
     question_grids }o--o{ question_blocks : "questions"
-    question_groups }o--o{ questions : "group"
-    question_groups ||--o{ question_groups : "parent"
-    instruments ||--o{ flow : "instrument"
-    flow ||--o{ flow : "parent"
-    questions ||--o{ flow : "question"
-    questions }o--o{ variables : "question"
+    concepts |o--o{ question_blocks : "concept"
+    instructions }o--o{ question_blocks : "instruction"
+    question_groups }o--o{ question_blocks : "group"
+    question_groups |o--o{ question_groups : "parent"
+    concepts |o--o{ question_groups : "concept"
 ```
 
-The study, its people and what hangs from it:
+The questionnaire flow. A `question` step names a question, a grid or a block:
 
 ```mermaid
 erDiagram
-    groups }o--o{ studies : "studies"
-    groups ||--o{ groups : "parent"
+    instruments ||--o{ flow : "instrument"
+    flow |o--o{ flow : "parent"
+    questions |o--o{ flow : "question"
+    question_grids |o--o{ flow : "question"
+    question_blocks |o--o{ flow : "question"
+```
+
+The study, its people and what hangs from it. A creator or publisher is an
+organization or an individual; a study has at most one methodology:
+
+```mermaid
+erDiagram
+    studies }o--o{ groups : "studies"
+    groups |o--o{ groups : "parent"
     organizations }o--o{ studies : "creator, publisher, funder"
     individuals }o--o{ studies : "creator, publisher"
+    universes |o--o{ studies : "universe"
+    concepts |o--o{ studies : "concept"
     studies ||--o{ instruments : "study"
     studies ||--o{ datasets : "study"
     studies ||--o| methodologies : "study"
     studies ||--o{ processing_events : "study"
     studies ||--o{ quality_statements : "study"
+```
+
+Comparisons. The `type` column says which table `source` and `target` name;
+for `category` they name codes:
+
+```mermaid
+erDiagram
+    concepts |o--o{ comparisons : "source, target"
+    universes |o--o{ comparisons : "source, target"
+    questions |o--o{ comparisons : "source, target"
+    variables |o--o{ comparisons : "source, target"
+    codes |o--o{ comparisons : "source, target"
 ```
 
 ## Rules every table follows
@@ -260,7 +312,7 @@ Two columns, `setting` and `value`, one row per setting:
 
 | `setting` | Meaning | Default |
 | --- | --- | --- |
-| `agency` | the maintenance agency of every item, such as `ca.statcan` | required |
+| `agency` | the maintenance agency of every item, such as `org.example` | required |
 | `version` | the version of every item without its own | `1` |
 | `language` | the language of names | `en` |
 
@@ -327,7 +379,7 @@ One row per group of studies, such as every cycle of a survey.
 | Column | Required | What goes in it |
 | --- | --- | --- |
 | `name@<language>` | yes | the organization's name, per language |
-| `abbreviation` | | a short name: `StatCan` |
+| `abbreviation` | | a short name or acronym |
 | `email` | | a contact email address |
 | `url` | | its web site |
 | `description@<language>` | | a description, per language |
@@ -698,7 +750,7 @@ ddi tables import my-survey -o my-survey.xml   # a Colectica FragmentInstance
 ddi tables import questionnaire --study "Labour Force Survey" -o study.xml
 ```
 
-Over HTTP, [`ddi serve`](server.md#load-metadata-tables) offers the same:
+Over HTTP, [`ddi serve`](server.en.md#load-metadata-tables) offers the same:
 `POST /v1/tables/import` takes a workbook or a zip and answers with the
 fragment, or with every problem as a `422`; `GET /v1/tables/template` gives
 the templates, and `GET /v1/tables` describes every table and column as JSON.
@@ -733,8 +785,8 @@ row you see in Excel.
 ## Into Colectica
 
 The `FragmentInstance` from `to_fragment()` is written the way Colectica
-Designer writes an export, with one item per `<Fragment>`, and imports into a
-Colectica repository. See [Work with Colectica exports](colectica.md) for
+Designer writes an export, with one item per `<Fragment>`, for importing into
+a Colectica repository; try the import in a test repository first. See [Work with Colectica exports](colectica.en.md) for
 reading and editing such files. Because identifiers are derived from your ids,
 loading the same tables again after editing them gives the same items with the
 same identifiers: bump `version` in `settings` (or per row) and import again.

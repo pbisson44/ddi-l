@@ -38,6 +38,12 @@ _LAZY_ATTRIBUTES: dict[str, tuple[str, str]] = {
     "new_study": (".document", "new_study"),
     "open_ddi": (".document", "open_ddi"),
     "open_fragment": (".document", "open_fragment"),
+    # Library-wide defaults
+    "Configuration": (".config", "Configuration"),
+    "configure": (".config", "configure"),
+    "configured": (".config", "configured"),
+    "get_configuration": (".config", "get_configuration"),
+    "reset_configuration": (".config", "reset_configuration"),
     # Exceptions
     "DDIError": (".exceptions", "DDIError"),
     "DDIModelError": (".exceptions", "DDIModelError"),
@@ -74,6 +80,7 @@ _LAZY_ATTRIBUTES: dict[str, tuple[str, str]] = {
 __all__ = [
     "CodeList",
     "Concept",
+    "Configuration",
     "DDIDocument",
     "DDIError",
     "DDIFragment",
@@ -101,6 +108,9 @@ __all__ = [
     "Variable",
     "__author__",
     "__version__",
+    "configure",
+    "configured",
+    "get_configuration",
     "iter_questions",
     "iter_variables",
     "iterparse_ddi",
@@ -108,6 +118,7 @@ __all__ = [
     "open_ddi",
     "open_fragment",
     "read_ddi",
+    "reset_configuration",
     "write_ddi",
 ]
 
@@ -142,6 +153,13 @@ def __dir__() -> list[str]:
 
 
 if TYPE_CHECKING:
+    from .config import (
+        Configuration,
+        configure,
+        configured,
+        get_configuration,
+        reset_configuration,
+    )
     from .document import (
         DDIDocument,
         DDIFragment,

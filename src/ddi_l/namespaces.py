@@ -65,18 +65,24 @@ NAMESPACE_PREFIXES: Mapping[str, str] = MappingProxyType(
 
 _DEFAULT_PROFILE_BINDINGS: Mapping[str | None, str] = DEFAULT_NSMAP
 
-NAMESPACE_PROFILES: dict[str, NamespaceProfile] = {
-    DDI_DEFAULT_PROFILE: _DEFAULT_PROFILE_BINDINGS,
-    DDI_REUSABLE_PROFILE: {"r": REUSABLE_NS},
-    DDI_STUDY_UNIT_PROFILE: {"s": STUDY_UNIT_NS, "c": CONCEPTUAL_COMPONENT_NS},
-    DDI_DATA_COLLECTION_PROFILE: {"d": DATA_COLLECTION_NS},
-    DDI_LOGICAL_PRODUCT_PROFILE: {"l": LOGICAL_PRODUCT_NS},
-    DDI_PHYSICAL_DATA_PROFILE: {"p": PHYSICAL_DATA_PRODUCT_NS},
-    DDI_ARCHIVE_PROFILE: {"a": ARCHIVE_NS},
-    DDI_CONCEPTUAL_COMPONENT_PROFILE: {"cc": CONCEPTUAL_COMPONENT_NS},
-    DDI_COMPARATIVE_PROFILE: {"cmp": COMPARATIVE_NS},
-    DDI_PROFILE_PROFILE: {"pr": _DDI_PROFILE_NAMESPACE},
-}
+NAMESPACE_PROFILES: Mapping[str, NamespaceProfile] = MappingProxyType(
+    {
+        DDI_DEFAULT_PROFILE: _DEFAULT_PROFILE_BINDINGS,
+        DDI_REUSABLE_PROFILE: MappingProxyType({"r": REUSABLE_NS}),
+        DDI_STUDY_UNIT_PROFILE: MappingProxyType(
+            {"s": STUDY_UNIT_NS, "c": CONCEPTUAL_COMPONENT_NS}
+        ),
+        DDI_DATA_COLLECTION_PROFILE: MappingProxyType({"d": DATA_COLLECTION_NS}),
+        DDI_LOGICAL_PRODUCT_PROFILE: MappingProxyType({"l": LOGICAL_PRODUCT_NS}),
+        DDI_PHYSICAL_DATA_PROFILE: MappingProxyType({"p": PHYSICAL_DATA_PRODUCT_NS}),
+        DDI_ARCHIVE_PROFILE: MappingProxyType({"a": ARCHIVE_NS}),
+        DDI_CONCEPTUAL_COMPONENT_PROFILE: MappingProxyType(
+            {"cc": CONCEPTUAL_COMPONENT_NS}
+        ),
+        DDI_COMPARATIVE_PROFILE: MappingProxyType({"cmp": COMPARATIVE_NS}),
+        DDI_PROFILE_PROFILE: MappingProxyType({"pr": _DDI_PROFILE_NAMESPACE}),
+    }
+)
 
 
 def get_namespace_profile(name: str) -> NamespaceBindings:
@@ -107,7 +113,7 @@ def merge_namespace_profiles(
             mappings. Later profiles are processed after earlier ones.
         overrides: Optional explicit mapping that is always applied last.
         allow_override: When ``False`` (the default) conflicting bindings raise
-            a :class:`ValueError`. When ``True`` later values replace earlier
+            a `ValueError`. When ``True`` later values replace earlier
             bindings.
     """
     merged: NamespaceBindings = {}
@@ -125,7 +131,7 @@ def canonicalize_prefixes(
     """Re-key namespace bindings onto their canonical DDI prefixes.
 
     Another tool may bind the studyunit namespace to ``p4`` rather than ``s``.
-    Bindings whose URI has a registered prefix in :data:`NAMESPACE_PREFIXES`
+    Bindings whose URI has a registered prefix in `NAMESPACE_PREFIXES`
     are moved onto it, so output is canonical and identical on both XML
     backends. The default (``None``) binding and unknown namespaces are
     preserved as given.
@@ -151,11 +157,11 @@ def build_namespace_map(
     default_namespace: str | None = None,
     extra: Mapping[str | None, str] | None = None,
 ) -> NamespaceBindings:
-    """Construct a namespace mapping using :data:`NAMESPACE_PREFIXES`.
+    """Construct a namespace mapping using `NAMESPACE_PREFIXES`.
 
     Args:
         *prefixes: Namespace prefixes to include in the resulting mapping.
-            Each prefix must be registered in :data:`NAMESPACE_PREFIXES`.
+            Each prefix must be registered in `NAMESPACE_PREFIXES`.
         default_namespace: Optional namespace URI bound to the default
             (``None``) prefix.
         extra: Optional explicit bindings merged into the result after the

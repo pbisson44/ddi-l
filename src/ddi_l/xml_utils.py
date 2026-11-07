@@ -17,6 +17,7 @@ __all__ = [
     "XMLSource",
     "coerce_element",
     "resolve_xml_source",
+    "sniff_bom",
 ]
 
 
@@ -67,20 +68,20 @@ def resolve_xml_source(
 
     Args:
         source: XML payload to classify.
-        require_existing_path: When ``True`` a :class:`~pathlib.Path` instance
+        require_existing_path: When ``True`` a `Path` instance
             must resolve to an existing file on disk.
 
     Returns:
         tuple[SourceKind, payload]: A two-tuple containing the detected kind and
         the value normalized for that category. ``"bytes"`` payloads are always
         ``bytes`` objects, ``"text"`` payloads are ``str`` instances,
-        ``"path"`` payloads are :class:`Path` instances, ``"file"`` payloads
+        ``"path"`` payloads are `Path` instances, ``"file"`` payloads
         are the original file-like object, and ``"element"`` payloads are the
-        original :class:`~ddi_l._etree.Element` instance.
+        original `Element` instance.
 
     Raises:
         FileNotFoundError: When ``require_existing_path`` is ``True`` and a
-            :class:`Path` input does not exist on disk.
+            `Path` input does not exist on disk.
         TypeError: If ``source`` cannot be categorized as a supported XML
             payload.
     """
@@ -136,13 +137,13 @@ def _is_binary_os_file(handle: object) -> bool:
 def coerce_element(
     source: XMLSource, *, require_existing_path: bool = False
 ) -> Element:
-    """Return an :class:`Element` for ``source`` regardless of representation.
+    """Return an `Element` for ``source`` regardless of representation.
 
     Args:
         source: XML payload in any supported representation.
-        require_existing_path: When ``True``, a string or :class:`Path` that
+        require_existing_path: When ``True``, a string or `Path` that
             looks like a filename but does not exist raises
-            :class:`FileNotFoundError`. Without it such a string falls through
+            `FileNotFoundError`. Without it such a string falls through
             to the text branch and the parser reports "Start tag expected",
             which tells a caller who mistyped a filename nothing useful.
 
@@ -172,3 +173,52 @@ def coerce_element(
         return fromstring(data)
 
     raise TypeError("Unsupported XML input type.")
+
+
+_UTF8_BOM = b"\xef\xbb\xbf"
+
+
+def sniff_bom(source: XMLSource) -> bool | None:
+    """Return whether ``source`` starts with a UTF-8 byte-order mark.
+
+    The XML parser drops the mark, so a writer that wants to reproduce the
+    input byte for byte has to learn about it before parsing. A stream is
+    peeked and rewound, and must therefore be seekable.
+
+    Args:
+        source: XML payload in any representation `coerce_element`
+            accepts.
+
+    Returns:
+        ``True`` or ``False`` when the source says, ``None`` when it cannot:
+        an already-parsed `Element`, a stream that cannot be rewound,
+        or a source that does not resolve.
+    """
+    try:
+        kind, payload = resolve_xml_source(source)
+    except (TypeError, OSError):
+        return None
+    if kind == "bytes":
+        return bytes(cast(bytes, payload)).startswith(_UTF8_BOM)
+    if kind == "text":
+        return cast(str, payload).startswith("\ufeff")
+    if kind == "path":
+        try:
+            with cast(Path, payload).open("rb") as handle:
+                return handle.read(len(_UTF8_BOM)) == _UTF8_BOM
+        except OSError:
+            return None
+    if kind == "file":
+        handle = cast(Any, payload)
+        try:
+            if not handle.seekable():
+                return None
+            position = handle.tell()
+            head = handle.read(len(_UTF8_BOM))
+            handle.seek(position)
+        except (AttributeError, OSError, ValueError):
+            return None
+        if isinstance(head, str):
+            return head.startswith("\ufeff")
+        return bytes(head) == _UTF8_BOM
+    return None

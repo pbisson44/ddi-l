@@ -1,0 +1,2685 @@
+# Mutants that survive `mutmut run`: changes to the code no test notices.
+# scripts/check_mutation.py fails on a survivor missing from this list, and on
+# an entry that no longer survives. After `#`, why it survives: "equivalent"
+# when no test can tell the mutant from the original, "stdlib backend only"
+# when only the stdlib backend runs that code (the run uses lxml). An entry
+# with no reason has not been looked at yet. Rewrite with: check_mutation.py --update
+ddi_l._facts.x_shared__mutmut_3  # equivalent: the cache keeps the owner only so its id is not reused; every caller keeps its owner alive
+ddi_l._incremental.x__about__mutmut_1  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_10  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_11  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_12  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_2  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_3  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_4  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_5  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_6  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_7  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_8  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__about__mutmut_9  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_1  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_10  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_11  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_12  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_13  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_14  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_15  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_16  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_17  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_18  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_19  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_2  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_20  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_21  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_22  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_23  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_24  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_25  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_26  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_27  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_28  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_29  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_3  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_30  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_31  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_4  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_5  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_6  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_7  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_8  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x__sorted_out__mutmut_9  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_1  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_10  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_11  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_14  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_15  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_16  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_17  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_18  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_19  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_2  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_20  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_21  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_22  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_23  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_24  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_25  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_26  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_27  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_28  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_29  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_30  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_31  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_32  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_33  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_34  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_35  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_36  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_37  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_38  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_39  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_40  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_41  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_42  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_43  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_44  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_45  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_46  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_47  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_48  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_49  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_50  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_51  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_52  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_53  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_54  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_55  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_56  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_57  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_58  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_59  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_6  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_60  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_61  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_62  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_63  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_64  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_65  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_66  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_67  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_68  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_69  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_7  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_70  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_71  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_72  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_73  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_8  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_findings__mutmut_9  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_chunk__mutmut_1  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_chunk__mutmut_2  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_1  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_10  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_11  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_13  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_14  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_15  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_16  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_17  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_18  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_19  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_2  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_20  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_21  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_22  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_23  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_24  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_25  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_26  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_27  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_28  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_29  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_30  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_31  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_32  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_33  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_34  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_35  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_36  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_37  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_38  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_39  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_40  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_41  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_42  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_43  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_6  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_7  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_8  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l._incremental.x_per_element__mutmut_9  # native backend only: the run uses lxml, and tests/test_incremental.py checks this code on the native backend
+ddi_l.colectica_edit.x__bump__mutmut_17
+ddi_l.colectica_edit.x__child_index__mutmut_1
+ddi_l.colectica_edit.x__child_index__mutmut_2
+ddi_l.colectica_edit.x__contains__mutmut_10
+ddi_l.colectica_edit.x__contains__mutmut_11
+ddi_l.colectica_edit.x__contains__mutmut_22
+ddi_l.colectica_edit.x__contains__mutmut_25
+ddi_l.colectica_edit.x__contains__mutmut_6
+ddi_l.colectica_edit.x__contains__mutmut_7
+ddi_l.colectica_edit.x__contains__mutmut_9
+ddi_l.colectica_edit.x__declared_versions__mutmut_8
+ddi_l.colectica_edit.x__describe__mutmut_7
+ddi_l.colectica_edit.x__flow_references__mutmut_10
+ddi_l.colectica_edit.x__flow_references__mutmut_16
+ddi_l.colectica_edit.x__flow_references__mutmut_17
+ddi_l.colectica_edit.x__flow_references__mutmut_18
+ddi_l.colectica_edit.x__flow_references__mutmut_19
+ddi_l.colectica_edit.x__flow_references__mutmut_20
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_13
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_24
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_34
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_35
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_37
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_38
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_39
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_41
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_43
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_44
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_45
+ddi_l.colectica_edit.x__insert_construct_ref__mutmut_46
+ddi_l.colectica_edit.x__keeper__mutmut_10
+ddi_l.colectica_edit.x__keeper__mutmut_11
+ddi_l.colectica_edit.x__keeper__mutmut_12
+ddi_l.colectica_edit.x__keeper__mutmut_15
+ddi_l.colectica_edit.x__keeper__mutmut_16
+ddi_l.colectica_edit.x__keeper__mutmut_17
+ddi_l.colectica_edit.x__keeper__mutmut_18
+ddi_l.colectica_edit.x__keeper__mutmut_20
+ddi_l.colectica_edit.x__keeper__mutmut_8
+ddi_l.colectica_edit.x__keeper__mutmut_9
+ddi_l.colectica_edit.x__local__mutmut_10
+ddi_l.colectica_edit.x__local__mutmut_12
+ddi_l.colectica_edit.x__local__mutmut_2
+ddi_l.colectica_edit.x__local__mutmut_6
+ddi_l.colectica_edit.x__local__mutmut_7
+ddi_l.colectica_edit.x__local__mutmut_9
+ddi_l.colectica_edit.x__new_item__mutmut_40
+ddi_l.colectica_edit.x__new_item__mutmut_65
+ddi_l.colectica_edit.x__pinned__mutmut_13  # equivalent: any default other than "true" or "1" reads as not late-bound
+ddi_l.colectica_edit.x__pinned__mutmut_5  # equivalent: versions.get(None) is None, as when there is no target
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_1
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_11
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_2
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_20
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_21
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_22
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_23
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_25
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_4
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_5
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_6
+ddi_l.colectica_edit.x__refuse_cycle__mutmut_7
+ddi_l.colectica_edit.x__repaired__mutmut_104
+ddi_l.colectica_edit.x__repaired__mutmut_11
+ddi_l.colectica_edit.x__repaired__mutmut_111
+ddi_l.colectica_edit.x__repaired__mutmut_113
+ddi_l.colectica_edit.x__repaired__mutmut_116
+ddi_l.colectica_edit.x__repaired__mutmut_117
+ddi_l.colectica_edit.x__repaired__mutmut_54
+ddi_l.colectica_edit.x__repaired__mutmut_68
+ddi_l.colectica_edit.x__repaired__mutmut_84
+ddi_l.colectica_edit.x__repaired__mutmut_86
+ddi_l.colectica_edit.x__repaired__mutmut_87
+ddi_l.colectica_edit.x__repaired__mutmut_96
+ddi_l.colectica_edit.x__repaired__mutmut_97
+ddi_l.colectica_edit.x__repoint__mutmut_13
+ddi_l.colectica_edit.x__repoint__mutmut_16
+ddi_l.colectica_edit.x__repoint__mutmut_17
+ddi_l.colectica_edit.x__repoint__mutmut_18
+ddi_l.colectica_edit.x__repoint__mutmut_22
+ddi_l.colectica_edit.x__repoint__mutmut_23
+ddi_l.colectica_edit.x__repoint__mutmut_24
+ddi_l.colectica_edit.x__repoint__mutmut_25
+ddi_l.colectica_edit.x__repoint__mutmut_26
+ddi_l.colectica_edit.x__repoint__mutmut_27
+ddi_l.colectica_edit.x__repoint_id__mutmut_18
+ddi_l.colectica_edit.x__repoint_id__mutmut_21
+ddi_l.colectica_edit.x__repoint_id__mutmut_22
+ddi_l.colectica_edit.x__repoint_id__mutmut_23
+ddi_l.colectica_edit.x__repoint_id__mutmut_26
+ddi_l.colectica_edit.x__repoint_id__mutmut_27
+ddi_l.colectica_edit.x__repoint_id__mutmut_28
+ddi_l.colectica_edit.x__repoint_id__mutmut_29
+ddi_l.colectica_edit.x__repoint_id__mutmut_30
+ddi_l.colectica_edit.x__repoint_id__mutmut_31
+ddi_l.colectica_edit.x__repoint_id__mutmut_32
+ddi_l.colectica_edit.x__repoint_id__mutmut_33
+ddi_l.colectica_edit.x__repoint_id__mutmut_34
+ddi_l.colectica_edit.x__require_construct__mutmut_14
+ddi_l.colectica_edit.x__require_construct__mutmut_15
+ddi_l.colectica_edit.x__require_construct__mutmut_16
+ddi_l.colectica_edit.x__require_construct__mutmut_17
+ddi_l.colectica_edit.x__require_construct__mutmut_18
+ddi_l.colectica_edit.x__require_construct__mutmut_19
+ddi_l.colectica_edit.x__require_construct__mutmut_20
+ddi_l.colectica_edit.x__require_construct__mutmut_23
+ddi_l.colectica_edit.x__require_construct__mutmut_24
+ddi_l.colectica_edit.x__require_construct__mutmut_25
+ddi_l.colectica_edit.x__require_construct__mutmut_6
+ddi_l.colectica_edit.x__require_construct__mutmut_7
+ddi_l.colectica_edit.x__revised__mutmut_127
+ddi_l.colectica_edit.x__revised__mutmut_42
+ddi_l.colectica_edit.x__revised__mutmut_44
+ddi_l.colectica_edit.x__revised__mutmut_60
+ddi_l.colectica_edit.x__revised__mutmut_74
+ddi_l.colectica_edit.x__revised__mutmut_92
+ddi_l.colectica_edit.x__revised__mutmut_93
+ddi_l.colectica_edit.x__revised__mutmut_95
+ddi_l.colectica_edit.x__set_id__mutmut_10
+ddi_l.colectica_edit.x__set_id__mutmut_21
+ddi_l.colectica_edit.x__set_id__mutmut_22
+ddi_l.colectica_edit.x__set_responsibility__mutmut_23
+ddi_l.colectica_edit.x__set_responsibility__mutmut_24
+ddi_l.colectica_edit.x__set_responsibility__mutmut_25
+ddi_l.colectica_edit.x__set_responsibility__mutmut_26
+ddi_l.colectica_edit.x__set_responsibility__mutmut_6
+ddi_l.colectica_edit.x__set_version__mutmut_11
+ddi_l.colectica_edit.x__set_version__mutmut_22
+ddi_l.colectica_edit.x__set_version__mutmut_23
+ddi_l.colectica_edit.x_duplicate__mutmut_100
+ddi_l.colectica_edit.x_duplicate__mutmut_101
+ddi_l.colectica_edit.x_duplicate__mutmut_102
+ddi_l.colectica_edit.x_duplicate__mutmut_110
+ddi_l.colectica_edit.x_duplicate__mutmut_111
+ddi_l.colectica_edit.x_duplicate__mutmut_112
+ddi_l.colectica_edit.x_duplicate__mutmut_113
+ddi_l.colectica_edit.x_duplicate__mutmut_114
+ddi_l.colectica_edit.x_duplicate__mutmut_115
+ddi_l.colectica_edit.x_duplicate__mutmut_116
+ddi_l.colectica_edit.x_duplicate__mutmut_146
+ddi_l.colectica_edit.x_duplicate__mutmut_147
+ddi_l.colectica_edit.x_duplicate__mutmut_148
+ddi_l.colectica_edit.x_duplicate__mutmut_149
+ddi_l.colectica_edit.x_duplicate__mutmut_15
+ddi_l.colectica_edit.x_duplicate__mutmut_163
+ddi_l.colectica_edit.x_duplicate__mutmut_29
+ddi_l.colectica_edit.x_duplicate__mutmut_34
+ddi_l.colectica_edit.x_duplicate__mutmut_50
+ddi_l.colectica_edit.x_duplicate__mutmut_57
+ddi_l.colectica_edit.x_duplicate__mutmut_60
+ddi_l.colectica_edit.x_duplicate__mutmut_61
+ddi_l.colectica_edit.x_duplicate__mutmut_62
+ddi_l.colectica_edit.x_duplicate__mutmut_63
+ddi_l.colectica_edit.x_duplicate__mutmut_64
+ddi_l.colectica_edit.x_duplicate__mutmut_65
+ddi_l.colectica_edit.x_duplicate__mutmut_66
+ddi_l.colectica_edit.x_duplicate__mutmut_67
+ddi_l.colectica_edit.x_duplicate__mutmut_68
+ddi_l.colectica_edit.x_duplicate__mutmut_71
+ddi_l.colectica_edit.x_duplicate__mutmut_74
+ddi_l.colectica_edit.x_duplicate__mutmut_75
+ddi_l.colectica_edit.x_duplicate__mutmut_76
+ddi_l.colectica_edit.x_duplicate__mutmut_77
+ddi_l.colectica_edit.x_duplicate__mutmut_78
+ddi_l.colectica_edit.x_duplicate__mutmut_79
+ddi_l.colectica_edit.x_duplicate__mutmut_99
+ddi_l.colectica_edit.x_insert_construct__mutmut_1
+ddi_l.colectica_edit.x_insert_construct__mutmut_21
+ddi_l.colectica_edit.x_insert_construct__mutmut_28
+ddi_l.colectica_edit.x_insert_construct__mutmut_42
+ddi_l.colectica_edit.x_insert_construct__mutmut_58
+ddi_l.colectica_edit.x_insert_construct__mutmut_60
+ddi_l.colectica_edit.x_insert_construct__mutmut_61
+ddi_l.colectica_edit.x_insert_construct__mutmut_62
+ddi_l.colectica_edit.x_insert_construct__mutmut_7
+ddi_l.colectica_edit.x_insert_construct__mutmut_77
+ddi_l.colectica_edit.x_insert_construct__mutmut_8
+ddi_l.colectica_edit.x_insert_construct__mutmut_81
+ddi_l.colectica_edit.x_insert_construct__mutmut_83
+ddi_l.colectica_edit.x_insert_construct__mutmut_94
+ddi_l.colectica_edit.x_insert_construct__mutmut_95
+ddi_l.colectica_edit.x_move_construct__mutmut_23
+ddi_l.colectica_edit.x_move_construct__mutmut_25
+ddi_l.colectica_edit.x_move_construct__mutmut_26
+ddi_l.colectica_edit.x_move_construct__mutmut_27
+ddi_l.colectica_edit.x_move_construct__mutmut_28
+ddi_l.colectica_edit.x_move_construct__mutmut_29
+ddi_l.colectica_edit.x_move_construct__mutmut_30
+ddi_l.colectica_edit.x_move_construct__mutmut_32
+ddi_l.colectica_edit.x_move_construct__mutmut_33
+ddi_l.colectica_edit.x_move_construct__mutmut_46
+ddi_l.colectica_edit.x_move_construct__mutmut_47
+ddi_l.colectica_edit.x_move_construct__mutmut_48
+ddi_l.colectica_edit.x_move_construct__mutmut_62
+ddi_l.colectica_edit.x_move_construct__mutmut_70
+ddi_l.colectica_edit.x_repair_shared_identifiables__mutmut_1
+ddi_l.colectica_edit.x_repair_shared_identifiables__mutmut_11
+ddi_l.colectica_edit.x_revise__mutmut_1
+ddi_l.colectica_edit.x_revise__mutmut_2
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_105
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_138
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_16
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_18
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_19
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_193
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_199
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_20
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_205
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_21
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_30
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_31
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_32
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_33
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_34
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_35
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_39
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_46
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_58
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_61
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_62
+ddi_l.colectica_edit.x_wrap_in_condition__mutmut_68
+ddi_l.colectica_edit.xǁRepairPlanǁ__iter____mutmut_1
+ddi_l.colectica_edit.xǁ_Itemsǁ__init____mutmut_1
+ddi_l.colectica_edit.xǁ_Itemsǁkey__mutmut_14
+ddi_l.colectica_edit.xǁ_Itemsǁreferences__mutmut_6
+ddi_l.colectica_edit.xǁ_Itemsǁset_attribute__mutmut_5
+ddi_l.colectica_edit.xǁ_Itemsǁset_attribute__mutmut_6
+ddi_l.colectica_edit.xǁ_Itemsǁset_attribute__mutmut_7
+ddi_l.colectica_edit.xǁ_Itemsǁset_attribute__mutmut_8
+ddi_l.colectica_edit.xǁ_Itemsǁset_attribute__mutmut_9
+ddi_l.colectica_edit.xǁ_Itemsǁversion__mutmut_7
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_13
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_14
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_23
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_26
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_27
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_5
+ddi_l.colectica_edit.xǁ_Referrersǁ__init____mutmut_6
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_11
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_13
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_14
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_15
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_18
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_3
+ddi_l.colectica_edit.xǁ_Referrersǁof__mutmut_5
+ddi_l.colectica_lint.x__aliases__mutmut_17
+ddi_l.colectica_lint.x__aliases__mutmut_3
+ddi_l.colectica_lint.x__aliases__mutmut_4
+ddi_l.colectica_lint.x__aliases__mutmut_5
+ddi_l.colectica_lint.x__attribute__mutmut_10
+ddi_l.colectica_lint.x__check_codedomain_without_codelist__mutmut_16  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_codedomain_without_codelist__mutmut_24  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_codedomain_without_codelist__mutmut_25  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_compounded_escapes__mutmut_15  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_compounded_escapes__mutmut_16  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_compounded_escapes__mutmut_28
+ddi_l.colectica_lint.x__check_compounded_escapes__mutmut_29
+ddi_l.colectica_lint.x__check_compounded_escapes__mutmut_7  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_13
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_14
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_15
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_21
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_34
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_38
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_46
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_47
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_48  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_5
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_56  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_dangling_bindings__mutmut_57  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_10
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_14
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_15
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_16
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_19
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_26
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_49
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_51
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_53
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_54
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_55
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_56
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_58
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_59
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_61
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_67
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_72  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_8
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_80  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_81  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_88
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_89
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_91
+ddi_l.colectica_lint.x__check_domain_label_mismatch__mutmut_94
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_11
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_12
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_13
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_22
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_24
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_28
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_29
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_30
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_49
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_52
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_57
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_68  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_76  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_77  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_84
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_85
+ddi_l.colectica_lint.x__check_domain_type_mismatch__mutmut_9
+ddi_l.colectica_lint.x__check_duplicate_lookup_fields__mutmut_16  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_duplicate_lookup_fields__mutmut_17  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_duplicate_lookup_fields__mutmut_8  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_10
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_13
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_17
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_19
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_20  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_28  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_empty_conditions__mutmut_29  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_21
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_27
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_28
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_29
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_33
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_37  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_45  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_46  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_53
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_54
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_57
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_58
+ddi_l.colectica_lint.x__check_logic_notes__mutmut_59
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_12
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_18  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_26  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_27  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_39
+ddi_l.colectica_lint.x__check_malformed_aliases__mutmut_40
+ddi_l.colectica_lint.x__check_malformed_conditions__mutmut_14  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_conditions__mutmut_15  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_conditions__mutmut_6  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_pipes__mutmut_12  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_pipes__mutmut_20  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_malformed_pipes__mutmut_21  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_124
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_125
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_126
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_127
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_128
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_129
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_130
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_131
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_132
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_133
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_134
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_135
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_140
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_142
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_143
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_144
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_145
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_146
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_148
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_149
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_150
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_151
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_24  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_32  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_33  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_37
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_45
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_55
+ddi_l.colectica_lint.x__check_missing_languages__mutmut_56
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_103
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_105
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_107
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_15
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_21
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_23
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_25
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_30
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_33
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_54
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_78
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_86
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_87
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_88
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_89  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_9
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_97  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_multi_answer_subjects__mutmut_98  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_104  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_105  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_14
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_18
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_38
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_40
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_41
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_95
+ddi_l.colectica_lint.x__check_native_conditions__mutmut_96  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_16
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_23
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_24
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_25
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_27
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_29
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_30
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_31
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_32
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_33
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_34
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_35
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_39
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_46
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_51
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_54
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_66
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_75
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_78
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_80  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_88  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_partial_gates__mutmut_89  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_placeholders__mutmut_15  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_placeholders__mutmut_16  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_placeholders__mutmut_23
+ddi_l.colectica_lint.x__check_placeholders__mutmut_26
+ddi_l.colectica_lint.x__check_placeholders__mutmut_7  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_14
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_15
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_22
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_25
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_26
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_41
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_53
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_6
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_61
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_62
+ddi_l.colectica_lint.x__check_shared_ids__mutmut_7
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_3
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_37
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_44
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_46  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_54  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_55  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_62
+ddi_l.colectica_lint.x__check_stale_synopses__mutmut_67
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_10
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_14  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_22  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_23  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_28
+ddi_l.colectica_lint.x__check_suspicious_lookup_fields__mutmut_29
+ddi_l.colectica_lint.x__check_ui_chrome__mutmut_18  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_ui_chrome__mutmut_26  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_ui_chrome__mutmut_27  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_ui_chrome__mutmut_7
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_13
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_14
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_23
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_26
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_27
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_35
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_39  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_47
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_48
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_49
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_5
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_57
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_58
+ddi_l.colectica_lint.x__check_undeclared_pipes__mutmut_6
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_10
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_22
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_30
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_33
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_36
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_38  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_46  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_47  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unlisted_lookup_outputs__mutmut_7
+ddi_l.colectica_lint.x__check_unreachable__mutmut_19
+ddi_l.colectica_lint.x__check_unreachable__mutmut_27
+ddi_l.colectica_lint.x__check_unreachable__mutmut_28
+ddi_l.colectica_lint.x__check_unreachable__mutmut_36
+ddi_l.colectica_lint.x__check_unreachable__mutmut_37
+ddi_l.colectica_lint.x__check_unreachable__mutmut_45
+ddi_l.colectica_lint.x__check_unreachable__mutmut_46
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_22
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_3
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_45
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_50
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_51
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_52
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_53
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_56  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_64  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_65  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unsatisfiable_conditions__mutmut_70
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_27
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_28
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_34
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_38
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_62  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_70  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_71  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.colectica_lint.x__check_unused_inputs__mutmut_76
+ddi_l.colectica_lint.x__code_only__mutmut_10
+ddi_l.colectica_lint.x__code_only__mutmut_5
+ddi_l.colectica_lint.x__code_only__mutmut_7
+ddi_l.colectica_lint.x__code_only__mutmut_8
+ddi_l.colectica_lint.x__context_items__mutmut_22
+ddi_l.colectica_lint.x__context_items__mutmut_23
+ddi_l.colectica_lint.x__context_items__mutmut_26
+ddi_l.colectica_lint.x__context_items__mutmut_27
+ddi_l.colectica_lint.x__context_items__mutmut_28
+ddi_l.colectica_lint.x__context_items__mutmut_39
+ddi_l.colectica_lint.x__context_items__mutmut_42
+ddi_l.colectica_lint.x__context_items__mutmut_44
+ddi_l.colectica_lint.x__context_items__mutmut_48
+ddi_l.colectica_lint.x__context_items__mutmut_56
+ddi_l.colectica_lint.x__context_items__mutmut_57
+ddi_l.colectica_lint.x__contradicts__mutmut_10
+ddi_l.colectica_lint.x__contradicts__mutmut_11
+ddi_l.colectica_lint.x__contradicts__mutmut_16
+ddi_l.colectica_lint.x__contradicts__mutmut_17
+ddi_l.colectica_lint.x__contradicts__mutmut_18
+ddi_l.colectica_lint.x__contradicts__mutmut_2
+ddi_l.colectica_lint.x__contradicts__mutmut_20
+ddi_l.colectica_lint.x__contradicts__mutmut_21
+ddi_l.colectica_lint.x__contradicts__mutmut_22
+ddi_l.colectica_lint.x__contradicts__mutmut_23
+ddi_l.colectica_lint.x__contradicts__mutmut_24
+ddi_l.colectica_lint.x__contradicts__mutmut_25
+ddi_l.colectica_lint.x__contradicts__mutmut_26
+ddi_l.colectica_lint.x__contradicts__mutmut_4
+ddi_l.colectica_lint.x__contradicts__mutmut_6
+ddi_l.colectica_lint.x__contradicts__mutmut_7
+ddi_l.colectica_lint.x__contradicts__mutmut_9
+ddi_l.colectica_lint.x__declarations__mutmut_17
+ddi_l.colectica_lint.x__declarations__mutmut_21
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_10
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_12
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_15
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_2
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_3
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_4
+ddi_l.colectica_lint.x__declared_identifiables__mutmut_5
+ddi_l.colectica_lint.x__description__mutmut_18
+ddi_l.colectica_lint.x__description__mutmut_6
+ddi_l.colectica_lint.x__domains__mutmut_10
+ddi_l.colectica_lint.x__domains__mutmut_11
+ddi_l.colectica_lint.x__domains__mutmut_9
+ddi_l.colectica_lint.x__first__mutmut_1
+ddi_l.colectica_lint.x__first__mutmut_7
+ddi_l.colectica_lint.x__first_word__mutmut_11
+ddi_l.colectica_lint.x__first_word__mutmut_8
+ddi_l.colectica_lint.x__flow_children__mutmut_1
+ddi_l.colectica_lint.x__flow_children__mutmut_7
+ddi_l.colectica_lint.x__flow_children__mutmut_8
+ddi_l.colectica_lint.x__flow_roots__mutmut_19
+ddi_l.colectica_lint.x__flow_roots__mutmut_20
+ddi_l.colectica_lint.x__flow_roots__mutmut_21
+ddi_l.colectica_lint.x__innermost_items__mutmut_10
+ddi_l.colectica_lint.x__innermost_items__mutmut_12
+ddi_l.colectica_lint.x__innermost_items__mutmut_13
+ddi_l.colectica_lint.x__innermost_items__mutmut_14
+ddi_l.colectica_lint.x__innermost_items__mutmut_15
+ddi_l.colectica_lint.x__innermost_items__mutmut_16
+ddi_l.colectica_lint.x__innermost_items__mutmut_17
+ddi_l.colectica_lint.x__innermost_items__mutmut_23
+ddi_l.colectica_lint.x__innermost_items__mutmut_4
+ddi_l.colectica_lint.x__innermost_items__mutmut_7
+ddi_l.colectica_lint.x__innermost_items__mutmut_8
+ddi_l.colectica_lint.x__item_conditions__mutmut_28
+ddi_l.colectica_lint.x__item_conditions__mutmut_31
+ddi_l.colectica_lint.x__item_conditions__mutmut_45
+ddi_l.colectica_lint.x__item_conditions__mutmut_51
+ddi_l.colectica_lint.x__item_conditions__mutmut_52
+ddi_l.colectica_lint.x__language_of__mutmut_1
+ddi_l.colectica_lint.x__language_of__mutmut_5
+ddi_l.colectica_lint.x__language_of__mutmut_6
+ddi_l.colectica_lint.x__language_of__mutmut_7
+ddi_l.colectica_lint.x__local__mutmut_10
+ddi_l.colectica_lint.x__local__mutmut_12
+ddi_l.colectica_lint.x__local__mutmut_2
+ddi_l.colectica_lint.x__local__mutmut_6
+ddi_l.colectica_lint.x__local__mutmut_7
+ddi_l.colectica_lint.x__local__mutmut_9
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_2
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_3
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_4
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_5
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_6
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_7
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_8
+ddi_l.colectica_lint.x__names_and_pipes__mutmut_9
+ddi_l.colectica_lint.x__parameters__mutmut_17
+ddi_l.colectica_lint.x__parameters__mutmut_18
+ddi_l.colectica_lint.x__parameters__mutmut_26
+ddi_l.colectica_lint.x__parameters__mutmut_29
+ddi_l.colectica_lint.x__parameters__mutmut_30
+ddi_l.colectica_lint.x__parameters__mutmut_31
+ddi_l.colectica_lint.x__passed_on__mutmut_15
+ddi_l.colectica_lint.x__passed_on__mutmut_27
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_12
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_14
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_16
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_22
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_23
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_26
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_28
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_29
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_30
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_34
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_36
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_47
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_5
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_54
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_57
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_6
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_65
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_66
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_68
+ddi_l.colectica_lint.x__read_before_computed_by_path__mutmut_76
+ddi_l.colectica_lint.x__read_before_finding__mutmut_26
+ddi_l.colectica_lint.x__read_before_finding__mutmut_34
+ddi_l.colectica_lint.x__read_before_finding__mutmut_35
+ddi_l.colectica_lint.x__read_inputs__mutmut_17
+ddi_l.colectica_lint.x__read_inputs__mutmut_40
+ddi_l.colectica_lint.x__read_inputs__mutmut_42
+ddi_l.colectica_lint.x__read_inputs__mutmut_44
+ddi_l.colectica_lint.x__read_inputs__mutmut_46
+ddi_l.colectica_lint.x__read_inputs__mutmut_49
+ddi_l.colectica_lint.x__read_inputs__mutmut_50
+ddi_l.colectica_lint.x__read_inputs__mutmut_51
+ddi_l.colectica_lint.x__read_inputs__mutmut_6
+ddi_l.colectica_lint.x__read_inputs__mutmut_62
+ddi_l.colectica_lint.x__read_inputs__mutmut_63
+ddi_l.colectica_lint.x__read_inputs__mutmut_64
+ddi_l.colectica_lint.x__read_inputs__mutmut_65
+ddi_l.colectica_lint.x__read_inputs__mutmut_66
+ddi_l.colectica_lint.x__read_inputs__mutmut_67
+ddi_l.colectica_lint.x__reads__mutmut_1
+ddi_l.colectica_lint.x__reads__mutmut_2
+ddi_l.colectica_lint.x__reads__mutmut_7
+ddi_l.colectica_lint.x__reads__mutmut_8
+ddi_l.colectica_lint.x__reference_key__mutmut_14
+ddi_l.colectica_lint.x__reference_key__mutmut_15
+ddi_l.colectica_lint.x__resolved_children__mutmut_10
+ddi_l.colectica_lint.x__resolved_children__mutmut_11
+ddi_l.colectica_lint.x__resolved_children__mutmut_12
+ddi_l.colectica_lint.x__resolved_children__mutmut_13
+ddi_l.colectica_lint.x__resolved_children__mutmut_16
+ddi_l.colectica_lint.x__resolved_children__mutmut_5
+ddi_l.colectica_lint.x__resolved_children__mutmut_6
+ddi_l.colectica_lint.x__resolved_children__mutmut_7
+ddi_l.colectica_lint.x__resolved_children__mutmut_9
+ddi_l.colectica_lint.x__routing__mutmut_11
+ddi_l.colectica_lint.x__routing__mutmut_12
+ddi_l.colectica_lint.x__routing__mutmut_17
+ddi_l.colectica_lint.x__routing__mutmut_18
+ddi_l.colectica_lint.x__statement_kind__mutmut_10
+ddi_l.colectica_lint.x__statement_kind__mutmut_11
+ddi_l.colectica_lint.x__statement_kind__mutmut_13
+ddi_l.colectica_lint.x__statement_kind__mutmut_14
+ddi_l.colectica_lint.x__statement_kind__mutmut_15
+ddi_l.colectica_lint.x__statement_kind__mutmut_5
+ddi_l.colectica_lint.x__statement_kind__mutmut_6
+ddi_l.colectica_lint.x__statement_kind__mutmut_7
+ddi_l.colectica_lint.x__statement_kind__mutmut_9
+ddi_l.colectica_lint.x__text_of__mutmut_4
+ddi_l.colectica_lint.x__text_of__mutmut_5
+ddi_l.colectica_lint.x__text_of__mutmut_7
+ddi_l.colectica_lint.x__texts__mutmut_13
+ddi_l.colectica_lint.x__texts__mutmut_7
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_12
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_14
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_15
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_2
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_3
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_8
+ddi_l.colectica_lint.xǁ_Contextǁ__post_init____mutmut_9
+ddi_l.colectica_lint.xǁ_Contextǁdescribe__mutmut_4
+ddi_l.colectica_lint.xǁ_Contextǁdescribe__mutmut_8
+ddi_l.colectica_lint.xǁ_Contextǁfinding__mutmut_11
+ddi_l.colectica_lint.xǁ_Contextǁfinding__mutmut_13
+ddi_l.colectica_lint.xǁ_Contextǁfinding__mutmut_2
+ddi_l.colectica_lint.xǁ_Contextǁlookup__mutmut_2
+ddi_l.colectica_lint.xǁ_Contextǁlookup__mutmut_3
+ddi_l.colectica_lint.xǁ_Contextǁlookup__mutmut_8
+ddi_l.colectica_lint.xǁ_Contextǁlookup__mutmut_9
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_10
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_12
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_15
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_19
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_20
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_29
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_32
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_34
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_36
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_38
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_40
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_42
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_43
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_47
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_48
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_49
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_51
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_52
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_53
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_54
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_55
+ddi_l.colectica_lint.xǁ_Contextǁname__mutmut_8
+ddi_l.colectica_lint.xǁ_Contextǁresolve__mutmut_12
+ddi_l.colectica_lint.xǁ_Contextǁshort_id__mutmut_6
+ddi_l.colectica_lint.xǁ_Contextǁtexts__mutmut_1
+ddi_l.colectica_lint.xǁ_Contextǁtexts__mutmut_2
+ddi_l.colectica_lint.xǁ_Contextǁtexts__mutmut_3
+ddi_l.colectica_lint.xǁ_Contextǁtexts__mutmut_8
+ddi_l.colectica_lint.xǁ_Contextǁtexts__mutmut_9
+ddi_l.colectica_lint.xǁ_ReadWalkǁ__init____mutmut_12
+ddi_l.colectica_lint.xǁ_ReadWalkǁ__init____mutmut_5
+ddi_l.colectica_lint.xǁ_ReadWalkǁ__init____mutmut_9
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_1
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_14
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_17
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_2
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_21
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_24
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_25
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_43
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_46
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_47
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_5
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_52
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_57
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_58
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_59
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_6
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_60
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_61
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_62
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_65
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_66
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_67
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_7
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_again__mutmut_8
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_1
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_10
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_12
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_14
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_15
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_16
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_17
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_2
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_3
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_5
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_6
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_7
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_bound__mutmut_9
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_keys__mutmut_1
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_keys__mutmut_10
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_keys__mutmut_5
+ddi_l.colectica_lint.xǁ_ReadWalkǁ_keys__mutmut_6
+ddi_l.colectica_lint.xǁ_ReadWalkǁchildren__mutmut_1
+ddi_l.colectica_lint.xǁ_ReadWalkǁcyclic__mutmut_10
+ddi_l.colectica_lint.xǁ_ReadWalkǁcyclic__mutmut_2
+ddi_l.colectica_lint.xǁ_ReadWalkǁcyclic__mutmut_21
+ddi_l.colectica_lint.xǁ_ReadWalkǁcyclic__mutmut_23
+ddi_l.colectica_lint.xǁ_ReadWalkǁcyclic__mutmut_4
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_10
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_11
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_12
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_13
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_25
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_3
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_4
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_5
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_6
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_67
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_68
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_7
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_8
+ddi_l.colectica_lint.xǁ_ReadWalkǁfirst__mutmut_9
+ddi_l.colectica_lint.xǁ_Wiringǁ_built__mutmut_52
+ddi_l.colectica_lint.xǁ_Wiringǁanswer__mutmut_18
+ddi_l.colectica_lint.xǁ_Wiringǁanswer__mutmut_19
+ddi_l.colectica_lint.xǁ_Wiringǁanswer__mutmut_20
+ddi_l.colectica_lint.xǁ_Wiringǁanswer__mutmut_7
+ddi_l.colectica_lint.xǁ_Wiringǁanswer__mutmut_8
+ddi_l.colectica_lint.xǁ_Wiringǁof__mutmut_1
+ddi_l.colectica_lint.xǁ_Wiringǁof__mutmut_2
+ddi_l.colectica_lint.xǁ_Wiringǁof__mutmut_7
+ddi_l.colectica_lint.xǁ_Wiringǁof__mutmut_8
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_11
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_12
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_13
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_15
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_17
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_19
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_21
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_23
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_29
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_3
+ddi_l.colectica_lint.xǁ_Wiringǁproducer__mutmut_30
+ddi_l.colectica_lint.xǁ_Wiringǁsource_on__mutmut_10
+ddi_l.colectica_lint.xǁ_Wiringǁsource_on__mutmut_4
+ddi_l.colectica_lint.xǁ_Wiringǁsource_on__mutmut_6
+ddi_l.colectica_lint.xǁ_Wiringǁsource_on__mutmut_8
+ddi_l.colectica_logic.x__check_which__mutmut_6
+ddi_l.colectica_logic.x__child__mutmut_5
+ddi_l.colectica_logic.x__child__mutmut_6
+ddi_l.colectica_logic.x__child__mutmut_8
+ddi_l.colectica_logic.x__child__mutmut_9
+ddi_l.colectica_logic.x__code__mutmut_6
+ddi_l.colectica_logic.x__command_holder__mutmut_1
+ddi_l.colectica_logic.x__descriptions__mutmut_26
+ddi_l.colectica_logic.x__descriptions__mutmut_27
+ddi_l.colectica_logic.x__descriptions__mutmut_35
+ddi_l.colectica_logic.x__else_if_commands__mutmut_10
+ddi_l.colectica_logic.x__else_if_commands__mutmut_6
+ddi_l.colectica_logic.x__else_if_commands__mutmut_7
+ddi_l.colectica_logic.x__else_if_commands__mutmut_9
+ddi_l.colectica_logic.x__encoded__mutmut_1
+ddi_l.colectica_logic.x__encoded__mutmut_2
+ddi_l.colectica_logic.x__encoded__mutmut_4
+ddi_l.colectica_logic.x__encoded__mutmut_5
+ddi_l.colectica_logic.x__expect__mutmut_3
+ddi_l.colectica_logic.x__find_item__mutmut_10
+ddi_l.colectica_logic.x__find_item__mutmut_11
+ddi_l.colectica_logic.x__find_item__mutmut_14
+ddi_l.colectica_logic.x__find_item__mutmut_15
+ddi_l.colectica_logic.x__find_item__mutmut_16
+ddi_l.colectica_logic.x__find_item__mutmut_18
+ddi_l.colectica_logic.x__find_item__mutmut_28
+ddi_l.colectica_logic.x__find_item__mutmut_30
+ddi_l.colectica_logic.x__find_item__mutmut_32
+ddi_l.colectica_logic.x__find_item__mutmut_33
+ddi_l.colectica_logic.x__find_item__mutmut_34
+ddi_l.colectica_logic.x__find_item__mutmut_35
+ddi_l.colectica_logic.x__first_command__mutmut_16
+ddi_l.colectica_logic.x__first_command__mutmut_17
+ddi_l.colectica_logic.x__first_command__mutmut_19
+ddi_l.colectica_logic.x__first_command__mutmut_20
+ddi_l.colectica_logic.x__parse_urn__mutmut_5
+ddi_l.colectica_logic.x__render_statement__mutmut_28
+ddi_l.colectica_logic.x__reusable__mutmut_1
+ddi_l.colectica_logic.x__selected_codes__mutmut_10
+ddi_l.colectica_logic.x__selected_codes__mutmut_14
+ddi_l.colectica_logic.x__selected_codes__mutmut_15
+ddi_l.colectica_logic.x__selected_codes__mutmut_16
+ddi_l.colectica_logic.x__subject_names__mutmut_3
+ddi_l.colectica_logic.x__subject_names__mutmut_4
+ddi_l.colectica_logic.x__subject_names__mutmut_5
+ddi_l.colectica_logic.x__subject_names__mutmut_9
+ddi_l.colectica_logic.x__version_rank__mutmut_5
+ddi_l.colectica_logic.x__version_rank__mutmut_6
+ddi_l.colectica_logic.x__version_rank__mutmut_7
+ddi_l.colectica_logic.x__version_rank__mutmut_8
+ddi_l.colectica_logic.x_explain_condition__mutmut_120
+ddi_l.colectica_logic.x_explain_condition__mutmut_122
+ddi_l.colectica_logic.x_explain_condition__mutmut_127
+ddi_l.colectica_logic.x_explain_condition__mutmut_18
+ddi_l.colectica_logic.x_explain_condition__mutmut_19
+ddi_l.colectica_logic.x_explain_condition__mutmut_191
+ddi_l.colectica_logic.x_explain_condition__mutmut_192
+ddi_l.colectica_logic.x_explain_condition__mutmut_193
+ddi_l.colectica_logic.x_explain_condition__mutmut_201
+ddi_l.colectica_logic.x_explain_condition__mutmut_21
+ddi_l.colectica_logic.x_explain_condition__mutmut_22
+ddi_l.colectica_logic.x_explain_condition__mutmut_52
+ddi_l.colectica_logic.x_explain_condition__mutmut_53
+ddi_l.colectica_logic.x_explain_condition__mutmut_58
+ddi_l.colectica_logic.x_explain_condition__mutmut_61
+ddi_l.colectica_logic.x_explain_condition__mutmut_65
+ddi_l.colectica_logic.x_explain_condition__mutmut_66
+ddi_l.colectica_logic.x_explain_condition__mutmut_67
+ddi_l.colectica_logic.x_explain_condition__mutmut_68
+ddi_l.colectica_logic.x_explain_condition__mutmut_69
+ddi_l.colectica_logic.x_explain_condition__mutmut_70
+ddi_l.colectica_logic.x_explain_condition__mutmut_72
+ddi_l.colectica_logic.x_explain_condition__mutmut_73
+ddi_l.colectica_logic.x_explain_condition__mutmut_74
+ddi_l.colectica_logic.x_explain_condition__mutmut_78
+ddi_l.colectica_logic.x_parse_command__mutmut_11
+ddi_l.colectica_logic.x_parse_command__mutmut_110
+ddi_l.colectica_logic.x_parse_command__mutmut_117
+ddi_l.colectica_logic.x_parse_command__mutmut_123
+ddi_l.colectica_logic.x_parse_command__mutmut_124
+ddi_l.colectica_logic.x_parse_command__mutmut_125
+ddi_l.colectica_logic.x_parse_command__mutmut_19
+ddi_l.colectica_logic.x_parse_command__mutmut_20
+ddi_l.colectica_logic.x_parse_command__mutmut_21
+ddi_l.colectica_logic.x_parse_command__mutmut_3
+ddi_l.colectica_logic.x_parse_command__mutmut_30
+ddi_l.colectica_logic.x_parse_command__mutmut_32
+ddi_l.colectica_logic.x_parse_command__mutmut_46
+ddi_l.colectica_logic.x_parse_command__mutmut_49
+ddi_l.colectica_logic.x_parse_command__mutmut_6
+ddi_l.colectica_logic.x_parse_command__mutmut_68
+ddi_l.colectica_logic.x_parse_command__mutmut_69
+ddi_l.colectica_logic.x_parse_command__mutmut_70
+ddi_l.colectica_logic.x_parse_command__mutmut_71
+ddi_l.colectica_logic.x_parse_command__mutmut_72
+ddi_l.colectica_logic.x_parse_command__mutmut_73
+ddi_l.colectica_logic.x_parse_command__mutmut_74
+ddi_l.colectica_logic.x_parse_command__mutmut_75
+ddi_l.colectica_logic.x_parse_command__mutmut_76
+ddi_l.colectica_logic.x_parse_command__mutmut_86
+ddi_l.colectica_logic.x_parse_command__mutmut_91
+ddi_l.colectica_logic.x_parse_command__mutmut_94
+ddi_l.colectica_logic.x_parse_command__mutmut_95
+ddi_l.colectica_logic.x_serialize_condition__mutmut_4
+ddi_l.colectica_logic.x_write_condition__mutmut_37
+ddi_l.colectica_logic.x_write_condition__mutmut_8
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_10
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_25
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_28
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_30
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_34
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_39
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_4
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_51
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_52
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_53
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_54
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_55
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_56
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_57
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_58
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_59
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_60
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_61
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_62
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_8
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_from_json__mutmut_9
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_10
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_5
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_6
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_7
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_8
+ddi_l.colectica_logic.xǁDataLookupFieldǁ_to_json__mutmut_9
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_10
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_14
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_19
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_21
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_25
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_26
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_27
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_4
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_47
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_48
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_49
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_50
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_51
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_52
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_8
+ddi_l.colectica_logic.xǁLogicGroupǁ_from_json__mutmut_9
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_100
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_101
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_102
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_103
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_104
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_105
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_106
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_111
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_112
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_113
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_114
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_115
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_116
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_117
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_118
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_119
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_14
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_19
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_21
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_25
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_26
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_27
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_54
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_56
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_60
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_82
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_84
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_88
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_95
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_96
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_97
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_98
+ddi_l.colectica_logic.xǁStatementǁ_from_json__mutmut_99
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_109
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_116
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_118
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_124
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_126
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_130
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_139
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_141
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_39
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_40
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_43
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_44
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_45
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_58
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_59
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_69
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_75
+ddi_l.colectica_logic.xǁ_Lookupǁ__init____mutmut_81
+ddi_l.colectica_logic.xǁ_Lookupǁ_key__mutmut_19
+ddi_l.colectica_logic.xǁ_Lookupǁ_key__mutmut_20
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_1
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_10
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_11
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_12
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_13
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_14
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_15
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_16
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_17
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_18
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_19
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_2
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_20
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_22
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_23
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_25
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_26
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_27
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_28
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_29
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_30
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_31
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_32
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_33
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_34
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_37
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_38
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_41
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_42
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_43
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_44
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_45
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_46
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_47
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_49
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_5
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_50
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_51
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_52
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_53
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_54
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_6
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_7
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_8
+ddi_l.colectica_logic.xǁ_Lookupǁ_question_of__mutmut_9
+ddi_l.colectica_logic.xǁ_Lookupǁalias__mutmut_13
+ddi_l.colectica_logic.xǁ_Lookupǁalias__mutmut_14
+ddi_l.colectica_logic.xǁ_Lookupǁalias__mutmut_15
+ddi_l.colectica_logic.xǁ_Lookupǁalias__mutmut_6
+ddi_l.colectica_logic.xǁ_Lookupǁalias__mutmut_9
+ddi_l.colectica_logic.xǁ_Lookupǁcode__mutmut_30
+ddi_l.colectica_logic.xǁ_Lookupǁcode__mutmut_35
+ddi_l.colectica_logic.xǁ_Lookupǁcode__mutmut_4
+ddi_l.colectica_logic.xǁ_Lookupǁcode__mutmut_40
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_10
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_11
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_12
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_13
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_14
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_16
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_18
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_19
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_2
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_3
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_4
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_5
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_6
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_7
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_8
+ddi_l.colectica_logic.xǁ_Lookupǁquestion_name__mutmut_9
+ddi_l.colectica_logic.xǁ_Lookupǁtext_of__mutmut_5
+ddi_l.colectica_logic.xǁ_Lookupǁtext_of__mutmut_6
+ddi_l.colectica_logic.xǁ_Lookupǁtext_of__mutmut_8
+ddi_l.colectica_logic.xǁ_Lookupǁtext_of__mutmut_9
+ddi_l.colectica_logic.xǁ_OpenIntEnumǁ_missing___mutmut_9
+ddi_l.io.x__coerce_source__mutmut_10
+ddi_l.io.x__coerce_source__mutmut_20  # equivalent: cast does nothing at run time
+ddi_l.io.x__coerce_source__mutmut_31  # equivalent: cast does nothing at run time
+ddi_l.io.x__coerce_source__mutmut_40  # equivalent: cast does nothing at run time
+ddi_l.io.x__coerce_source__mutmut_46
+ddi_l.io.x__coerce_source__mutmut_47
+ddi_l.io.x__coerce_source__mutmut_48
+ddi_l.io.x__coerce_source__mutmut_49
+ddi_l.io.x__coerce_source__mutmut_7
+ddi_l.io.x__coerce_source__mutmut_8
+ddi_l.io.x__coerce_source__mutmut_9
+ddi_l.io.x__emit_xml__mutmut_11  # stdlib backend only: under lxml the map already holds every binding in the tree
+ddi_l.io.x__emit_xml__mutmut_6  # stdlib backend only: under lxml the map already holds every binding in the tree
+ddi_l.io.x__finalize_document__mutmut_10  # stdlib backend only: lxml ends a pretty-printed body with a newline
+ddi_l.io.x__finalize_document__mutmut_11  # stdlib backend only: lxml ends a pretty-printed body with a newline
+ddi_l.io.x__finalize_document__mutmut_12  # stdlib backend only: lxml ends a pretty-printed body with a newline
+ddi_l.io.x__hardened__mutmut_5
+ddi_l.io.x__root_nsmap_for_tree__mutmut_14  # equivalent: every lxml node has an nsmap
+ddi_l.io.x__root_nsmap_for_tree__mutmut_5  # stdlib backend only: lxml declares xsi itself
+ddi_l.io.x__serialize__mutmut_1
+ddi_l.io.x__serialize__mutmut_10  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_11  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_12  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_13  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_14  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_15  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_16  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_17  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_18  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_19  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_2  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_20  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_21  # equivalent: only an lxml that writes ns0 prefixes runs this, and the installed one does not
+ddi_l.io.x__serialize__mutmut_3  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_31
+ddi_l.io.x__serialize__mutmut_32
+ddi_l.io.x__serialize__mutmut_33
+ddi_l.io.x__serialize__mutmut_35
+ddi_l.io.x__serialize__mutmut_4  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_5  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_6  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_7  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_8  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__serialize__mutmut_9  # stdlib backend only: the mutation run uses lxml
+ddi_l.io.x__write_to_destination__mutmut_13  # equivalent: cast does nothing at run time
+ddi_l.io.x__written_as_read__mutmut_1
+ddi_l.io.x__written_as_read__mutmut_16
+ddi_l.io.x__written_as_read__mutmut_18
+ddi_l.io.x__written_as_read__mutmut_2
+ddi_l.io.x__written_as_read__mutmut_5
+ddi_l.io.x_iter_questions__mutmut_7  # equivalent: cast does nothing at run time
+ddi_l.io.x_iter_variables__mutmut_7  # equivalent: cast does nothing at run time
+ddi_l.io.x_read_ddi__mutmut_10
+ddi_l.io.x_read_ddi__mutmut_105
+ddi_l.io.x_read_ddi__mutmut_108
+ddi_l.io.x_read_ddi__mutmut_109
+ddi_l.io.x_read_ddi__mutmut_11
+ddi_l.io.x_read_ddi__mutmut_110
+ddi_l.io.x_read_ddi__mutmut_12
+ddi_l.io.x_read_ddi__mutmut_13
+ddi_l.io.x_read_ddi__mutmut_14
+ddi_l.io.x_read_ddi__mutmut_15
+ddi_l.io.x_read_ddi__mutmut_16
+ddi_l.io.x_read_ddi__mutmut_17
+ddi_l.io.x_read_ddi__mutmut_18
+ddi_l.io.x_read_ddi__mutmut_19
+ddi_l.io.x_read_ddi__mutmut_23
+ddi_l.io.x_read_ddi__mutmut_25
+ddi_l.io.x_read_ddi__mutmut_26
+ddi_l.io.x_read_ddi__mutmut_27
+ddi_l.io.x_read_ddi__mutmut_28
+ddi_l.io.x_read_ddi__mutmut_29
+ddi_l.io.x_read_ddi__mutmut_30
+ddi_l.io.x_read_ddi__mutmut_31
+ddi_l.io.x_read_ddi__mutmut_32
+ddi_l.io.x_read_ddi__mutmut_33
+ddi_l.io.x_read_ddi__mutmut_34
+ddi_l.io.x_read_ddi__mutmut_35
+ddi_l.io.x_read_ddi__mutmut_36
+ddi_l.io.x_read_ddi__mutmut_37
+ddi_l.io.x_read_ddi__mutmut_38
+ddi_l.io.x_read_ddi__mutmut_39
+ddi_l.io.x_read_ddi__mutmut_40
+ddi_l.io.x_read_ddi__mutmut_41
+ddi_l.io.x_read_ddi__mutmut_42
+ddi_l.io.x_read_ddi__mutmut_43
+ddi_l.io.x_read_ddi__mutmut_44
+ddi_l.io.x_read_ddi__mutmut_45
+ddi_l.io.x_read_ddi__mutmut_46
+ddi_l.io.x_read_ddi__mutmut_47
+ddi_l.io.x_read_ddi__mutmut_49
+ddi_l.io.x_read_ddi__mutmut_53
+ddi_l.io.x_read_ddi__mutmut_54
+ddi_l.io.x_read_ddi__mutmut_57
+ddi_l.io.x_read_ddi__mutmut_65
+ddi_l.io.x_read_ddi__mutmut_67
+ddi_l.io.x_read_ddi__mutmut_9
+ddi_l.io.x_read_ddi__mutmut_90
+ddi_l.io.x_read_ddi__mutmut_95
+ddi_l.io.x_write_ddi__mutmut_118
+ddi_l.io.x_write_ddi__mutmut_4  # equivalent: UTF-8 and utf-8 name the same codec
+ddi_l.io.x_write_ddi__mutmut_50
+ddi_l.io.x_write_ddi__mutmut_57
+ddi_l.io.x_write_ddi__mutmut_80
+ddi_l.io.x_write_ddi__mutmut_81
+ddi_l.io.x_write_ddi__mutmut_83
+ddi_l.io.x_write_ddi__mutmut_90
+ddi_l.io.x_write_ddi__mutmut_94
+ddi_l.io.x_write_ddi__mutmut_95
+ddi_l.lint.x___getattr____mutmut_1
+ddi_l.lint.x___getattr____mutmut_2
+ddi_l.lint.x___getattr____mutmut_3
+ddi_l.lint.x___getattr____mutmut_4
+ddi_l.lint.x___getattr____mutmut_5
+ddi_l.lint.x___getattr____mutmut_6
+ddi_l.lint.x__check_allowed_agency__mutmut_27  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_allowed_agency__mutmut_28
+ddi_l.lint.x__check_allowed_agency__mutmut_30
+ddi_l.lint.x__check_allowed_agency__mutmut_33
+ddi_l.lint.x__check_allowed_agency__mutmut_34
+ddi_l.lint.x__check_allowed_agency__mutmut_35  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_allowed_agency__mutmut_36  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_allowed_agency__mutmut_37
+ddi_l.lint.x__check_allowed_agency__mutmut_38
+ddi_l.lint.x__check_allowed_agency__mutmut_39
+ddi_l.lint.x__check_allowed_agency__mutmut_44  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_allowed_agency__mutmut_50
+ddi_l.lint.x__check_allowed_agency__mutmut_52  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_allowed_agency__mutmut_53  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_present__mutmut_19  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_present__mutmut_22
+ddi_l.lint.x__check_citation_present__mutmut_25
+ddi_l.lint.x__check_citation_present__mutmut_26
+ddi_l.lint.x__check_citation_present__mutmut_27  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_present__mutmut_28  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_languages__mutmut_39  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_languages__mutmut_42
+ddi_l.lint.x__check_citation_title_languages__mutmut_46
+ddi_l.lint.x__check_citation_title_languages__mutmut_47  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_languages__mutmut_48  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_present__mutmut_29  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_present__mutmut_30
+ddi_l.lint.x__check_citation_title_present__mutmut_32
+ddi_l.lint.x__check_citation_title_present__mutmut_35
+ddi_l.lint.x__check_citation_title_present__mutmut_36
+ddi_l.lint.x__check_citation_title_present__mutmut_37  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_present__mutmut_38  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_citation_title_present__mutmut_39
+ddi_l.lint.x__check_citation_title_present__mutmut_40
+ddi_l.lint.x__check_citation_title_present__mutmut_41
+ddi_l.lint.x__check_colectica_labels__mutmut_11
+ddi_l.lint.x__check_colectica_labels__mutmut_12
+ddi_l.lint.x__check_colectica_labels__mutmut_6
+ddi_l.lint.x__check_maintainable_labels__mutmut_11
+ddi_l.lint.x__check_maintainable_labels__mutmut_12
+ddi_l.lint.x__check_maintainable_labels__mutmut_6
+ddi_l.lint.x__check_reference_integrity__mutmut_12
+ddi_l.lint.x__check_reference_integrity__mutmut_13
+ddi_l.lint.x__check_reference_integrity__mutmut_15
+ddi_l.lint.x__check_reference_integrity__mutmut_16
+ddi_l.lint.x__check_reference_integrity__mutmut_22
+ddi_l.lint.x__check_reference_integrity__mutmut_24
+ddi_l.lint.x__check_reference_integrity__mutmut_25
+ddi_l.lint.x__check_reference_integrity__mutmut_28
+ddi_l.lint.x__check_reference_integrity__mutmut_29
+ddi_l.lint.x__check_reference_integrity__mutmut_30  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_integrity__mutmut_33
+ddi_l.lint.x__check_reference_integrity__mutmut_37
+ddi_l.lint.x__check_reference_integrity__mutmut_38  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_integrity__mutmut_39  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_provenance__mutmut_10
+ddi_l.lint.x__check_reference_provenance__mutmut_11
+ddi_l.lint.x__check_reference_provenance__mutmut_12
+ddi_l.lint.x__check_reference_provenance__mutmut_13
+ddi_l.lint.x__check_reference_provenance__mutmut_14
+ddi_l.lint.x__check_reference_provenance__mutmut_17
+ddi_l.lint.x__check_reference_provenance__mutmut_18
+ddi_l.lint.x__check_reference_provenance__mutmut_19
+ddi_l.lint.x__check_reference_provenance__mutmut_20  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_provenance__mutmut_23
+ddi_l.lint.x__check_reference_provenance__mutmut_27
+ddi_l.lint.x__check_reference_provenance__mutmut_28  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_provenance__mutmut_29  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_provenance__mutmut_7
+ddi_l.lint.x__check_reference_provenance__mutmut_9
+ddi_l.lint.x__check_reference_version__mutmut_19  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_version__mutmut_22
+ddi_l.lint.x__check_reference_version__mutmut_26
+ddi_l.lint.x__check_reference_version__mutmut_27  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_version__mutmut_28  # equivalent: the lint runner stamps the registered rule id on each finding
+ddi_l.lint.x__check_reference_version__mutmut_5
+ddi_l.lint.x__check_reference_version__mutmut_6
+ddi_l.lint.x__check_reference_version__mutmut_7
+ddi_l.lint.x__check_reference_version__mutmut_8
+ddi_l.lint.x__check_severity__mutmut_4
+ddi_l.lint.x__classify__mutmut_1
+ddi_l.lint.x__classify__mutmut_11
+ddi_l.lint.x__classify__mutmut_12
+ddi_l.lint.x__classify__mutmut_15
+ddi_l.lint.x__classify__mutmut_16
+ddi_l.lint.x__classify__mutmut_2
+ddi_l.lint.x__classify__mutmut_5
+ddi_l.lint.x__classify__mutmut_7
+ddi_l.lint.x__collect_identifiable_items__mutmut_2
+ddi_l.lint.x__collect_identifiable_items__mutmut_3
+ddi_l.lint.x__collect_identifiable_items__mutmut_4
+ddi_l.lint.x__collect_identifiable_items__mutmut_44
+ddi_l.lint.x__collect_identifiable_items__mutmut_5
+ddi_l.lint.x__collect_identifiable_items__mutmut_51
+ddi_l.lint.x__collect_identifiable_items__mutmut_52
+ddi_l.lint.x__collect_title_languages__mutmut_10
+ddi_l.lint.x__collect_title_languages__mutmut_25
+ddi_l.lint.x__collect_title_languages__mutmut_27
+ddi_l.lint.x__collect_title_languages__mutmut_28
+ddi_l.lint.x__collect_title_languages__mutmut_29
+ddi_l.lint.x__collect_title_languages__mutmut_30
+ddi_l.lint.x__collect_title_languages__mutmut_31
+ddi_l.lint.x__collect_title_languages__mutmut_32
+ddi_l.lint.x__collect_title_languages__mutmut_33
+ddi_l.lint.x__collect_title_languages__mutmut_34
+ddi_l.lint.x__collect_title_languages__mutmut_35
+ddi_l.lint.x__collect_title_languages__mutmut_36
+ddi_l.lint.x__collect_title_languages__mutmut_37
+ddi_l.lint.x__collect_title_languages__mutmut_6
+ddi_l.lint.x__collect_title_languages__mutmut_7
+ddi_l.lint.x__identifiable_index__mutmut_12
+ddi_l.lint.x__identifiable_index__mutmut_17
+ddi_l.lint.x__identifiable_index__mutmut_18
+ddi_l.lint.x__identifiable_index__mutmut_2
+ddi_l.lint.x__identifiable_index__mutmut_21
+ddi_l.lint.x__identifiable_index__mutmut_23
+ddi_l.lint.x__identifiable_index__mutmut_8
+ddi_l.lint.x__identification__mutmut_1
+ddi_l.lint.x__identification__mutmut_10
+ddi_l.lint.x__identification__mutmut_11
+ddi_l.lint.x__identification__mutmut_12
+ddi_l.lint.x__identification__mutmut_14
+ddi_l.lint.x__identification__mutmut_15
+ddi_l.lint.x__identification__mutmut_16
+ddi_l.lint.x__identification__mutmut_17
+ddi_l.lint.x__identification__mutmut_18
+ddi_l.lint.x__identification__mutmut_19
+ddi_l.lint.x__identification__mutmut_20
+ddi_l.lint.x__identification__mutmut_21
+ddi_l.lint.x__identification__mutmut_24
+ddi_l.lint.x__identification__mutmut_25
+ddi_l.lint.x__identification__mutmut_26
+ddi_l.lint.x__identification__mutmut_29
+ddi_l.lint.x__identification__mutmut_3
+ddi_l.lint.x__identification__mutmut_30
+ddi_l.lint.x__identification__mutmut_4
+ddi_l.lint.x__identification__mutmut_5
+ddi_l.lint.x__identification__mutmut_7
+ddi_l.lint.x__identification__mutmut_8
+ddi_l.lint.x__identification__mutmut_9
+ddi_l.lint.x__index_identifiable_items__mutmut_1
+ddi_l.lint.x__index_identifiable_items__mutmut_2
+ddi_l.lint.x__index_identifiable_items__mutmut_7
+ddi_l.lint.x__index_identifiable_items__mutmut_8
+ddi_l.lint.x__iter_label_candidates__mutmut_1
+ddi_l.lint.x__iter_label_candidates__mutmut_2
+ddi_l.lint.x__iter_label_candidates__mutmut_3
+ddi_l.lint.x__iter_label_candidates__mutmut_4
+ddi_l.lint.x__iter_label_candidates__mutmut_5
+ddi_l.lint.x__iter_label_candidates__mutmut_6
+ddi_l.lint.x__iter_label_candidates__mutmut_7
+ddi_l.lint.x__iter_label_candidates__mutmut_8
+ddi_l.lint.x__iter_reference_resolutions__mutmut_1
+ddi_l.lint.x__iter_reference_resolutions__mutmut_2
+ddi_l.lint.x__iter_reference_resolutions__mutmut_3
+ddi_l.lint.x__iter_reference_resolutions__mutmut_8
+ddi_l.lint.x__iter_reference_resolutions__mutmut_9
+ddi_l.lint.x__iter_typed_references__mutmut_2
+ddi_l.lint.x__iter_typed_references__mutmut_24
+ddi_l.lint.x__iter_typed_references__mutmut_28
+ddi_l.lint.x__iter_typed_references__mutmut_3
+ddi_l.lint.x__iter_typed_references__mutmut_4
+ddi_l.lint.x__iter_typed_references__mutmut_5
+ddi_l.lint.x__label_candidates__mutmut_10
+ddi_l.lint.x__label_candidates__mutmut_13
+ddi_l.lint.x__label_candidates__mutmut_14
+ddi_l.lint.x__label_candidates__mutmut_15
+ddi_l.lint.x__label_candidates__mutmut_16
+ddi_l.lint.x__label_candidates__mutmut_19
+ddi_l.lint.x__label_candidates__mutmut_2
+ddi_l.lint.x__label_candidates__mutmut_20
+ddi_l.lint.x__label_candidates__mutmut_21
+ddi_l.lint.x__label_candidates__mutmut_24
+ddi_l.lint.x__label_candidates__mutmut_27
+ddi_l.lint.x__label_candidates__mutmut_28
+ddi_l.lint.x__label_candidates__mutmut_3
+ddi_l.lint.x__label_candidates__mutmut_31
+ddi_l.lint.x__label_candidates__mutmut_34
+ddi_l.lint.x__label_candidates__mutmut_6
+ddi_l.lint.x__label_candidates__mutmut_7
+ddi_l.lint.x__label_candidates__mutmut_8
+ddi_l.lint.x__label_candidates__mutmut_9
+ddi_l.lint.x__local_name__mutmut_4
+ddi_l.lint.x__local_name__mutmut_5
+ddi_l.lint.x__local_name__mutmut_7
+ddi_l.lint.x__local_name__mutmut_8
+ddi_l.lint.x__normalize_sequence__mutmut_4
+ddi_l.lint.x__read_references__mutmut_10
+ddi_l.lint.x__read_references__mutmut_11
+ddi_l.lint.x__read_references__mutmut_3
+ddi_l.lint.x__read_references__mutmut_5
+ddi_l.lint.x__reference_resolutions__mutmut_10
+ddi_l.lint.x__reference_resolutions__mutmut_15
+ddi_l.lint.x__reference_resolutions__mutmut_16
+ddi_l.lint.x__reference_resolutions__mutmut_19
+ddi_l.lint.x__reference_resolutions__mutmut_2
+ddi_l.lint.x__resolve_reference__mutmut_1
+ddi_l.lint.x__resolve_reference__mutmut_10
+ddi_l.lint.x__resolve_reference__mutmut_11
+ddi_l.lint.x__resolve_reference__mutmut_12
+ddi_l.lint.x__resolve_reference__mutmut_13
+ddi_l.lint.x__resolve_reference__mutmut_14
+ddi_l.lint.x__resolve_reference__mutmut_15
+ddi_l.lint.x__resolve_reference__mutmut_16
+ddi_l.lint.x__resolve_reference__mutmut_17
+ddi_l.lint.x__resolve_reference__mutmut_18
+ddi_l.lint.x__resolve_reference__mutmut_19
+ddi_l.lint.x__resolve_reference__mutmut_2
+ddi_l.lint.x__resolve_reference__mutmut_20
+ddi_l.lint.x__resolve_reference__mutmut_21
+ddi_l.lint.x__resolve_reference__mutmut_22
+ddi_l.lint.x__resolve_reference__mutmut_23
+ddi_l.lint.x__resolve_reference__mutmut_24
+ddi_l.lint.x__resolve_reference__mutmut_25
+ddi_l.lint.x__resolve_reference__mutmut_3
+ddi_l.lint.x__resolve_reference__mutmut_4
+ddi_l.lint.x__resolve_reference__mutmut_5
+ddi_l.lint.x__resolve_reference__mutmut_6
+ddi_l.lint.x__resolve_reference__mutmut_7
+ddi_l.lint.x__resolve_reference__mutmut_8
+ddi_l.lint.x__resolve_reference__mutmut_9
+ddi_l.lint.x__sorted_versions__mutmut_2
+ddi_l.lint.x__sorted_versions__mutmut_4
+ddi_l.lint.x__sorted_versions__mutmut_6
+ddi_l.lint.x__unlabelled_items__mutmut_10
+ddi_l.lint.x__unlabelled_items__mutmut_16
+ddi_l.lint.x__unlabelled_items__mutmut_19
+ddi_l.lint.x__unlabelled_items__mutmut_23
+ddi_l.lint.x__unlabelled_items__mutmut_24
+ddi_l.lint.x__unlabelled_items__mutmut_25
+ddi_l.lint.x__unnamed_items__mutmut_17
+ddi_l.lint.x__unnamed_items__mutmut_36
+ddi_l.lint.x__unnamed_items__mutmut_38
+ddi_l.lint.x__unnamed_items__mutmut_41
+ddi_l.lint.x__unnamed_items__mutmut_45
+ddi_l.lint.x__unnamed_items__mutmut_46
+ddi_l.lint.x__unnamed_items__mutmut_47
+ddi_l.lint.x__updates__mutmut_14
+ddi_l.lint.x__updates__mutmut_34
+ddi_l.lint.x__updates__mutmut_41
+ddi_l.lint.x__updates__mutmut_46
+ddi_l.lint.x__updates__mutmut_9
+ddi_l.lint.x_iter_registered_rules__mutmut_1
+ddi_l.lint.x_iter_registered_rules__mutmut_2
+ddi_l.lint.x_iter_rule_metadata__mutmut_18
+ddi_l.lint.x_iter_rule_metadata__mutmut_22
+ddi_l.lint.x_iter_rule_metadata__mutmut_24
+ddi_l.lint.x_iter_rule_metadata__mutmut_26
+ddi_l.lint.x_register_profile__mutmut_5
+ddi_l.lint.x_register_profile__mutmut_7
+ddi_l.lint.x_register_rule__mutmut_10
+ddi_l.lint.x_register_rule__mutmut_12
+ddi_l.lint.x_register_rule__mutmut_17
+ddi_l.lint.x_register_rule__mutmut_18
+ddi_l.lint.x_register_rule__mutmut_19
+ddi_l.lint.x_register_rule__mutmut_20
+ddi_l.lint.x_register_rule__mutmut_24
+ddi_l.lint.x_register_rule__mutmut_25
+ddi_l.lint.x_register_rule__mutmut_26
+ddi_l.lint.x_register_rule__mutmut_29
+ddi_l.lint.x_register_rule__mutmut_9
+ddi_l.lint.x_run_lint__mutmut_7
+ddi_l.lint.x_run_profile__mutmut_12
+ddi_l.lint.x_run_profile__mutmut_8
+ddi_l.lint.x_run_profile__mutmut_9
+ddi_l.lint.xǁProfileResultǁas_dict__mutmut_2
+ddi_l.lint.xǁProfileResultǁas_dict__mutmut_3
+ddi_l.lint.xǁProfileResultǁas_dict__mutmut_7
+ddi_l.lint.xǁProfileResultǁas_dict__mutmut_8
+ddi_l.lint.xǁ_LintRuleǁrun__mutmut_12
+ddi_l.lint.xǁ_LintRuleǁrun__mutmut_14
+ddi_l.lint.xǁ_LintRuleǁrun__mutmut_17
+ddi_l.lint.xǁ_LintRuleǁrun__mutmut_18
+ddi_l.lint.xǁ_LintRuleǁrun__mutmut_3
+ddi_l.operations.x__drop_schema_fixed_attributes__mutmut_22  # equivalent: the tag passed for an attribute only reaches its scalar value
+ddi_l.operations.x__drop_schema_fixed_attributes__mutmut_23  # equivalent: the tag passed for an attribute only reaches its scalar value
+ddi_l.operations.x__drop_schema_fixed_attributes__mutmut_7  # equivalent: no element is named XXXX either
+ddi_l.operations.x__drop_schema_fixed_attributes__mutmut_9  # equivalent: an element name never matches a pinned attribute name
+ddi_l.operations.x_coerce_json_payload__mutmut_13  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_16  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_17  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_18  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_19  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_21  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_23  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_25  # equivalent: at the top level only the root key is filtered, and it is never an attribute
+ddi_l.operations.x_coerce_json_payload__mutmut_42  # equivalent: JSON keys are strings, and a key with no '}' names no element
+ddi_l.operations.x_coerce_json_payload__mutmut_50  # equivalent: a Clark-notation name has one '}'
+ddi_l.operations.x_from_json_payload__mutmut_10
+ddi_l.operations.x_from_json_payload__mutmut_15  # equivalent: write_ddi's destination defaults to None
+ddi_l.operations.x_from_json_payload__mutmut_8
+ddi_l.operations.x_lint_source__mutmut_10
+ddi_l.operations.x_lint_source__mutmut_11  # equivalent: include_lint defaults to True
+ddi_l.operations.x_lint_source__mutmut_14
+ddi_l.operations.x_lint_source__mutmut_15
+ddi_l.operations.x_parse_lint_configuration__mutmut_10
+ddi_l.operations.x_parse_lint_configuration__mutmut_13
+ddi_l.operations.x_parse_lint_configuration__mutmut_14
+ddi_l.operations.x_parse_lint_configuration__mutmut_3
+ddi_l.operations.x_parse_lint_configuration__mutmut_5
+ddi_l.operations.x_parse_lint_configuration__mutmut_6
+ddi_l.operations.x_parse_lint_configuration__mutmut_7
+ddi_l.operations.x_parse_lint_configuration__mutmut_8
+ddi_l.operations.x_roundtrip_source__mutmut_25  # equivalent: write_ddi's destination defaults to None
+ddi_l.operations.x_roundtrip_source__mutmut_7
+ddi_l.operations.x_roundtrip_source__mutmut_9
+ddi_l.operations.x_tables_import__mutmut_12
+ddi_l.operations.x_tables_import__mutmut_16
+ddi_l.operations.x_tables_import__mutmut_20  # equivalent: write_ddi's destination defaults to None
+ddi_l.operations.x_tables_import__mutmut_23  # equivalent: a FragmentInstance gets the colectica layout by default
+ddi_l.operations.x_tables_import__mutmut_25  # equivalent: write_ddi's destination defaults to None
+ddi_l.operations.x_tables_import__mutmut_26  # equivalent: a FragmentInstance gets the colectica layout by default
+ddi_l.operations.x_to_json_payload__mutmut_3
+ddi_l.operations.x_to_json_payload__mutmut_5
+ddi_l.operations.x_to_json_payload__mutmut_9  # equivalent: process_namespaces defaults to True
+ddi_l.operations.x_to_jsonld_payload__mutmut_3
+ddi_l.operations.x_to_jsonld_payload__mutmut_5
+ddi_l.operations.x_validate_source__mutmut_10
+ddi_l.operations.x_validate_source__mutmut_11
+ddi_l.operations.x_validate_source__mutmut_15
+ddi_l.operations.x_validate_source__mutmut_16
+ddi_l.operations.x_validate_source__mutmut_4
+ddi_l.operations.x_validate_source__mutmut_6
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_10
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_106
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_11
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_114
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_32
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_33
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_35
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_36
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_40
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_41
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_43
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_51
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_60
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_62
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_63
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_64
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_65
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_66
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_68
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_69
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_70
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_71
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_72
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_73
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_74
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_8
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_80
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_81
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_82
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_83
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_84
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_85
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_88
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_9
+ddi_l.schema_loader._conversion.x__align_mapping_with_element__mutmut_96
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_10
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_11
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_13
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_15
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_16
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_17
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_18
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_20
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_21
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_22
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_25
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_26
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_27
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_28
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_29
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_3
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_30
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_31
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_32
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_33
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_34
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_35
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_36
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_37
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_38
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_39
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_4
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_40
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_41
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_42
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_43
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_6
+ddi_l.schema_loader._conversion.x__attribute_lookup__mutmut_9
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_1
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_10
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_100
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_106
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_107
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_108
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_11
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_112
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_113
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_12
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_13
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_14
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_15
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_16
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_18
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_19
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_2
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_20
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_21
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_22
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_23
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_24
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_25
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_26
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_27
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_29
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_3
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_30
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_31
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_32
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_4
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_41
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_43
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_54
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_58
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_59
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_6
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_60
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_63
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_64
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_66
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_67
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_68
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_69
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_7
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_70
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_71
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_72
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_73
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_74
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_75
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_76
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_8
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_85
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_89
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_9
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_93
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_94
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_95
+ddi_l.schema_loader._conversion.x__build_element_from_mapping__mutmut_99
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_2
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_3
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_4
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_5
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_6
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_7
+ddi_l.schema_loader._conversion.x__coerce_element__mutmut_8
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_18
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_19
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_21
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_30
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_31
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_33
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_48
+ddi_l.schema_loader._conversion.x__collect_declared_namespaces__mutmut_50
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_1
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_10
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_14
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_21
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_4
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_7
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_8
+ddi_l.schema_loader._conversion.x__collect_used_namespace_uris__mutmut_9
+ddi_l.schema_loader._conversion.x__denormalize_clark_notation__mutmut_1
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_10
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_11
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_15
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_16
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_17
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_21
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_22
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_24
+ddi_l.schema_loader._conversion.x__dict_to_element__mutmut_4
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_1
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_10
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_13
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_24
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_26
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_4
+ddi_l.schema_loader._conversion.x__element_to_dict__mutmut_9
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_10
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_18
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_5
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_6
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_7
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_8
+ddi_l.schema_loader._conversion.x__has_payload__mutmut_9
+ddi_l.schema_loader._conversion.x__is_namespace_declaration_key__mutmut_8
+ddi_l.schema_loader._conversion.x__is_namespace_declaration_key__mutmut_9
+ddi_l.schema_loader._conversion.x__normalize_input_mapping__mutmut_1
+ddi_l.schema_loader._conversion.x__normalize_input_mapping__mutmut_3
+ddi_l.schema_loader._conversion.x__normalize_input_mapping__mutmut_5
+ddi_l.schema_loader._conversion.x__normalize_input_mapping__mutmut_8
+ddi_l.schema_loader._conversion.x__normalize_prefixed_qnames__mutmut_2
+ddi_l.schema_loader._conversion.x__normalize_result_namespaces__mutmut_2
+ddi_l.schema_loader._conversion.x__normalize_result_namespaces__mutmut_3
+ddi_l.schema_loader._conversion.x__normalize_result_namespaces__mutmut_4
+ddi_l.schema_loader._conversion.x__normalize_result_namespaces__mutmut_9
+ddi_l.schema_loader._conversion.x__prepare_nsmap__mutmut_4
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_12
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_14
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_15
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_17
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_18
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_19
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_21
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_22
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_23
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_28
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_29
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_3
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_31
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_34
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_40
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_42
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_43
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_46
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_48
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_49
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_64
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_65
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_66
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_67
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_69
+ddi_l.schema_loader._conversion.x__prune_schema_defaults_from_element__mutmut_8
+ddi_l.schema_loader._conversion.x__root_namespace_of__mutmut_10
+ddi_l.schema_loader._conversion.x__root_namespace_of__mutmut_3
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_17
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_19
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_30
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_31
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_32
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_33
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_34
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_35
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_36
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_37
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_38
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_40
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_42
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_46
+ddi_l.schema_loader._conversion.x__schema_namespace_defaults__mutmut_48
+ddi_l.schema_loader._conversion.x__seed_canonical_namespaces__mutmut_14
+ddi_l.schema_loader._conversion.x__seed_canonical_namespaces__mutmut_15
+ddi_l.schema_loader._conversion.x__seed_canonical_namespaces__mutmut_3
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_10
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_11
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_15
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_16
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_17
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_19
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_2
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_23
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_24
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_26
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_27
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_3
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_30
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_31
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_35
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_36
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_37
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_38
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_39
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_4
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_40
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_41
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_42
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_43
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_44
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_45
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_46
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_47
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_48
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_49
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_5
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_50
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_51
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_52
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_53
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_54
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_55
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_56
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_57
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_58
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_59
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_6
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_60
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_61
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_62
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_63
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_67
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_68
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_69
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_7
+ddi_l.schema_loader._conversion.x_from_dict__mutmut_71
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_1
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_10
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_105
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_108
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_11
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_117
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_118
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_119
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_120
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_121
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_122
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_123
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_124
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_125
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_126
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_127
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_128
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_129
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_130
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_131
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_132
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_133
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_134
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_135
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_138
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_139
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_140
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_142
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_143
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_145
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_146
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_147
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_149
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_150
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_151
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_152
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_153
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_154
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_155
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_156
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_157
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_161
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_170
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_171
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_172
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_173
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_174
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_175
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_176
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_177
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_181
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_182
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_183
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_184
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_2
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_23
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_25
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_27
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_28
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_29
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_3
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_35
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_38
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_39
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_4
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_40
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_42
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_48
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_50
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_51
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_52
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_53
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_54
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_55
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_60
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_61
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_62
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_63
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_7
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_70
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_77
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_78
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_79
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_82
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_87
+ddi_l.schema_loader._conversion.x_to_dict__mutmut_94
+ddi_l.spec._instrument.x__is_branch_body__mutmut_9  # equivalent: neither "" nor "XXXX" is a type of sequence
+ddi_l.spec._instrument.x__texts__mutmut_7  # equivalent: setdefault's default is None
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_aliases__mutmut_17  # equivalent: setdefault's default is None
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_key__mutmut_13  # equivalent: one fallback for every construct without an ID
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_key__mutmut_7  # equivalent: one fallback for every construct without an agency
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_meets_a_key_twice__mutmut_3  # equivalent: no construct leads back to the instrument
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_targets__mutmut_1  # equivalent: a memo; resolving again gives the same targets
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_targets__mutmut_2  # equivalent: a memo; resolving again gives the same targets
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_targets__mutmut_3  # equivalent: a memo; resolving again gives the same targets
+ddi_l.spec._instrument.xǁInstrumentIndexǁ_targets__mutmut_6  # equivalent: a memo; resolving again gives the same targets
+ddi_l.spec._instrument.xǁInstrumentIndexǁfirst_path__mutmut_50  # equivalent: None and False are both false
+ddi_l.spec._instrument.xǁInstrumentIndexǁids__mutmut_56  # equivalent: setdefault's default is None
+ddi_l.spec._instrument.xǁNodeǁgates_inside__mutmut_4  # equivalent: sequences and entered always have the same length
+ddi_l.spec._instrument.xǁNodeǁgates_inside__mutmut_7  # equivalent: sequences and entered always have the same length
+ddi_l.spec._instrument.xǁNodeǁgates_inside__mutmut_8  # equivalent: sequences and entered always have the same length
+ddi_l.spec._routing.xǁRoutingǁ__init____mutmut_6
+ddi_l.spec._routing.xǁRoutingǁ_before__mutmut_1
+ddi_l.spec._routing.xǁRoutingǁ_before__mutmut_3
+ddi_l.spec._routing.xǁRoutingǁ_before__mutmut_4
+ddi_l.spec._routing.xǁRoutingǁ_before__mutmut_5
+ddi_l.spec._routing.xǁRoutingǁ_before__mutmut_7
+ddi_l.spec._routing.xǁRoutingǁ_inside_of__mutmut_15
+ddi_l.spec._routing.xǁRoutingǁ_inside_of__mutmut_3
+ddi_l.spec._routing.xǁRoutingǁ_opaque_unmodelled__mutmut_13
+ddi_l.spec._routing.xǁRoutingǁ_opaque_unmodelled__mutmut_14
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_20
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_21
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_23
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_24
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_25
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_26
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_28
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_29
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_3
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_30
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_31
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_32
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_33
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_39
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_40
+ddi_l.spec._routing.xǁRoutingǁ_parents_first__mutmut_5
+ddi_l.spec._routing.xǁRoutingǁ_read_graph__mutmut_2
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_14
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_20
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_3
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_4
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_5
+ddi_l.spec._routing.xǁRoutingǁ_term__mutmut_8
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_10
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_17
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_20
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_41
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_42
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_8
+ddi_l.spec._routing.xǁRoutingǁ_walk__mutmut_9
+ddi_l.spec._routing.xǁRoutingǁreached__mutmut_13
+ddi_l.spec._routing.xǁRoutingǁreached__mutmut_15
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_1
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_12
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_13
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_27
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_29
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_31
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_33
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_35
+ddi_l.spec._routing.xǁRoutingǁrespondent_before__mutmut_36
+ddi_l.spec._routing.xǁRoutingǁundefined__mutmut_12
+ddi_l.spec._routing.xǁRoutingǁundefined__mutmut_14
+ddi_l.spec._routing.xǁRoutingǁundefined__mutmut_4
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_10
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_12
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_13
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_17
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_18
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_19
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_2
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_20
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_24
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_26
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_27
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_28
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_36
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_38
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_4
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_43
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_44
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_49
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_5
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_7
+ddi_l.spec._routing.xǁRoutingǁunreachable__mutmut_9
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_21
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_23
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_3
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_37
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_41
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_49
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_50
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_51
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_52
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_53
+ddi_l.spec._routing.xǁ_GateReaderǁ_condition__mutmut_56
+ddi_l.spec._routing.xǁ_GateReaderǁ_key__mutmut_13
+ddi_l.spec._routing.xǁ_GateReaderǁ_key__mutmut_14
+ddi_l.spec._routing.xǁ_GateReaderǁcode_value__mutmut_15
+ddi_l.spec._routing.xǁ_GateReaderǁcode_value__mutmut_4
+ddi_l.spec._routing.xǁ_GateReaderǁconditions__mutmut_10
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_14
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_15
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_24
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_28
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_30
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_32
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_33
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_34
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_35
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_36
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_6
+ddi_l.spec._routing.xǁ_GateReaderǁsubject__mutmut_7
+ddi_l.spec._smt.x__alike__mutmut_1  # equivalent: Z3 converts a mixed pair itself; _alike keeps whole-number problems integer for speed
+ddi_l.spec._smt.x_decide__mutmut_14  # equivalent: Z3 parameter names ignore case
+ddi_l.spec._smt.x_decide__mutmut_26  # equivalent: at most one of one atom always holds
+ddi_l.spec._smt.x_decide__mutmut_28  # equivalent: the outcome is sat or unknown here, and checking an unknown outcome again gives up again
+ddi_l.spec._smt.xǁFlowǁ__init____mutmut_10
+ddi_l.spec._smt.xǁFlowǁ__init____mutmut_6
+ddi_l.spec._smt.xǁFlowǁ__init____mutmut_7
+ddi_l.spec._smt.xǁFlowǁ__init____mutmut_9
+ddi_l.spec._smt.xǁFlowǁall_of__mutmut_2
+ddi_l.spec._smt.xǁFlowǁall_of__mutmut_5
+ddi_l.spec._smt.xǁFlowǁany_of__mutmut_2
+ddi_l.spec._smt.xǁFlowǁany_of__mutmut_8
+ddi_l.spec._smt.xǁFlowǁany_of__mutmut_9
+ddi_l.spec._smt.xǁFlowǁcheck__mutmut_18
+ddi_l.spec._smt.xǁFlowǁcheck__mutmut_2
+ddi_l.spec._smt.xǁFlowǁcheck__mutmut_3
+ddi_l.spec._smt.xǁFlowǁcheck__mutmut_8
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_1
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_2
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_3
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_4
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_5
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_6
+ddi_l.spec._smt.xǁFlowǁholds__mutmut_7
+ddi_l.spec._smt.xǁFlowǁvariable__mutmut_7
+ddi_l.spec._smt.xǁFlowǁvariable__mutmut_8
+ddi_l.spec._smt.xǁ_Encodingǁ__init____mutmut_2  # noticed: without a context of its own Z3 crashes the test run (segfault)
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_22  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_24  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_25  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_3  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_5  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_55  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_57  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_58  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁexample__mutmut_6  # equivalent: the model gives every constant the solver was given a value
+ddi_l.spec._smt.xǁ_Encodingǁformula__mutmut_55  # equivalent: typing has already made text compared with a number unknown, so both sides are text or neither is
+ddi_l.spec._smt.xǁ_Encodingǁformula__mutmut_63  # equivalent: a comparison of two text literals reads no answers
+ddi_l.spec._smt.xǁ_Encodingǁstate__mutmut_58  # equivalent: at most one of one atom always holds
+ddi_l.spec._smt.xǁ_Encodingǁterm__mutmut_21  # equivalent: Z3's names for constants are never read
+ddi_l.spec._smt.xǁ_Encodingǁterm__mutmut_25  # equivalent: Z3's names for constants are never read
+ddi_l.spec._smt.xǁ_Encodingǁterm__mutmut_26  # equivalent: Z3's names for constants are never read
+ddi_l.spec._smt.xǁ_Encodingǁterm__mutmut_54  # equivalent: an assertion that always holds
+ddi_l.spec.compile.x__atom__mutmut_58  # equivalent: _check_codes raises the same error before any statement is built
+ddi_l.spec.compile.x__blaise_syntax__mutmut_15  # equivalent: iso_dates is only tested for truth
+ddi_l.spec.compile.x__code_set__mutmut_38  # equivalent: every operand compares the same question
+ddi_l.spec.compile.x__compiled__mutmut_7
+ddi_l.spec.compile.x__date_fields__mutmut_12  # equivalent: only the width's truth is read
+ddi_l.spec.compile.x__date_fields__mutmut_8  # equivalent: Formatter.parse gives a piece with no field only last
+ddi_l.spec.compile.x__neutral__mutmut_11  # equivalent: Condition's version defaults to 1
+ddi_l.spec.compile.x__neutral__mutmut_29  # equivalent: _groups gives one join per group
+ddi_l.spec.compile.x__neutral__mutmut_32  # equivalent: _groups gives one join per group
+ddi_l.spec.compile.x__neutral__mutmut_33  # equivalent: _groups gives one join per group
+ddi_l.spec.compile.x__verified__mutmut_12
+ddi_l.spec.compile.x__verified__mutmut_29
+ddi_l.spec.compile.x__verified__mutmut_33
+ddi_l.spec.compile.x__verified__mutmut_37
+ddi_l.spec.compile.x__verified__mutmut_40
+ddi_l.spec.compile.x__verified__mutmut_44
+ddi_l.spec.compile.x__verified__mutmut_45
+ddi_l.spec.compile.x__verified__mutmut_46
+ddi_l.spec.compile.x__verified__mutmut_47
+ddi_l.spec.compile.x__verified__mutmut_49
+ddi_l.spec.compile.x__verified__mutmut_50
+ddi_l.spec.compile.x__verified__mutmut_51
+ddi_l.spec.compile.xǁ_BlaiseWriterǁparenthesise__mutmut_3  # equivalent: no caller passes a minimum of 4
+ddi_l.spec.conform.x__all_of__mutmut_2
+ddi_l.spec.conform.x__all_of__mutmut_6
+ddi_l.spec.conform.x__decimal__mutmut_1
+ddi_l.spec.conform.x__number__mutmut_1
+ddi_l.spec.conform.x__number__mutmut_2
+ddi_l.spec.conform.x__number__mutmut_3
+ddi_l.spec.conform.x__number__mutmut_4
+ddi_l.spec.conform.x__number__mutmut_6
+ddi_l.spec.conform.x__number__mutmut_7
+ddi_l.spec.conform.x__range_text__mutmut_10
+ddi_l.spec.conform.x__range_text__mutmut_12
+ddi_l.spec.conform.x__range_text__mutmut_14
+ddi_l.spec.conform.x__range_text__mutmut_8
+ddi_l.spec.conform.x__same_text__mutmut_2
+ddi_l.spec.conform.x__same_text__mutmut_5
+ddi_l.spec.conform.x__sentence__mutmut_3
+ddi_l.spec.conform.x__sentence__mutmut_5
+ddi_l.spec.conform.x__types__mutmut_10
+ddi_l.spec.conform.x__types__mutmut_15
+ddi_l.spec.conform.x__types__mutmut_16
+ddi_l.spec.conform.x__types__mutmut_18
+ddi_l.spec.conform.x__types__mutmut_4
+ddi_l.spec.conform.x_conform__mutmut_20
+ddi_l.spec.conform.x_conform__mutmut_28
+ddi_l.spec.conform.x_conform__mutmut_30
+ddi_l.spec.conform.x_conform__mutmut_31
+ddi_l.spec.conform.x_conform__mutmut_57
+ddi_l.spec.conform.xǁConformReportǁfailed__mutmut_1
+ddi_l.spec.conform.xǁConformReportǁfailed__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_1
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁ__init____mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_21
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁ_instrument_ids__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_100
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_110
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_38
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_47
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_78
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_85
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_codes__mutmut_92
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_22
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_25
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_29
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_30
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_31
+ddi_l.spec.conform.xǁ_Checkerǁcheck_date__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_122
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_77  # equivalent: kinds holds one kind per domain in inner
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_80  # equivalent: kinds holds one kind per domain in inner
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_81  # equivalent: kinds holds one kind per domain in inner
+ddi_l.spec.conform.xǁ_Checkerǁcheck_domain__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_104
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_110
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_122
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_136
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_144
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_55  # equivalent: no list and an empty list are both reported missing
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_57  # equivalent: no list and an empty list are both reported missing
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_91
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_95  # equivalent: the read flags are only tested for truth
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_96
+ddi_l.spec.conform.xǁ_Checkerǁcheck_edits__mutmut_99
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_28
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_35
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_36
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_49
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_50
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_55
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_63
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_64
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_65
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_66
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_67
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_68
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_77
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_78
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_items__mutmut_81
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_modules__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_modules__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_modules__mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_modules__mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁcheck_extra_modules__mutmut_44
+ddi_l.spec.conform.xǁ_Checkerǁcheck_id_sources__mutmut_27
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_138
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_184
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_186
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_190
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_192
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_195
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_61
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_80
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item__mutmut_85
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item_gate__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁcheck_item_gate__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_26
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_45
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_46
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_49
+ddi_l.spec.conform.xǁ_Checkerǁcheck_label__mutmut_56
+ddi_l.spec.conform.xǁ_Checkerǁcheck_languages__mutmut_32
+ddi_l.spec.conform.xǁ_Checkerǁcheck_languages__mutmut_37
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_77
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_78
+ddi_l.spec.conform.xǁ_Checkerǁcheck_module_gate__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_106
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_113
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_121
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_122
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_21
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_30
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_31
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_32
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_50
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_51
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_52
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_58
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_59
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_60
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁcheck_numeric__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_paths__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcheck_paths__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁcheck_question__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁcheck_question__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_32
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_42
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_48
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_51
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_54
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_57
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_61
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_66
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_72
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_75
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_76
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_77
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_80
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_83
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_84
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_85
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_91
+ddi_l.spec.conform.xǁ_Checkerǁcheck_statement_gate__mutmut_92
+ddi_l.spec.conform.xǁ_Checkerǁcheck_text__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcheck_text__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁcheck_text__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁcheck_text__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcheck_variables__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁcheck_variables__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_1
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_5
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁcode_value__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁcompare_gate__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁcompare_gate__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁcompare_gate__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁcompare_gate__mutmut_81
+ddi_l.spec.conform.xǁ_Checkerǁcompare_gate__mutmut_89
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_27
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_42
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_43
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_44
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_45
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_46
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_47
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_49
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_50
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_51
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_52
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_53
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_54
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_55
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_57
+ddi_l.spec.conform.xǁ_Checkerǁcondition__mutmut_64
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_19
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_21
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_22
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_23
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_31
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁdecide__mutmut_5
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_5
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁdomain_kind__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁfind_instrument__mutmut_28
+ddi_l.spec.conform.xǁ_Checkerǁfind_instrument__mutmut_38
+ddi_l.spec.conform.xǁ_Checkerǁfind_instrument__mutmut_39
+ddi_l.spec.conform.xǁ_Checkerǁfind_instrument__mutmut_40
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_20
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁgated_per_page__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁinside__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁis_edit__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁis_edit__mutmut_21
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_1
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_4
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_5
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁkey__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁlookup_fields__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_13
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_15
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_35
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_38
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_41
+ddi_l.spec.conform.xǁ_Checkerǁmatch_items__mutmut_48
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_21
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_22
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_24
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_29
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_33
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_36
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_41
+ddi_l.spec.conform.xǁ_Checkerǁmatch_modules__mutmut_44
+ddi_l.spec.conform.xǁ_Checkerǁpaths_disagree__mutmut_7
+ddi_l.spec.conform.xǁ_Checkerǁquestion_name__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁquestion_name__mutmut_11
+ddi_l.spec.conform.xǁ_Checkerǁquestion_name__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁquestion_name__mutmut_8
+ddi_l.spec.conform.xǁ_Checkerǁquestion_name__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁquestion_subject__mutmut_12
+ddi_l.spec.conform.xǁ_Checkerǁquestion_subject__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁquestion_subject__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁread_only_neutral__mutmut_1
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_19
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_25
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_31
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_32
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_33
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_34
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_35
+ddi_l.spec.conform.xǁ_Checkerǁread_term__mutmut_36
+ddi_l.spec.conform.xǁ_Checkerǁrun__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁrun__mutmut_5
+ddi_l.spec.conform.xǁ_Checkerǁrun__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁsame__mutmut_10
+ddi_l.spec.conform.xǁ_Checkerǁsame__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁsame__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁsame__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁsame__mutmut_19
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_18
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_3
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_33
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_37
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_39
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_40
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_41
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_42
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_45
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_6
+ddi_l.spec.conform.xǁ_Checkerǁsubject__mutmut_9
+ddi_l.spec.conform.xǁ_Checkerǁterm__mutmut_1
+ddi_l.spec.conform.xǁ_Checkerǁterm__mutmut_14
+ddi_l.spec.conform.xǁ_Checkerǁterm__mutmut_16
+ddi_l.spec.conform.xǁ_Checkerǁterm__mutmut_17
+ddi_l.spec.conform.xǁ_Checkerǁterm__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁterm_is__mutmut_2
+ddi_l.spec.conform.xǁ_Checkerǁterm_is__mutmut_7
+ddi_l.spec.expression.x__format__mutmut_38
+ddi_l.spec.expression.x__needs_answers__mutmut_1
+ddi_l.spec.expression.x__needs_answers__mutmut_2
+ddi_l.spec.expression.x__normal__mutmut_27
+ddi_l.spec.expression.x__normal__mutmut_50
+ddi_l.spec.expression.x__normal_leaf__mutmut_3
+ddi_l.spec.expression.x__normal_leaf__mutmut_35
+ddi_l.spec.expression.x__normal_leaf__mutmut_36
+ddi_l.spec.expression.x__normal_leaf__mutmut_38
+ddi_l.spec.expression.x__normal_leaf__mutmut_42
+ddi_l.spec.expression.x__normal_leaf__mutmut_47
+ddi_l.spec.expression.x__normal_leaf__mutmut_51
+ddi_l.spec.expression.x__normal_leaf__mutmut_52
+ddi_l.spec.expression.x__normal_leaf__mutmut_8
+ddi_l.spec.expression.x__precedence__mutmut_10
+ddi_l.spec.expression.x__precedence__mutmut_2
+ddi_l.spec.expression.x__precedence__mutmut_3
+ddi_l.spec.expression.x__precedence__mutmut_4
+ddi_l.spec.expression.x__string__mutmut_13
+ddi_l.spec.expression.x__string__mutmut_14
+ddi_l.spec.expression.x__tokens__mutmut_104
+ddi_l.spec.expression.x__tokens__mutmut_144
+ddi_l.spec.expression.x__tokens__mutmut_145
+ddi_l.spec.expression.x__tokens__mutmut_168
+ddi_l.spec.expression.x__tokens__mutmut_178
+ddi_l.spec.expression.x__tokens__mutmut_179
+ddi_l.spec.expression.x__tokens__mutmut_188
+ddi_l.spec.expression.x__tokens__mutmut_197
+ddi_l.spec.expression.x__tokens__mutmut_273
+ddi_l.spec.expression.x__tokens__mutmut_280
+ddi_l.spec.expression.x__tokens__mutmut_61
+ddi_l.spec.expression.x__tokens__mutmut_62
+ddi_l.spec.expression.x__tokens__mutmut_68
+ddi_l.spec.expression.x__tokens__mutmut_69
+ddi_l.spec.expression.x__tokens__mutmut_78
+ddi_l.spec.expression.x__tokens__mutmut_94
+ddi_l.spec.expression.x__tokens__mutmut_95
+ddi_l.spec.expression.x__without_implied_answers__mutmut_2
+ddi_l.spec.expression.x_equivalent__mutmut_5
+ddi_l.spec.expression.x_equivalent__mutmut_7
+ddi_l.spec.expression.x_format_number__mutmut_10
+ddi_l.spec.expression.x_format_number__mutmut_7
+ddi_l.spec.expression.x_normalise__mutmut_2
+ddi_l.spec.expression.xǁExpressionErrorǁ__init____mutmut_2
+ddi_l.spec.expression.xǁ_Parserǁ__init____mutmut_11
+ddi_l.spec.expression.xǁ_Parserǁadditive__mutmut_1
+ddi_l.spec.expression.xǁ_Parserǁadditive__mutmut_24
+ddi_l.spec.expression.xǁ_Parserǁcall__mutmut_5
+ddi_l.spec.expression.xǁ_Parserǁcomparison__mutmut_29
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_10
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_14
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_21
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_23
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_26
+ddi_l.spec.expression.xǁ_Parserǁkeyword_comparison__mutmut_28
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_1
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_2
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_3
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_4
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_5
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_6
+ddi_l.spec.expression.xǁ_Parserǁnest__mutmut_7
+ddi_l.spec.expression.xǁ_Parserǁnot_expression__mutmut_6
+ddi_l.spec.expression.xǁ_Parserǁnot_expression__mutmut_7
+ddi_l.spec.expression.xǁ_Parserǁnot_expression__mutmut_8
+ddi_l.spec.expression.xǁ_Parserǁoperand__mutmut_2
+ddi_l.spec.expression.xǁ_Parserǁoperand__mutmut_4
+ddi_l.spec.expression.xǁ_Parserǁprimary__mutmut_24
+ddi_l.spec.expression.xǁ_Parserǁprimary__mutmut_25
+ddi_l.spec.expression.xǁ_Parserǁprimary__mutmut_26
+ddi_l.spec.expression.xǁ_Parserǁterm__mutmut_1
+ddi_l.spec.expression.xǁ_Parserǁterm__mutmut_10
+ddi_l.spec.expression.xǁ_Parserǁterm__mutmut_13
+ddi_l.spec.expression.xǁ_Parserǁterm__mutmut_24
+ddi_l.spec.expression.xǁ_Parserǁunary__mutmut_10
+ddi_l.spec.expression.xǁ_Parserǁunary__mutmut_11
+ddi_l.spec.expression.xǁ_Parserǁunary__mutmut_3
+ddi_l.spec.expression.xǁ_Parserǁunary__mutmut_6
+ddi_l.spec.expression.xǁ_Parserǁunary__mutmut_9
+ddi_l.spec.expression.xǁ_Writerǁstring__mutmut_8
+ddi_l.spec.expression.xǁ_Writerǁstring__mutmut_9
+ddi_l.spec.expression.xǁ_Writerǁtoday__mutmut_2
+ddi_l.spec.semantics.x__compares__mutmut_10  # equivalent: a name not in the respondent has no value either way
+ddi_l.spec.semantics.x__holds__mutmut_8  # equivalent: the last test, state == name, also reads answered
+ddi_l.spec.semantics.x__holds__mutmut_9  # equivalent: the last test, state == name, also reads answered
+ddi_l.spec.semantics.x__typing__mutmut_10  # equivalent: a name only predicates read needs no type
+ddi_l.spec.semantics.x__typing__mutmut_29  # equivalent: None and False are both false
+ddi_l.spec.semantics.x__value__mutmut_13  # equivalent: a name not in the respondent has no value either way
+ddi_l.spec.semantics.x__value_text__mutmut_38  # equivalent: a value with decimal places is never 0
+ddi_l.spec.semantics.xǁExampleǁdescribe__mutmut_9  # equivalent: it joins at most one part
+ddi_l.validation.x__build_fragment_from_maintainable__mutmut_2  # equivalent: the report does not depend on the TopLevelReference
+ddi_l.validation.x__coerce_wrapper__mutmut_4  # equivalent: from_xml validates only when validate is true
+ddi_l.validation.x__coerce_wrapper__mutmut_6  # equivalent: from_xml's validate defaults to False
+ddi_l.validation.x__collect_lint__mutmut_10
+ddi_l.validation.x__collect_lint__mutmut_11
+ddi_l.validation.x__collect_lint__mutmut_5  # equivalent: the lint findings do not depend on include_schema
+ddi_l.validation.x__collect_lint__mutmut_6
+ddi_l.validation.x__collect_lint__mutmut_9  # equivalent: the lint findings do not depend on include_schema
+ddi_l.validation.x_validate_document__mutmut_18
+ddi_l.validation.x_validate_document__mutmut_19
+ddi_l.validation.x_validate_document__mutmut_22
+ddi_l.validation.x_validate_document__mutmut_25
+ddi_l.validation.x_validate_fragment__mutmut_12
+ddi_l.validation.x_validate_fragment__mutmut_17  # equivalent: the fallback location is unused while schema issues carry an xpath
+ddi_l.validation.x_validate_fragment__mutmut_18
+ddi_l.validation.x_validate_fragment__mutmut_19
+ddi_l.validation.x_validate_fragment__mutmut_22
+ddi_l.validation.x_validate_fragment__mutmut_25
+ddi_l.validation.x_validate_fragment__mutmut_31
+ddi_l.validation.x_validate_fragment__mutmut_35
+ddi_l.validation.x_validate_maintainable__mutmut_12
+ddi_l.validation.x_validate_maintainable__mutmut_19
+ddi_l.validation.xǁValidationReportǁto_dict__mutmut_7  # equivalent: every message dict has a "context" key

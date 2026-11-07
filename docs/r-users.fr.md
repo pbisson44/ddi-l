@@ -13,7 +13,7 @@ valeurs dans les deux sens : aucun paquet R distinct n'est nécessaire, et toute
 les fonctionnalités de `ddi-l` sont disponibles.
 
 Cette page présente les équivalents R des tâches courantes. Le
-[Guide de l'utilisateur](user-guide.md) Python détaille chaque fonctionnalité ;
+[Guide de l'utilisateur](user-guide.fr.md) Python détaille chaque fonctionnalité ;
 les appels sont les mêmes, avec `$` à la place de `.`.
 
 ## Installation
@@ -158,7 +158,7 @@ py_last_error()$type
 # -> "DDIParseError"
 ```
 
-Voir [Validation](validation.md) pour la liste complète des types d'exceptions.
+Voir [Validation](validation.fr.md) pour la liste complète des types d'exceptions.
 
 ## JSON et données liées
 

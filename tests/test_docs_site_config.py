@@ -341,6 +341,63 @@ def test_the_em_dash_check_catches_each_spelling(tmp_path) -> None:
     ]
 
 
+# A link to another page names its file, `installation.en.md`, not
+# `installation.md`: the site maps either to the page in its language, but
+# GitHub's file view only finds the file.
+_PAGE_LINK = re.compile(
+    r"\]\(<?(?P<a>[^)\s>#:]+\.md)[#)>\s]"
+    r"|^\s{0,3}\[[^\]]+\]:\s*(?P<b>[^\s#:]+\.md)\b"
+    r"|\bhref=[\"'](?P<c>[^\"'#:]+\.md)[#\"']"
+)
+
+
+def _missing_link_targets(path: Path) -> list[str]:
+    problems: list[str] = []
+    fence: str | None = None
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            marker = stripped[:3]
+            fence = marker if fence is None else (None if marker == fence else fence)
+            continue
+        if fence is not None:
+            continue
+        for match in _PAGE_LINK.finditer(re.sub(r"`[^`]*`", "", line)):
+            target = next(group for group in match.groups() if group)
+            if not (path.parent / target).is_file():
+                problems.append(f"{path.name}:{number}: {target}")
+    return problems
+
+
+def test_every_link_to_a_page_names_its_file() -> None:
+    pages = sorted((PROJECT_ROOT / "docs").rglob("*.md"))
+
+    problems = [p for page in pages for p in _missing_link_targets(page)]
+
+    assert problems == []
+
+
+def test_the_link_check_catches_a_link_github_cannot_follow(tmp_path) -> None:
+    (tmp_path / "other.en.md").write_text("# Other\n", encoding="utf-8")
+    page = tmp_path / "page.en.md"
+    page.write_text(
+        "[Fine](other.en.md#part) and [missing](other.md#part).\n"
+        "[ref]: other.md\n"
+        '<a href="other.md">raw</a>\n'
+        "`[in code](other.md)` and [a site](https://example.org/x.md)\n"
+        "```markdown\n[in a fence](other.md)\n```\n",
+        encoding="utf-8",
+    )
+
+    problems = _missing_link_targets(page)
+
+    assert problems == [
+        "page.en.md:1: other.md",
+        "page.en.md:2: other.md",
+        "page.en.md:3: other.md",
+    ]
+
+
 # The curriculum's answer-key page is generated from the modules by
 # hooks/answer_keys.py, so the answers under each exercise are the only copy.
 

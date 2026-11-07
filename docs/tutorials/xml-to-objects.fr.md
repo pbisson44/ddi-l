@@ -56,5 +56,5 @@ ddi roundtrip mon-etude.xml sortie.xml --validate
 
 ## Prochaines étapes
 
-- [Guide d'utilisation](../user-guide.md) pour l'API CRUD complète.
-- [Référence des modèles](../models.md) pour tous les types disponibles.
+- [Guide d'utilisation](../user-guide.fr.md) pour l'API CRUD complète.
+- [Référence des modèles](../models.fr.md) pour tous les types disponibles.

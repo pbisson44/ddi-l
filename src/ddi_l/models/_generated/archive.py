@@ -412,12 +412,12 @@ class IndividualIdentificationFields(MaintainableBase):
 
     TAG: ClassVar[str] = qn(ARCHIVE_NS, "IndividualIdentification")
     NSMAP: ClassVar[NamespaceBindings] = build_namespace_map("a")
-    individual_names: list[InternationalString] = field(default_factory=list)  # [0..*]
+    individual_names: list[Element] = field(default_factory=list)  # [0..*]
     ddi_maintenance_agency_ids: list[Element] = field(default_factory=list)  # [0..*]
     researcher_ids: list[Element] = field(default_factory=list)  # [0..*]
     individual_images: list[Element] = field(default_factory=list)  # [0..*]
     _FIELD_XML_MAP: ClassVar[dict] = {
-        "individual_names": (qn(ARCHIVE_NS, "IndividualName"), "intl_string", True),
+        "individual_names": (qn(ARCHIVE_NS, "IndividualName"), "element", True),
         "ddi_maintenance_agency_ids": (qn(ARCHIVE_NS, "DDIMaintenanceAgencyID"), "element", True),
         "researcher_ids": (qn(ARCHIVE_NS, "ResearcherID"), "element", True),
         "individual_images": (qn(ARCHIVE_NS, "IndividualImage"), "element", True),

@@ -1,10 +1,10 @@
 """Request bodies for the generated OpenAPI schema.
 
 The handlers read ``await request.body()`` rather than a typed ``data``
-parameter (see :mod:`ddi_l.server.routes`), so Litestar cannot infer their
+parameter (see `ddi_l.server.routes`), so Litestar cannot infer their
 request bodies. They are added to the generated spec here. Paths are checked
 against the app's routes at startup, and the sample payloads come from
-:mod:`ddi_l.server.samples`.
+`ddi_l.server.samples`.
 
 Also added here: the zip variant of `GET /v1/tables/template`, since a route
 declares one media type per response.

@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ddi-l:questionnaire-spec:1",
+  "title": "ddi-l questionnaire spec",
+  "description": "What a questionnaire should contain: its modules, questions, response domains, gates and edit checks. `ddi conform` compares an instrument with it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["spec", "modules"],
+  "properties": {
+    "spec": {
+      "description": "The spec's name.",
+      "$ref": "#/$defs/id"
+    },
+    "version": {
+      "description": "The spec's own version.",
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "instrument": {
+      "description": "The instrument to check, when the file has several: its name, label, user ID or ID.",
+      "$ref": "#/$defs/id"
+    },
+    "languages": {
+      "description": "The languages every text must be in.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/language"},
+      "uniqueItems": true
+    },
+    "blaise": {
+      "description": "The Blaise words a gate compiled to Blaise needs. None has a default.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "empty": {"type": "string", "minLength": 1},
+        "refused": {"type": "string", "minLength": 1},
+        "today": {"type": "string", "minLength": 1},
+        "date": {
+          "description": "A template with {year}, {month} and {day}.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "match": {"$ref": "#/$defs/match"},
+    "severities": {
+      "description": "A severity for a rule, replacing its default.",
+      "type": "object",
+      "propertyNames": {"pattern": "^spec\\."},
+      "additionalProperties": {"$ref": "#/$defs/severity"}
+    },
+    "code_lists": {
+      "description": "Code lists that questions name with `list:`.",
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/id"},
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["values"],
+        "properties": {
+          "values": {"$ref": "#/$defs/codes"}
+        }
+      }
+    },
+    "imported_variables": {
+      "description": "Variables a data lookup supplies.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/variable"}
+    },
+    "derived_variables": {
+      "description": "Variables the instrument computes.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/variable"}
+    },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/module"}
+    },
+    "edits": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/edit"}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "description": "A BCP 47 language tag: en, fr-CA.",
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,8}(-[A-Za-z0-9]{1,8})*$"
+    },
+    "severity": {
+      "enum": ["error", "warning", "info"]
+    },
+    "expression": {
+      "description": "A gate or condition in the spec expression language.",
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "description": "Text in the first of `languages`, or text by language.",
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"$ref": "#/$defs/language"},
+          "additionalProperties": {"type": "string"}
+        }
+      ]
+    },
+    "codes": {
+      "description": "Each code value and its category label.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/text"}
+    },
+    "domain": {
+      "description": "One response domain.",
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "values": {"$ref": "#/$defs/codes"},
+            "list": {"$ref": "#/$defs/id"}
+          },
+          "oneOf": [{"required": ["values"]}, {"required": ["list"]}]
+        },
+        "numeric": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": {"type": "number"},
+            "max": {"type": "number"},
+            "min_inclusive": {"type": "boolean"},
+            "max_inclusive": {"type": "boolean"},
+            "decimals": {"type": "integer", "minimum": 0}
+          }
+        },
+        "text": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min_length": {"type": "integer", "minimum": 0},
+            "max_length": {"type": "integer", "minimum": 1}
+          }
+        },
+        "date": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "description": "The DDI DateTypeCode: Date, DateTime, Year...",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "domain": {"$ref": "#/$defs/domain"},
+        "gate": {"$ref": "#/$defs/expression"}
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "required": {
+          "description": "Whether the instrument must have the module (default true).",
+          "type": "boolean"
+        },
+        "gate": {"$ref": "#/$defs/expression"},
+        "gate_scope": {
+          "description": "Whether the gate wraps the whole module (default) or each of its pages.",
+          "enum": ["module", "page"]
+        },
+        "statements": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "questions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/question"}
+        }
+      }
+    },
+    "edit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "when"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "when": {"$ref": "#/$defs/expression"},
+        "module": {"$ref": "#/$defs/id"},
+        "message": {"$ref": "#/$defs/text"},
+        "severity": {"$ref": "#/$defs/severity"}
+      }
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {"$ref": "#/$defs/id"},
+        "type": {"enum": ["text", "numeric", "code", "date"]},
+        "source": {"type": "string"},
+        "values": {
+          "type": "array",
+          "items": {"type": ["string", "number"]}
+        }
+      }
+    },
+    "id_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "construct_name",
+          "construct_alias",
+          "item_name",
+          "item_alias",
+          "label",
+          "user_id"
+        ]
+      }
+    },
+    "match": {
+      "description": "Where to find each spec id in the instrument.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {"$ref": "#/$defs/id_sources"},
+        "statement_id": {"$ref": "#/$defs/id_sources"},
+        "module_id": {"$ref": "#/$defs/id_sources"},
+        "module_depth": {
+          "description": "The depth of module sequences: the instrument's own sequence is 1, its children 2. By default any depth, and modules the spec does not list are looked for at the depth of those it does.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "edits": {
+          "description": "How edit checks are stored, for --edits strict. No default.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["attribute", "value", "id"],
+          "properties": {
+            "attribute": {
+              "description": "The user attribute key that marks an edit check.",
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "description": "Its value on an edit check.",
+              "type": "string"
+            },
+            "id": {
+              "enum": ["construct_name", "label", "user_id"]
+            }
+          }
+        },
+        "lookup_types": {
+          "description": "A data lookup field type and the spec type it stands for. None by default.",
+          "type": "object",
+          "additionalProperties": {"enum": ["text", "numeric", "code", "date"]}
+        }
+      }
+    }
+  }
+}

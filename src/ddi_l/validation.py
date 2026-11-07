@@ -11,18 +11,13 @@ from . import schema_loader
 from ._etree import Element
 from .document import DDIDocument, DDIFragment, Document
 from .exceptions import DDIValidationError, ErrorLocation, build_error_location
-from .lint import LintFinding, run_lint, run_profile
-from .models import MaintainableBase, clone_element
+from .lint import LintConfiguration, LintFinding, run_lint, run_profile
+from .models import MaintainableBase
 
 DocumentSource = Document | DDIDocument | Element | str | bytes | Path
 FragmentSource = DDIFragment | Element | str | bytes | Path
 
 _WrapperT = TypeVar("_WrapperT", DDIDocument, DDIFragment)
-
-_LINT_CONTAINER_AGENCY = "example.agency"
-_LINT_CONTAINER_IDENTIFIER = "lint.container"
-_LINT_CONTAINER_VERSION = "1.0"
-_LINT_CONTAINER_TITLE = "Lint validation container"
 
 
 @dataclass(frozen=True)
@@ -53,7 +48,7 @@ class ValidationMessage:
     def from_schema_issue(
         cls, issue: schema_loader.SchemaValidationIssue
     ) -> ValidationMessage:
-        """Build a message from a :class:`SchemaValidationIssue`."""
+        """Build a message from a `SchemaValidationIssue`."""
         location = ErrorLocation.from_issue(issue)
         location_description = location.describe() if location else None
         return cls(
@@ -67,7 +62,7 @@ class ValidationMessage:
 
     @classmethod
     def from_lint_finding(cls, finding: LintFinding) -> ValidationMessage:
-        """Build a message from a :class:`LintFinding`."""
+        """Build a message from a `LintFinding`."""
         return cls(
             message=finding.message,
             severity=finding.severity,
@@ -165,9 +160,11 @@ def _coerce_wrapper(
         return source
     if isinstance(source, Document):
         # ``Document`` is what ``new_study()`` and ``open_ddi()`` hand back, so
-        # it is the type a caller most naturally has. ``.inner`` flushes any
-        # pending edits before returning the underlying ``DDIDocument``.
-        inner = source.inner
+        # it is the type a caller most naturally has. Flush pending edits and
+        # read the underlying ``DDIDocument`` directly: ``.inner`` would also
+        # detach any model the caller holds, losing its later edits.
+        source._flush()
+        inner = source._inner
         if isinstance(inner, wrapper_cls):
             return inner
     if isinstance(source, Element):
@@ -191,43 +188,27 @@ def _build_fragment_from_maintainable(maintainable: MaintainableBase) -> DDIFrag
     return fragment
 
 
-def _build_document_for_lint(fragment: DDIFragment) -> DDIDocument:
-    """Create a temporary document container for fragment lint execution."""
-    document = DDIDocument.create(
-        agency=_LINT_CONTAINER_AGENCY,
-        identifier=_LINT_CONTAINER_IDENTIFIER,
-        version=_LINT_CONTAINER_VERSION,
-        title=_LINT_CONTAINER_TITLE,
-    )
-    for payload in fragment.iter_fragment_payloads():
-        document.root.append(clone_element(payload))
-    return document
-
-
 def _collect_lint(
-    document: DDIDocument,
+    document: DDIDocument | DDIFragment,
     *,
     lint_rules: Sequence[str] | None = None,
     lint_profile: str | None = None,
+    configuration: LintConfiguration | None = None,
 ) -> list[LintFinding]:
-    """Execute lint rules or a profile against ``document``."""
+    """Execute lint rules or a profile against ``document``.
+
+    A fragment is linted as itself, as `ddi lint` does, so the rules that
+    know a fragment from a whole document see one.
+    """
     if lint_profile is not None:
         profile_result = run_profile(
-            document, profile_name=lint_profile, include_schema=False
+            document,
+            profile_name=lint_profile,
+            include_schema=False,
+            configuration=configuration,
         )
         return profile_result.lint_findings
-    return run_lint(document, rules=lint_rules)
-
-
-def _collect_fragment_lint(
-    fragment: DDIFragment,
-    *,
-    lint_rules: Sequence[str] | None = None,
-    lint_profile: str | None = None,
-) -> list[LintFinding]:
-    """Execute lint rules against ``fragment`` by wrapping it in a document."""
-    document = _build_document_for_lint(fragment)
-    return _collect_lint(document, lint_rules=lint_rules, lint_profile=lint_profile)
+    return run_lint(document, rules=lint_rules, configuration=configuration)
 
 
 def validate_document(
@@ -239,6 +220,8 @@ def validate_document(
     raise_error: bool = False,
     include_context: bool = True,
     version: str | None = None,
+    max_schema_issues: int | None = None,
+    lint_configuration: LintConfiguration | None = None,
 ) -> ValidationReport:
     """Validate a DDI document and optionally execute lint rules.
 
@@ -248,12 +231,17 @@ def validate_document(
             validation.
         lint_rules: Specific lint rule identifiers to run.
         lint_profile: Named lint profile to execute.
-        raise_error: ``True`` to raise :class:`DDIValidationError` when issues
+        raise_error: ``True`` to raise `DDIValidationError` when issues
             are detected.
         include_context: ``False`` to omit contextual snippets from reported
             schema issues.
         version: DDI schema version to validate against; ``None`` uses the
             version the document declares.
+        max_schema_issues: Schema errors to report at most; ``None``
+            reports them all.
+        lint_configuration: The lint configuration for this call, from
+            `ddi_l.lint.lint_configuration`; ``None`` keeps the process
+            default.
     """
     document = _coerce_document(source)
     root = document.to_etree()
@@ -263,6 +251,7 @@ def validate_document(
             raise_error=raise_error,
             include_context=include_context,
             version=version,
+            max_issues=max_schema_issues,
         )
     except schema_loader.SchemaValidationError as exc:
         fallback_location = build_error_location(element=root)
@@ -275,7 +264,10 @@ def validate_document(
     lint_findings: list[LintFinding] = []
     if include_lint:
         lint_findings = _collect_lint(
-            document, lint_rules=lint_rules, lint_profile=lint_profile
+            document,
+            lint_rules=lint_rules,
+            lint_profile=lint_profile,
+            configuration=lint_configuration,
         )
 
     return ValidationReport(schema_issues=schema_issues, lint_findings=lint_findings)
@@ -290,6 +282,8 @@ def validate_fragment(
     raise_error: bool = False,
     include_context: bool = True,
     version: str | None = None,
+    max_schema_issues: int | None = None,
+    lint_configuration: LintConfiguration | None = None,
 ) -> ValidationReport:
     """Validate a fragment instance and return structured issues.
 
@@ -299,12 +293,17 @@ def validate_fragment(
             validation.
         lint_rules: Specific lint rule identifiers to run.
         lint_profile: Named lint profile to execute.
-        raise_error: ``True`` to raise :class:`DDIValidationError` when issues
+        raise_error: ``True`` to raise `DDIValidationError` when issues
             are detected.
         include_context: ``False`` to omit contextual snippets from reported
             schema issues.
         version: DDI schema version to validate against; ``None`` uses the
             version the document declares.
+        max_schema_issues: Schema errors to report at most; ``None``
+            reports them all.
+        lint_configuration: The lint configuration for this call, from
+            `ddi_l.lint.lint_configuration`; ``None`` keeps the process
+            default.
     """
     fragment = _coerce_fragment(source)
     root = fragment.to_etree()
@@ -314,6 +313,7 @@ def validate_fragment(
             raise_error=raise_error,
             include_context=include_context,
             version=version,
+            max_issues=max_schema_issues,
         )
     except schema_loader.SchemaValidationError as exc:
         fallback_location = build_error_location(element=root)
@@ -324,8 +324,11 @@ def validate_fragment(
         ) from exc
     lint_findings: list[LintFinding] = []
     if include_lint:
-        lint_findings = _collect_fragment_lint(
-            fragment, lint_rules=lint_rules, lint_profile=lint_profile
+        lint_findings = _collect_lint(
+            fragment,
+            lint_rules=lint_rules,
+            lint_profile=lint_profile,
+            configuration=lint_configuration,
         )
     return ValidationReport(schema_issues=schema_issues, lint_findings=lint_findings)
 
@@ -338,6 +341,7 @@ def validate_maintainable(
     lint_profile: str | None = None,
     raise_error: bool = False,
     include_context: bool = True,
+    lint_configuration: LintConfiguration | None = None,
 ) -> ValidationReport:
     """Validate an individual maintainable by wrapping it in a fragment.
 
@@ -347,10 +351,11 @@ def validate_maintainable(
             validation.
         lint_rules: Specific lint rule identifiers to run.
         lint_profile: Named lint profile to execute.
-        raise_error: ``True`` to raise :class:`DDIValidationError` when issues
+        raise_error: ``True`` to raise `DDIValidationError` when issues
             are detected.
         include_context: ``False`` to omit contextual snippets from reported
             schema issues.
+        lint_configuration: As for `validate_fragment`.
     """
     fragment = _build_fragment_from_maintainable(maintainable)
     return validate_fragment(
@@ -360,6 +365,7 @@ def validate_maintainable(
         lint_profile=lint_profile,
         raise_error=raise_error,
         include_context=include_context,
+        lint_configuration=lint_configuration,
     )
 
 

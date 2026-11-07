@@ -23,7 +23,7 @@ permissions:
 env:
   # Silences Material's advisory banner.
   NO_MKDOCS_2_WARNING: "1"
-  UV_VERSION: "0.9.7"
+  UV_VERSION: "0.13.7"
 
 jobs:
   deploy:

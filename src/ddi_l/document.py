@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import builtins
 import dataclasses
+import functools
 import re
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
@@ -12,12 +13,15 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
+    TypeVar,
 )
 from uuid import uuid4
 
 if TYPE_CHECKING:  # pragma: no cover - imported for type checking only
+    from .colectica_edit import EditResult, RepairPlan, RevisionPlan
+    from .colectica_logic import AnyCondition
     from .index import Index
-    from .lint import LintFinding
+    from .lint import LintConfiguration, LintFinding
     from .models.archive import Archive
     from .models.comparison import Comparison
     from .models.concept import Concept, Universe
@@ -52,6 +56,8 @@ from ._etree import (
     create_element,
     tostring,
 )
+from ._lossless import Source
+from .colectica_logic import _version_rank
 from .constants import (
     COMPARATIVE_NS,
     DDI_PROFILE_NS,
@@ -87,6 +93,9 @@ from .namespace_utils import apply_namespace_map, extract_namespace_declarations
 from .namespaces import NAMESPACE_PREFIXES, canonicalize_prefixes
 from .schema_loader._versions import detect_version_from_element, normalize_version
 from .xml_utils import coerce_element as _coerce_xml_input
+from .xml_utils import sniff_bom
+
+_ModuleT = TypeVar("_ModuleT", bound=MaintainableBase)
 
 SourceType = str | Path | bytes | Element
 
@@ -213,21 +222,39 @@ def _build_item_registry() -> dict[type[MaintainableBase], _ItemSlot]:
     }
 
 
-_ITEM_REGISTRY: dict[type[MaintainableBase], _ItemSlot] | None = None
-
-
+@functools.cache
 def _get_item_registry() -> dict[type[MaintainableBase], _ItemSlot]:
-    global _ITEM_REGISTRY
-    if _ITEM_REGISTRY is None:
-        _ITEM_REGISTRY = _build_item_registry()
-    return _ITEM_REGISTRY
+    return _build_item_registry()
+
+
+def _written_as_read(
+    wrapper: DDIDocument | DDIFragment, *, whole: bool
+) -> bytes | None:
+    """``wrapper`` with its unchanged parts as read, or ``None``.
+
+    ``None`` without a source, and for a ``DDIInstance`` whose file binds a
+    DDI namespace to a prefix other than its own: that one is laid out afresh
+    with the canonical prefixes, as it always was.
+    """
+    if wrapper._source is None:
+        return None
+    from ._lossless import write
+
+    fragment = isinstance(wrapper, DDIFragment)
+    return write(
+        wrapper._root,
+        wrapper._source,
+        colectica=fragment,
+        whole=whole,
+        canonical_prefixes=not fragment,
+    )
 
 
 def _parse_source(source: SourceType) -> Element:
-    """Convert a supported XML input into an :class:`Element` tree.
+    """Convert a supported XML input into an `Element` tree.
 
     Args:
-        source: Raw XML, a filesystem path, or an :class:`Element` instance to
+        source: Raw XML, a filesystem path, or an `Element` instance to
             wrap.
 
     Returns:
@@ -275,7 +302,7 @@ def citation_title(citation: Element | None) -> str | None:
     """Return the title text of ``citation``, or ``None`` when it has none.
 
     DDI 3.3 nests the text one level down: ``r:Title`` holds one
-    ``r:String`` per language, as :meth:`DDIDocument.set_citation` writes it.
+    ``r:String`` per language, as `DDIDocument.set_citation` writes it.
     Some producers write ``<r:Title>text</r:Title>`` without the wrapper, so
     direct text is accepted as well.
     """
@@ -419,6 +446,9 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
             )
         self._root = root
         self._index: Index | None = None
+        # The bytes the document was read from, when it was read from a file
+        # or bytes in UTF-8; unchanged parts are written back as read.
+        self._source: Source | None = None
         cleanup_namespaces(self._root, dict(self._default_ns_map))
         # Record declarations after the cleanup so unused ones (such as an
         # unused ``xsi``) are not re-emitted on save; both backends then agree.
@@ -457,7 +487,7 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
             title: Optional human-readable title added to the citation.
             title_language: Language tag for ``title`` when provided.
             build_index: Build the resolver index now. By default it is built on
-                first use of :attr:`DDIDocument.resolver`.
+                first use of `DDIDocument.resolver`.
 
         Returns:
             DDIDocument: A wrapper ready for further manipulation.
@@ -490,12 +520,12 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
 
         Args:
             source: Raw XML text, bytes, a filesystem path, or an
-                :class:`Element` instance.
+                `Element` instance.
             validate: Whether to validate the parsed XML against the DDI XML
                 schema. When ``True``, invalid XML raises
-                :class:`schema_loader.SchemaValidationError`.
+                `schema_loader.SchemaValidationError`.
             build_index: Build the resolver index now. By default it is built on
-                first use of :attr:`DDIDocument.resolver`.
+                first use of `DDIDocument.resolver`.
 
         Returns:
             DDIDocument: The parsed document wrapper.
@@ -505,10 +535,12 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
             schema_loader.SchemaValidationError: Raised when ``validate`` is
                 ``True`` and the XML is not schema compliant.
         """
+        record, source = Source.capture(source)
         root = _parse_source(source)
         if validate:
             schema_loader.validate(root)
         document = cls(root)
+        document._source = record
         if build_index:
             document.build_index()
         return document
@@ -518,10 +550,16 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
 
         Args:
             pretty_print: When ``True`` the output is formatted for readability.
+                A document read from a file then keeps its unchanged parts as
+                they were read.
 
         Returns:
             str: UTF-8 encoded XML representation of the document.
         """
+        if pretty_print:
+            written = _written_as_read(self, whole=False)
+            if written is not None:
+                return written.decode("utf-8")
         clone = clone_element(self._root)
         nsmap = _build_serialization_nsmap(
             self._root,
@@ -555,9 +593,9 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
                 ``<DDIInstance>`` payload.
             validate: Whether to validate the generated XML against the DDI
                 schema. When ``True``, invalid XML raises
-                :class:`schema_loader.SchemaValidationError`.
+                `schema_loader.SchemaValidationError`.
             build_index: Build the resolver index now. By default it is built on
-                first use of :attr:`DDIDocument.resolver`.
+                first use of `DDIDocument.resolver`.
 
         Returns:
             DDIDocument: The document represented by ``data``.
@@ -669,11 +707,11 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
         return citation
 
     def iter_study_units(self) -> Iterator[StudyUnit]:
-        """Yield :class:`StudyUnit` wrappers for each inline study in the document."""
+        """Yield `StudyUnit` wrappers for each inline study in the document."""
         yield from self.iter_maintainables(StudyUnit)
 
     def add_study_unit(self, study_unit: StudyUnit) -> Element:
-        """Append a new :class:`StudyUnit` to the instance document."""
+        """Append a new `StudyUnit` to the instance document."""
         return self.add_maintainable(study_unit)
 
     def add_maintainable(self, maintainable: MaintainableBase) -> Element:
@@ -702,11 +740,19 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
             self._invalidate_index()
         return removed
 
-    def lint(self, rules: Sequence[str] | None = None):
-        """Run lint checks against the document using the shared registry."""
+    def lint(
+        self,
+        rules: Sequence[str] | None = None,
+        *,
+        configuration: LintConfiguration | None = None,
+    ):
+        """Run lint checks against the document using the shared registry.
+
+        ``rules`` and ``configuration`` are as for `ddi_l.lint.run_lint`.
+        """
         from . import lint as lint_module
 
-        return lint_module.run_lint(self, rules=rules)
+        return lint_module.run_lint(self, rules=rules, configuration=configuration)
 
     def _invalidate_index(self) -> None:
         """Clear the cached resolver so it is rebuilt on next access."""
@@ -714,13 +760,13 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
 
     @property
     def resolver(self) -> Index:
-        """Return an :class:`Index` resolver for the document, caching results."""
+        """Return an `Index` resolver for the document, caching results."""
         if self._index is None:
             self._index = self.build_index()
         return self._index
 
     def build_index(self) -> Index:
-        """Construct an :class:`ddi_l.index.Index` for the document's content."""
+        """Construct an `ddi_l.index.Index` for the document's content."""
         from .index import Index
 
         self._require_typed_models()
@@ -792,18 +838,22 @@ class DDIDocument(MaintainableManagementMixin, NamespaceManagementMixin):
 
         Args:
             raise_error: When ``True`` a validation failure raises
-                :class:`schema_loader.SchemaValidationError` instead of
-                returning issues.
+                `DDIValidationError` (with the issues
+                and the document root as its location) instead of returning
+                issues.
 
         Returns:
             list[schema_loader.SchemaValidationIssue]: Collected schema
             validation issues, empty when the document is valid.
+
+        Raises:
+            DDIValidationError: If ``raise_error`` is ``True`` and the document
+                is invalid.
         """
         try:
             return schema_loader.validate(self._root, raise_error=raise_error)
         except schema_loader.SchemaValidationError as exc:
-            if not raise_error:
-                return list(exc.issues)
+            # schema_loader.validate only raises when raise_error is True.
             fallback_location = build_error_location(element=self._root)
             raise DDIValidationError.from_schema_error(
                 exc,
@@ -831,12 +881,28 @@ class DDIFragment:
         self._declared_namespaces: dict[str | None, str] = (
             extract_namespace_declarations(self._root)
         )
+        # Whether the file read started with a byte-order mark; ``None`` for a
+        # fragment built in code or from an Element. See ``source_bom``.
+        self._source_bom: bool | None = None
+        # The bytes it was read from; see DDIDocument._source.
+        self._source: Source | None = None
         cleanup_namespaces(self._root, dict(self._default_ns_map))
 
     @property
     def root(self) -> Element:
         """Element: Direct access to the fragment instance tree."""
         return self._root
+
+    @property
+    def source_bom(self) -> bool | None:
+        """Whether the source started with a UTF-8 byte-order mark.
+
+        Most Colectica exports have one, some do not. `save` and
+        `to_colectica_bytes` keep whichever the source had. ``None``
+        when the fragment was not read from bytes (built in code, or from an
+        already-parsed element).
+        """
+        return self._source_bom
 
     @classmethod
     def create(
@@ -858,10 +924,10 @@ class DDIFragment:
 
         Args:
             source: Raw XML text, bytes, a filesystem path, or an
-                :class:`Element` instance.
+                `Element` instance.
             validate: Whether to validate the parsed XML against the DDI XML
                 schema. When ``True`` invalid XML raises
-                :class:`schema_loader.SchemaValidationError`.
+                `schema_loader.SchemaValidationError`.
 
         Returns:
             DDIFragment: The parsed fragment wrapper.
@@ -871,20 +937,33 @@ class DDIFragment:
             schema_loader.SchemaValidationError: Raised when ``validate`` is
                 ``True`` and the XML is not schema compliant.
         """
+        bom = sniff_bom(source)
+        record, source = Source.capture(source)
         root = _parse_source(source)
         if validate:
             schema_loader.validate(root)
-        return cls(root)
+        fragment = cls(root)
+        fragment._source_bom = bom
+        fragment._source = record
+        return fragment
 
     def to_xml(self, *, pretty_print: bool = True) -> str:
         """Serialise the fragment into an XML string.
 
         Args:
-            pretty_print: When ``True`` the output is formatted for readability.
+            pretty_print: ``True`` gives the text Colectica writes, without
+                a byte-order mark; a fragment read from a file keeps its
+                unchanged parts as they were read. ``False`` gives this
+                library's compact layout.
 
         Returns:
-            str: UTF-8 encoded XML representation of the fragment.
+            str: The XML text of the fragment.
         """
+        if pretty_print:
+            written = _written_as_read(self, whole=True)
+            if written is not None:
+                return written.decode("utf-8-sig")
+            return self.to_colectica_bytes(bom=False).decode("utf-8")
         clone = clone_element(self._root)
         nsmap = _build_serialization_nsmap(
             self._root, getattr(self, "_declared_namespaces", None)
@@ -1007,11 +1086,11 @@ class DDIFragment:
 
         Each ``<Fragment>`` payload becomes an instance of the model registered
         for its tag; every item type a DDI 3.3 fragment can carry has one. The
-        models are copies: change one and :meth:`put` it back.
+        models are copies: change one and `put` it back.
 
         Args:
             item_type: Only return items of this model class (or a subclass),
-                e.g. :class:`~ddi_l.models.Variable`.
+                e.g. `Variable`.
 
         Returns:
             The items in document order. Payloads that are not items (an
@@ -1076,7 +1155,7 @@ class DDIFragment:
         version_tag = qn(self._reusable_ns, "Version")
         _, payload = max(
             matches,
-            key=lambda pair: _version_key(pair[1].findtext(version_tag) or ""),
+            key=lambda pair: _version_rank(pair[1].findtext(version_tag) or ""),
         )
         MaintainableBase.maintainable_types()
         model = MaintainableBase.for_tag(payload.tag)
@@ -1098,7 +1177,7 @@ class DDIFragment:
 
         The item replaces the payload with the same agency, ID and version; if
         there is none, the single payload with the same agency and ID (the
-        previous version, after :meth:`MaintainableBase.increment_minor_version`
+        previous version, after `MaintainableBase.increment_minor_version`
         or similar); otherwise it is added in a new ``<Fragment>``.
 
         Returns:
@@ -1170,6 +1249,237 @@ class DDIFragment:
                 self._root.remove(fragment)
         return len(matches)
 
+    # ---- Editing a questionnaire ------------------------------------------
+
+    def revise(
+        self,
+        *items: str | MaintainableBase | Element,
+        cascade: bool = True,
+        dry_run: bool = False,
+        responsibility: str | None = None,
+        version_date: str | None = None,
+        rationale: str | Mapping[str, str] | None = None,
+    ) -> RevisionPlan:
+        """Give items a new version and, with ``cascade``, every item pinning them.
+
+        Each item gets the next major version (``"6"`` becomes ``"7"``), and
+        so does every identifiable it declares (its parameters, its codes),
+        as Colectica numbers them. Every item revised in one call gets the
+        same ``versionDate`` (if it has one), as when Colectica saves several
+        items at once, and ``responsibility`` (default: the one set with
+        `ddi_l.configure`). With ``cascade``, every item referring to
+        an old version without ``lateBound`` (of a revised item or of what it
+        declares) gets its reference re-pointed and is revised in turn, up to
+        the top of the instrument; the ``TopLevelReference`` follows.
+        Late-bound references already mean "the latest version" and are left
+        alone. Each item is revised once, however many paths lead to it.
+
+        Args:
+            *items: The changed items, by ``r:ID``, typed model or element.
+            cascade: Also revise the items pinning them.
+            dry_run: Return the plan without changing the fragment.
+            responsibility: Recorded as ``r:VersionResponsibility``.
+            version_date: The ``versionDate`` of every item revised (default:
+                now, in Colectica's format), so that items made in the same
+                change can share it.
+            rationale: Why the items changed, recorded as each revised item's
+                ``r:VersionRationale``, as Colectica records the message of a
+                save on every item it saves: a string, or ``{language: text}``.
+                Each revised item's previous rationale is dropped either way:
+                it explained the previous version.
+
+        Returns:
+            The items revised, with their old and new versions and the
+            references re-pointed in each.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment, or an item with a
+                non-numeric version.
+            KeyError: If an item is not in the fragment.
+        """
+        from .colectica_edit import revise
+
+        return revise(
+            self,
+            items,
+            cascade=cascade,
+            dry_run=dry_run,
+            responsibility=responsibility,
+            version_date=version_date,
+            rationale=rationale,
+        )
+
+    def move_construct(
+        self,
+        construct: str | MaintainableBase | Element,
+        from_sequence: str | MaintainableBase | Element,
+        to_sequence: str | MaintainableBase | Element,
+        *,
+        index: int | None = None,
+    ) -> EditResult:
+        """Move a construct from one sequence to another.
+
+        The construct's ``ControlConstructReference`` leaves
+        ``from_sequence`` and goes into ``to_sequence`` at position
+        ``index`` among its constructs (default: last; a negative index
+        counts from the end, as with ``list.insert``). Versions do not
+        change; pass the result's ``touched`` to `revise`. Bindings to
+        the construct's parameters stay where they are.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment.
+            KeyError: If an item is missing, or ``from_sequence`` does not
+                contain the construct.
+            ValueError: If the construct is ``to_sequence`` or contains it,
+                so the move would make a cycle.
+        """
+        from .colectica_edit import move_construct
+
+        return move_construct(self, construct, from_sequence, to_sequence, index=index)
+
+    def insert_construct(
+        self,
+        sequence: str | MaintainableBase | Element,
+        construct: str | MaintainableBase | Element,
+        *,
+        index: int | None = None,
+        before: str | MaintainableBase | Element | None = None,
+        after: str | MaintainableBase | Element | None = None,
+        colectica: bool = True,
+    ) -> EditResult:
+        """Place a construct in ``sequence``.
+
+        ``construct`` is an item already in the fragment (an ID, a typed
+        model or an element), placed as it is in the fragment, or a new
+        typed item, which is added; with ``colectica``, a new item gets what
+        Colectica writes on every item (see
+        `ddi_l.colectica.apply_colectica_conventions`). Its
+        ``ControlConstructReference`` goes at position ``index`` among the
+        sequence's constructs (negative counts from the end, as with
+        ``list.insert``), or just ``before`` or ``after`` one of them
+        (default: last), and names no ``r:URN``, as Colectica writes it.
+        Versions do not change: pass the result's ``touched`` to
+        `revise`. A call that raises leaves the fragment unchanged.
+
+        Returns:
+            ``touched``: ``sequence``; ``created``: the construct's ID, if it
+            was added.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment, if ``sequence`` is
+                not a ``Sequence``, or if ``construct`` is not a control
+                construct (a question goes in through its
+                ``QuestionConstruct``).
+            KeyError: If an item is missing, or ``sequence`` does not
+                contain ``before`` or ``after``.
+            ValueError: If more than one of ``index``, ``before`` and
+                ``after`` is given; if ``construct`` is ``sequence`` or
+                contains it, so placing it would make a cycle; if
+                ``sequence`` already contains it (move it with
+                `move_construct`); or if a new typed construct has no
+                agency, identifier or version.
+        """
+        from .colectica_edit import insert_construct
+
+        return insert_construct(
+            self,
+            sequence,
+            construct,
+            index=index,
+            before=before,
+            after=after,
+            colectica=colectica,
+        )
+
+    def wrap_in_condition(
+        self,
+        sequence: str | MaintainableBase | Element,
+        constructs: Sequence[str | MaintainableBase | Element],
+        condition: AnyCondition,
+        *,
+        name: str | None = None,
+    ) -> EditResult:
+        """Put constructs of ``sequence`` under a new ``IfThenElse``.
+
+        The constructs move, in their order, into a new Then sequence of type
+        ``ConditionalChildContainer`` (the type Colectica gives Then
+        branches); a new ``IfThenElse`` holding ``condition`` takes the
+        place of the first of them in ``sequence``. Versions do not change:
+        revise ``touched``; the new items start at version 1, share one
+        ``versionDate`` and record the responsibility set with
+        `ddi_l.configure`, if any. The
+        condition's subjects must be input parameters the caller declares
+        on the new ``IfThenElse`` (an `InParameter` in
+        its ``in_parameters``), fed by a `Binding` in
+        ``sequence``'s ``bindings``.
+
+        Returns:
+            ``created``: the new ``IfThenElse`` and Then sequence IDs;
+            ``touched``: ``sequence``.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment.
+            KeyError: If ``sequence`` does not contain every construct.
+        """
+        from .colectica_edit import wrap_in_condition
+
+        return wrap_in_condition(self, sequence, constructs, condition, name=name)
+
+    def duplicate(
+        self,
+        item: str | MaintainableBase | Element,
+        *,
+        new_id: str | None = None,
+    ) -> tuple[MaintainableBase, dict[str, str]]:
+        """Copy an item with new IDs for it and everything it declares.
+
+        Unlike a copy that keeps its source's ``OutParameter`` IDs, every
+        identifiable in the copy (parameters, codes, ...) gets a new ID, so
+        bindings to one cannot be mistaken for the other. References inside
+        the copy to what it declares follow; the copy and what it declares
+        start at version 1, and the copy records its source in
+        ``r:BasedOnObject`` and the responsibility set with
+        `ddi_l.configure`, if any. It is added to the fragment; place
+        it in a sequence with `insert_construct`.
+
+        Returns:
+            The copy, as its typed model, and the map from old to new IDs.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment.
+            KeyError: If ``item`` is not in the fragment.
+        """
+        from .colectica_edit import duplicate
+
+        return duplicate(self, item, new_id=new_id)
+
+    def repair_shared_identifiables(self, *, dry_run: bool = True) -> RepairPlan:
+        """Give each copy of a shared identifiable an ID of its own.
+
+        For an identifiable declared inside several items (what
+        ``colectica.identifiable.shared-id`` reports), the original keeps
+        its ID: the item with the earliest ``versionDate``, else the one
+        without ``r:BasedOnObject``. Each copy gets a new ID, and the
+        bindings in the copy's own question constructs follow it. Any other
+        reference to the shared ID cannot be told apart; it is left as it is
+        and listed in the step's ``ambiguous``.
+
+        Whether Colectica accepts the re-identified items on re-import has
+        not been verified; try it on a copy of the repository first.
+
+        Args:
+            dry_run: Return the plan without changing the fragment (default).
+
+        Returns:
+            The plan; ``touched`` lists the items to `revise`.
+
+        Raises:
+            DDIModelError: On a DDI 3.1 or 3.2 fragment.
+        """
+        from .colectica_edit import repair_shared_identifiables
+
+        return repair_shared_identifiables(self, dry_run=dry_run)
+
     @classmethod
     def from_items(
         cls,
@@ -1189,12 +1499,12 @@ class DDIFragment:
                 is missing, and identify references by Agency/ID/Version
                 alone. Items read from a Colectica export already conform and
                 are left untouched. See
-                :func:`ddi_l.colectica.apply_colectica_conventions`.
+                `ddi_l.colectica.apply_colectica_conventions`.
             version_date: ``versionDate`` for items that have none (default:
                 now, in Colectica's format).
 
         Returns:
-            The fragment. Write it with :meth:`save`.
+            The fragment. Write it with `save`.
         """
         from .colectica import apply_colectica_conventions
 
@@ -1218,30 +1528,52 @@ class DDIFragment:
             fragment.add_fragment(element)
         return fragment
 
-    def to_colectica_bytes(self) -> bytes:
-        """Serialize in Colectica Designer's exact layout (UTF-8 with BOM).
+    def to_colectica_bytes(self, *, bom: bool | None = None) -> bytes:
+        """Serialize in Colectica's exact layout.
 
         A fragment read from a Colectica export comes back byte for byte.
+
+        Args:
+            bom: Start with a UTF-8 byte-order mark. ``None`` (default) keeps
+                what the source had (`source_bom`); a fragment that was
+                not read from a file gets one, as Colectica Designer writes.
         """
         from .colectica import to_colectica_bytes
 
-        return to_colectica_bytes(self._root)
+        return to_colectica_bytes(self._root, bom=self._resolve_bom(bom))
 
-    def save(self, destination: str | Path, *, layout: str = "colectica") -> bytes:
+    def _resolve_bom(self, bom: bool | None) -> bool:
+        if bom is not None:
+            return bom
+        return True if self._source_bom is None else self._source_bom
+
+    def save(
+        self,
+        destination: str | Path,
+        *,
+        layout: str | None = None,
+        bom: bool | None = None,
+    ) -> bytes:
         """Write the fragment to ``destination``.
 
         Args:
             destination: File path.
-            layout: ``"colectica"`` (default) writes Colectica's layout, so an
-                export read and saved again is unchanged; ``"default"`` writes
-                this library's usual pretty-printed layout.
+            layout: ``None`` (default) writes a fragment read from a file
+                with its unchanged parts as they were read and new ones in
+                Colectica's layout, and any other fragment in Colectica's
+                layout. ``"colectica"`` writes all of it in Colectica's
+                layout; ``"default"`` in this library's usual pretty-printed
+                layout.
+            bom: For the Colectica layout, whether to start with a byte-order
+                mark; ``None`` keeps what the source had. See
+                `to_colectica_bytes`.
 
         Returns:
             The bytes written.
         """
         from .io import write_ddi
 
-        return write_ddi(self, destination, layout=layout)
+        return write_ddi(self, destination, layout=layout, bom=bom)
 
     def to_etree(self) -> Element:
         """Return the fragment root element for downstream XML operations.
@@ -1258,18 +1590,22 @@ class DDIFragment:
 
         Args:
             raise_error: When ``True`` a validation failure raises
-                :class:`schema_loader.SchemaValidationError` instead of
-                returning issues.
+                `DDIValidationError` (with the issues
+                and the fragment root as its location) instead of returning
+                issues.
 
         Returns:
             list[schema_loader.SchemaValidationIssue]: Collected schema
             validation issues, empty when the fragment is valid.
+
+        Raises:
+            DDIValidationError: If ``raise_error`` is ``True`` and the fragment
+                is invalid.
         """
         try:
             return schema_loader.validate(self._root, raise_error=raise_error)
         except schema_loader.SchemaValidationError as exc:
-            if not raise_error:
-                return list(exc.issues)
+            # schema_loader.validate only raises when raise_error is True.
             fallback_location = build_error_location(element=self._root)
             raise DDIValidationError.from_schema_error(
                 exc,
@@ -1327,7 +1663,6 @@ class Document:
         # The XML element ``_study`` was parsed from, so ``_flush`` can put the
         # edited study back exactly where it came from.
         self._study_element: Element | None = None
-        self._dirty = False
 
     def __repr__(self) -> str:
         try:
@@ -1394,7 +1729,7 @@ class Document:
 
     @contextmanager
     def _use_study(self, study: StudyUnit) -> Iterator[None]:
-        """Redirect :meth:`_get_study` (and the ``add_*`` helpers) to ``study``."""
+        """Redirect `_get_study` (and the ``add_*`` helpers) to ``study``."""
         previous = self._study_override
         self._study_override = study
         try:
@@ -1405,7 +1740,7 @@ class Document:
     def _flush(self, *, check_references: bool = False) -> None:
         """Sync the cached StudyUnit, DDIProfiles, and group content into XML.
 
-        The cached :class:`StudyUnit` stays cached, so model objects handed out
+        The cached `StudyUnit` stays cached, so model objects handed out
         by the ``add_*`` helpers and list properties remain attached to the
         document after a flush.
 
@@ -1443,7 +1778,6 @@ class Document:
                 element = self._replace_study_in_parent(
                     parent, study, check_references=check_references
                 )
-        self._dirty = False
         self._study_parent = parent
         self._study_element = element
 
@@ -1677,7 +2011,7 @@ class Document:
 
         Reads the citation title from the StudyUnit when it carries its own
         ``r:Citation``, then the document-level one written by
-        :func:`new_study` (and preserved by :func:`open_ddi`), falling back
+        `new_study` (and preserved by `open_ddi`), falling back
         last to the StudyUnit's first abstract.
         """
         study = self._get_study()
@@ -1707,7 +2041,7 @@ class Document:
         The facade creates these containers on the caller's behalf, so it also
         labels them; that keeps its output clean under the
         ``ddi.maintainable.labels`` lint rule. The label describes the container,
-        and :meth:`~MaintainableBase.set_scheme_label` overrides it. Parsed
+        and `set_scheme_label` overrides it. Parsed
         modules are never touched. Scheme names come from the generated
         label-slot table.
         """
@@ -1731,56 +2065,48 @@ class Document:
                     lang=self._generated_label_lang,
                 )
 
+    def _ensure_module(
+        self, modules: list[_ModuleT], model: type[_ModuleT], ns: str
+    ) -> _ModuleT:
+        """The study's first ``model`` module, created and labelled if none."""
+        if modules:
+            return modules[0]
+        study = self._get_study()
+        module = model(
+            agency=study.agency,
+            identifier=str(uuid4()),
+            version=study.version or "1",
+        )
+        self._label_generated_module(module, ns)
+        modules.append(module)
+        return module
+
     def _ensure_data_collection(self) -> DataCollection:
         from .constants import DATA_COLLECTION_NS
         from .models.datacollection import DataCollection
 
         study = self._get_study()
-        if study.data_collections:
-            return study.data_collections[0]
-        dc = DataCollection(
-            agency=study.agency,
-            identifier=str(uuid4()),
-            version=study.version or "1",
+        return self._ensure_module(
+            study.data_collections, DataCollection, DATA_COLLECTION_NS
         )
-        self._label_generated_module(dc, DATA_COLLECTION_NS)
-        study.data_collections.append(dc)
-        self._dirty = True
-        return dc
 
     def _ensure_logical_product(self) -> LogicalProduct:
         from .constants import LOGICAL_PRODUCT_NS
         from .models.logicalproduct import LogicalProduct
 
         study = self._get_study()
-        if study.logical_products:
-            return study.logical_products[0]
-        lp = LogicalProduct(
-            agency=study.agency,
-            identifier=str(uuid4()),
-            version=study.version or "1",
+        return self._ensure_module(
+            study.logical_products, LogicalProduct, LOGICAL_PRODUCT_NS
         )
-        self._label_generated_module(lp, LOGICAL_PRODUCT_NS)
-        study.logical_products.append(lp)
-        self._dirty = True
-        return lp
 
     def _ensure_conceptual_component(self) -> ConceptualComponent:
         from .constants import CONCEPTUAL_COMPONENT_NS
         from .models.conceptualcomponent import ConceptualComponent
 
         study = self._get_study()
-        if study.conceptual_components:
-            return study.conceptual_components[0]
-        cc = ConceptualComponent(
-            agency=study.agency,
-            identifier=str(uuid4()),
-            version=study.version or "1",
+        return self._ensure_module(
+            study.conceptual_components, ConceptualComponent, CONCEPTUAL_COMPONENT_NS
         )
-        self._label_generated_module(cc, CONCEPTUAL_COMPONENT_NS)
-        study.conceptual_components.append(cc)
-        self._dirty = True
-        return cc
 
     def add_question(
         self,
@@ -1823,7 +2149,6 @@ class Document:
             ],
         )
         dc.questions.append(qi)
-        self._dirty = True
         return qi
 
     def add_variable(
@@ -1876,7 +2201,6 @@ class Document:
             concept_references=concept_refs,
         )
         lp.variables.append(var)
-        self._dirty = True
         return var
 
     def add_concept(
@@ -1918,7 +2242,6 @@ class Document:
         )
         cc.concepts.append(c)
         cc.has_concept_scheme = True
-        self._dirty = True
         return c
 
     def add_universe(
@@ -1960,7 +2283,6 @@ class Document:
         )
         cc.universes.append(u)
         cc.has_universe_scheme = True
-        self._dirty = True
         return u
 
     def add_code_list(
@@ -2001,7 +2323,6 @@ class Document:
             labels=self._labels_for(label, lang, label_lang),
         )
         lp.code_lists.append(cl)
-        self._dirty = True
         return cl
 
     @staticmethod
@@ -2144,13 +2465,12 @@ class Document:
         getattr(module, slot.attr).append(item)
         if slot.scheme_flag is not None:
             setattr(module, slot.scheme_flag, True)
-        self._dirty = True
         return item
 
     def attach(self, item: MaintainableBase) -> MaintainableBase:
         """Put an item built elsewhere into the study, where its type belongs.
 
-        Unlike :meth:`add_item`, the item keeps its own agency, identifier
+        Unlike `add_item`, the item keeps its own agency, identifier
         and version: a ``Concept`` goes into the conceptual component, a
         ``Variable`` into the logical product, and so on.
 
@@ -2164,7 +2484,6 @@ class Document:
         getattr(module, slot.attr).append(item)
         if slot.scheme_flag is not None:
             setattr(module, slot.scheme_flag, True)
-        self._dirty = True
         return item
 
     def add_record_layout(
@@ -2178,13 +2497,13 @@ class Document:
         Builds a backing physical structure and a linked ``RecordLayout``, both
         stored on the study and serialized inside a ``PhysicalDataProduct``. Add
         variable-to-position mappings on the returned layout with
-        :meth:`RecordLayout.add_data_item`::
+        `RecordLayout.add_data_item`::
 
             rl = doc.add_record_layout()
             rl.add_data_item(age.to_reference(), start_position=1, width=2)
 
         Pass ``logical_record`` (from
-        :meth:`DataRelationship.add_logical_record`) to tie the backing physical
+        `DataRelationship.add_logical_record`) to tie the backing physical
         structure to that logical record, so the layout describes a modeled
         record rather than a placeholder.
 
@@ -2231,7 +2550,6 @@ class Document:
             physical_record_segment_used=segment_identifier,
         )
         study.record_layouts.append(layout)
-        self._dirty = True
         return layout
 
     def add_dataset(
@@ -2244,7 +2562,7 @@ class Document:
         """Create an inline dataset (data values stored in the document).
 
         Add values on the returned dataset with
-        :meth:`DataSet.add_item_value`::
+        `DataSet.add_item_value`::
 
             ds = doc.add_dataset(name="Sample rows")
             ds.add_item_value(age.to_reference(), record="1", value="42")
@@ -2297,8 +2615,6 @@ class Document:
             physical_record_segment_used=str(uuid4()),
         )
         study.datasets.append(dataset)
-        study._label_generated_wrappers = True  # type: ignore[attr-defined]
-        self._dirty = True
         return dataset
 
     def add_data_relationship(
@@ -2311,7 +2627,7 @@ class Document:
         """Create a data relationship in the logical product.
 
         A data relationship groups the dataset's logical records. Add records
-        with :meth:`DataRelationship.add_logical_record`::
+        with `DataRelationship.add_logical_record`::
 
             dr = doc.add_data_relationship()
             dr.add_logical_record()  # all variables in one rectangular record
@@ -2329,7 +2645,6 @@ class Document:
             labels=self._labels_for(label, lang, None),
         )
         product.data_relationships.append(relationship)
-        self._dirty = True
         return relationship
 
     def add_ncube(
@@ -2373,7 +2688,6 @@ class Document:
             labels=self._labels_for(label, lang, label_lang),
         )
         product.n_cubes.append(cube)
-        self._dirty = True
         return cube
 
     def add_group(self, *, identifier: str | None = None):
@@ -2413,7 +2727,6 @@ class Document:
             self._study = None
             self._study_parent = None
             self._study_element = None
-        self._dirty = False
         return group
 
     @property
@@ -2440,7 +2753,7 @@ class Document:
     ) -> DDIProfile:
         """Attach a ``DDIProfile`` declaring which DDI elements are used.
 
-        Pass ``used_xpaths`` for the common case, or call :meth:`DDIProfile.add_used`
+        Pass ``used_xpaths`` for the common case, or call `DDIProfile.add_used`
         on the returned profile; it is re-serialized on save either way::
 
             profile = doc.add_ddi_profile(name="Deposit profile")
@@ -2507,7 +2820,7 @@ class Document:
         The document is organized into a group if it is not already. The new
         study is returned for model-layer building; it is re-serialized into the
         group on save. To target it with the high-level ``add_*`` helpers, use
-        the cursor from :meth:`study`::
+        the cursor from `study`::
 
             wave2 = doc.add_study(title="Wave 2")
             doc.study(wave2.identifier).add_variable(name="income")
@@ -2530,7 +2843,6 @@ class Document:
             lang=lang or self._generated_label_lang,
         )
         self._extra_studies.append(study)
-        self._dirty = True
         return study
 
     def study(self, identifier: str | None = None) -> StudyCursor:
@@ -2538,7 +2850,7 @@ class Document:
 
         With no ``identifier`` (or the primary study's id) the cursor targets the
         primary study; otherwise it targets a study previously added with
-        :meth:`add_study`. This is how you edit a non-primary study in a
+        `add_study`. This is how you edit a non-primary study in a
         multi-study series::
 
             doc.study(wave2.identifier).add_variable(name="income")
@@ -2548,7 +2860,7 @@ class Document:
 
         Raises:
             DDIReferenceError: If no study matches ``identifier`` (a
-                :class:`LookupError`).
+                `LookupError`).
         """
         primary = self._get_study()
         if identifier is None or identifier == primary.identifier:
@@ -2598,7 +2910,6 @@ class Document:
             labels=self._labels_for(label, lang, label_lang),
         )
         self._comparisons.append(comparison)
-        self._dirty = True
         return comparison
 
     @property
@@ -2645,7 +2956,6 @@ class Document:
             labels=self._labels_for(label, lang, None),
         )
         study.archives.append(archive)
-        self._dirty = True
         return archive
 
     @property
@@ -2668,7 +2978,6 @@ class Document:
             version=study.version or "1",
         )
         self._resource_packages.append(package)
-        self._dirty = True
         return package
 
     @property
@@ -2716,7 +3025,6 @@ class Document:
             depository_study_unit_references=[ref],
         )
         self._local_holding_packages.append(package)
-        self._dirty = True
         return package
 
     @property
@@ -2756,7 +3064,6 @@ class Document:
             lang=lang,
         )
         self._translation_information = info
-        self._dirty = True
         return info
 
     @property
@@ -2907,7 +3214,7 @@ class Document:
         """Remove an item by identifier from any study of the document.
 
         References to the removed item elsewhere in the document are left in
-        place; :meth:`validate` reports them as dangling.
+        place; `validate` reports them as dangling.
 
         Args:
             identifier: The identifier of the item to remove.
@@ -2920,7 +3227,6 @@ class Document:
         for container, item in self._iter_item_slots():
             if item.identifier == identifier:
                 container.remove(item)
-                self._dirty = True
                 return True
         return False
 
@@ -2954,10 +3260,15 @@ class Document:
             str: UTF-8 XML representation, including the XML declaration.
         """
         self._flush()
-        return self._serialize(pretty_print=pretty_print)
+        text = self._serialize(pretty_print=pretty_print)
+        return text[1:] if text.startswith("\ufeff") else text
 
     def _serialize(self, *, pretty_print: bool) -> str:
         """Render the already-flushed XML tree as a string."""
+        if pretty_print:
+            written = _written_as_read(self._inner, whole=True)
+            if written is not None:
+                return written.decode("utf-8")
         # ``_finalize_document`` normalizes the declaration and trailing newline
         # so the output does not depend on which XML backend is installed.
         from .io import _finalize_document
@@ -2978,28 +3289,36 @@ class Document:
         self._flush()
         return self._inner.validate()
 
-    def lint(self, rules: Sequence[str] | None = None) -> list[LintFinding]:
+    def lint(
+        self,
+        rules: Sequence[str] | None = None,
+        *,
+        configuration: LintConfiguration | None = None,
+    ) -> list[LintFinding]:
         """Run the lint rules against the document.
 
         Args:
             rules: Rule identifiers to run; ``None`` runs the default set.
+            configuration: The configuration for this call, from
+                `ddi_l.lint.lint_configuration`; ``None`` keeps the process
+                default.
 
         Returns:
             list[LintFinding]: Findings; empty when the document is clean.
         """
         self._flush()
-        return self._inner.lint(rules=rules)
+        return self._inner.lint(rules=rules, configuration=configuration)
 
     @property
     def study_unit(self) -> StudyUnit:
-        """StudyUnit: The document's active :class:`StudyUnit` model object.
+        """StudyUnit: The document's active `StudyUnit` model object.
 
         Use this to reach study-level metadata the CRUD helpers do not cover ---
-        versioning (:meth:`~MaintainableBase.increment_minor_version`), version
+        versioning (`increment_minor_version`), version
         rationales, custom properties on the study itself.
 
         The object is live: mutating it changes the document, and the changes
-        are serialized by :meth:`save`, :meth:`to_xml` and :meth:`validate`.
+        are serialized by `save`, `to_xml` and `validate`.
 
         Raises:
             DDIModelError: If the document contains no StudyUnit.
@@ -3017,7 +3336,7 @@ class Document:
 
         Accessing it hands the XML tree to the caller: pending edits are
         written out and model objects obtained earlier from this
-        :class:`Document` are detached, so later XML edits are picked up.
+        `Document` are detached, so later XML edits are picked up.
         """
         self._release_study()
         return self._inner
@@ -3026,8 +3345,8 @@ class Document:
 class StudyCursor:
     """A handle to one study whose ``add_*`` helpers target that study.
 
-    Obtained from :meth:`Document.study`. Each method forwards to the matching
-    :class:`Document` helper with this cursor's study as the target, so the same
+    Obtained from `Document.study`. Each method forwards to the matching
+    `Document` helper with this cursor's study as the target, so the same
     validation and serialization apply. This is how you edit a non-primary study
     in a multi-study series.
     """
@@ -3058,7 +3377,7 @@ class StudyCursor:
         label_lang: str | None = None,
         identifier: str | None = None,
     ) -> QuestionItem:
-        """Add a question to this study (see :meth:`Document.add_question`)."""
+        """Add a question to this study (see `Document.add_question`)."""
         with self._document._use_study(self._study):
             return self._document.add_question(
                 text,
@@ -3079,7 +3398,7 @@ class StudyCursor:
         concept: Concept | Reference | None = None,
         identifier: str | None = None,
     ) -> Variable:
-        """Add a variable to this study (see :meth:`Document.add_variable`)."""
+        """Add a variable to this study (see `Document.add_variable`)."""
         with self._document._use_study(self._study):
             return self._document.add_variable(
                 name,
@@ -3100,7 +3419,7 @@ class StudyCursor:
         label_lang: str | None = None,
         identifier: str | None = None,
     ) -> Concept:
-        """Add a concept to this study (see :meth:`Document.add_concept`)."""
+        """Add a concept to this study (see `Document.add_concept`)."""
         with self._document._use_study(self._study):
             return self._document.add_concept(
                 name,
@@ -3119,7 +3438,7 @@ class StudyCursor:
         label_lang: str | None = None,
         identifier: str | None = None,
     ) -> Universe:
-        """Add a universe to this study (see :meth:`Document.add_universe`)."""
+        """Add a universe to this study (see `Document.add_universe`)."""
         with self._document._use_study(self._study):
             return self._document.add_universe(
                 name,
@@ -3138,7 +3457,7 @@ class StudyCursor:
         label_lang: str | None = None,
         identifier: str | None = None,
     ) -> CodeList:
-        """Add a code list to this study (see :meth:`Document.add_code_list`)."""
+        """Add a code list to this study (see `Document.add_code_list`)."""
         with self._document._use_study(self._study):
             return self._document.add_code_list(
                 name,
@@ -3159,7 +3478,7 @@ class StudyCursor:
         identifier: str | None = None,
         **kwargs: object,
     ) -> MaintainableBase:
-        """Add any registered item to this study (see :meth:`Document.add_item`)."""
+        """Add any registered item to this study (see `Document.add_item`)."""
         with self._document._use_study(self._study):
             return self._document.add_item(
                 item_type,
@@ -3180,7 +3499,7 @@ class StudyCursor:
         label: str | None = None,
         label_lang: str | None = None,
     ) -> NCube:
-        """Add an NCube to this study (see :meth:`Document.add_ncube`)."""
+        """Add an NCube to this study (see `Document.add_ncube`)."""
         with self._document._use_study(self._study):
             return self._document.add_ncube(
                 name=name,
@@ -3197,7 +3516,7 @@ class StudyCursor:
         label: str | None = None,
         lang: str = "en",
     ) -> DataRelationship:
-        """Add a data relationship (see :meth:`Document.add_data_relationship`)."""
+        """Add a data relationship (see `Document.add_data_relationship`)."""
         with self._document._use_study(self._study):
             return self._document.add_data_relationship(
                 identifier=identifier, label=label, lang=lang
@@ -3209,7 +3528,7 @@ class StudyCursor:
         identifier: str | None = None,
         logical_record: LogicalRecord | None = None,
     ) -> RecordLayout:
-        """Add a record layout (see :meth:`Document.add_record_layout`)."""
+        """Add a record layout (see `Document.add_record_layout`)."""
         with self._document._use_study(self._study):
             return self._document.add_record_layout(
                 identifier=identifier, logical_record=logical_record
@@ -3222,7 +3541,7 @@ class StudyCursor:
         identifier: str | None = None,
         lang: str = "en",
     ) -> DataSet:
-        """Add an inline dataset (see :meth:`Document.add_dataset`)."""
+        """Add an inline dataset (see `Document.add_dataset`)."""
         with self._document._use_study(self._study):
             return self._document.add_dataset(
                 name=name, identifier=identifier, lang=lang
@@ -3235,7 +3554,7 @@ class StudyCursor:
         label: str | None = None,
         lang: str = "en",
     ) -> Archive:
-        """Add an archive to this study (see :meth:`Document.add_archive`)."""
+        """Add an archive to this study (see `Document.add_archive`)."""
         with self._document._use_study(self._study):
             return self._document.add_archive(
                 identifier=identifier, label=label, lang=lang
@@ -3318,7 +3637,6 @@ def new_study(
     # would otherwise append a second StudyUnit next to the stale one.
     doc._study_parent = ddi_doc._root
     doc._study_element = element
-    doc._dirty = True
     return doc
 
 
@@ -3334,9 +3652,9 @@ def open_fragment(
         validate: Whether to validate against the DDI schema on load.
 
     Returns:
-        DDIFragment: The fragment. Read items with :meth:`DDIFragment.items`
-        or :meth:`DDIFragment.get`, write them back with
-        :meth:`DDIFragment.put`, and save with :meth:`DDIFragment.save`, which
+        DDIFragment: The fragment. Read items with `DDIFragment.items`
+        or `DDIFragment.get`, write them back with
+        `DDIFragment.put`, and save with `DDIFragment.save`, which
         writes Colectica's layout byte for byte.
 
     Example:
@@ -3345,14 +3663,6 @@ def open_fragment(
         >>> variables = fragment.items(ddi.Variable)
     """
     return DDIFragment.from_xml(Path(path), validate=validate)
-
-
-def _version_key(version: str) -> tuple[int, ...]:
-    """Sort key for a DDI version string (``"1.10"`` after ``"1.9"``)."""
-    parts: list[int] = []
-    for part in version.split("."):
-        parts.append(int(part) if part.isdigit() else -1)
-    return tuple(parts)
 
 
 def _fragment_payload(item: MaintainableBase) -> Element:

@@ -179,7 +179,7 @@ def table_template_bytes(
     languages: tuple[str, ...] = _EXAMPLE_LANGUAGES,
     layout: Literal["xlsx", "zip"] = "xlsx",
 ) -> bytes:
-    """The tables of :func:`write_table_templates` as bytes, built in memory.
+    """The tables of `write_table_templates` as bytes, built in memory.
 
     Args:
         example: The bilingual example instead of empty tables.

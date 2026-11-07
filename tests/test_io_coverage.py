@@ -2,7 +2,9 @@
 
 import io
 import textwrap
+from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 from unittest.mock import patch
 
 import pytest
@@ -222,15 +224,84 @@ def test_write_ddi_to_text_stream():
     assert buf.getvalue()
 
 
-def test_write_ddi_unsupported_destination():
+def test_write_ddi_unsupported_destination(tmp_path):
     doc = DDIDocument.create(agency="test.org", identifier="doc", version="1.0")
-    with pytest.raises(DDIWriteError):
+    with pytest.raises(DDIWriteError) as caught:
         write_ddi(doc, 42)  # type: ignore[arg-type]
+    assert str(caught.value) == (
+        "Unexpected failure while writing DDI XML. (xpath /DDIInstance)"
+    )
+    cause = caught.value.original_exception
+    assert isinstance(cause, TypeError)
+    assert str(cause) == "Unsupported destination type for DDI serialization."
+
+    # The location names the file the document came from.
+    source = tmp_path / "in.xml"
+    source.write_text("<root/>")
+    with pytest.raises(DDIWriteError) as caught:
+        write_ddi(source, 42)  # type: ignore[arg-type]
+    location = caught.value.location
+    assert location is not None
+    assert (location.filename, location.xpath) == (str(source), "/root")
+
+
+@dataclass
+class _Named:
+    name: str = "pets.xml"
 
 
 def test_write_ddi_type_error():
-    with pytest.raises(DDIWriteError):
+    with pytest.raises(DDIWriteError) as caught:
         write_ddi(42)  # type: ignore[arg-type]
+    assert str(caught.value) == "Failed to prepare DDI XML for serialisation."
+    cause = caught.value.original_exception
+    assert isinstance(cause, TypeError)
+    assert str(cause) == "Unsupported document type for DDI serialization."
+
+    # A dataclass without to_xml is not a document, and its name is the file.
+    with pytest.raises(DDIWriteError) as caught:
+        write_ddi(_Named())  # type: ignore[arg-type]
+    assert str(caught.value) == (
+        "Failed to prepare DDI XML for serialisation. (pets.xml)"
+    )
+
+
+@dataclass
+class _Wrapper:
+    def to_xml(self):
+        return create_element(f"{{{INSTANCE_NS}}}DDIInstance")
+
+
+@dataclass
+class _Broken:
+    def to_xml(self):
+        raise RuntimeError("boom")
+
+
+def test_write_ddi_dataclass_with_to_xml():
+    assert b"DDIInstance" in write_ddi(_Wrapper())  # type: ignore[arg-type]
+
+    with pytest.raises(DDIWriteError) as caught:
+        write_ddi(_Broken())  # type: ignore[arg-type]
+    assert str(caught.value) == "Unexpected failure while writing DDI XML."
+    assert isinstance(caught.value.original_exception, RuntimeError)
+
+
+def test_write_ddi_a_file_that_cannot_be_read(tmp_path):
+    bad = tmp_path / "bad.xml"
+    bad.write_text("<root")
+    with pytest.raises(DDIWriteError) as caught:
+        write_ddi(bad)
+    assert str(caught.value) == f"Unexpected failure while writing DDI XML. ({bad})"
+
+    # A file opened for writing cannot be read: a ValueError.
+    with (tmp_path / "out.xml").open("w") as handle:
+        with pytest.raises(DDIWriteError) as caught:
+            write_ddi(handle)
+    assert str(caught.value) == (
+        f"Failed to serialise DDI XML content. ({tmp_path / 'out.xml'})"
+    )
+    assert isinstance(caught.value.original_exception, ValueError)
 
 
 def test_write_ddi_string():
@@ -253,6 +324,52 @@ def test_write_ddi_with_version():
     doc = DDIDocument.create(agency="test.org", identifier="doc", version="1.0")
     result = write_ddi(doc, version="3.3")
     assert isinstance(result, bytes)
+    with pytest.raises(ValueError, match=r"^Unsupported DDI schema version: '9\.9'$"):
+        write_ddi(doc, version="9.9")
+
+
+def test_write_ddi_unknown_layout():
+    doc = DDIDocument.create(agency="test.org", identifier="doc", version="1.0")
+    with pytest.raises(
+        ValueError,
+        match=r"^Unknown layout 'tight'; expected 'default' or 'colectica'\.$",
+    ):
+        write_ddi(doc, layout="tight")
+
+
+def test_write_ddi_colectica_layout_to_a_text_stream():
+    fragment = DDIFragment.from_xml(_minimal_ddi_xml("FragmentInstance"))
+    buf = io.StringIO()
+    written = write_ddi(fragment, buf, layout="colectica")
+    assert buf.getvalue() == written.decode("utf-8")
+
+
+def test_write_ddi_colectica_layout_of_an_instance(tmp_path):
+    source = tmp_path / "in.xml"
+    source.write_text("<root/>")
+    with pytest.raises(DDIWriteError) as caught:
+        write_ddi(source, layout="colectica")
+    assert caught.value.message == "Failed to serialise DDI XML content."
+    location = caught.value.location
+    assert location is not None
+    assert (location.filename, location.xpath) == (str(source), "/root")
+    assert isinstance(caught.value.original_exception, ValueError)
+
+
+def test_write_ddi_declaration_and_trailing_newline():
+    element = create_element("a")
+    compact = write_ddi(element, pretty_print=False, xml_declaration=False)
+    assert compact.startswith(b"<a ") and compact.endswith(b"/>")
+
+    pretty = write_ddi(element, encoding="latin-1")
+    assert pretty.startswith(b'<?xml version="1.0" encoding="LATIN-1"?>\n<a ')
+    assert pretty.endswith(b"/>\n")
+
+
+def test_write_ddi_writes_text_as_characters():
+    element = create_element(f"{{{INSTANCE_NS}}}DDIInstance")
+    element.text = "chat \u00e9"
+    assert "chat \u00e9".encode() in write_ddi(element, pretty_print=False)
 
 
 def test_write_ddi_value_error():
@@ -261,24 +378,22 @@ def test_write_ddi_value_error():
 
     # Patch _coerce_element to raise ValueError
     with patch("ddi_l.io._coerce_element", side_effect=ValueError("bad value")):
-        with pytest.raises(DDIWriteError):
+        with pytest.raises(DDIWriteError) as caught:
             write_ddi(doc)
-
-
-def test_write_ddi_value_error_with_element():
-    """Trigger ValueError path with element type input."""
-    elem = create_element("test")
-    with patch("ddi_l.io._coerce_element", side_effect=ValueError("bad")):
-        with pytest.raises(DDIWriteError):
-            write_ddi(elem)
+    assert str(caught.value) == "Failed to serialise DDI XML content."
+    assert str(caught.value.original_exception) == "bad value"
 
 
 def test_write_ddi_value_error_during_emit():
     """Trigger ValueError during XML emission."""
     doc = DDIDocument.create(agency="test.org", identifier="doc", version="1.0")
     with patch("ddi_l.io._emit_xml", side_effect=ValueError("emit error")):
-        with pytest.raises(DDIWriteError):
+        with pytest.raises(DDIWriteError) as caught:
             write_ddi(doc)
+    assert (
+        str(caught.value) == "Failed to serialise DDI XML content. (xpath /DDIInstance)"
+    )
+    assert str(caught.value.original_exception) == "emit error"
 
 
 # ---------------------------------------------------------------------------
@@ -395,9 +510,37 @@ def test_iterparse_ddi_skips_unwanted_maintainables():
     assert len(results) == 0
 
 
+def test_iterparse_ddi_closes_only_what_it_opened(monkeypatch, tmp_path):
+    import ddi_l.io as io_module
+
+    opened: list[io.IOBase] = []
+    real = io_module._coerce_source
+
+    def spy(source):
+        handle, should_close = real(source)
+        opened.append(cast(io.IOBase, handle))
+        return handle, should_close
+
+    monkeypatch.setattr(io_module, "_coerce_source", spy)
+    list(iterparse_ddi(_minimal_ddi_bytes()))
+    assert opened[0].closed
+
+    path = tmp_path / "in.xml"
+    path.write_bytes(_minimal_ddi_bytes())
+    with path.open("rb") as handle:
+        list(iterparse_ddi(handle))
+        assert not handle.closed
+
+
 # ---------------------------------------------------------------------------
 # iter_variables / iter_questions
 # ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("iterate", [iter_variables, iter_questions])
+def test_iter_helpers_pass_options_to_the_parser(iterate):
+    with pytest.raises(TypeError):
+        list(iterate(_minimal_ddi_bytes(), no_such_option=True))
 
 
 def test_iter_variables_from_xml_string():

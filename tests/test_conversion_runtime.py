@@ -22,17 +22,17 @@ from ddi_l.schema_loader._conversion_runtime import (
     _PYTHON_FUNCTIONS,
     IMPLEMENTATION,
 )
-from tests import PACKAGE_FIXTURES_DIR
+from tests import SAMPLES_DIR, TEST_FIXTURES_DIR
 
-SAMPLE_XML = (PACKAGE_FIXTURES_DIR / "minimal_instance.xml").read_text()
+SAMPLE_XML = (SAMPLES_DIR / "minimal_instance.xml").read_text()
 _SAMPLE_ELEMENT = fromstring(SAMPLE_XML)
 _SAMPLE_MAPPING = _PYTHON_FUNCTIONS["to_dict"](_SAMPLE_ELEMENT)
 _SAMPLE_ROOT = _SAMPLE_ELEMENT.tag
 _SAMPLE_WRAPPED_MAPPING = {_SAMPLE_ROOT: _SAMPLE_MAPPING}
 
 NAMESPACE_FIXTURE_PATHS = [
-    PACKAGE_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
-    PACKAGE_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
+    TEST_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
+    TEST_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
 ]
 
 

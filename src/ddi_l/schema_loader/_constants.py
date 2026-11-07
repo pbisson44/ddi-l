@@ -19,11 +19,6 @@ XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/"
 _SCHEMA_PACKAGE = "ddi_l.schemas"
 
 
-def _schema_resource_for_version(version: str | None = None) -> tuple[str, ...]:
-    release = get_schema_release(version)
-    return release["schema_resource"]
-
-
 def _namespaces_for_version(version: str | None = None) -> Mapping[str, str]:
     release = get_schema_release(version)
     return release["namespaces"]
@@ -44,7 +39,6 @@ def get_namespaces(version: str | None = None) -> Mapping[str, str]:
 SCHEMA_VERSION = DEFAULT_SCHEMA_VERSION
 INSTANCE_NAMESPACE = get_instance_namespace()
 REUSABLE_NAMESPACE = get_reusable_namespace()
-_SCHEMA_RESOURCE = _schema_resource_for_version()
 
 SchemaInput = str | Path | Element | bytes | IO[bytes] | IO[str]
 
@@ -57,7 +51,6 @@ __all__ = [
     "SUPPORTED_SCHEMA_VERSIONS",
     "XMLNS_NAMESPACE",
     "_SCHEMA_PACKAGE",
-    "_SCHEMA_RESOURCE",
     "SchemaInput",
     "get_instance_namespace",
     "get_namespaces",

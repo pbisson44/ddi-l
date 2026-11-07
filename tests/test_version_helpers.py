@@ -17,7 +17,7 @@ def test_increment_major_version_resets_lower_components() -> None:
 def test_increment_minor_version_extends_missing_segment() -> None:
     maintainable = MaintainableBase(version="1")
 
-    maintainable.increment_minor_version()
+    maintainable.increment_minor_version(allow_dotted=True)
 
     assert maintainable.version == "1.1"
 
@@ -48,7 +48,7 @@ def test_increment_keeps_an_explicit_urn_in_step_with_the_version() -> None:
         urn="urn:ddi:example.org:q-1:1",
     )
 
-    maintainable.increment_subversion()
+    maintainable.increment_subversion(allow_dotted=True)
 
     assert maintainable.urn == "urn:ddi:example.org:q-1:1.0.1"
     assert maintainable.to_reference().urn == "urn:ddi:example.org:q-1:1.0.1"

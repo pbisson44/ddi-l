@@ -24,8 +24,8 @@ __all__ = ["DDI_PROFILE_NS", "DDIProfile"]
 class DDIProfile(DDIProfileFields):
     """Declares which DDI elements a system uses (a profile of usage).
 
-    Build one with :meth:`ddi_l.document.Document.add_ddi_profile` and list the
-    elements it relies on with :meth:`add_used` / :meth:`add_not_used`.
+    Build one with `ddi_l.document.Document.add_ddi_profile` and list the
+    elements it relies on with `add_used` / `add_not_used`.
     """
 
     TAG: ClassVar[str] = qn(DDI_PROFILE_NS, "DDIProfile")

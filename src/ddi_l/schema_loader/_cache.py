@@ -5,11 +5,11 @@ from __future__ import annotations
 import threading
 from importlib import resources
 from importlib.resources.abc import Traversable
-from pathlib import Path
 from types import SimpleNamespace
 
+import xmlschema
+
 from ._constants import _SCHEMA_PACKAGE, SCHEMA_VERSION, get_schema_release
-from ._fallback import _FallbackSchema
 
 _SCHEMA_CACHE: dict[str, object] = {}
 # Loading a schema takes seconds; the lock stops concurrent first requests
@@ -28,24 +28,13 @@ def _schema_resource(version: str) -> Traversable:
 
 def _load_schema(version: str) -> object:
     resource = _schema_resource(version)
-    release = get_schema_release(version)
-    expected_filename = release["schema_filename"]
     if not resource.is_file():
-        return _FallbackSchema(Path(expected_filename), version=version)
-
+        raise FileNotFoundError(
+            f"The DDI {version} schema is missing from the ddi-l install "
+            f"({resource}). Reinstall ddi-l."
+        )
     with resources.as_file(resource) as schema_path:
-        actual_filename = schema_path.name
-        if actual_filename != expected_filename:
-            return _FallbackSchema(Path(schema_path), version=version)
-        from . import xmlschema as xmlschema_module
-
-        if xmlschema_module is not None:  # pragma: no branch - dependency controlled
-            try:
-                return xmlschema_module.XMLSchema(schema_path)
-            except OSError:
-                pass
-
-        return _FallbackSchema(Path(schema_path), version=version)
+        return xmlschema.XMLSchema(schema_path)
 
 
 def get_schema(version: str | None = None):

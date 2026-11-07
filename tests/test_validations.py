@@ -8,7 +8,7 @@ from typing import ClassVar
 import pytest
 
 from ddi_l.constants import DATA_COLLECTION_NS, LOGICAL_PRODUCT_NS, REUSABLE_NS
-from ddi_l.exceptions import ModelValidationError
+from ddi_l.exceptions import DDIReferenceWarning, ModelValidationError
 from ddi_l.models import (
     CollectionEvent,
     DataCollection,
@@ -159,7 +159,9 @@ def test_study_unit_with_reference_serializes() -> None:
         ],
     )
 
-    serialized = study.to_xml()
+    # The data collection is not in the study: written all the same, with a warning.
+    with pytest.warns(DDIReferenceWarning, match="'collect' which is not present"):
+        serialized = study.to_xml()
     assert serialized.find(qn(REUSABLE_NS, "DataCollectionReference")) is not None
 
 

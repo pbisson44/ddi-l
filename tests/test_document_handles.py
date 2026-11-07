@@ -232,3 +232,7 @@ def test_save_warns_once_about_dangling_references(tmp_path) -> None:
     warning = record[0].message
     assert isinstance(warning, DDIReferenceWarning)
     assert len(warning.records) == 1
+    # Made again from its args, as pytest-xdist and pickle do.
+    again = DDIReferenceWarning(*warning.args)
+    assert str(again) == str(warning)
+    assert str(warning).startswith("1 unresolved reference(s): ")

@@ -52,7 +52,7 @@ pipelines d’automatisation puissent réagir de manière programmatique.
     pipelines reproduisent les diagnostics. Lors de l’utilisation des assistants
     Python, `validation.validate_document(..., include_context=False)` offre la
     même protection. Pour les démarches de rédaction, consultez les
-    [recommandations du carnet d'automatisation](tutorials/automation-playbook.md#5-mettre-en-evidence-les-constats-dans-les-tableaux-de-bord-ci).
+    [recommandations du carnet d'automatisation](tutorials/automation-playbook.fr.md#5-mettre-en-evidence-les-constats-dans-les-tableaux-de-bord-ci).
 
 === "Exécution en échec"
     ```bash
@@ -174,9 +174,30 @@ disque, indiquez un chemin de destination plutôt que `-`. Avec l’option
 `--validate`, la commande se comporte comme `ddi validate` en renvoyant le code
 `1` et en produisant les anomalies JSON si la source est invalide.
 
-Le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.md)
+Le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.fr.md)
 montre comment intégrer cette étape avec les conversions et la préparation de
 paquets dans un pipeline de publication plus large.
+
+## Vérifier un questionnaire avec `ddi conform`
+
+`ddi conform` compare un instrument à une spécification de questionnaire, un
+fichier YAML ou JSON qui liste ses modules, ses questions, ses domaines, ses
+filtres et ses contrôles. Il demande l'extra `spec`
+(`pip install 'ddi-l[spec]'`).
+
+```bash
+ddi spec example > pet-survey.spec.yaml       # partir de l'exemple
+ddi spec validate pet-survey.spec.yaml
+ddi conform export.xml --spec pet-survey.spec.yaml --format table
+ddi conform export.xml --spec pet-survey.spec.yaml --module pets --fail-severity warning
+```
+
+Il se termine avec 0 quand aucun constat n'atteint `--fail-severity` (`error`
+par défaut), 1 quand un constat l'atteint, et 2 quand il ne peut pas
+s'exécuter (une spécification qui ne passe pas ses vérifications, un module
+inconnu). Voir
+[Vérifier un questionnaire par rapport à une spécification](spec-conformance.fr.md)
+pour le format et chaque règle.
 
 ## Exporter des instantanés avec `ddi to-json`
 
@@ -260,4 +281,4 @@ jobs:
 
 Complétez le workflow avec `ddi to-json` pour publier des instantanés lisibles
 par machine aux côtés des sorties XML ou déléguez à un script sur mesure comme
-proposé dans le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.md).
+proposé dans le [Playbook d’automatisation en ligne de commande](tutorials/automation-playbook.fr.md).

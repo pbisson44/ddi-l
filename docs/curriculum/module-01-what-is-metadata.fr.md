@@ -6,17 +6,25 @@ description: >-
 
 # Module 1 : Qu'est-ce que les métadonnées et pourquoi sont-elles importantes ?
 
-!!! info "Ce que vous apprendrez"
-    - Définir les métadonnées dans vos propres mots.
-    - Expliquer pourquoi des données sans documentation sont difficiles à utiliser.
-    - Décrire ce qu'est DDI et qui l'utilise.
-    - Expliquer comment DDI aide à rendre les données FAIR (Trouvables,
-      Accessibles, Interopérables, Réutilisables).
-    - Décrire ce que fait `ddi-l`.
+!!! info "Objectifs d'apprentissage"
+    À la fin de ce module, vous pouvez :
+
+    - **O1.** Définir les métadonnées en une phrase et désigner deux
+      métadonnées qui décrivent un tableau donné.
+    - **O2.** Énumérer trois questions auxquelles un lecteur doit répondre
+      avant d'utiliser un tableau non documenté.
+    - **O3.** Décrire ce qu'est DDI en deux phrases et nommer deux types
+      d'organisations qui l'utilisent.
+    - **O4.** Associer chaque principe FAIR à une façon dont les métadonnées
+      DDI le soutiennent.
+    - **O5.** Indiquer ce que fait `ddi-l` et une chose qu'il ne fait pas.
 
 **Prérequis :** Aucun.
 
 **Durée :** 30 min en autonomie / 45 min avec instructeur.
+
+**Nouveau dans ce module :** aucune fonction ni commande pour l'instant. Ce
+module pose les idées sur lesquelles s'appuie le reste du cours.
 
 ---
 
@@ -154,6 +162,14 @@ Ce que `ddi-l` peut faire :
 - **Modifier** un document DDI en ajoutant ou en supprimant des éléments.
 - **Valider** un document pour vérifier qu'il respecte les règles DDI.
 
+Ce que `ddi-l` ne fait pas :
+
+- Il ne **collecte** pas de réponses. Vous menez toujours votre enquête avec
+  votre propre outil d'enquête ; `ddi-l` décrit l'enquête et ses données.
+- Il n'**analyse** pas vos données. Il ne calcule ni moyennes ni tableaux à
+  partir des valeurs de votre fichier de données. Il enregistre ce que ces
+  valeurs signifient.
+
 ---
 
 ## 6. La vue d'ensemble
@@ -208,7 +224,7 @@ public puisse accéder à des données fiables et bien documentées.
     cinq lignes et les colonnes sont nommées A, B et C. Les valeurs ressemblent
     à des chiffres et des mots courts.
 
-**Exercice 1.** Regardez le tableau ci-dessous.
+**Exercice 1 (O2).** Regardez le tableau ci-dessous.
 
 | A  | B      |     C |
 | -: | ------ | ----: |
@@ -218,90 +234,219 @@ public puisse accéder à des données fiables et bien documentées.
 | 22 | Male   | 29000 |
 | 51 | Other  | 73000 |
 
-Notez **3 choses** qu'une nouvelle personne aurait besoin de savoir avant de
-pouvoir utiliser ces données. Par exemple : que mesure la colonne A ?
+Notez **3 questions** auxquelles une nouvelle personne aurait besoin d'une
+réponse avant de pouvoir utiliser ces données. Par exemple : que mesure la
+colonne A ?
+
+Résultat attendu : une liste de trois questions.
 
 ??? success "Réponse"
-    Trois de ces éléments, ou d'autres semblables :
+    Trois de ces questions, ou d'autres semblables :
 
-    1. Ce que signifie chaque colonne (A est-elle un âge ? En années ou en mois ?)
-    2. Qui a été interrogé (des étudiants ? des adultes ? tout le monde ?)
-    3. Quand les données ont été collectées
+    1. Que signifie chaque colonne ? (A est-elle un âge ? En années ou en mois ?)
+    2. Dans quelle unité est la colonne C ? (Dollars ? Euros ? Par année ou par mois ?)
+    3. Qui a été interrogé ? (Des étudiants ? Des adultes ? Tout le monde ?)
+    4. Quand les données ont-elles été collectées ?
 
-**Exercice 2.** Visitez <https://ddialliance.org> et trouvez une phrase sur le
-site qui décrit ce que fait DDI. Notez cette phrase.
+**Exercice 2 (O1).** La même chercheuse vous envoie maintenant la version
+documentée d'un autre fichier :
+
+> **Campus Sleep Study 2025.** Données collectées en septembre 2025 auprès
+> d'étudiants de première année. `sleep_hrs` est le nombre d'heures de sommeil
+> lors d'une soirée de cours typique.
+
+| sleep_hrs |
+| --------: |
+|         7 |
+|         6 |
+|         8 |
+
+1. Écrivez une définition des métadonnées en une phrase.
+2. Nommez **deux métadonnées** de ce fichier, et **une donnée**.
+
+Résultat attendu : une phrase, puis trois éléments courts.
 
 ??? success "Réponse"
-    Par exemple : « The Data Documentation Initiative (DDI) is an international
-    standard for describing data from the social, behavioral, economic, and health
-    sciences. » (L'initiative de documentation des données est une norme
-    internationale pour décrire les données des sciences sociales,
-    comportementales, économiques et de la santé.)
+    1. Les métadonnées sont des informations qui décrivent des données : ce
+       qu'elles signifient, d'où elles viennent et comment elles ont été
+       collectées.
+    2. Métadonnées : deux éléments parmi le titre « Campus Sleep Study 2025 »,
+       la date de collecte (septembre 2025), la population (étudiants de
+       première année), le nom de colonne `sleep_hrs` ou sa signification
+       (heures de sommeil lors d'une soirée de cours typique). Donnée : l'une
+       des valeurs 7, 6 ou 8.
+
+**Exercice 3 (O4).** Associez chaque principe FAIR (1 à 4) à la
+caractéristique DDI (a à d) qui le soutient.
+
+| Principe FAIR     | Caractéristique DDI |
+| ----------------- | ------------------- |
+| 1. Trouvable      | a. Le fichier DDI indique qui a été interrogé, quand, et ce que chaque variable signifie. |
+| 2. Accessible     | b. Deux enquêtes utilisent la même liste de codes DDI pour le statut d'emploi. |
+| 3. Interopérable  | c. Un catalogue de données indexe le titre, l'agence et les concepts stockés dans le fichier DDI. |
+| 4. Réutilisable   | d. Le fichier DDI est du XML simple, publié à côté des données, que tout outil XML peut ouvrir. |
+
+Résultat attendu : quatre paires, comme `1-?`.
+
+??? success "Réponse"
+    `1-c`, `2-d`, `3-b`, `4-a`.
+
+    - **Trouvable (c) :** le catalogue ne peut trouver que ce qui est décrit
+      dans des champs structurés.
+    - **Accessible (d) :** un format standard et ouvert ne demande aucun
+      logiciel spécial.
+    - **Interopérable (b) :** une liste de codes partagée donne le même sens
+      au même code dans les deux enquêtes, ce qui permet de combiner les
+      données.
+    - **Réutilisable (a) :** un nouvel utilisateur sait exactement ce que
+      contiennent les données.
+
+**Exercice 4 (O3).** Un nouveau collègue vous demande : « Qu'est-ce que
+DDI ? » Écrivez une réponse en **deux phrases**. Nommez **deux types
+d'organisations** qui l'utilisent.
+
+Résultat attendu : deux phrases.
+
+??? success "Réponse"
+    Par exemple : « DDI, la Data Documentation Initiative, est une norme
+    internationale pour décrire les enquêtes, les recensements et les jeux de
+    données en XML. Les instituts nationaux de statistique, les archives de
+    données, les universités et les équipes de recherche l'utilisent pour que
+    d'autres puissent trouver, comprendre et réutiliser leurs données. »
+
+    Deux de ces types d'organisations suffisent : instituts nationaux de
+    statistique, archives de données ou bibliothèques nationales, universités
+    et leurs dépôts de recherche, équipes de recherche.
+
+**Exercice 5 (O5).** Pour chaque tâche ci-dessous, écrivez **oui** si
+`ddi-l` la fait, ou **non** s'il ne la fait pas.
+
+1. Écrire un fichier DDI XML à partir d'un court script Python.
+2. Envoyer un questionnaire aux répondants et recueillir leurs réponses.
+3. Vérifier un document DDI par rapport aux règles DDI.
+4. Calculer le revenu moyen à partir des valeurs d'un fichier CSV.
+5. Ouvrir un fichier DDI existant et lister ses questions.
+
+Écrivez ensuite une phrase qui dit ce que fait `ddi-l` et une chose qu'il ne
+fait pas.
+
+Résultat attendu : cinq réponses, puis une phrase.
+
+??? success "Réponse"
+    Oui : 1, 3 et 5. Non : 2 et 4.
+
+    Par exemple : « `ddi-l` crée, lit, modifie et valide des métadonnées DDI
+    à partir de Python, mais il ne recueille pas les réponses d'enquête. »
 
 ---
 
 ## Quiz
 
-???+ question "Question 1 : Qu'est-ce que les métadonnées ?"
-    **A.** Les données brutes dans un tableur.
+???+ question "Question 1 (O1) : Un tableur contient une colonne intitulée `Age (years)` avec les valeurs 34, 28 et 45. Lequel de ces éléments est une métadonnée ?"
+    **A.** La valeur 34.
 
-    **B.** Des informations sur les données, comme une étiquette ou une
-    description qui vous dit ce que les données signifient.
+    **B.** L'en-tête `Age (years)`, qui dit ce que les valeurs signifient et
+    dans quelle unité elles sont exprimées.
 
-    **C.** Un type de langage de programmation.
+    **C.** La somme des trois valeurs.
 
-    **D.** Un format de fichier utilisé uniquement par les gouvernements.
-
-    ??? success "Réponse"
-        **B.** Les métadonnées sont des informations sur les données. Elles
-        décrivent ce que les données signifient, d'où elles viennent et comment
-        elles ont été collectées.
-
-???+ question "Question 2 : Pourquoi la documentation est-elle importante ?"
-    **A.** Elle réduit la taille du fichier de données.
-
-    **B.** Elle est exigée par Python.
-
-    **C.** Sans elle, les gens ne peuvent pas comprendre ce que les données
-    signifient ni comment les utiliser correctement.
-
-    **D.** Elle modifie les valeurs dans le jeu de données.
+    **D.** La deuxième ligne.
 
     ??? success "Réponse"
-        **C.** Sans documentation, les données ne sont que des chiffres et des
-        étiquettes sans contexte. Les gens risquent de mal interpréter ou de
-        mal utiliser les données.
+        **B.** Les métadonnées sont des informations sur les données.
+        L'en-tête vous dit ce que les chiffres signifient et comment ils sont
+        mesurés. Les valeurs elles-mêmes, et tout ce qu'on en calcule, sont
+        des données.
 
-???+ question "Question 3 : Que signifie FAIR ?"
-    **A.** Fast, Automated, Indexed, Reliable.
+???+ question "Question 2 (O2) : Un collègue vous envoie un tableau avec les colonnes A, B et C, sans aucune note. La colonne C contient des valeurs comme 52000. Vous voulez publier le revenu moyen. À quelle question devez-vous d'abord répondre ?"
+    **A.** Quelle police a servi à saisir le tableau ?
 
-    **B.** Findable, Accessible, Interoperable, Re-usable.
+    **B.** Combien de lignes le fichier contient-il ?
 
-    **C.** File, Archive, Import, Report.
+    **C.** Quel est le nom du fichier ?
 
-    **D.** Format, Align, Inspect, Review.
-
-    ??? success "Réponse"
-        **B.** FAIR signifie Findable (Trouvable), Accessible, Interoperable
-        (Interopérable) et Re-usable (Réutilisable). Ces quatre principes
-        guident la façon dont les données devraient être partagées pour que
-        d'autres puissent les découvrir, les comprendre et les réutiliser.
-        Les métadonnées DDI vous aident à respecter les quatre.
-
-???+ question "Question 4 : Que fait ddi-l ?"
-    **A.** Il collecte les réponses d'enquête auprès des gens.
-
-    **B.** C'est un outil Python qui crée, lit, modifie et valide des documents
-    DDI.
-
-    **C.** Il convertit du code Python en fichiers Excel.
-
-    **D.** Il remplace Microsoft Word pour rédiger des rapports.
+    **D.** Que mesure la colonne C, dans quelle devise et pour quelle période ?
 
     ??? success "Réponse"
-        **B.** `ddi-l` est un paquet Python pour travailler avec les
-        documents de métadonnées DDI. Il gère le XML pour que vous puissiez
-        vous concentrer sur vos données.
+        **D.** Sans savoir que C est un revenu, et s'il est en dollars ou en
+        euros, par année ou par mois, toute moyenne publiée pourrait être
+        fausse. Les autres questions ne changent pas le sens des chiffres.
+
+???+ question "Question 3 (O3) : Quelle phrase décrit le mieux DDI ?"
+    **A.** Une norme internationale pour décrire les enquêtes, les
+    recensements et les jeux de données, utilisée par les instituts
+    nationaux de statistique, les archives de données et les universités.
+
+    **B.** Un outil d'enquête qui envoie des questionnaires aux répondants.
+
+    **C.** Un paquet Python qui calcule des statistiques à partir de fichiers
+    de données.
+
+    **D.** Une base de données qui stocke les réponses d'enquête.
+
+    ??? success "Réponse"
+        **A.** DDI est une norme : un ensemble de règles convenues pour la
+        documentation. L'option C confond DDI avec les outils ; `ddi-l` est
+        un paquet Python qui travaille avec DDI, et il ne calcule pas de
+        statistiques.
+
+???+ question "Question 4 (O4) : Votre enquête et une enquête française utilisent la même liste de codes DDI pour le genre, ce qui permet de fusionner les deux jeux de données. Quel principe FAIR cela soutient-il le plus directement ?"
+    **A.** Trouvable
+
+    **B.** Accessible
+
+    **C.** Interopérable
+
+    **D.** Réutilisable
+
+    ??? success "Réponse"
+        **C.** Interopérable signifie que les données fonctionnent avec
+        d'autres données. Une liste de codes partagée donne à chaque code le
+        même sens dans les deux jeux de données, qui peuvent alors être
+        combinés et comparés.
+
+???+ question "Question 5 (O4) : Un catalogue de données lit le titre, l'agence et les concepts de votre fichier DDI, si bien qu'une recherche sur 'enquête santé mentale' affiche votre jeu de données. Quel principe FAIR cela soutient-il ?"
+    **A.** Trouvable
+
+    **B.** Accessible
+
+    **C.** Interopérable
+
+    **D.** Réutilisable
+
+    ??? success "Réponse"
+        **A.** Trouvable signifie que les gens peuvent découvrir les données.
+        Les champs DDI structurés donnent aux catalogues une base fiable à
+        indexer et à interroger.
+
+???+ question "Question 6 (O5) : Laquelle de ces tâches ddi-l NE fait-il PAS ?"
+    **A.** Créer une étude DDI à partir d'un script Python.
+
+    **B.** Recueillir les réponses des répondants à une enquête.
+
+    **C.** Valider un document DDI par rapport aux règles DDI.
+
+    **D.** Ouvrir un fichier DDI existant et examiner son contenu.
+
+    ??? success "Réponse"
+        **B.** `ddi-l` travaille avec des métadonnées : il crée, lit, modifie
+        et valide des documents DDI. Recueillir des réponses est le rôle d'un
+        outil d'enquête.
+
+---
+
+## Faites le point
+
+- [ ] Je peux définir les métadonnées en une phrase et désigner deux
+  métadonnées qui décrivent un tableau. (O1)
+- [ ] Je peux énumérer trois questions auxquelles un lecteur doit répondre
+  avant d'utiliser un tableau non documenté. (O2)
+- [ ] Je peux décrire DDI en deux phrases et nommer deux types
+  d'organisations qui l'utilisent. (O3)
+- [ ] Je peux associer chaque principe FAIR à une façon dont les métadonnées
+  DDI le soutiennent. (O4)
+- [ ] Je peux indiquer ce que fait `ddi-l` et une chose qu'il ne fait pas.
+  (O5)
 
 ---
 
@@ -310,12 +455,18 @@ site qui décrit ce que fait DDI. Notez cette phrase.
       désordonné » (exercice 1). Donnez aux apprenants le tableau sans
       étiquettes et demandez-leur de deviner ce que les données signifient.
       Cela crée la motivation pour le reste du module.
-    - **Adaptation au public :** Utilisez l'exemple du recensement pour les
-      publics des INS. Utilisez l'exemple de la thèse pour les étudiants
-      universitaires.
+    - **Adaptation au public :** Pour le tableau désordonné, vous pouvez
+      montrer quelques lignes des jeux de données d'exemple du cours, sans
+      les en-têtes : [`census-data.csv`](census-data.csv) pour les
+      publics des INS et [`thesis-data.csv`](thesis-data.csv) pour les
+      étudiants universitaires. Les deux reviennent dans le projet final du
+      module 17.
     - **Question de discussion :** Demandez aux apprenants de raconter une
       fois où ils ont reçu un fichier sans documentation. Quelles questions
       avaient-ils ?
+    - **Associations FAIR (exercice 3) :** Demandez quelle lettre FAIR est la
+      plus difficile à atteindre sans une norme comme DDI. La plupart
+      répondront Interopérable ou Trouvable.
     - **Conclusion :** Insistez sur le fait que `ddi-l` rend la
       documentation facile : vous écrivez du Python, et l'outil crée le XML
       standard pour vous.

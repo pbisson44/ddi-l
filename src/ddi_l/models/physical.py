@@ -89,9 +89,9 @@ class PhysicalInstance(PhysicalInstanceFields):
     """Maintainable wrapper for ``pi:PhysicalInstance`` descriptions.
 
     A physical instance documents one concrete data file: where it lives
-    (:meth:`set_data_file`), how many records it holds
-    (:meth:`set_record_count`), and what it is called
-    (:meth:`set_citation_title`). It has no ``Name`` element in DDI; it is
+    (`set_data_file`), how many records it holds
+    (`set_record_count`), and what it is called
+    (`set_citation_title`). It has no ``Name`` element in DDI; it is
     titled through its citation.
     """
 
@@ -141,8 +141,8 @@ class RecordLayout(RecordLayoutFields):
     """Maintainable wrapper for ``p:RecordLayout`` descriptions.
 
     A record layout maps variables to their physical position in a data file.
-    Build one with :meth:`ddi_l.document.Document.add_record_layout` and add
-    mappings with :meth:`add_data_item`.
+    Build one with `ddi_l.document.Document.add_record_layout` and add
+    mappings with `add_data_item`.
     """
 
     physical_record_segment_used: str | None = None

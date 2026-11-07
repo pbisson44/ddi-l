@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:ddi="ddi:instance:3_3">
+  <ddi:TopLevelReference>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000001</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>Instrument</r:TypeOfObject>
+  </ddi:TopLevelReference>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Instrument isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000001:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000001</r:ID>
+    <r:Version>1</r:Version>
+    <InstrumentName>
+      <r:String xml:lang="en-CA">Pet survey instrument</r:String>
+    </InstrumentName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000002</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+  </Instrument>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000002:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000002</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Root</r:String>
+    </ConstructName>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000013</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000021</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>InParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000034</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000041</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>InParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000013</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000051</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>InParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000054</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000086</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>InParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000010</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000020</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>IfThenElse</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000070</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000080</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>ComputationItem</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000085</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>ComputationItem</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000010:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000010</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">household</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000011</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000011:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000011</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Household page</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000012</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000012:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000012</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetCount</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000013:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000013</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetCount</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000016</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000013</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000015</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000015:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000015</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">HouseholdPets</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000016:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000016</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetCount</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">How many pets live here?</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Combien d’animaux vivent ici ?</Text>
+      </LiteralText>
+    </QuestionText>
+    <NumericDomain blankIsMissingValue="false" decimalPositions="0">
+      <r:NumberRange>
+        <r:Low isInclusive="true">0</r:Low>
+        <r:High isInclusive="true">20</r:High>
+      </r:NumberRange>
+      <r:NumericTypeCode>Integer</r:NumericTypeCode>
+    </NumericDomain>
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <IfThenElse isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000020:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000020</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Pets gate</r:String>
+    </ConstructName>
+    <r:InParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000021:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000021</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetCount</r:Alias>
+    </r:InParameter>
+    <IfCondition>
+      <r:Command>
+        <r:ProgramLanguage>Neutral</r:ProgramLanguage>
+        <r:CommandContent>{"LogicGroups":[{"GroupBooleanType":0,"Statements":[{"StatementBooleanType":0,"Subject":"urn:ddi:int.example:55555555-5555-4555-8555-000000000021:1","Operator":3,"Value":{"Value":"0","ValueNotNeeded":false,"SelectedCodes":[]}}]}],"Synopsis":"PetCount Greater than 0","Version":1}</r:CommandContent>
+      </r:Command>
+    </IfCondition>
+    <ThenConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000022</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ThenConstructReference>
+  </IfThenElse>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000022:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000022</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Pets gate (then)</r:String>
+    </ConstructName>
+    <TypeOfSequence>ConditionalChildContainer</TypeOfSequence>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000030</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000030:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000030</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">pets</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000031</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000031:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000031</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Pets page</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000032</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>StatementItem</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000033</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000040</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>IfThenElse</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000050</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>IfThenElse</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000060</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000065</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <StatementItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000032:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000032</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetsIntro</r:String>
+    </ConstructName>
+    <DisplayText>
+      <LiteralText>
+        <Text xml:lang="en-CA">Now, about your pets.</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Parlons maintenant de vos animaux.</Text>
+      </LiteralText>
+    </DisplayText>
+  </StatementItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000033:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000033</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetKind</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000034:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000034</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetKind</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000037</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000034</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000036</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000036:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000036</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">PetKind</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000037:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000037</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetKind</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">What kind of pet?</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Quel genre d’animal ?</Text>
+      </LiteralText>
+    </QuestionText>
+    <CodeDomain blankIsMissingValue="false">
+      <r:CodeListReference>
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000090</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>CodeList</r:TypeOfObject>
+      </r:CodeListReference>
+    </CodeDomain>
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <IfThenElse isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000040:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000040</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Name gate</r:String>
+    </ConstructName>
+    <r:InParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000041:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000041</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetKind</r:Alias>
+    </r:InParameter>
+    <IfCondition>
+      <r:Command>
+        <r:ProgramLanguage>Blaise</r:ProgramLanguage>
+        <r:CommandContent>NOT ({{PetKind}} = EMPTY) AND NOT ({{PetKind}} = REFUSAL)</r:CommandContent>
+      </r:Command>
+    </IfCondition>
+    <ThenConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000042</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ThenConstructReference>
+  </IfThenElse>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000042:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000042</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Name gate (then)</r:String>
+    </ConstructName>
+    <TypeOfSequence>ConditionalChildContainer</TypeOfSequence>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000043</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000043:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000043</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetName</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000044:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000044</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetName</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000047</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000044</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000046</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000046:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000046</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">PetName</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000047:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000047</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetName</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">What is its name?</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Quel est son nom ?</Text>
+      </LiteralText>
+    </QuestionText>
+    <TextDomain blankIsMissingValue="false" maxLength="40" />
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <IfThenElse isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000050:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000050</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Age gate</r:String>
+    </ConstructName>
+    <r:InParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000051:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000051</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetCount</r:Alias>
+    </r:InParameter>
+    <IfCondition>
+      <r:Command>
+        <r:ProgramLanguage>Neutral</r:ProgramLanguage>
+        <r:CommandContent>{"LogicGroups":[{"GroupBooleanType":0,"Statements":[{"StatementBooleanType":0,"Subject":"urn:ddi:int.example:55555555-5555-4555-8555-000000000051:1","Operator":3,"Value":{"Value":"1","ValueNotNeeded":false,"SelectedCodes":[]}}]}],"Synopsis":"PetCount Greater than 1","Version":1}</r:CommandContent>
+      </r:Command>
+    </IfCondition>
+    <ThenConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000052</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>Sequence</r:TypeOfObject>
+    </ThenConstructReference>
+  </IfThenElse>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000052:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000052</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Age gate (then)</r:String>
+    </ConstructName>
+    <TypeOfSequence>ConditionalChildContainer</TypeOfSequence>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000053</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionConstruct</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000053:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000053</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetAge</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000054:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000054</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetAge</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000057</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000054</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000056</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000056:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000056</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">PetAge</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000057:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000057</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetAge</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">How old is it?</Text>
+      </LiteralText>
+    </QuestionText>
+    <NumericDomain blankIsMissingValue="false" decimalPositions="1">
+      <r:NumberRange>
+        <r:Low isInclusive="true">0</r:Low>
+        <r:High isInclusive="true">30</r:High>
+      </r:NumberRange>
+      <r:NumericTypeCode>Decimal</r:NumericTypeCode>
+    </NumericDomain>
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000060:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000060</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">VisitDate</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000061:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000061</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>VisitDate</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000064</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000061</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000063</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000063:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000063</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">VisitDate</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000064:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000064</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>VisitDate</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">When was the last visit?</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Quand a eu lieu la dernière visite ?</Text>
+      </LiteralText>
+    </QuestionText>
+    <DateTimeDomain blankIsMissingValue="false">
+      <r:DateTypeCode>Date</r:DateTypeCode>
+    </DateTimeDomain>
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionConstruct isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000065:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000065</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">PetColour</r:String>
+    </ConstructName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000066:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000066</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetColour</r:Alias>
+    </r:OutParameter>
+    <r:Binding>
+      <r:SourceParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000069</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:SourceParameterReference>
+      <r:TargetParameterReference lateBound="true">
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000066</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>OutParameter</r:TypeOfObject>
+      </r:TargetParameterReference>
+    </r:Binding>
+    <r:QuestionReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000068</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>QuestionItem</r:TypeOfObject>
+    </r:QuestionReference>
+  </QuestionConstruct>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <QuestionItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000068:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000068</r:ID>
+    <r:Version>1</r:Version>
+    <QuestionItemName>
+      <r:String xml:lang="en-CA">PetColour</r:String>
+    </QuestionItemName>
+    <r:OutParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000069:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000069</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetColour</r:Alias>
+    </r:OutParameter>
+    <QuestionText>
+      <LiteralText>
+        <Text xml:lang="en-CA">What colour is it?</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">De quelle couleur est-il ?</Text>
+      </LiteralText>
+    </QuestionText>
+    <TextDomain blankIsMissingValue="false" maxLength="20" />
+  </QuestionItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Sequence isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000070:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000070</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">feedback</r:String>
+    </ConstructName>
+    <ControlConstructReference>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000071</r:ID>
+      <r:Version>1</r:Version>
+      <r:TypeOfObject>StatementItem</r:TypeOfObject>
+    </ControlConstructReference>
+  </Sequence>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <StatementItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000071:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000071</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Thanks</r:String>
+    </ConstructName>
+    <DisplayText>
+      <LiteralText>
+        <Text xml:lang="en-CA">Thank you.</Text>
+      </LiteralText>
+      <LiteralText>
+        <Text xml:lang="fr-CA">Merci.</Text>
+      </LiteralText>
+    </DisplayText>
+  </StatementItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <ComputationItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000080:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000080</r:ID>
+    <r:Version>1</r:Version>
+    <ConstructName>
+      <r:String xml:lang="en-CA">Owner lookup</r:String>
+    </ConstructName>
+    <r:CommandCode>
+      <r:Command>
+        <r:ProgramLanguage>Blaise5DataLookup</r:ProgramLanguage>
+        <r:CommandContent>{"DataLookupFields":[{"Name":"OwnerName","Type":"Text","IsAssigned":true,"Identifier":"1"},{"Name":"OwnerAge","Type":"Text","IsAssigned":true,"Identifier":"2"},{"Name":"HasPets","Type":"Integer","IsAssigned":true,"Identifier":"3"}]}</r:CommandContent>
+      </r:Command>
+    </r:CommandCode>
+  </ComputationItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <ComputationItem isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:datacollection:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000085:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000085</r:ID>
+    <r:Version>1</r:Version>
+    <r:UserAttributePair>
+      <r:AttributeKey>kind</r:AttributeKey>
+      <r:AttributeValue>EditCheck</r:AttributeValue>
+    </r:UserAttributePair>
+    <ConstructName>
+      <r:String xml:lang="en-CA">age_range</r:String>
+    </ConstructName>
+    <r:InParameter isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000086:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000086</r:ID>
+      <r:Version>1</r:Version>
+      <r:Alias>PetAge</r:Alias>
+    </r:InParameter>
+    <r:CommandCode>
+      <r:Command>
+        <r:ProgramLanguage>Neutral</r:ProgramLanguage>
+        <r:CommandContent>{"LogicGroups":[{"GroupBooleanType":0,"Statements":[{"StatementBooleanType":0,"Subject":"urn:ddi:int.example:55555555-5555-4555-8555-000000000086:1","Operator":3,"Value":{"Value":"25","ValueNotNeeded":false,"SelectedCodes":[]}}]}],"Synopsis":"PetAge Greater than 25","Version":1}</r:CommandContent>
+      </r:Command>
+    </r:CommandCode>
+  </ComputationItem>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <CodeList isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" xmlns="ddi:logicalproduct:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000090:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000090</r:ID>
+    <r:Version>1</r:Version>
+    <r:Label>
+      <r:Content xml:lang="en-CA">Species</r:Content>
+    </r:Label>
+    <Code isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000091:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000091</r:ID>
+      <r:Version>1</r:Version>
+      <r:CategoryReference>
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000095</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Category</r:TypeOfObject>
+      </r:CategoryReference>
+      <r:Value>1</r:Value>
+    </Code>
+    <Code isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000092:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000092</r:ID>
+      <r:Version>1</r:Version>
+      <r:CategoryReference>
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000096</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Category</r:TypeOfObject>
+      </r:CategoryReference>
+      <r:Value>2</r:Value>
+    </Code>
+    <Code isUniversallyUnique="true">
+      <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000093:1</r:URN>
+      <r:Agency>int.example</r:Agency>
+      <r:ID>55555555-5555-4555-8555-000000000093</r:ID>
+      <r:Version>1</r:Version>
+      <r:CategoryReference>
+        <r:Agency>int.example</r:Agency>
+        <r:ID>55555555-5555-4555-8555-000000000097</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Category</r:TypeOfObject>
+      </r:CategoryReference>
+      <r:Value>4</r:Value>
+    </Code>
+  </CodeList>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Category isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" isMissing="false" xmlns="ddi:logicalproduct:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000095:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000095</r:ID>
+    <r:Version>1</r:Version>
+    <r:Label>
+      <r:Content xml:lang="en-CA">Dog</r:Content>
+      <r:Content xml:lang="fr-CA">Chien</r:Content>
+    </r:Label>
+  </Category>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Category isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" isMissing="false" xmlns="ddi:logicalproduct:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000096:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000096</r:ID>
+    <r:Version>1</r:Version>
+    <r:Label>
+      <r:Content xml:lang="en-CA">Cat</r:Content>
+      <r:Content xml:lang="fr-CA">Chats</r:Content>
+    </r:Label>
+  </Category>
+</Fragment>
+<Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+  <Category isUniversallyUnique="true" versionDate="2026-03-01T10:00:00.0000000Z" isMissing="false" xmlns="ddi:logicalproduct:3_3">
+    <r:URN>urn:ddi:int.example:55555555-5555-4555-8555-000000000097:1</r:URN>
+    <r:Agency>int.example</r:Agency>
+    <r:ID>55555555-5555-4555-8555-000000000097</r:ID>
+    <r:Version>1</r:Version>
+    <r:Label>
+      <r:Content xml:lang="en-CA">Fish</r:Content>
+      <r:Content xml:lang="fr-CA">Poisson</r:Content>
+    </r:Label>
+  </Category>
+</Fragment>
+</ddi:FragmentInstance>

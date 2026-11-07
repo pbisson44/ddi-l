@@ -71,8 +71,7 @@ class MaintainableRegistry:
 
             # Notify any listeners (e.g., schema_loader cache invalidation)
             for callback in cls._on_register_callbacks:
-                with contextlib.suppress(Exception):
-                    callback(model_class)
+                callback(model_class)
 
             return model_class
 
@@ -94,8 +93,7 @@ class MaintainableRegistry:
             cls._registered_types.append(model_class)
 
         for callback in cls._on_register_callbacks:
-            with contextlib.suppress(Exception):
-                callback(model_class)
+            callback(model_class)
 
     @classmethod
     def get(cls, tag: str) -> type[MaintainableBase] | None:

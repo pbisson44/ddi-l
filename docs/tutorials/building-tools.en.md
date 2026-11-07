@@ -12,8 +12,8 @@ pipelines.
 
 !!! info "Prerequisites"
     - Python 3.11+ with `ddi-l` installed.
-    - Familiarity with the [user guide](../user-guide.md) and the
-      [models reference](../models.md).
+    - Familiarity with the [user guide](../user-guide.en.md) and the
+      [models reference](../models.en.md).
 
 ## Read and query documents
 

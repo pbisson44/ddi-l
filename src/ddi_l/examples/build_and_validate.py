@@ -3,7 +3,7 @@
 The script is intentionally verbose so newcomers can inspect how the
 ``ddi_l`` models compose into a multi-study instance.  When invoked with the
 ``--refresh`` flag it rebuilds the bundled XML payload from scratch before
-loading it back via :func:`ddi_l.read_ddi`, applying a small modification,
+loading it back via `ddi_l.read_ddi`, applying a small modification,
 validating the tree, and writing the serialized XML to disk.
 
 UUID Generation
@@ -30,17 +30,9 @@ This script demonstrates two patterns:
 from __future__ import annotations
 
 import argparse
-import sys
 from collections.abc import Iterable
 from pathlib import Path
 from uuid import uuid4, uuid5
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SRC_PATH = PROJECT_ROOT / "src"
-for path in (SRC_PATH, PROJECT_ROOT):
-    stringified = str(path)
-    if stringified not in sys.path:
-        sys.path.insert(0, stringified)
 
 from ddi_l import read_ddi, schema_loader, write_ddi
 from ddi_l.constants import IDENTIFIER_NAMESPACE
@@ -836,8 +828,8 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path(__file__).resolve().parent / EXAMPLE_FILENAME,
-        help="Location of the example XML document.",
+        default=Path(EXAMPLE_FILENAME),
+        help="Location of the example XML document (default: the current folder).",
     )
     parser.add_argument(
         "--refresh-fragment",
@@ -847,8 +839,11 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--fragment-output",
         type=Path,
-        default=Path(__file__).resolve().parent / FRAGMENT_FILENAME,
-        help="Location of the reusable fragment XML document.",
+        default=Path(FRAGMENT_FILENAME),
+        help=(
+            "Location of the reusable fragment XML document "
+            "(default: the current folder)."
+        ),
     )
     parser.add_argument(
         "--uuid-demo",

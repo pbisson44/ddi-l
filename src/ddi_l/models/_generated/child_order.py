@@ -2483,8 +2483,7 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:datacollection:3_3}GridResponseDomainInMixed", "{ddi:datacollection:3_3}NoDataByDefinition",),
     ),
     "{ddi:datacollection:3_3}StructuredMixedResponseDomainType": (
-        ("{ddi:datacollection:3_3}ResponseTextSet",),
-        ("{ddi:datacollection:3_3}ResponseDomainInMixed",),
+        ("{ddi:datacollection:3_3}ResponseTextSet", "{ddi:datacollection:3_3}ResponseDomainInMixed",),
     ),
     "{ddi:datacollection:3_3}TargetSampleSizeType": (
         ("{ddi:datacollection:3_3}StrataNumber",),
@@ -4433,27 +4432,10 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:reusable:3_3}ComplianceDescription",),
     ),
     "{ddi:reusable:3_3}ContentType": (
-        ("{http://www.w3.org/1999/xhtml}h1",),
-        ("{http://www.w3.org/1999/xhtml}h2",),
-        ("{http://www.w3.org/1999/xhtml}h3",),
-        ("{http://www.w3.org/1999/xhtml}h4",),
-        ("{http://www.w3.org/1999/xhtml}h5",),
-        ("{http://www.w3.org/1999/xhtml}h6",),
-        ("{http://www.w3.org/1999/xhtml}ul",),
-        ("{http://www.w3.org/1999/xhtml}ol",),
-        ("{http://www.w3.org/1999/xhtml}dl",),
-        ("{http://www.w3.org/1999/xhtml}p",),
-        ("{http://www.w3.org/1999/xhtml}div",),
-        ("{http://www.w3.org/1999/xhtml}pre",),
-        ("{http://www.w3.org/1999/xhtml}blockquote",),
-        ("{http://www.w3.org/1999/xhtml}address",),
-        ("{http://www.w3.org/1999/xhtml}hr",),
-        ("{http://www.w3.org/1999/xhtml}table",),
+        ("{http://www.w3.org/1999/xhtml}h1", "{http://www.w3.org/1999/xhtml}h2", "{http://www.w3.org/1999/xhtml}h3", "{http://www.w3.org/1999/xhtml}h4", "{http://www.w3.org/1999/xhtml}h5", "{http://www.w3.org/1999/xhtml}h6", "{http://www.w3.org/1999/xhtml}ul", "{http://www.w3.org/1999/xhtml}ol", "{http://www.w3.org/1999/xhtml}dl", "{http://www.w3.org/1999/xhtml}p", "{http://www.w3.org/1999/xhtml}div", "{http://www.w3.org/1999/xhtml}pre", "{http://www.w3.org/1999/xhtml}blockquote", "{http://www.w3.org/1999/xhtml}address", "{http://www.w3.org/1999/xhtml}hr", "{http://www.w3.org/1999/xhtml}table",),
     ),
     "{ddi:reusable:3_3}ContributorType": (
-        ("{ddi:reusable:3_3}ContributorName",),
-        ("{ddi:reusable:3_3}ContributorRole",),
-        ("{ddi:reusable:3_3}ContributorReference",),
+        ("{ddi:reusable:3_3}ContributorName", "{ddi:reusable:3_3}ContributorRole", "{ddi:reusable:3_3}ContributorReference",),
     ),
     "{ddi:reusable:3_3}CoordinatePairsType": (
         ("{ddi:reusable:3_3}RecommendedDataType",),
@@ -4475,8 +4457,7 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:reusable:3_3}RestrictionProcess",),
     ),
     "{ddi:reusable:3_3}CreatorType": (
-        ("{ddi:reusable:3_3}CreatorName",),
-        ("{ddi:reusable:3_3}CreatorReference",),
+        ("{ddi:reusable:3_3}CreatorName", "{ddi:reusable:3_3}CreatorReference",),
     ),
     "{ddi:reusable:3_3}DataExistenceType": (
         ("{ddi:reusable:3_3}LevelNumber",),
@@ -4737,8 +4718,7 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:reusable:3_3}TypeOfLabel",),
     ),
     "{ddi:reusable:3_3}LevelReferenceType": (
-        ("{ddi:reusable:3_3}GeographicLevelReference",),
-        ("{ddi:reusable:3_3}GeographicLevelName",),
+        ("{ddi:reusable:3_3}GeographicLevelReference", "{ddi:reusable:3_3}GeographicLevelName",),
     ),
     "{ddi:reusable:3_3}LifecycleEventType": (
         ("{ddi:reusable:3_3}URN", "{ddi:reusable:3_3}Agency", "{ddi:reusable:3_3}ID", "{ddi:reusable:3_3}Version",),
@@ -5079,9 +5059,7 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:reusable:3_3}OtherMaterialReference",),
     ),
     "{ddi:reusable:3_3}PublisherType": (
-        ("{ddi:reusable:3_3}PublisherName",),
-        ("{ddi:reusable:3_3}PublisherRole",),
-        ("{ddi:reusable:3_3}PublisherReference",),
+        ("{ddi:reusable:3_3}PublisherName", "{ddi:reusable:3_3}PublisherRole", "{ddi:reusable:3_3}PublisherReference",),
     ),
     "{ddi:reusable:3_3}QualitySchemeType": (
         ("{ddi:reusable:3_3}URN", "{ddi:reusable:3_3}Agency", "{ddi:reusable:3_3}ID", "{ddi:reusable:3_3}Version",),
@@ -5330,8 +5308,7 @@ CHILD_RANKS: Final[dict[str, tuple[tuple[str, ...], ...]]] = {
         ("{ddi:reusable:3_3}MeasurementUnit",),
     ),
     "{ddi:reusable:3_3}TextualType": (
-        ("{ddi:reusable:3_3}LineParameter",),
-        ("{ddi:reusable:3_3}CharacterParameter",),
+        ("{ddi:reusable:3_3}LineParameter", "{ddi:reusable:3_3}CharacterParameter",),
     ),
     "{ddi:reusable:3_3}TopicalCoverageType": (
         ("{ddi:reusable:3_3}URN", "{ddi:reusable:3_3}Agency", "{ddi:reusable:3_3}ID", "{ddi:reusable:3_3}Version",),

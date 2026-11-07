@@ -10,7 +10,6 @@ from ddi_l.models.base import qn
 from ddi_l.schema_loader._validation import (
     SchemaValidationError,
     SchemaValidationIssue,
-    _apply_validation_backend,
     _build_fragment_gap_sets,
     _build_validation_issue,
     _clear_fragment_gap_cache,
@@ -19,6 +18,7 @@ from ddi_l.schema_loader._validation import (
     _identify_fragment_schema_gap,
     _resolve_known_type_names,
     get_available_validation_backends,
+    get_validation_backend,
     set_validation_backend,
     validate,
 )
@@ -460,9 +460,14 @@ def test_get_available_backends():
 
 
 def test_set_validation_backend_python():
+    previous = get_validation_backend()
     set_validation_backend("python")
+    try:
+        assert get_validation_backend() == "python"
+    finally:
+        set_validation_backend(previous)
 
 
-def test_apply_validation_backend_unsupported():
+def test_set_validation_backend_unsupported():
     with pytest.raises(ValueError, match="Unsupported"):
-        _apply_validation_backend("nonexistent")
+        set_validation_backend("nonexistent")

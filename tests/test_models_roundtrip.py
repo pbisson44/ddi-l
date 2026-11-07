@@ -30,10 +30,6 @@ from ddi_l.constants import (
     REUSABLE_NS,
     XML_NS,
 )
-from ddi_l.examples.tests.fixtures.models.regenerate import (
-    FIXTURE_DEFAULT_AGENCY,
-    _fixture_identifier,
-)
 from ddi_l.exceptions import DDIParseError
 from ddi_l.io import iter_variables, read
 from ddi_l.models import (
@@ -75,6 +71,11 @@ from tests.helpers.maintainable_fixtures import (
     MODEL_FIXTURE_DIR,
     MODEL_FIXTURES,
     iter_maintainable_fixture_names,
+)
+from tests.helpers.marks import refers_outside
+from tests.helpers.regenerate_model_fixtures import (
+    FIXTURE_DEFAULT_AGENCY,
+    _fixture_identifier,
 )
 
 
@@ -190,6 +191,7 @@ def test_fixture_definitions_cover_all_maintainables(
 
 
 @pytest.mark.parametrize(("model_cls", "fixture_name"), list(_round_trip_cases()))
+@refers_outside
 def test_maintainable_round_trip(
     model_cls: type[MaintainableBase], fixture_name: str
 ) -> None:
@@ -211,6 +213,7 @@ def test_maintainable_round_trip(
 
 
 @pytest.mark.parametrize(("model_cls", "fixture_name"), list(_validation_cases()))
+@refers_outside
 def test_validated_models_pass_schema(
     model_cls: type[MaintainableBase], fixture_name: str
 ) -> None:

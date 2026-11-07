@@ -9,6 +9,7 @@ import pytest
 
 from ddi_l import _schema_versions, cli, schema_loader
 from ddi_l import lint as lint_module
+from tests import SAMPLES_DIR
 
 
 @pytest.fixture(scope="module")
@@ -66,7 +67,7 @@ class NonSeekableSentinel(io.BytesIO):
 def test_maybe_validate_returns_reusable_stream(cli_fixtures: Path):
     """`_maybe_validate` yields a rewound handle for non-seekable inputs."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
     stream = NonSeekableSentinel(xml_bytes)
 
     issues, reusable = cli._maybe_validate(
@@ -88,7 +89,7 @@ def test_maybe_validate_returns_reusable_stream(cli_fixtures: Path):
 def test_maybe_validate_reports_issues_for_paths(cli_fixtures: Path, capsys):
     """`_maybe_validate` surfaces validation issues when given a path input."""
 
-    path = cli_fixtures / "invalid_instance_missing_id.xml"
+    path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
 
     issues, returned = cli._maybe_validate(
         path,
@@ -112,7 +113,7 @@ def test_validate_success(cli_fixtures: Path, capsys):
     Args:
         capsys: Captures CLI stdout/stderr for assertions.
     """
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(["validate", str(path)])
     captured = capsys.readouterr()
     assert exit_code == 0
@@ -136,7 +137,7 @@ def test_validate_failure_reports_issues(cli_fixtures: Path, capsys):
     Args:
         capsys: Captures CLI stdout/stderr for assertions.
     """
-    path = cli_fixtures / "invalid_instance_missing_id.xml"
+    path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     exit_code = cli.main(["validate", str(path)])
     captured = capsys.readouterr()
     assert exit_code == 1
@@ -146,7 +147,7 @@ def test_validate_failure_reports_issues(cli_fixtures: Path, capsys):
 def test_validate_unsupported_version(cli_fixtures: Path, capsys):
     """Unsupported schema overrides are surfaced as CLI errors."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     with pytest.raises(SystemExit) as excinfo:
         cli.main(["validate", str(path), "--ddi-version", "2.5"])
     captured = capsys.readouterr()
@@ -158,7 +159,7 @@ def test_validate_unsupported_version(cli_fixtures: Path, capsys):
 def test_validate_redact_context_removes_field(cli_fixtures: Path, capsys):
     """`--redact-context` omits contextual snippets from CLI output."""
 
-    path = cli_fixtures / "invalid_instance_missing_id.xml"
+    path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     exit_code = cli.main(
         ["validate", str(path), "--redact-context", "--format", "json"]
     )
@@ -177,8 +178,8 @@ def test_validate_redact_context_removes_field(cli_fixtures: Path, capsys):
 def test_validate_multiple_inputs_summarizes_status(cli_fixtures: Path, capsys):
     """`validate` accepts multiple inputs and reports a summary."""
 
-    valid = cli_fixtures / "minimal_instance.xml"
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    valid = SAMPLES_DIR / "minimal_instance.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
 
     exit_code = cli.main(["validate", str(valid), str(invalid)])
     captured = capsys.readouterr()
@@ -197,8 +198,8 @@ def test_validate_writes_per_source_payloads(
 ) -> None:
     """`--output` writes per-source validation results when given a directory."""
 
-    valid = cli_fixtures / "minimal_instance.xml"
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    valid = SAMPLES_DIR / "minimal_instance.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
 
     exit_code = cli.main(
         [
@@ -225,7 +226,7 @@ def test_validate_writes_per_source_payloads(
 def test_validate_writes_single_file(cli_fixtures: Path, tmp_path: Path, capsys):
     """`--output` writes validation results to a single file for valid inputs."""
 
-    source = cli_fixtures / "minimal_instance.xml"
+    source = SAMPLES_DIR / "minimal_instance.xml"
     destination = tmp_path / "report.json"
 
     exit_code = cli.main(["validate", str(source), "--output", str(destination)])
@@ -241,7 +242,7 @@ def test_validate_writes_single_file(cli_fixtures: Path, tmp_path: Path, capsys)
 def test_validate_with_labels_wraps_payload(cli_fixtures: Path, capsys):
     """`--with-labels` wraps validation payloads with their source labels."""
 
-    path = cli_fixtures / "invalid_instance_missing_id.xml"
+    path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
 
     exit_code = cli.main(["validate", str(path), "--with-labels"])
     captured = capsys.readouterr()
@@ -259,7 +260,7 @@ def test_to_json_contains_reusable_agency_key(cli_fixtures: Path, capsys):
     Args:
         capsys: Captures CLI stdout/stderr for assertions.
     """
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(["to-json", str(path)])
     captured = capsys.readouterr()
     assert exit_code == 0
@@ -288,7 +289,7 @@ def test_to_json_with_version_override(cli_fixtures: Path, capsys):
 def test_to_json_rejects_unsupported_version(cli_fixtures: Path, capsys):
     """Explicit schema overrides must be supported for conversion."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     with pytest.raises(SystemExit) as excinfo:
         cli.main(["to-json", str(path), "--ddi-version", "9.9"])
     captured = capsys.readouterr()
@@ -305,7 +306,7 @@ def _build_instance_mapping(path: Path) -> dict:
 def test_from_json_writes_valid_xml(cli_fixtures: Path, tmp_path: Path, capsys):
     """`from-json` converts JSON input to valid XML output."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
     json_path = tmp_path / "instance.json"
     output = tmp_path / "output.xml"
     json_path.write_text(json.dumps(mapping))
@@ -326,7 +327,7 @@ def test_from_json_validation_reports_issues(
 ):
     """`from-json` surfaces validation failures from generated XML."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
     mapping.pop("{ddi:reusable:3_3}ID", None)
     json_path = tmp_path / "invalid.json"
     output = tmp_path / "output.validate.json"
@@ -346,7 +347,7 @@ def test_from_json_validation_reports_issues(
 def test_from_json_writes_to_stdout(cli_fixtures: Path, monkeypatch, capsys):
     """`from-json` accepts stdin input and writes XML to stdout."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
 
     monkeypatch.setattr(cli.sys, "stdin", io.StringIO(json.dumps(mapping)))
 
@@ -361,7 +362,7 @@ def test_from_json_writes_to_stdout(cli_fixtures: Path, monkeypatch, capsys):
 def test_from_json_validation_uses_output_directory(cli_fixtures: Path, tmp_path: Path):
     """Validation issues respect directory outputs for multiple sources."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
     mapping.pop("{ddi:reusable:3_3}ID", None)
 
     first = tmp_path / "first.json"
@@ -392,7 +393,7 @@ def test_from_json_validation_uses_output_directory(cli_fixtures: Path, tmp_path
 def test_from_json_validation_with_labels(cli_fixtures: Path, tmp_path: Path, capsys):
     """Validation output honours ``--with-labels`` just like conversion results."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
     mapping.pop("{ddi:reusable:3_3}ID", None)
 
     json_path = tmp_path / "invalid.json"
@@ -414,7 +415,7 @@ def test_from_json_with_labels_writes_labeled_outputs(
 ):
     """`from-json` writes labeled NDJSON to stdout or per-source outputs."""
 
-    mapping = _build_instance_mapping(cli_fixtures / "minimal_instance.xml")
+    mapping = _build_instance_mapping(SAMPLES_DIR / "minimal_instance.xml")
 
     first = tmp_path / "first.json"
     second = tmp_path / "second.json"
@@ -449,7 +450,7 @@ def test_from_json_with_labels_writes_labeled_outputs(
 def test_to_json_validate_opens_input_once(cli_fixtures: Path, monkeypatch, capsys):
     """Validation buffers path inputs so the source file is opened once."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     recorded_calls = 0
     original_open = Path.open
 
@@ -474,8 +475,8 @@ def test_to_json_validation_writes_labeled_outputs(
 ):
     """`to-json --validate` writes labeled payloads per source when requested."""
 
-    valid = cli_fixtures / "minimal_instance.xml"
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    valid = SAMPLES_DIR / "minimal_instance.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
 
     exit_code = cli.main(
         [
@@ -513,7 +514,7 @@ def test_roundtrip_writes_valid_output(cli_fixtures: Path, tmp_path, capsys):
         tmp_path: Temporary directory for roundtrip output.
         capsys: Captures CLI stdout/stderr for assertions.
     """
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     output = tmp_path / "roundtrip.xml"
     exit_code = cli.main(
         ["roundtrip", str(path), "--output", str(output), "--validate"]
@@ -554,7 +555,7 @@ def test_roundtrip_rejects_unsupported_version(
 ):
     """Roundtrip fails fast for unsupported schema overrides."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     output = tmp_path / "roundtrip.xml"
     with pytest.raises(SystemExit) as excinfo:
         cli.main(
@@ -569,7 +570,7 @@ def test_roundtrip_rejects_unsupported_version(
 def test_roundtrip_supports_multiple_inputs(cli_fixtures: Path, tmp_path: Path, capsys):
     """Roundtrip can emit multiple inputs into a destination directory."""
 
-    first = cli_fixtures / "minimal_instance.xml"
+    first = SAMPLES_DIR / "minimal_instance.xml"
     second = cli_fixtures / "minimal_fragment.xml"
     destination_dir = tmp_path / "roundtripped"
 
@@ -589,8 +590,8 @@ def test_roundtrip_validation_writes_per_file_reports(
 ):
     """Roundtrip writes validation issues beside other outputs for each source."""
 
-    valid = cli_fixtures / "minimal_instance.xml"
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    valid = SAMPLES_DIR / "minimal_instance.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     destination_dir = tmp_path / "roundtripped"
 
     exit_code = cli.main(
@@ -621,7 +622,7 @@ def test_roundtrip_validate_opens_input_once(
 ):
     """Roundtrip validation buffers path inputs to avoid reopening files."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     output = tmp_path / "roundtrip.xml"
     recorded_calls = 0
     original_open = Path.open
@@ -746,7 +747,7 @@ def test_ensure_reusable_input_spools_with_max_size(monkeypatch):
 def test_to_json_from_stdin_with_validation(cli_fixtures: Path, monkeypatch, capsys):
     """`to-json` reads XML bytes from stdin, validates, and emits JSON."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
 
     class DummyStdin:
         def __init__(self, buffer):
@@ -769,7 +770,7 @@ def test_to_json_writes_output_files(cli_fixtures: Path, tmp_path: Path, capsys)
     """`to-json` writes per-source JSON payloads to the requested directory."""
 
     inputs = [
-        cli_fixtures / "minimal_instance.xml",
+        SAMPLES_DIR / "minimal_instance.xml",
         cli_fixtures / "minimal_fragment.xml",
     ]
 
@@ -811,7 +812,7 @@ def test_cli_configures_requested_backends(cli_fixtures: Path, monkeypatch, caps
         ),
     )
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(
         [
             "to-json",
@@ -843,7 +844,7 @@ def test_cli_reports_unavailable_backend(monkeypatch, cli_fixtures: Path, capsys
 
     monkeypatch.setattr(cli.schema_loader, "set_conversion_backend", failing_backend)
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(["to-json", str(path), "--conversion-backend", "python"])
     captured = capsys.readouterr()
 
@@ -859,7 +860,7 @@ def test_validate_from_stdin_consumes_stream(
 ):
     """`validate` reads stdin exactly once for both seekable and non-seekable streams."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
     stream = stream_factory(xml_bytes)
 
     class DummyStdin:
@@ -883,7 +884,7 @@ def test_validate_from_stdin_consumes_stream(
 def test_to_json_from_nonseekable_stdin(cli_fixtures: Path, monkeypatch, capsys):
     """`to-json` copies non-seekable stdin before validation consumes it."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
     stream = NonSeekableSentinel(xml_bytes)
 
     class DummyStdin:
@@ -908,7 +909,7 @@ def test_roundtrip_from_stdin_emits_valid_xml(
 ):
     """Roundtrip command processes stdin and writes validated XML to stdout."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
 
     class DummyStdin:
         def __init__(self, buffer):
@@ -933,7 +934,7 @@ def test_roundtrip_from_stdin_emits_valid_xml(
 def test_roundtrip_from_nonseekable_stdin(cli_fixtures: Path, monkeypatch, capsys):
     """Roundtrip rewrites XML from a non-seekable stdin stream."""
 
-    xml_bytes = (cli_fixtures / "minimal_instance.xml").read_bytes()
+    xml_bytes = (SAMPLES_DIR / "minimal_instance.xml").read_bytes()
     stream = NonSeekableSentinel(xml_bytes)
 
     class DummyStdin:
@@ -957,7 +958,7 @@ def test_lint_reports_findings_when_rules_fail(
 ):
     """`lint` returns lint findings and a failing exit status when rules fail."""
 
-    payload = (cli_fixtures / "minimal_instance.xml").read_text()
+    payload = (SAMPLES_DIR / "minimal_instance.xml").read_text()
     failing_path = tmp_path / "lint_failure.xml"
     failing_path.write_text(payload.replace("example.agency", "unknown.agency"))
 
@@ -988,7 +989,7 @@ def test_lint_reports_findings_when_rules_fail(
 def test_lint_writes_output_to_file(cli_fixtures: Path, tmp_path: Path, capsys):
     """`lint` can route JSON results to a file when requested."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     destination = tmp_path / "lint_results.json"
 
     exit_code = cli.main(
@@ -1071,7 +1072,7 @@ def test_lint_error_severity_triggers_failure(
 ):
     """Errors still produce a failing exit status when configured for ``error`` only."""
 
-    payload = (cli_fixtures / "minimal_instance.xml").read_text()
+    payload = (SAMPLES_DIR / "minimal_instance.xml").read_text()
     failing_path = tmp_path / "lint_failure.xml"
     failing_path.write_text(payload.replace("example.agency", "unknown.agency"))
 
@@ -1102,7 +1103,7 @@ def test_lint_error_severity_triggers_failure(
 def test_lint_profile_includes_schema_issues(cli_fixtures: Path, capsys):
     """Profiles can include schema validation issues when requested."""
 
-    path = cli_fixtures / "invalid_instance_missing_id.xml"
+    path = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     exit_code = cli.main(
         [
             "lint",
@@ -1126,7 +1127,7 @@ def test_lint_profile_includes_schema_issues(cli_fixtures: Path, capsys):
 def test_lint_unknown_profile_exits_cleanly(cli_fixtures: Path, capsys):
     """Unknown lint profiles surface concise CLI errors."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(["lint", str(path), "--profile", "does-not-exist"])
     captured = capsys.readouterr()
 
@@ -1138,7 +1139,7 @@ def test_lint_unknown_profile_exits_cleanly(cli_fixtures: Path, capsys):
 def test_lint_unknown_rule_exits_cleanly(cli_fixtures: Path, capsys):
     """Unknown lint rules are reported without tracebacks."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(["lint", str(path), "--rules", "does.not.exist"])
     captured = capsys.readouterr()
 
@@ -1174,7 +1175,7 @@ def test_lint_can_list_profiles_as_table(capsys):
 def test_lint_skip_rule_excludes_findings(cli_fixtures: Path, capsys):
     """`--skip-rule` can be repeated and drops the named rules."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(
         [
             "lint",
@@ -1193,7 +1194,7 @@ def test_lint_skip_rule_excludes_findings(cli_fixtures: Path, capsys):
 def test_lint_rules_accepts_comma_separated_and_repeated(cli_fixtures: Path, capsys):
     """`--rules` takes comma-separated ids and does not swallow the input path."""
 
-    path = cli_fixtures / "minimal_instance.xml"
+    path = SAMPLES_DIR / "minimal_instance.xml"
     exit_code = cli.main(
         [
             "lint",
@@ -1229,20 +1230,20 @@ def test_validate_json_format_is_consistent(cli_fixtures: Path, capsys):
 
     assert (
         cli.main(
-            ["validate", "--format", "json", str(cli_fixtures / "minimal_instance.xml")]
+            ["validate", "--format", "json", str(SAMPLES_DIR / "minimal_instance.xml")]
         )
         == 0
     )
     assert json.loads(capsys.readouterr().out) == []
 
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     assert cli.main(["validate", "--format", "json", str(invalid)]) == 1
     payload = json.loads(capsys.readouterr().out)
     assert payload and payload[0]["severity"] == "error"
 
 
 def test_validate_text_format_is_readable(cli_fixtures: Path, capsys):
-    invalid = cli_fixtures / "invalid_instance_missing_id.xml"
+    invalid = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     assert cli.main(["validate", str(invalid)]) == 1
     out = capsys.readouterr().out
     assert out.startswith("error: Missing required identification element")

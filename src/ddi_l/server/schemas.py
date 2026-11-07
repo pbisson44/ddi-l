@@ -115,8 +115,8 @@ class LintFindingModel:
     severity: Annotated[
         str,
         _field(
-            "`error` or `warning`. Only `error` makes a document invalid, matching "
-            "`ddi lint`'s default exit status.",
+            "`error`, `warning` or `info`. Only `error` makes a document invalid, "
+            "matching `ddi lint`'s default exit status.",
             "warning",
         ),
     ]
@@ -145,7 +145,7 @@ class ValidationMessageModel:
             "Maintainable element is missing a label.",
         ),
     ]
-    severity: Annotated[str, _field("`error` or `warning`.", "warning")]
+    severity: Annotated[str, _field("`error`, `warning` or `info`.", "warning")]
     source: Annotated[
         str, _field("Which check produced it: `schema` or `lint`.", "lint", "schema")
     ]
@@ -211,7 +211,7 @@ class ProfileResponse:
     """The result of `POST /v1/lint?profile=NAME`.
 
     A profile bundles schema validation with lint rules, so this carries both --
-    which is why it is a different shape from :class:`LintResponse`.
+    which is why it is a different shape from `LintResponse`.
     """
 
     schema_issues: Annotated[
@@ -246,7 +246,7 @@ class HealthResponse:
     status: Annotated[
         str, _field("Always `ok`; a failing service does not answer.", "ok")
     ]
-    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.2")]
+    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.0")]
 
 
 @dataclass
@@ -254,7 +254,7 @@ class IndexResponse:
     """What `GET /` returns to a non-browser client."""
 
     service: Annotated[str, _field("Distribution name.", "ddi-l")]
-    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.2")]
+    version: Annotated[str, _field("The installed `ddi-l` version.", "0.1.0")]
     endpoints: Annotated[
         dict[str, str], _field("Every route this service exposes, keyed by short name.")
     ]
@@ -362,7 +362,7 @@ class SettingModel:
         str,
         _field(
             "What it sets.",
-            "The maintenance agency of every item, such as ca.statcan.",
+            "The maintenance agency of every item, such as org.example.",
         ),
     ]
 
@@ -522,7 +522,7 @@ EXAMPLE_VERSIONS = Example(
 )
 
 EXAMPLE_HEALTH = Example(
-    summary="Service is up", value={"status": "ok", "version": "0.1.2"}
+    summary="Service is up", value={"status": "ok", "version": "0.1.0"}
 )
 
 #: Every route, as `GET /` lists them.
@@ -544,7 +544,7 @@ EXAMPLE_INDEX = Example(
     summary="Service index",
     value={
         "service": "ddi-l",
-        "version": "0.1.2",
+        "version": "0.1.0",
         "endpoints": ENDPOINTS,
         "documentation": "/schema",
     },
@@ -607,7 +607,7 @@ EXAMPLE_TIMEOUT = Example(
 
 
 def schema_issue(payload: dict[str, Any]) -> SchemaIssueModel:
-    """Build a :class:`SchemaIssueModel` from the library's dict form."""
+    """Build a `SchemaIssueModel` from the library's dict form."""
     return SchemaIssueModel(
         message=payload.get("message", ""),
         severity=payload.get("severity", "error"),
@@ -619,7 +619,7 @@ def schema_issue(payload: dict[str, Any]) -> SchemaIssueModel:
 
 
 def lint_finding(payload: dict[str, Any]) -> LintFindingModel:
-    """Build a :class:`LintFindingModel` from the library's dict form."""
+    """Build a `LintFindingModel` from the library's dict form."""
     return LintFindingModel(
         rule_id=str(payload.get("rule_id", "")),
         message=str(payload.get("message", "")),
@@ -629,7 +629,7 @@ def lint_finding(payload: dict[str, Any]) -> LintFindingModel:
 
 
 def validation_message(payload: dict[str, Any]) -> ValidationMessageModel:
-    """Build a :class:`ValidationMessageModel` from the library's dict form."""
+    """Build a `ValidationMessageModel` from the library's dict form."""
     return ValidationMessageModel(
         message=payload.get("message", ""),
         severity=payload.get("severity", ""),

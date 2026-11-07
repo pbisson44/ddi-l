@@ -6,6 +6,9 @@ These files are the first thing a new user opens, so they must pass
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import pytest
 
 from ddi_l import read_ddi, schema_loader
@@ -67,3 +70,17 @@ def test_generated_example_references_resolve() -> None:
         f"example_instance.xml has {len(dangling)} unresolvable reference(s): "
         f"{[f.location for f in dangling[:5]]}"
     )
+
+
+def test_example_builder_writes_to_the_current_folder(tmp_path, monkeypatch):
+    import ddi_l
+    from ddi_l.examples import build_and_validate
+
+    monkeypatch.chdir(tmp_path)
+    build_and_validate.main(["--refresh", "--refresh-fragment"])
+
+    assert (tmp_path / "example_instance.xml").is_file()
+    assert (tmp_path / "example_fragment.xml").is_file()
+    # The package folder on sys.path would let ddi_l/io.py shadow stdlib io.
+    package_dir = str(Path(ddi_l.__file__).resolve().parent)
+    assert package_dir not in sys.path

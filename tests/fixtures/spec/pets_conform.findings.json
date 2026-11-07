@@ -1,0 +1,214 @@
+{
+  "spec": "pet-survey-conform",
+  "instrument": "Instrument 55555555 (Pet survey instrument)",
+  "edits": "info",
+  "summary": {
+    "error": 7,
+    "warning": 8,
+    "info": 2
+  },
+  "modules": [
+    {
+      "id": "household",
+      "found": true,
+      "required": true,
+      "findings": {
+        "error": 0,
+        "warning": 0,
+        "info": 1
+      }
+    },
+    {
+      "id": "pets",
+      "found": true,
+      "required": true,
+      "findings": {
+        "error": 4,
+        "warning": 5,
+        "info": 1
+      }
+    },
+    {
+      "id": "visits",
+      "found": false,
+      "required": false,
+      "findings": {
+        "error": 1,
+        "warning": 1,
+        "info": 0
+      }
+    }
+  ],
+  "findings": [
+    {
+      "rule_id": "spec.item.id-sources-differ",
+      "message": "The question PetCount is found by its construct_alias; its item_name is 'HouseholdPets'.",
+      "severity": "info",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[5]/*",
+      "module": "household",
+      "item": "PetCount",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "rule_id": "spec.code.missing",
+      "message": "The question PetKind does not offer the code(s) 3.",
+      "severity": "error",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[30]/*",
+      "module": "pets",
+      "item": "PetKind",
+      "expected": "1, 2, 3",
+      "actual": "1, 2, 4"
+    },
+    {
+      "rule_id": "spec.code.extra",
+      "message": "The question PetKind offers the code(s) 4, which the spec does not list.",
+      "severity": "error",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[30]/*",
+      "module": "pets",
+      "item": "PetKind",
+      "expected": "1, 2, 3",
+      "actual": "1, 2, 4"
+    },
+    {
+      "rule_id": "spec.code.label",
+      "message": "Code 2 of PetKind is labelled 'Chats' in fr; the spec says 'Chat'.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[32]/*",
+      "module": "pets",
+      "item": "PetKind",
+      "expected": "Chat",
+      "actual": "Chats"
+    },
+    {
+      "rule_id": "spec.domain.length",
+      "message": "The maximum length of PetName is 40; the spec says 50.",
+      "severity": "error",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[17]/*/*[8]",
+      "module": "pets",
+      "item": "PetName",
+      "expected": "50",
+      "actual": "40"
+    },
+    {
+      "rule_id": "spec.language.missing",
+      "message": "The question text of PetAge has no fr.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[21]/*/*[7]",
+      "module": "pets",
+      "item": "PetAge",
+      "expected": "en, fr",
+      "actual": "en-CA"
+    },
+    {
+      "rule_id": "spec.domain.range",
+      "message": "The range of PetAge is [0, 30]; the spec says [0, 40].",
+      "severity": "error",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[21]/*/*[8]",
+      "module": "pets",
+      "item": "PetAge",
+      "expected": "[0, 40]",
+      "actual": "[0, 30]"
+    },
+    {
+      "rule_id": "spec.domain.decimals",
+      "message": "PetAge allows 1 decimal(s); the spec says 0.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[21]/*/*[8]",
+      "module": "pets",
+      "item": "PetAge",
+      "expected": "0",
+      "actual": "1"
+    },
+    {
+      "rule_id": "spec.gate.extra",
+      "message": "Question PetAge is gated by PetCount > 1; the spec gates it with nothing.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[20]/*",
+      "module": "pets",
+      "item": "PetAge",
+      "expected": null,
+      "actual": "PetCount > 1"
+    },
+    {
+      "rule_id": "spec.item.extra",
+      "message": "Module pets has the question QuestionConstruct 55555555 (PetColour), which the spec does not list.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[24]/*",
+      "module": "pets",
+      "item": "PetColour",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "rule_id": "spec.item.misplaced",
+      "message": "The question VisitDate belongs in module visits, but is in module pets.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[22]/*",
+      "module": "visits",
+      "item": "VisitDate",
+      "expected": "visits",
+      "actual": "pets"
+    },
+    {
+      "rule_id": "spec.gate.missing",
+      "message": "Question VisitDate is not gated; the spec says PetCount > 2.",
+      "severity": "error",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[22]/*",
+      "module": "visits",
+      "item": "VisitDate",
+      "expected": "PetCount > 2",
+      "actual": null
+    },
+    {
+      "rule_id": "spec.module.extra",
+      "message": "The instrument has the module Sequence 55555555 (feedback), which the spec does not list.",
+      "severity": "warning",
+      "location": "/ddi:FragmentInstance/ddi:Fragment[26]/*",
+      "module": null,
+      "item": "feedback",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "rule_id": "spec.variable.import-type",
+      "message": "The lookup field OwnerAge is Text (text); the spec says numeric.",
+      "severity": "warning",
+      "location": null,
+      "module": null,
+      "item": "OwnerAge",
+      "expected": "numeric",
+      "actual": "text"
+    },
+    {
+      "rule_id": "spec.variable.import-undeclared",
+      "message": "The imported variable OwnerPhone is not a field of any data lookup of the instrument.",
+      "severity": "error",
+      "location": null,
+      "module": null,
+      "item": "OwnerPhone",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "rule_id": "spec.variable.derived-is-lookup",
+      "message": "The derived variable HasPets is a data lookup field: it is imported, not computed.",
+      "severity": "error",
+      "location": null,
+      "module": null,
+      "item": "HasPets",
+      "expected": null,
+      "actual": null
+    },
+    {
+      "rule_id": "spec.edit.unverifiable",
+      "message": "The edit age_range: not verifiable (edit storage unknown).",
+      "severity": "info",
+      "location": null,
+      "module": "pets",
+      "item": "age_range",
+      "expected": "PetAge > 30",
+      "actual": null
+    }
+  ]
+}

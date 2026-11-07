@@ -25,7 +25,7 @@ class NamespaceManagementMixin:
 
         Args:
             profile_or_map: Either a namespace profile identifier, a
-                :class:`~ddi_l.namespaces.NamespaceProfileLike`, or a mapping
+                `NamespaceProfileLike`, or a mapping
                 of prefix-to-URI bindings that should be declared on the
                 instance root.
             extra_namespaces: Additional prefix-to-URI bindings to merge on top

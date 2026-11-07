@@ -49,13 +49,22 @@ def _summarize(results: list[float], payload_count: int) -> str:
     )
 
 
+_DEFAULT_FRAGMENT = (
+    Path(__file__).resolve().parents[1]
+    / "src"
+    / "ddi_l"
+    / "examples"
+    / "Quality_of_Life.xml"
+)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "fragment",
         type=Path,
         nargs="?",
-        default=Path("examples/Quality_of_Life.xml"),
+        default=_DEFAULT_FRAGMENT,
         help="Path to a fragment instance used for benchmarking.",
     )
     parser.add_argument(

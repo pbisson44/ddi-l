@@ -16,11 +16,11 @@ tableau par type d'élément, et des lignes qui se désignent les unes les autre
 par leur `id`.
 
 Les tableaux peuvent être un dossier de fichiers CSV, le même dossier
-compressé en zip, ou un seul classeur Excel avec une feuille par tableau. Le résultat est une `FragmentInstance` Colectica
-prête à importer dans un dépôt, ou une étude DDI.
+compressé en zip, ou un seul classeur Excel avec une feuille par tableau. Le résultat est une `FragmentInstance` disposée comme l'écrit
+Colectica Designer, ou une étude DDI.
 
 Partez d'un modèle : la page des
-[modèles de tableurs](spreadsheet-templates.md) offre des tableaux vides et un
+[modèles de tableurs](spreadsheet-templates.fr.md) offre des tableaux vides et un
 exemple bilingue rempli, en fichiers CSV et en classeur Excel.
 
 ## Ce que couvrent les tableaux
@@ -56,58 +56,112 @@ ajoutez-les aux modèles typés en Python, ou dans Colectica.
 ## Comment les tableaux s'articulent
 
 Une colonne qui désigne un autre tableau contient des `id` de ce tableau. Les
-diagrammes montrent les liens, un domaine à la fois.
+diagrammes montrent tous les liens, un domaine à la fois. La patte d'oie marque
+le côté qui peut compter plusieurs lignes ; une colonne qui contient plusieurs
+`id` (`a|b`) fait un lien plusieurs-à-plusieurs. En DDI, chaque lien est une
+référence, comme le `r:QuestionReference` d'une variable ou le
+`r:DefiningConceptReference` d'un univers.
 
-Concepts, codes et variables :
+Concepts, univers et codes, et les variables qu'ils définissent :
 
 ```mermaid
 erDiagram
-    concepts ||--o{ concepts : "parent"
-    concepts ||--o{ universes : "concept"
-    concepts ||--o{ unit_types : "concept"
-    concepts ||--o{ conceptual_variables : "concept"
-    unit_types ||--o{ conceptual_variables : "unit_type"
-    conceptual_variables ||--o{ represented_variables : "conceptual_variable"
+    concepts }o--o{ concepts : "parent"
+    concepts |o--o{ universes : "concept"
+    concepts |o--o{ unit_types : "concept"
+    concepts |o--o{ conceptual_variables : "concept"
+    universes }o--o{ conceptual_variables : "universe"
+    unit_types |o--o{ conceptual_variables : "unit_type"
+    concepts |o--o{ represented_variables : "concept"
+    unit_types |o--o{ represented_variables : "unit_type"
+    conceptual_variables |o--o{ represented_variables : "conceptual_variable"
+    code_lists |o--o{ represented_variables : "code_list"
     code_lists ||--o{ codes : "code_list"
-    code_lists ||--o{ represented_variables : "code_list"
-    represented_variables ||--o{ variables : "represented_variable"
-    universes }o--o{ variables : "universe"
-    variable_groups }o--o{ variables : "group"
-    datasets }o--o{ variables : "dataset"
-    variables }o--o{ ncubes : "dimensions"
+    codes |o--o{ codes : "parent"
 ```
 
-Questions et questionnaire :
+Variables, leurs groupes, fichiers de données et n-cubes :
 
 ```mermaid
 erDiagram
-    instructions }o--o{ questions : "instruction"
-    code_lists ||--o{ questions : "code_list"
+    concepts |o--o{ variables : "concept"
+    universes }o--o{ variables : "universe"
+    unit_types |o--o{ variables : "unit_type"
+    code_lists |o--o{ variables : "code_list"
+    conceptual_variables |o--o{ variables : "conceptual_variable"
+    represented_variables |o--o{ variables : "represented_variable"
+    questions }o--o{ variables : "question"
+    datasets }o--o{ variables : "dataset"
+    variable_groups }o--o{ variables : "group"
+    variable_groups |o--o{ variable_groups : "parent"
+    concepts |o--o{ variable_groups : "concept"
+    universes }o--o{ variable_groups : "universe"
+    variables }o--o{ ncubes : "dimensions"
+    universes }o--o{ ncubes : "universe"
+```
+
+Questions, grilles, blocs et groupes :
+
+```mermaid
+erDiagram
     questions ||--o{ question_texts : "question"
-    code_lists ||--o{ question_grids : "rows, columns"
+    concepts |o--o{ questions : "concept"
+    code_lists |o--o{ questions : "code_list"
+    instructions }o--o{ questions : "instruction"
+    question_groups }o--o{ questions : "group"
+    concepts |o--o{ question_grids : "concept"
+    code_lists |o--o{ question_grids : "rows, columns, code_list"
+    instructions }o--o{ question_grids : "instruction"
+    question_groups }o--o{ question_grids : "group"
     questions }o--o{ question_blocks : "questions"
     question_grids }o--o{ question_blocks : "questions"
-    question_groups }o--o{ questions : "group"
-    question_groups ||--o{ question_groups : "parent"
-    instruments ||--o{ flow : "instrument"
-    flow ||--o{ flow : "parent"
-    questions ||--o{ flow : "question"
-    questions }o--o{ variables : "question"
+    concepts |o--o{ question_blocks : "concept"
+    instructions }o--o{ question_blocks : "instruction"
+    question_groups }o--o{ question_blocks : "group"
+    question_groups |o--o{ question_groups : "parent"
+    concepts |o--o{ question_groups : "concept"
 ```
 
-L'étude, ses personnes et ce qui s'y rattache :
+Le flux du questionnaire. Une étape `question` désigne une question, une
+grille ou un bloc :
 
 ```mermaid
 erDiagram
-    groups }o--o{ studies : "studies"
-    groups ||--o{ groups : "parent"
+    instruments ||--o{ flow : "instrument"
+    flow |o--o{ flow : "parent"
+    questions |o--o{ flow : "question"
+    question_grids |o--o{ flow : "question"
+    question_blocks |o--o{ flow : "question"
+```
+
+L'étude, ses personnes et ce qui s'y rattache. Un créateur ou un éditeur est
+une organisation ou une personne ; une étude a au plus une méthodologie :
+
+```mermaid
+erDiagram
+    studies }o--o{ groups : "studies"
+    groups |o--o{ groups : "parent"
     organizations }o--o{ studies : "creator, publisher, funder"
     individuals }o--o{ studies : "creator, publisher"
+    universes |o--o{ studies : "universe"
+    concepts |o--o{ studies : "concept"
     studies ||--o{ instruments : "study"
     studies ||--o{ datasets : "study"
     studies ||--o| methodologies : "study"
     studies ||--o{ processing_events : "study"
     studies ||--o{ quality_statements : "study"
+```
+
+Les comparaisons. La colonne `type` dit quel tableau `source` et `target`
+désignent ; pour `category`, ce sont des codes :
+
+```mermaid
+erDiagram
+    concepts |o--o{ comparisons : "source, target"
+    universes |o--o{ comparisons : "source, target"
+    questions |o--o{ comparisons : "source, target"
+    variables |o--o{ comparisons : "source, target"
+    codes |o--o{ comparisons : "source, target"
 ```
 
 ## Les règles communes à tous les tableaux
@@ -274,7 +328,7 @@ Deux colonnes, `setting` et `value`, une ligne par paramètre :
 
 | `setting` | Sens | Par défaut |
 | --- | --- | --- |
-| `agency` | l'agence de maintenance de chaque élément, comme `ca.statcan` | requis |
+| `agency` | l'agence de maintenance de chaque élément, comme `org.example` | requis |
 | `version` | la version des éléments qui n'en ont pas | `1` |
 | `language` | la langue des noms | `en` |
 
@@ -344,7 +398,7 @@ Une ligne par groupe d'études, comme tous les cycles d'une enquête.
 | Colonne | Requise | Contenu |
 | --- | --- | --- |
 | `name@<langue>` | oui | le nom de l'organisation, par langue |
-| `abbreviation` | | un nom court : `StatCan` |
+| `abbreviation` | | un nom court ou un sigle |
 | `email` | | une adresse de courriel de contact |
 | `url` | | son site Web |
 | `description@<langue>` | | une description, par langue |
@@ -726,7 +780,7 @@ ddi tables import mon-enquete -o mon-enquete.xml # une FragmentInstance Colectic
 ddi tables import questionnaire --study "Enquête sur la population active" -o etude.xml
 ```
 
-Par HTTP, [`ddi serve`](server.md#charger-des-tableaux-de-metadonnees) offre la
+Par HTTP, [`ddi serve`](server.fr.md#charger-des-tableaux-de-metadonnees) offre la
 même chose : `POST /v1/tables/import` reçoit un classeur ou un zip et répond
 par le fragment, ou par tous les problèmes dans un `422` ; `GET
 /v1/tables/template` donne les modèles, et `GET /v1/tables` décrit chaque
@@ -765,9 +819,9 @@ quatrième ligne que vous voyez dans Excel.
 ## Vers Colectica
 
 La `FragmentInstance` produite par `to_fragment()` est écrite comme Colectica
-Designer écrit un export, un élément par `<Fragment>`, et s'importe dans un
-dépôt Colectica. Voir
-[Travailler avec les exports Colectica](colectica.md) pour lire et modifier ces
+Designer écrit un export, un élément par `<Fragment>`, pour l'importer dans
+un dépôt Colectica ; essayez l'import dans un dépôt de test d'abord. Voir
+[Travailler avec les exports Colectica](colectica.fr.md) pour lire et modifier ces
 fichiers. Comme les identifiants sont dérivés de vos id, recharger les mêmes
 tableaux après modification donne les mêmes éléments avec les mêmes
 identifiants : augmentez `version` dans `settings` (ou par ligne) et importez

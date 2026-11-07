@@ -20,23 +20,66 @@ authors new documents in DDI 3.3.
 
 <div class="ddi-cta-group" markdown>
 
-[Install ddi-l](installation.md#install-from-pypi){ .md-button .md-button--primary }
-[Start the training curriculum](curriculum/index.md){ .md-button .md-button--secondary .md-button--outlined }
+[Install ddi-l](installation.en.md#install-from-pypi){ .md-button .md-button--primary }
+[Start the training curriculum](curriculum/index.en.md){ .md-button .md-button--secondary .md-button--outlined }
 
 </div>
 
 ## How a study fits together
 
-A DDI study holds the questions you asked. Each answer becomes a variable in
-your dataset, and each variable measures a concept.
+A DDI study (a `StudyUnit`) keeps its metadata in modules, the boxes below:
+concepts and universes in a `ConceptualComponent`, the questionnaire and its
+questions in a `DataCollection`, variables, code lists and categories in a
+`LogicalProduct`, record layouts in a `PhysicalDataProduct`, each data file in
+a `PhysicalInstance`, and organizations and people in an `Archive`. Items refer
+to each other across modules (dashed arrows): a variable to the question that
+collected it, the concept it measures, its universe and its code list; a data
+file to the record layout and the logical record that list its variables.
 
 ```mermaid
-flowchart LR
+flowchart TB
     accTitle: How a DDI study fits together
-    accDescr: A study contains questions. Each question is recorded as a variable, and each variable measures a concept.
-    S[Study] -->|asks| Q[Questions]
-    Q -->|recorded as| V[Variables]
-    V -->|measure| C[Concepts]
+    accDescr: A StudyUnit holds its metadata in modules: concepts and universes in a ConceptualComponent; the instrument, its control constructs and the questions in a DataCollection; variables, code lists, categories and data relationships in a LogicalProduct; record layouts in a PhysicalDataProduct; each data file in a PhysicalInstance; organizations and individuals in an Archive. Dashed arrows are references: a variable refers to its question, concept, universe and code list; a data file refers to its record layout and data relationship, which list its variables.
+    subgraph SU["StudyUnit"]
+        direction TB
+        subgraph CC["ConceptualComponent"]
+            CON[Concept]
+            UNI[Universe]
+        end
+        subgraph DC["DataCollection"]
+            INS[Instrument]
+            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
+            QI[QuestionItem]
+        end
+        subgraph LP["LogicalProduct"]
+            VAR[Variable]
+            CL[CodeList]
+            CAT[Category]
+            DR["DataRelationship\n(LogicalRecord)"]
+        end
+        subgraph PDP["PhysicalDataProduct"]
+            RL[RecordLayout]
+        end
+        subgraph PI["PhysicalInstance"]
+            DF["DataFileIdentification\n(the data file)"]
+        end
+        subgraph AR["Archive"]
+            ORG["Organization,\nIndividual"]
+        end
+    end
+    INS -.->|ControlConstructReference| CTL
+    CTL -.->|QuestionReference| QI
+    QI -.->|ConceptReference| CON
+    QI -.->|"CodeDomain:\nCodeListReference"| CL
+    VAR -.->|QuestionReference| QI
+    VAR -.->|ConceptReference| CON
+    VAR -.->|UniverseReference| UNI
+    VAR -.->|"CodeRepresentation:\nCodeListReference"| CL
+    CL -.->|"Code:\nCategoryReference"| CAT
+    DR -.->|VariableUsedReference| VAR
+    RL -.->|"DataItem:\nVariableReference"| VAR
+    PI -.->|RecordLayoutReference| RL
+    PI -.->|DataRelationshipReference| DR
 ```
 
 ## Quick start
@@ -75,7 +118,7 @@ ddi lint household-survey.xml
 ## Install
 
 Install `ddi-l` from PyPI. The `full` extra adds the faster `lxml` backend
-(see [Installation](installation.md)).
+(see [Installation](installation.en.md)).
 
 === "pip"
     ```bash
@@ -100,40 +143,40 @@ Install `ddi-l` from PyPI. The `full` extra adds the faster `lxml` backend
 
 - **Learn**
 
-    A 16-module course that takes you from "what is metadata?" to a fully
+    A 17-module course that takes you from "what is metadata?" to a fully
     documented, validated and versioned DDI package. No DDI or XML experience
     needed.
 
-    [Training curriculum →](curriculum/index.md){ .md-button .md-button--primary }
+    [Training curriculum →](curriculum/index.en.md){ .md-button .md-button--primary }
 
 - **Validate**
 
     Validate documents against the DDI schemas, run the lint rules, and add
     the checks to CI.
 
-    [Validation guide →](validation.md){ .md-button .md-button--secondary .md-button--outlined }
+    [Validation guide →](validation.en.md){ .md-button .md-button--secondary .md-button--outlined }
 
 - **Use the CLI**
 
     Validate, round-trip and convert files with the `ddi` command.
 
-    [CLI recipes →](cli-recipes.md){ .md-button .md-button--secondary .md-button--outlined }
+    [CLI recipes →](cli-recipes.en.md){ .md-button .md-button--secondary .md-button--outlined }
 
 - **Not using Python?**
 
     Call `ddi-l` from R through reticulate, or from any language over its
     HTTP API.
 
-    [Use from R →](r-users.md){ .md-button .md-button--secondary .md-button--outlined }
-    [HTTP API →](server.md){ .md-button .md-button--secondary .md-button--outlined }
+    [Use from R →](r-users.en.md){ .md-button .md-button--secondary .md-button--outlined }
+    [HTTP API →](server.en.md){ .md-button .md-button--secondary .md-button--outlined }
 
 </div>
 
-For a one-page tour of the `Document` API, see the [user guide](user-guide.md).
-The [API reference](api.md) and the [models reference](models.md) cover every
+For a one-page tour of the `Document` API, see the [user guide](user-guide.en.md).
+The [API reference](api.en.md) and the [models reference](models.en.md) cover every
 class. To contribute, start with the
 [contributor guide](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md);
-the [development guide](DEVELOPMENT.md) covers the architecture, code
+the [development guide](DEVELOPMENT.en.md) covers the architecture, code
 generation and release process in depth.
 
 ## Cite ddi-l
@@ -141,7 +184,7 @@ generation and release process in depth.
 If you use `ddi-l` in research or in an archive's workflow, please cite it:
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.1.2) [Computer software].
+> documents* (Version 0.2.0) [Computer software].
 > <https://github.com/pbisson44/ddi-l>
 
 ```bibtex
@@ -149,7 +192,7 @@ If you use `ddi-l` in research or in an archive's workflow, please cite it:
   author  = {Bisson, Philippe},
   title   = {ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents},
   year    = {2026},
-  version = {0.1.2},
+  version = {0.2.0},
   url     = {https://github.com/pbisson44/ddi-l},
   license = {MIT}
 }

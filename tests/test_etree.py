@@ -122,6 +122,11 @@ def test_apply_namespace_map_binds_required_prefixes():
 EXPECTED_PUBLIC_API = [
     "CodeList",
     "Concept",
+    "Configuration",
+    "configure",
+    "configured",
+    "get_configuration",
+    "reset_configuration",
     "DDIDocument",
     "DDIError",
     "DDIFragment",

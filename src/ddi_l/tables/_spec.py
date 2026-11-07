@@ -129,7 +129,7 @@ SETTING_NAMES: dict[str, tuple[bool, str | None, str]] = {
     "agency": (
         True,
         None,
-        "The maintenance agency of every item, such as ca.statcan.",
+        "The maintenance agency of every item, such as org.example.",
     ),
     "version": (False, "1", "The version of every item without its own."),
     "language": (
@@ -295,7 +295,7 @@ ORGANIZATIONS = Table(
         _DDI_ID,
         _VERSION,
         Column("name", "The organization's name.", required=True, multilingual=True),
-        Column("abbreviation", "A short name: StatCan."),
+        Column("abbreviation", "A short name or acronym."),
         Column("email", "A contact email address."),
         Column("url", "Its web site."),
         _DESCRIPTION,

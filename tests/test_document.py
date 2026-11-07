@@ -25,6 +25,8 @@ from ddi_l.namespaces import (
     DDI_PROFILE_PROFILE,
     DDI_STUDY_UNIT_PROFILE,
 )
+from tests import SAMPLES_DIR
+from tests.helpers.marks import refers_outside
 
 
 @pytest.fixture(scope="module")
@@ -36,7 +38,7 @@ def document_fixtures(fixtures_dir: Path) -> Path:
 
 def test_round_trip_from_fixture(document_fixtures: Path):
     """Round-trip fixture XML through DDIDocument to ensure lossless conversion."""
-    source = document_fixtures / "minimal_instance.xml"
+    source = SAMPLES_DIR / "minimal_instance.xml"
     document = DDIDocument.from_xml(source, validate=True)
     identification = document.get_identification()
     expected_identifier = str(
@@ -60,7 +62,7 @@ def test_round_trip_from_fixture(document_fixtures: Path):
 
 def test_document_validate_surfaces_structured_errors(document_fixtures: Path):
     """Document.validate returns structured issues for invalid fixture data."""
-    source = document_fixtures / "invalid_instance_missing_id.xml"
+    source = SAMPLES_DIR / "invalid_instance_missing_id.xml"
     document = DDIDocument.from_xml(source)
 
     issues = document.validate()
@@ -87,17 +89,21 @@ def test_builder_and_mutation_support():
     document.set_citation(title="Updated Demo", lang="en")
     # `ensure_namespace_prefixes()` declares the default map, and on the stdlib
     # backend declarations are literal attributes that xmlschema reports as
-    # not allowed; filter those issues.
+    # not allowed, one issue per prefix; filter those issues.
     issues = [
         issue
         for issue in document.validate()
-        if "'xmlns:xsi' attribute not allowed for element" not in issue.message
+        if not (
+            issue.message.startswith("'xmlns:")
+            and "attribute not allowed for element" in issue.message
+        )
     ]
     assert issues == []
 
     assert document.get_identification()["version"] == "2.0"
 
 
+@refers_outside
 def test_namespace_profiles_propagate_to_study_units():
     """Ensuring namespace profiles propagate to StudyUnit XML output."""
     document = DDIDocument.create(
@@ -212,9 +218,7 @@ def test_to_etree_exposes_underlying_element():
 
 def test_to_dict_preserves_qnames_with_xmlschema(fixtures_dir: Path):
     """to_dict retains QName keys when xmlschema helpers are present."""
-    pytest.importorskip("xmlschema")
-
-    source = fixtures_dir / "minimal_instance.xml"
+    source = SAMPLES_DIR / "minimal_instance.xml"
     document = DDIDocument.from_xml(source)
 
     data = document.to_dict()
@@ -420,6 +424,7 @@ def test_ensure_namespace_prefixes_under_lxml():
     if existing_pythonpath:
         python_paths.append(existing_pythonpath)
     env["PYTHONPATH"] = os.pathsep.join(python_paths)
+    env["DDI_L_XML_BACKEND"] = "lxml"  # the fake lxml above
 
     subprocess.run([sys.executable, "-c", script], check=True, env=env)
 
@@ -471,6 +476,7 @@ def test_ensure_namespace_prefixes_under_stdlib():
     if existing_pythonpath:
         python_paths.append(existing_pythonpath)
     env["PYTHONPATH"] = os.pathsep.join(python_paths)
+    env["DDI_L_XML_BACKEND"] = "stdlib"
 
     subprocess.run([sys.executable, "-c", script], check=True, env=env)
 

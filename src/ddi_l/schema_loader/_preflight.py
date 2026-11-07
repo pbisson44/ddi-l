@@ -1,4 +1,4 @@
-"""Preflight helpers shared between validation and fallback schema logic."""
+"""Preflight checks run before full schema validation."""
 
 from __future__ import annotations
 

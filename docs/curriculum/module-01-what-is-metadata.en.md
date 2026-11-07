@@ -6,17 +6,24 @@ description: >-
 
 # Module 1: What is metadata and why does it matter?
 
-!!! info "What you will learn"
-    - Define metadata in your own words.
-    - Explain why data without documentation is hard to use.
-    - Describe what DDI is and who uses it.
-    - Explain how DDI helps make data FAIR (Findable, Accessible,
-      Interoperable, Re-usable).
-    - Describe what `ddi-l` does.
+!!! info "Learning objectives"
+    By the end of this module, you can:
+
+    - **O1.** Define metadata in one sentence and point to two pieces of
+      metadata that describe a given table.
+    - **O2.** List three questions a reader must answer before using an
+      undocumented table.
+    - **O3.** Describe what DDI is in two sentences and name two kinds of
+      organizations that use it.
+    - **O4.** Match each FAIR principle to one way DDI metadata supports it.
+    - **O5.** State what `ddi-l` does and one thing it does not do.
 
 **Prerequisites:** None.
 
 **Time:** 30 min self-paced / 45 min instructor-led.
+
+**New in this module:** no functions or commands yet. This module sets out
+the ideas the rest of the course builds on.
 
 ---
 
@@ -148,6 +155,14 @@ What `ddi-l` can do:
 - **Update** a DDI document by adding or removing items.
 - **Validate** a document to make sure it follows the DDI rules.
 
+What `ddi-l` does not do:
+
+- It does not **collect** answers. You still run your survey with your own
+  survey tool; `ddi-l` describes the survey and its data.
+- It does not **analyze** your data. It does not compute averages or
+  tables from the values in your data file. It records what those values
+  mean.
+
 ---
 
 ## 6. The big picture
@@ -201,7 +216,7 @@ data.
     the columns are labeled A, B, and C. The values look like numbers and
     short words.
 
-**Exercise 1.** Look at the table below.
+**Exercise 1 (O2).** Look at the table below.
 
 | A  | B      |     C |
 | -: | ------ | ----: |
@@ -211,84 +226,204 @@ data.
 | 22 | Male   | 29000 |
 | 51 | Other  | 73000 |
 
-Write down **3 things** a new person would need to know before they could use
-this data. For example: What does column A measure?
+Write down **3 questions** a new person would need answered before they could
+use this data. For example: What does column A measure?
+
+Expected output: a list of three questions.
 
 ??? success "Answer"
     Any three of these, or similar:
 
-    1. What each column means (is A an age? In years or months?)
-    2. Who was surveyed (students? adults? everyone?)
-    3. When the data was collected
+    1. What does each column mean? (Is A an age? In years or months?)
+    2. What unit is column C in? (Dollars? Euros? Per year or per month?)
+    3. Who was surveyed? (Students? Adults? Everyone?)
+    4. When was the data collected?
 
-**Exercise 2.** Visit <https://ddialliance.org> and find one sentence on the
-site that describes what DDI does. Write that sentence down.
+**Exercise 2 (O1).** The same researcher now sends a documented version of
+another file:
+
+> **Campus Sleep Study 2025.** Collected in September 2025 from first-year
+> students. `sleep_hrs` is the hours of sleep on a typical school night.
+
+| sleep_hrs |
+| --------: |
+|         7 |
+|         6 |
+|         8 |
+
+1. Write a one-sentence definition of metadata.
+2. Name **two pieces of metadata** in this file, and **one piece of data**.
+
+Expected output: one sentence, then three short items.
 
 ??? success "Answer"
-    For example: "The Data Documentation Initiative (DDI) is an international
-    standard for describing data from the social, behavioral, economic, and health
-    sciences."
+    1. Metadata is information that describes data: what it means, where it
+       came from, and how it was collected.
+    2. Metadata: any two of the title "Campus Sleep Study 2025", the
+       collection date (September 2025), the population (first-year
+       students), the column name `sleep_hrs`, or its meaning (hours of sleep
+       on a typical school night). Data: any of the values 7, 6, or 8.
+
+**Exercise 3 (O4).** Match each FAIR principle (1 to 4) with the DDI feature
+(a to d) that supports it.
+
+| FAIR principle    | DDI feature |
+| ----------------- | ----------- |
+| 1. Findable       | a. The DDI file records who was surveyed, when, and what each variable means. |
+| 2. Accessible     | b. Two surveys use the same DDI code list for employment status. |
+| 3. Interoperable  | c. A data catalog indexes the title, agency, and concepts stored in the DDI file. |
+| 4. Re-usable      | d. The DDI file is plain XML, published next to the data, that any XML tool can open. |
+
+Expected output: four pairs, such as `1-?`.
+
+??? success "Answer"
+    `1-c`, `2-d`, `3-b`, `4-a`.
+
+    - **Findable (c):** the catalog can only find what is described in
+      structured fields.
+    - **Accessible (d):** a standard, open format needs no special software.
+    - **Interoperable (b):** a shared code list means the same code has the
+      same meaning in both surveys, so the data can be combined.
+    - **Re-usable (a):** a new user knows exactly what the data contains.
+
+**Exercise 4 (O3).** A new colleague asks you: "What is DDI?" Write a
+**two-sentence** answer. Name **two kinds of organizations** that use it.
+
+Expected output: two sentences.
+
+??? success "Answer"
+    For example: "DDI, the Data Documentation Initiative, is an international
+    standard for describing surveys, censuses, and datasets in XML. National
+    statistics offices, data archives, universities, and research teams use it
+    so that others can find, understand, and reuse their data."
+
+    Any two of these kinds of organizations are correct: national statistics
+    offices, data archives or national libraries, universities and their
+    research repositories, research teams.
+
+**Exercise 5 (O5).** For each task below, write **does** if `ddi-l` does it,
+or **does not** if it does not.
+
+1. Write a DDI XML file from a short Python script.
+2. Send a questionnaire to respondents and collect their answers.
+3. Check a DDI document against the DDI rules.
+4. Calculate the average income from the values in a CSV file.
+5. Open an existing DDI file and list its questions.
+
+Then write one sentence that says what `ddi-l` does and one thing it does not
+do.
+
+Expected output: five answers, then one sentence.
+
+??? success "Answer"
+    Does: 1, 3, and 5. Does not: 2 and 4.
+
+    For example: "`ddi-l` creates, reads, updates, and validates DDI metadata
+    from Python, but it does not collect survey answers."
 
 ---
 
 ## Quiz
 
-???+ question "Question 1: What is metadata?"
-    **A.** The raw data in a spreadsheet.
+???+ question "Question 1 (O1): A spreadsheet has a column headed `Age (years)` with the values 34, 28, and 45. Which of these is metadata?"
+    **A.** The value 34.
 
-    **B.** Information about data, like a label or description that tells you
-    what the data means.
+    **B.** The header `Age (years)`, which says what the values mean and
+    their unit.
 
-    **C.** A type of programming language.
+    **C.** The sum of the three values.
 
-    **D.** A file format used only by governments.
-
-    ??? success "Answer"
-        **B.** Metadata is information about data. It describes what the data
-        means, where it came from, and how it was collected.
-
-???+ question "Question 2: Why does documentation matter?"
-    **A.** It makes the data file smaller.
-
-    **B.** It is required by Python.
-
-    **C.** Without it, people cannot understand what the data means or how to
-    use it correctly.
-
-    **D.** It changes the values in the dataset.
+    **D.** The second row.
 
     ??? success "Answer"
-        **C.** Without documentation, data is just numbers and labels with no
-        context. People may misinterpret or misuse the data.
+        **B.** Metadata is information about data. The header tells you what
+        the numbers mean and how they are measured. The values themselves,
+        and anything computed from them, are data.
 
-???+ question "Question 3: What does FAIR stand for?"
-    **A.** Fast, Automated, Indexed, Reliable.
+???+ question "Question 2 (O2): A colleague sends a table with columns A, B, and C and no notes. Column C holds values like 52000. You want to report the average income. Which question must you answer first?"
+    **A.** Which font was used to type the table?
 
-    **B.** Findable, Accessible, Interoperable, Re-usable.
+    **B.** How many rows does the file have?
 
-    **C.** File, Archive, Import, Report.
+    **C.** What is the name of the file?
 
-    **D.** Format, Align, Inspect, Review.
-
-    ??? success "Answer"
-        **B.** FAIR stands for Findable, Accessible, Interoperable, and
-        Re-usable. These four principles guide how data should be shared so
-        that others can discover, understand, and reuse it. DDI metadata
-        helps you meet all four.
-
-???+ question "Question 4: What does ddi-l do?"
-    **A.** It collects survey responses from people.
-
-    **B.** It is a Python tool that creates, reads, updates, and validates DDI
-    documents.
-
-    **C.** It converts Python code into Excel files.
-
-    **D.** It replaces Microsoft Word for writing reports.
+    **D.** What does column C measure, and in which currency and period?
 
     ??? success "Answer"
-        **B.** `ddi-l` is a Python package for working with DDI metadata
-        documents. It handles the XML so you can focus on your data.
+        **D.** Without knowing that C is income, and whether it is in dollars
+        or euros, per year or per month, any average you report could be
+        wrong. The other questions do not change what the numbers mean.
+
+???+ question "Question 3 (O3): Which sentence best describes DDI?"
+    **A.** An international standard for describing surveys, censuses, and
+    datasets, used by national statistics offices, data archives, and
+    universities.
+
+    **B.** A survey tool that sends questionnaires to respondents.
+
+    **C.** A Python package that computes statistics from data files.
+
+    **D.** A database that stores survey answers.
+
+    ??? success "Answer"
+        **A.** DDI is a standard: a set of agreed rules for documentation.
+        Option C confuses DDI with tools; `ddi-l` is a Python package that
+        works with DDI, and it does not compute statistics.
+
+???+ question "Question 4 (O4): Your survey and a survey in France use the same DDI code list for gender, so the two datasets can be merged. Which FAIR principle does this support most directly?"
+    **A.** Findable
+
+    **B.** Accessible
+
+    **C.** Interoperable
+
+    **D.** Re-usable
+
+    ??? success "Answer"
+        **C.** Interoperable means data works with other data. A shared code
+        list gives each code the same meaning in both datasets, so they can
+        be combined and compared.
+
+???+ question "Question 5 (O4): A data catalog reads the title, agency, and concepts in your DDI file, so a search for 'mental health survey' lists your dataset. Which FAIR principle does this support?"
+    **A.** Findable
+
+    **B.** Accessible
+
+    **C.** Interoperable
+
+    **D.** Re-usable
+
+    ??? success "Answer"
+        **A.** Findable means people can discover the data. Structured DDI
+        fields give catalogs something reliable to index and search.
+
+???+ question "Question 6 (O5): Which of these tasks does ddi-l NOT do?"
+    **A.** Create a DDI study from a Python script.
+
+    **B.** Collect answers from survey respondents.
+
+    **C.** Validate a DDI document against the DDI rules.
+
+    **D.** Open an existing DDI file and inspect its contents.
+
+    ??? success "Answer"
+        **B.** `ddi-l` works with metadata: it creates, reads, updates, and
+        validates DDI documents. Collecting answers is the job of a survey
+        tool.
+
+---
+
+## Check yourself
+
+- [ ] I can define metadata in one sentence and point to two pieces of
+  metadata that describe a table. (O1)
+- [ ] I can list three questions a reader must answer before using an
+  undocumented table. (O2)
+- [ ] I can describe DDI in two sentences and name two kinds of
+  organizations that use it. (O3)
+- [ ] I can match each FAIR principle to one way DDI metadata supports it.
+  (O4)
+- [ ] I can state what `ddi-l` does and one thing it does not do. (O5)
 
 ---
 
@@ -296,9 +431,15 @@ site that describes what DDI does. Write that sentence down.
     - **Opening activity:** Start with the "messy table" exercise (Exercise 1).
       Give learners the unlabeled table and ask them to guess what the data
       means. This builds motivation for the rest of the module.
-    - **Audience adaptation:** Use the census example for NSO audiences. Use the
-      thesis example for university students.
+    - **Audience adaptation:** For the messy table, you can show a few rows
+      of the course's sample datasets with the headers removed:
+      [`census-data.csv`](census-data.csv) for NSO audiences and
+      [`thesis-data.csv`](thesis-data.csv) for university students. Both
+      come back in the Module 17 capstone.
     - **Discussion prompt:** Ask learners to share a time they received a file
       with no documentation. What questions did they have?
+    - **FAIR matching (Exercise 3):** Ask which FAIR letter is hardest to
+      achieve without a standard like DDI. Most will say Interoperable or
+      Findable.
     - **Closing:** Reinforce that `ddi-l` makes documentation easy: you
       write Python, and the tool creates the standard XML for you.

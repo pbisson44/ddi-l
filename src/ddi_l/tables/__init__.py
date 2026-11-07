@@ -1,7 +1,7 @@
 """Bulk-load DDI items from spreadsheets: a folder of CSV files or one workbook.
 
 Each table (``studies``, ``concepts``, ``questions``, ``flow``,
-``variables``, ``datasets`` and the others in :data:`TABLES`, plus
+``variables``, ``datasets`` and the others in `TABLES`, plus
 ``settings``) is one CSV file, or one sheet of an ``.xlsx`` workbook. Rows
 point at each other by ``id``: a variable's ``question`` column holds a
 question's ``id``. Text in several languages goes in one column per language
@@ -124,8 +124,8 @@ class TableImport:
     ) -> DDIFragment:
         """The items as a ``FragmentInstance``, one item per fragment.
 
-        Written the way Colectica Designer writes an export, so the file
-        imports into a Colectica repository. Without ``top_level`` the
+        Written the way Colectica Designer writes an export, for importing
+        into a Colectica repository. Without ``top_level`` the
         fragment names the only study, or the only group, as its top-level
         item, and otherwise none.
         """
@@ -150,7 +150,7 @@ class TableImport:
         A study document has one study, so the tables that describe studies
         themselves, their groups, people, variable groups, processing,
         quality or comparisons do not fit in it: load those with
-        :meth:`to_fragment`.
+        `to_fragment`.
 
         Raises:
             TableImportError: If such a table has rows.

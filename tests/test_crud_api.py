@@ -845,6 +845,40 @@ class TestReopenAndEdit:
         final = open_ddi(path2)
         assert len(final.code_lists) == 2
 
+    def test_add_question_after_reopen_is_kept(self, tmp_path):
+        # Regression: a question added to a file that already had questions
+        # was dropped on save.
+        doc = new_study(title="T", agency="a.org")
+        doc.add_question(text="Q1?")
+        path = tmp_path / "a.xml"
+        doc.save(path)
+
+        reopened = open_ddi(path)
+        question = reopened.add_question(text="Q2?")
+        reopened.add_variable(name="q2", question=question)
+        path2 = tmp_path / "b.xml"
+        reopened.save(path2)
+
+        final = open_ddi(path2)
+        assert len(final.questions) == 2
+        assert final.validate() == []
+
+    def test_remove_question_after_reopen_is_kept(self, tmp_path):
+        doc = new_study(title="T", agency="a.org")
+        first = doc.add_question(text="Q1?")
+        doc.add_question(text="Q2?")
+        path = tmp_path / "a.xml"
+        doc.save(path)
+
+        reopened = open_ddi(path)
+        assert reopened.remove(first.identifier)
+        path2 = tmp_path / "b.xml"
+        reopened.save(path2)
+
+        final = open_ddi(path2)
+        assert [q.identifier for q in final.questions] != [first.identifier]
+        assert len(final.questions) == 1
+
 
 # ------------------------------------------------------------------
 # Groups (study series / publication packaging)

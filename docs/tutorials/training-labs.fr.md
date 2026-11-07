@@ -8,15 +8,15 @@ description: >-
 
 !!! info "Ces laboratoires font désormais partie du programme de formation"
     Les laboratoires qui se trouvaient ici sont couverts, avec une réponse sous
-    chaque exercice, par le [programme de formation](../curriculum/index.md) :
+    chaque exercice, par le [programme de formation](../curriculum/index.fr.md) :
 
     | Ancien laboratoire | Où le trouver |
     | --- | --- |
-    | Laboratoire 1 : Construire une enquête de zéro | Exercices des [modules 3](../curriculum/module-03-first-study.md), [4](../curriculum/module-04-variables.md) et [5](../curriculum/module-05-concepts-universes.md) |
-    | Laboratoire 2 : Ouvrir, modifier et revalider | Exercices du [module 6 : Ouvrir et modifier des fichiers](../curriculum/module-06-open-modify.md) |
-    | Laboratoire 3 : Validation en ligne de commande | Exercices du [module 7 : Valider depuis la ligne de commande](../curriculum/module-07-cli-validation.md) |
+    | Laboratoire 1 : Construire une enquête de zéro | Exercices des [modules 3](../curriculum/module-03-first-study.fr.md), [4](../curriculum/module-04-variables.fr.md) et [5](../curriculum/module-05-concepts-universes.fr.md) |
+    | Laboratoire 2 : Ouvrir, modifier et revalider | Exercices du [module 6 : Ouvrir et modifier des fichiers](../curriculum/module-06-open-modify.fr.md) |
+    | Laboratoire 3 : Validation en ligne de commande | Exercices du [module 7 : Valider depuis la ligne de commande](../curriculum/module-07-cli-validation.fr.md) |
 
-    Vous animez un atelier ? Le [guide de l'instructeur](../curriculum/instructor-guide.md)
+    Vous animez un atelier ? Le [guide de l'instructeur](../curriculum/instructor-guide.fr.md)
     propose des calendriers et des conseils d'animation, et les
-    [corrigés](../curriculum/answer-keys.md) rassemblent toutes les solutions
+    [corrigés](../curriculum/answer-keys.fr.md) rassemblent toutes les solutions
     sur une seule page.

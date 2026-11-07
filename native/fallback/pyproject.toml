@@ -1,0 +1,20 @@
+# The stand-in for ddi-l-native on platforms with no compiled wheel (Alpine,
+# Windows on ARM, PyPy, free-threaded Python...). It is a pure-Python wheel
+# with the same name and version: pip prefers a compiled wheel that fits and
+# takes this one otherwise, so installing ddi-l never compiles Rust. Importing
+# it raises ModuleNotFoundError, and ddi-l uses lxml or the standard library.
+# It is published as a wheel only; the sdist is the real one, in native/.
+[build-system]
+requires = ["poetry-core>=2.0.0,<3"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "ddi-l-native"
+version = "0.2.0"
+description = "Stand-in for ddi-l's native XML core where no compiled wheel exists"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+
+[tool.poetry]
+packages = [{ include = "ddi_l_native" }]

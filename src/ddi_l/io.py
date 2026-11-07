@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import codecs
 import io
 from collections.abc import Iterator, Mapping, MutableMapping
 from collections.abc import Sequence as TypingSequence
@@ -16,14 +17,22 @@ from typing import (
 from . import schema_loader
 from ._etree import (
     _LXML_NEEDS_STDLIB_SERIALIZATION,
+    HARDENED_ITERPARSE,
     PARSER_ERRORS,
     USING_LXML,
     Element,
-    _serialize_with_stdlib,
+    adopt,
+    doctype_refused,
     etree,
+    inline_layout_kept,
     parse_xml,
+    refuse_doctype,
+    text_as_utf8,
     tostring,
+    unicode_text,
 )
+from ._lossless import Source
+from ._whitespace import without_indentation
 from .constants import DEFAULT_NSMAP, XSI_NS, get_namespace_set
 from .document import DDIDocument, DDIFragment, Document
 from .exceptions import (
@@ -37,7 +46,9 @@ from .models.base import qn
 from .namespace_utils import apply_namespace_map
 from .schema_loader._versions import detect_version_from_element, normalize_version
 from .xml_utils import coerce_element as _coerce_xml_input
-from .xml_utils import resolve_xml_source
+from .xml_utils import resolve_xml_source, sniff_bom
+
+_UTF8_BOM = b"\xef\xbb\xbf"
 
 __all__ = [
     "iter_questions",
@@ -65,10 +76,6 @@ DDIWrapper = DDIDocument | DDIFragment
 
 _DEFAULT_NS_MAP: Mapping[str | None, str] = DEFAULT_NSMAP
 
-_DEFAULT_MAINTAINABLES: TypingSequence[type[MaintainableBase]] = (
-    MaintainableBase.maintainable_types()
-)
-
 
 def _coerce_source(source: SourceType) -> tuple[str | BinaryIO | TextIO, bool]:
     """Normalize different source types into a path or file-like handle.
@@ -84,7 +91,7 @@ def _coerce_source(source: SourceType) -> tuple[str | BinaryIO | TextIO, bool]:
         after use.
 
     Raises:
-        FileNotFoundError: Raised when ``source`` is a :class:`~pathlib.Path`
+        FileNotFoundError: Raised when ``source`` is a `Path`
             instance that does not exist on disk.
         TypeError: Raised when ``source`` is not one of the supported
             types.
@@ -98,7 +105,7 @@ def _coerce_source(source: SourceType) -> tuple[str | BinaryIO | TextIO, bool]:
         return str(payload), False
     if kind == "text":
         text_payload = cast(str, payload)
-        return io.BytesIO(text_payload.encode("utf-8")), True
+        return io.BytesIO(text_as_utf8(text_payload)), True
     if kind == "bytes":
         byte_payload = cast(bytes, payload)
         return io.BytesIO(byte_payload), True
@@ -114,10 +121,10 @@ def _coerce_element(document_or_element: DocumentLike) -> Element:
         document_or_element: A DDI document wrapper, maintainable instance,
             XML element, serialized XML string or bytes, or dataclass with a
             ``to_xml`` method that can be transformed into an
-            :class:`~ddi_l._etree.Element` instance.
+            `Element` instance.
 
     Returns:
-        The XML :class:`~ddi_l._etree.Element` representing the provided
+        The XML `Element` representing the provided
         document or maintainable object.
 
     Raises:
@@ -149,7 +156,7 @@ def read_ddi(
     build_index: bool = False,
     version: str | None = None,
 ) -> DDIWrapper:
-    """Parse ``source`` into a :class:`DDIDocument` or :class:`DDIFragment`.
+    """Parse ``source`` into a `DDIDocument` or `DDIFragment`.
 
     Args:
         source: The DDI instance XML to parse. Accepts filesystem paths,
@@ -157,16 +164,16 @@ def read_ddi(
         validate: Whether to validate the parsed document against the DDI XML
             schema.
         build_index: Build the resolver index now. By default it is built on
-            first use of :attr:`DDIDocument.resolver`.
+            first use of `DDIDocument.resolver`.
         version: Optional DDI schema version override used when validating the
             parsed document.
 
     Returns:
-        A :class:`DDIDocument` when the root element is ``DDIInstance`` or a
-        :class:`DDIFragment` when the root element is ``FragmentInstance``.
+        A `DDIDocument` when the root element is ``DDIInstance`` or a
+        `DDIFragment` when the root element is ``FragmentInstance``.
 
     Raises:
-        FileNotFoundError: Propagated when ``source`` is a :class:`~pathlib.Path`
+        FileNotFoundError: Propagated when ``source`` is a `Path`
             that does not exist.
         TypeError: Raised when ``source`` is not a supported input type.
         ValueError: Raised when the parsed XML root is not a valid DDI
@@ -176,8 +183,12 @@ def read_ddi(
     """
     root: Element
 
+    # Before parsing: the parser drops the mark, and the Colectica layout
+    # writes it back only when the source had one.
+    bom = sniff_bom(source)
+    record, parsed = Source.capture(source)
     try:
-        handle, should_close = _coerce_source(source)
+        handle, should_close = _coerce_source(parsed)
     except (FileNotFoundError, TypeError):
         raise
     except Exception as exc:  # pragma: no cover - defensive guard
@@ -226,36 +237,21 @@ def read_ddi(
     fragment_tag = qn(instance_namespace, "FragmentInstance")
     if root.tag == document_tag:
         document = DDIDocument(root)
+        document._source = record
         if build_index:
             document.build_index()
         return document
     if root.tag == fragment_tag:
-        return DDIFragment(root)
+        fragment = DDIFragment(root)
+        fragment._source_bom = bom
+        fragment._source = record
+        return fragment
     location = build_error_location(sources=[source], element=root)
     raise DDIReadError(
         "Document root must be DDIInstance or FragmentInstance"
         " in the DDI instance namespace.",
         location=location,
     )
-
-
-class _WriteBackend:
-    """Strategy object encapsulating backend-specific serialization behaviour."""
-
-    def prepare(self, element: Element) -> Element:
-        """Return the element that should be serialised for this backend."""
-        raise NotImplementedError
-
-    def serialize(
-        self,
-        element: Element,
-        *,
-        pretty_print: bool,
-        xml_declaration: bool,
-        encoding: str,
-    ) -> bytes:
-        """Serialize ``element`` into bytes for the configured backend."""
-        raise NotImplementedError
 
 
 def _finalize_document(
@@ -280,87 +276,45 @@ def _finalize_document(
     return (declaration + body).encode(encoding)
 
 
-class _LXMLWriteBackend(_WriteBackend):
-    """Implementation of :class:`_WriteBackend` for the lxml backend."""
-
-    def prepare(self, element: Element) -> Element:
-        return element
-
-    def serialize(
-        self,
-        element: Element,
-        *,
-        pretty_print: bool,
-        xml_declaration: bool,
-        encoding: str,
-    ) -> bytes:
-        if _LXML_NEEDS_STDLIB_SERIALIZATION:
-            serialized = _serialize_with_stdlib(
-                element,
-                pretty_print=pretty_print,
-                xml_declaration=False,
-                encoding="unicode",
-            )
-            body = (
-                serialized.decode(encoding)
-                if isinstance(serialized, bytes)
-                else serialized
-            )
-            return _finalize_document(
-                body,
-                pretty_print=pretty_print,
-                xml_declaration=xml_declaration,
-                encoding=encoding,
-            )
-
-        # Serialize without a declaration and add our own, so the two backends
-        # agree on its spelling.
-        xml_bytes = etree.tostring(
-            element,
-            encoding="unicode",
-            pretty_print=pretty_print,
-        )
-        body = xml_bytes.decode(encoding) if isinstance(xml_bytes, bytes) else xml_bytes
-        return _finalize_document(
-            body,
-            pretty_print=pretty_print,
-            xml_declaration=xml_declaration,
-            encoding=encoding,
-        )
-
-
-class _StdlibWriteBackend(_WriteBackend):
-    """Implementation of :class:`_WriteBackend` for the stdlib backend."""
-
-    def prepare(self, element: Element) -> Element:
-        return clone_element(element)
-
-    def serialize(
-        self,
-        element: Element,
-        *,
-        pretty_print: bool,
-        xml_declaration: bool,
-        encoding: str,
-    ) -> bytes:
-        serialized = (
+def _serialize(
+    element: Element,
+    *,
+    pretty_print: bool,
+    xml_declaration: bool,
+    encoding: str,
+) -> bytes:
+    """Serialize ``element`` with the active XML backend."""
+    body: str | bytes
+    if not USING_LXML:
+        body = (
             tostring(element, pretty_print=pretty_print)
             if pretty_print
-            else etree.tostring(element, encoding="unicode")
+            else unicode_text(element)
         )
-        if isinstance(serialized, bytes):
-            serialized = serialized.decode(encoding)
-        return _finalize_document(
-            serialized,
+    elif _LXML_NEEDS_STDLIB_SERIALIZATION:
+        from ._etree import _serialize_with_stdlib
+
+        body = _serialize_with_stdlib(
+            element,
             pretty_print=pretty_print,
-            xml_declaration=xml_declaration,
-            encoding=encoding,
+            xml_declaration=False,
+            encoding="unicode",
         )
-
-
-_WRITE_BACKEND: _WriteBackend = (
-    _LXMLWriteBackend() if USING_LXML else _StdlibWriteBackend()
-)
+    else:
+        # Serialize without a declaration and add our own, so the two
+        # backends agree on its spelling.
+        with inline_layout_kept(element):
+            body = etree.tostring(
+                element, encoding="unicode", pretty_print=pretty_print
+            )
+    if isinstance(body, bytes):
+        body = body.decode(encoding)
+    return _finalize_document(
+        body,
+        pretty_print=pretty_print,
+        xml_declaration=xml_declaration,
+        encoding=encoding,
+    )
 
 
 def _root_nsmap_for_tree(element: Element) -> Mapping[str | None, str]:
@@ -409,18 +363,30 @@ def _emit_xml(
     encoding: str,
 ) -> bytes:
     """Serialize ``element`` using the active XML backend."""
-    target = _WRITE_BACKEND.prepare(element)
-    if USING_LXML:
-        target = clone_element(target)
+    target = clone_element(element)
     target = apply_namespace_map(
         target, _root_nsmap_for_tree(target), preserve_existing=True
     )
-    return _WRITE_BACKEND.serialize(
+    return _serialize(
         target,
         pretty_print=pretty_print,
         xml_declaration=xml_declaration,
         encoding=encoding,
     )
+
+
+def _written_as_read(document: DocumentLike, bom: bool | None) -> bytes | None:
+    """``document`` with its unchanged parts as read, if it was read."""
+    from .document import _written_as_read as written_as_read
+
+    wrapper = document._inner if isinstance(document, Document) else document
+    if not isinstance(wrapper, (DDIDocument, DDIFragment)):
+        return None
+    written = written_as_read(wrapper, whole=True)
+    if written is None or bom is None:
+        return written
+    body = written.removeprefix(_UTF8_BOM)
+    return _UTF8_BOM + body if bom else body
 
 
 def _write_to_destination(
@@ -455,7 +421,8 @@ def write_ddi(
     xml_declaration: bool = True,
     encoding: str = "utf-8",
     version: str | None = None,
-    layout: str = "default",
+    layout: str | None = None,
+    bom: bool | None = None,
 ) -> bytes:
     """Serialize a document to ``destination`` (or return bytes when omitted).
 
@@ -474,12 +441,22 @@ def write_ddi(
             text streams.
         version: Optional DDI schema version override used to assert the target
             release is supported when specified.
-        layout: ``"default"``, or ``"colectica"`` to write a
-            ``FragmentInstance`` exactly as Colectica Designer does (UTF-8 with
-            a byte-order mark, one item per ``<Fragment>`` with its module as
-            the default namespace). ``pretty_print``, ``xml_declaration`` and
-            ``encoding`` do not apply to that layout. See
-            :mod:`ddi_l.colectica`.
+        layout: ``"colectica"`` writes a ``FragmentInstance`` exactly as
+            Colectica does (UTF-8, one item per ``<Fragment>`` with its
+            module as the default namespace); ``pretty_print``,
+            ``xml_declaration`` and ``encoding`` do not apply to it.
+            ``"default"`` is this library's layout. ``None`` (default)
+            writes a document read from a file or bytes with its unchanged
+            parts as they were read, byte for byte, and new or changed parts
+            laid out like the file (Colectica's layout for a
+            ``FragmentInstance``). Anything else gets ``"colectica"`` for a
+            ``FragmentInstance`` and ``"default"`` otherwise, as does
+            everything when one of those three options asks for something
+            only the default layout does. See `ddi_l.colectica`.
+        bom: For the Colectica layout, whether to start with a UTF-8
+            byte-order mark. ``None`` (default) keeps what a
+            `DDIFragment` read from a file had, and writes one
+            otherwise, as Colectica Designer does.
 
     Returns:
         The serialized XML bytes regardless of ``destination``.
@@ -492,7 +469,6 @@ def write_ddi(
         normalize_version(version)
 
     location_sources = [document_or_element]
-    element: Element | None = None
     try:
         element = _coerce_element(document_or_element)
     except DDIWriteError:
@@ -505,38 +481,42 @@ def write_ddi(
             location=location,
         ) from exc
     except ValueError as exc:
-        element_hint = None
-        if isinstance(document_or_element, (DDIDocument, DDIFragment)):
-            element_hint = document_or_element.root
-        elif isinstance(document_or_element, Element):
-            element_hint = document_or_element
-        location = build_error_location(
-            sources=location_sources,
-            element=element_hint,
-        )
+        location = build_error_location(sources=location_sources)
         raise DDIWriteError(
             "Failed to serialise DDI XML content.",
             cause=exc,
             location=location,
         ) from exc
-    except Exception as exc:  # pragma: no cover - defensive guard
-        element_hint = element
-        location = build_error_location(sources=location_sources, element=element_hint)
+    except Exception as exc:
+        location = build_error_location(sources=location_sources)
         raise DDIWriteError(
             "Unexpected failure while writing DDI XML.",
             cause=exc,
             location=location,
         ) from exc
 
+    own_options = pretty_print and xml_declaration
+    utf8 = codecs.lookup(encoding).name == "utf-8"
+    as_read = layout is None and own_options and utf8
+    if layout is None:
+        is_fragment = str(element.tag).rpartition("}")[2] == "FragmentInstance"
+        layout = "colectica" if is_fragment and own_options and utf8 else "default"
     if layout not in ("default", "colectica"):
         raise ValueError(
             f"Unknown layout {layout!r}; expected 'default' or 'colectica'."
         )
     try:
+        written = _written_as_read(document_or_element, bom) if as_read else None
+        if written is not None:
+            return _write_to_destination(written, destination, encoding="utf-8")
         if layout == "colectica":
             from .colectica import to_colectica_bytes
 
-            xml_bytes = to_colectica_bytes(element)
+            if isinstance(document_or_element, DDIFragment):
+                write_bom = document_or_element._resolve_bom(bom)
+            else:
+                write_bom = True if bom is None else bom
+            xml_bytes = to_colectica_bytes(element, bom=write_bom)
             return _write_to_destination(xml_bytes, destination, encoding="utf-8")
         xml_bytes = _emit_xml(
             element,
@@ -554,7 +534,7 @@ def write_ddi(
             cause=exc,
             location=location,
         ) from exc
-    except Exception as exc:  # pragma: no cover - defensive guard
+    except Exception as exc:
         location = build_error_location(element=element, sources=location_sources)
         raise DDIWriteError(
             "Unexpected failure while writing DDI XML.",
@@ -563,11 +543,26 @@ def write_ddi(
         ) from exc
 
 
-_LXML_ITERPARSE_DEFAULTS = {
+# The parser options that keep a file from expanding entities, reading a DTD
+# or reaching the network, on either backend, with their only accepted value.
+_PROTECTIONS = {
     "resolve_entities": False,
     "load_dtd": False,
     "no_network": True,
+    "forbid_dtd": True,
+    "forbid_entities": True,
+    "forbid_external": True,
 }
+
+
+def _hardened(kwargs: dict[str, object]) -> dict[str, object]:
+    """``kwargs`` for `etree.iterparse`, with protections no caller can relax."""
+    if "parser" in kwargs:
+        raise ValueError("iterparse_ddi builds its own parser; pass no parser.")
+    for key, value in _PROTECTIONS.items():
+        if key in kwargs and kwargs.pop(key) != value:
+            raise ValueError(f"iterparse_ddi keeps {key}={value!r}.")
+    return {**kwargs, **HARDENED_ITERPARSE}
 
 
 def _prune_element(element: Element, parent: Element | None) -> None:
@@ -590,7 +585,7 @@ def iterparse_ddi(
     another requested maintainable are yielded as well and kept in the tree
     until the enclosing one is built. Once an element is no longer inside a
     requested match it is cleared, so memory is bounded by the largest
-    outermost match. Request only the types you need, as :func:`iter_variables`
+    outermost match. Request only the types you need, as `iter_variables`
     does, to keep that bound small.
 
     Args:
@@ -599,10 +594,15 @@ def iterparse_ddi(
         maintainable_types: Classes to instantiate when their XML tags are
             encountered. Defaults to every registered maintainable type.
         **kwargs: Additional keyword arguments forwarded to
-            :func:`etree.iterparse`.
+            `etree.iterparse`. The parser stays as hardened as `read_ddi`'s:
+            no DTD, no entity expansion, no network.
 
     Yields:
         Instances of the requested maintainable classes, innermost first.
+
+    Raises:
+        ValueError: If ``kwargs`` would relax the parser's protections or
+            pass a parser of its own.
     """
     registered_maintainables = MaintainableBase.maintainable_types()
     maintainable_types = (
@@ -615,30 +615,32 @@ def iterparse_ddi(
     }
     prunable_tags = {maintainable.TAG for maintainable in registered_maintainables}
     prunable_tags.update(tag_to_type)
-    if USING_LXML:
-        for key, value in _LXML_ITERPARSE_DEFAULTS.items():
-            kwargs.setdefault(key, value)
+    options = _hardened(kwargs)
     handle, should_close = _coerce_source(source)
     stack: list[Element] = []
     root: Element | None = None
     open_matches = 0
     try:
-        context = etree.iterparse(handle, events=("start", "end"), **kwargs)
-        for event, element in context:
-            if event == "start":
-                if root is None:
-                    root = element
-                stack.append(element)
-                if element.tag in tag_to_type:
-                    open_matches += 1
-                continue
-            stack.pop()
-            cls = tag_to_type.get(element.tag)
-            if cls is not None:
-                open_matches -= 1
-                yield cls.from_xml(element)
-            if open_matches == 0 and element.tag in prunable_tags and stack:
-                _prune_element(element, stack[-1])
+        with doctype_refused():
+            context = etree.iterparse(handle, events=("start", "end"), **options)
+            for event, element in context:
+                if event == "start":
+                    if root is None:
+                        root = element
+                        refuse_doctype(element)
+                    stack.append(element)
+                    if element.tag in tag_to_type:
+                        open_matches += 1
+                    continue
+                stack.pop()
+                cls = tag_to_type.get(element.tag)
+                if cls is not None:
+                    open_matches -= 1
+                    # The parser keeps every blank; drop the layout, as read_ddi
+                    # does, and keep the space of mixed content.
+                    yield cls.from_xml(without_indentation(adopt(element)))
+                if open_matches == 0 and element.tag in prunable_tags and stack:
+                    _prune_element(element, stack[-1])
     finally:
         if root is not None:
             root.clear()
@@ -647,20 +649,20 @@ def iterparse_ddi(
 
 
 def iter_variables(source: SourceType, **kwargs: object) -> Iterator[Variable]:
-    """Iterate over :class:`Variable` maintainables in a DDI instance.
+    """Iterate over `Variable` maintainables in a DDI instance.
 
     Args:
         source: The XML content to parse for ``Variable`` maintainables.
         **kwargs: Additional keyword arguments forwarded to
-            :func:`iterparse_ddi`.
+            `iterparse_ddi`.
 
     Returns:
-        An iterator yielding :class:`Variable` objects as they are parsed from
+        An iterator yielding `Variable` objects as they are parsed from
         ``source``.
 
     Side Effects:
         Consumes the input stream and prunes processed XML elements via
-        :func:`iterparse_ddi` to minimize memory usage.
+        `iterparse_ddi` to minimize memory usage.
     """
     if isinstance(source, DDIDocument):
         yield from source.resolver.iter_resources(Variable)
@@ -671,20 +673,20 @@ def iter_variables(source: SourceType, **kwargs: object) -> Iterator[Variable]:
 
 
 def iter_questions(source: SourceType, **kwargs: object) -> Iterator[QuestionItem]:
-    """Iterate over :class:`QuestionItem` maintainables in a DDI instance.
+    """Iterate over `QuestionItem` maintainables in a DDI instance.
 
     Args:
         source: The XML content to parse for ``QuestionItem`` maintainables.
         **kwargs: Additional keyword arguments forwarded to
-            :func:`iterparse_ddi`.
+            `iterparse_ddi`.
 
     Returns:
-        An iterator yielding :class:`QuestionItem` objects as they are parsed
+        An iterator yielding `QuestionItem` objects as they are parsed
         from ``source``.
 
     Side Effects:
         Consumes the input stream and prunes processed XML elements via
-        :func:`iterparse_ddi` to minimize memory usage.
+        `iterparse_ddi` to minimize memory usage.
     """
     if isinstance(source, DDIDocument):
         yield from source.resolver.iter_resources(QuestionItem)

@@ -23,13 +23,15 @@ uv sync --group docs             # Documentation toolchain
 ```
 
 Note that `full` is an **extra**, not a dependency group: `--group full`
-fails.
+fails. None of these needs Rust: `uv.lock` installs the native core's
+pure-Python stand-in. To work on the native core, see "The XML backends" in
+`docs/DEVELOPMENT.en.md`.
 
 With plain pip instead:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e '.[full]' --group dev   # pip 25.1+ reads dependency groups
+pip install -e '.[full]' ./native/fallback --group dev   # pip 25.1+ reads groups
 ```
 
 ## Coding standards

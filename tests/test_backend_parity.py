@@ -24,12 +24,13 @@ from ddi_l.examples.build_and_validate import build_example_document
 from ddi_l.models import StudyUnit
 from ddi_l.namespace_utils import extract_namespace_declarations
 from ddi_l.namespaces import NAMESPACE_PREFIXES, canonicalize_prefixes
-from tests import EXAMPLES_DIR, PACKAGE_FIXTURES_DIR
+from tests import EXAMPLES_DIR, SAMPLES_DIR, TEST_FIXTURES_DIR
+from tests.helpers.marks import refers_outside
 
 INSTANCE_FIXTURES = (
-    PACKAGE_FIXTURES_DIR / "minimal_instance.xml",
-    PACKAGE_FIXTURES_DIR / "instances" / "example_instance.xml",
-    PACKAGE_FIXTURES_DIR / "instances" / "quality_of_life_instance.xml",
+    SAMPLES_DIR / "minimal_instance.xml",
+    TEST_FIXTURES_DIR / "instances" / "example_instance.xml",
+    TEST_FIXTURES_DIR / "instances" / "quality_of_life_instance.xml",
 )
 
 _CANONICAL_FOR_URI = {uri: prefix for prefix, uri in NAMESPACE_PREFIXES.items()}
@@ -103,9 +104,10 @@ def test_empty_elements_use_a_single_spelling():
     assert "<child />" not in rendered
 
 
+@refers_outside
 def test_model_round_trip_ignores_the_source_documents_prefixes():
     """Re-serializing adopts canonical prefixes rather than echoing the input."""
-    fixture = PACKAGE_FIXTURES_DIR / "models" / "study_unit_minimal.xml"
+    fixture = TEST_FIXTURES_DIR / "models" / "study_unit_minimal.xml"
 
     rendered = tostring(
         StudyUnit.from_xml(parse_xml(fixture)).to_xml(), pretty_print=False

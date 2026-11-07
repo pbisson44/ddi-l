@@ -120,9 +120,9 @@ def to_jsonld(document: Document, *, include_context: bool = True) -> dict[str, 
     """Render ``document`` as a JSON-LD graph using Disco.
 
     Args:
-        document: A :class:`~ddi_l.document.Document`, as returned by
-            :func:`~ddi_l.document.new_study` or
-            :func:`~ddi_l.document.open_ddi`.
+        document: A `Document`, as returned by
+            `new_study` or
+            `open_ddi`.
         include_context: Emit the ``@context``. Set ``False`` when embedding the
             graph in a larger document that supplies its own.
 

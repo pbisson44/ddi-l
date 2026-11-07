@@ -461,9 +461,9 @@ class StudyUnit(StudyUnitFields):
     def to_xml(self, *, validate_refs: bool = True) -> Element:
         """Serialize to XML, optionally validating cross-references first.
 
-        When ``validate_refs`` is ``True`` every :class:`Reference` in the
+        When ``validate_refs`` is ``True`` every `Reference` in the
         study is checked against the objects the study contains, and one
-        :class:`~ddi_l.exceptions.DDIReferenceWarning` lists any that cannot
+        `DDIReferenceWarning` lists any that cannot
         be resolved.
 
         Args:

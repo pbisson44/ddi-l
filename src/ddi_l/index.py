@@ -185,7 +185,7 @@ class Index:
             document: Document whose contents will be registered.
 
         Returns:
-            A populated :class:`Index` containing all maintainables from the
+            A populated `Index` containing all maintainables from the
             document.
         """
         index = cls()
@@ -286,10 +286,10 @@ class Index:
             version: Optional version string for the variable.
 
         Returns:
-            The resolved :class:`Variable` instance.
+            The resolved `Variable` instance.
 
         Raises:
-            LookupError: Propagated from :meth:`resolve` when the variable cannot
+            LookupError: Propagated from `resolve` when the variable cannot
                 be found.
         """
         reference = Reference(

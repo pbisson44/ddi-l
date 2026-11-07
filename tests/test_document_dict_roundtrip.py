@@ -19,6 +19,7 @@ from tests.helpers.maintainable_fixtures import (
     MODEL_FIXTURE_DIR,
     iter_maintainable_fixture_names,
 )
+from tests.helpers.marks import refers_outside
 
 LOSSY_DICT_MODELS: tuple[type, ...] = (MethodologyItem,)
 LOSSY_XMLSCHEMA_DICT_MODELS: tuple[type, ...] = (
@@ -162,13 +163,6 @@ def _normalized_document_xml(document: DDIDocument) -> bytes:
     return tostring(element, pretty_print=True).strip()
 
 
-class _StubXMLSchemaConverter:
-    """Lightweight stand-in for :class:`xmlschema.XMLSchemaConverter`."""
-
-    def __init__(self, **kwargs):  # pragma: no cover - simple data holder
-        self.settings = kwargs
-
-
 @pytest.fixture(params=[True, False], ids=["xmlschema", "fallback"])
 def schema_environment(request, monkeypatch):
     """Toggle schema backend availability to exercise both validation paths.
@@ -177,84 +171,16 @@ def schema_environment(request, monkeypatch):
         request: Parametrized fixture controlling backend availability.
         monkeypatch: Fixture used to stub schema loader attributes.
     """
-    # Clearing the schema cache forces a full recompile, so only the fallback
-    # paths, which change what a cached schema means, clear it.
-    if request.param:
-        if schema_loader.xmlschema is None:
-            schema_loader.get_schema.cache_clear()
-            from pathlib import Path
-            from types import SimpleNamespace
-
-            from ddi_l.schema_loader._compat import _fallback_qname_converter
-            from ddi_l.schema_loader._fallback import _FallbackSchema
-
-            class _StubXMLSchema:
-                """Adapter delegating to the internal fallback schema helpers."""
-
-                def __init__(self, schema_path):
-                    self._delegate = _FallbackSchema(Path(schema_path))
-                    self.namespaces = self._delegate.namespaces
-
-                def to_dict(
-                    self,
-                    element,
-                    *,
-                    process_namespaces: bool = True,
-                    converter=None,
-                    validation: str | None = None,
-                    use_defaults: bool | None = None,
-                ):
-                    return self._delegate.to_dict(
-                        element, process_namespaces=process_namespaces
-                    )
-
-                def from_dict(self, data, *, process_namespaces: bool = True):
-                    return self._delegate.from_dict(
-                        data, process_namespaces=process_namespaces
-                    )
-
-                def fromdict(self, data):
-                    return self.from_dict(data, process_namespaces=True)
-
-                def validate(self, document):  # pragma: no cover - passthrough
-                    return self._delegate.validate(document)
-
-            stub_exceptions = SimpleNamespace(
-                XMLSchemaKeyError=KeyError,
-                XMLSchemaValueError=ValueError,
-            )
-
-            stub_module = SimpleNamespace(
-                XMLSchema=_StubXMLSchema,
-                exceptions=stub_exceptions,
-            )
-
-            monkeypatch.setattr(schema_loader, "xmlschema", stub_module)
-            monkeypatch.setattr(
-                schema_loader,
-                "XMLSchemaConverter",
-                _StubXMLSchemaConverter,
-            )
-            monkeypatch.setattr(
-                schema_loader,
-                "qname_to_clark_notation",
-                _fallback_qname_converter,
-            )
-            schema_loader.get_schema.cache_clear()
-            yield
-            schema_loader.get_schema.cache_clear()
-        else:
-            yield
-    else:
+    # The cached schema is the same either way, so it is kept: a recompile
+    # takes seconds.
+    if not request.param:
         monkeypatch.setattr(schema_loader, "xmlschema", None)
         monkeypatch.setattr(schema_loader, "XMLSchemaConverter", None)
         monkeypatch.setattr(schema_loader, "qname_to_clark_notation", None)
-        schema_loader.get_schema.cache_clear()
-        yield
-        # A fallback-built schema must never survive into an xmlschema test.
-        schema_loader.get_schema.cache_clear()
+    yield
 
 
+@refers_outside
 def test_document_roundtrip_from_dict(schema_environment):
     """Round-trip StudyUnit data through dict serialization without drift.
 
@@ -291,6 +217,7 @@ def test_document_roundtrip_from_dict(schema_environment):
         for model_cls, fixture_name in iter_maintainable_fixture_names()
     ],
 )
+@refers_outside
 def test_maintainable_roundtrip_from_dict(cls, fixture_name, schema_environment):
     """Ensure maintainable models round-trip via dict representations.
 

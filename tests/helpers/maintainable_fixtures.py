@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Iterator, Mapping
-from importlib import resources
 from pathlib import Path
 
 from ddi_l.models import (
@@ -87,9 +86,7 @@ from ddi_l.models import (
     WeightingMethodology,
 )
 
-MODEL_FIXTURE_DIR = Path(
-    resources.files("ddi_l").joinpath("examples", "tests", "fixtures", "models")  # type: ignore[arg-type]
-)
+MODEL_FIXTURE_DIR = Path(__file__).resolve().parents[1] / "fixtures" / "models"
 
 MODEL_FIXTURES: Mapping[type[MaintainableBase], Iterable[str]] = {
     Archive: ("archive_minimal", "archive_with_specific"),

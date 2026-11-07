@@ -421,8 +421,11 @@ def test_prune_schema_defaults_removes_extra_children():
 
 def test_prune_schema_defaults_non_mapping():
     elem = create_element("root")
+    elem.set("kept", "value")
+    elem.append(create_element("child"))
     _prune_schema_defaults_from_element(elem, "scalar")
-    # Should not raise
+    assert elem.get("kept") == "value"
+    assert [c.tag for c in elem] == ["child"]
 
 
 # ---------------------------------------------------------------------------

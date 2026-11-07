@@ -11,7 +11,7 @@ from ddi_l import read_ddi
 from ddi_l._etree import cleanup_namespaces, fromstring, tostring
 from ddi_l.constants import DEFAULT_NSMAP
 from ddi_l.validation import validate_document
-from tests import PACKAGE_FIXTURES_DIR
+from tests import SAMPLES_DIR, TEST_FIXTURES_DIR
 
 
 def _canonicalize(xml: str) -> str:
@@ -27,18 +27,18 @@ def _fixture_cases() -> Iterable[tuple[str, Path, Path]]:
 
     yield (
         "tiny-minimal",
-        PACKAGE_FIXTURES_DIR / "minimal_instance.xml",
-        PACKAGE_FIXTURES_DIR / "golden" / "minimal_instance.canonical.xml",
+        SAMPLES_DIR / "minimal_instance.xml",
+        TEST_FIXTURES_DIR / "golden" / "minimal_instance.canonical.xml",
     )
     yield (
         "medium-example-instance",
-        PACKAGE_FIXTURES_DIR / "instances" / "example_instance.xml",
-        PACKAGE_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
+        TEST_FIXTURES_DIR / "instances" / "example_instance.xml",
+        TEST_FIXTURES_DIR / "golden" / "example_instance.canonical.xml",
     )
     yield (
         "large-quality-of-life",
-        PACKAGE_FIXTURES_DIR / "instances" / "quality_of_life_instance.xml",
-        PACKAGE_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
+        TEST_FIXTURES_DIR / "instances" / "quality_of_life_instance.xml",
+        TEST_FIXTURES_DIR / "golden" / "quality_of_life_instance.canonical.xml",
     )
 
 

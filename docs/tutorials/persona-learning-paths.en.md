@@ -8,7 +8,7 @@ description: >-
 
 !!! info "These tracks are now part of the training curriculum"
     The site uses one set of learner profiles, in the curriculum's
-    [Where do I start?](../curriculum/index.md#where-do-i-start) table:
+    [Where do I start?](../curriculum/index.en.md#where-do-i-start) table:
     students, researchers, archivists, NSO staff and developers who automate
     DDI checks.
 
@@ -16,4 +16,4 @@ description: >-
       to 7 install `ddi-l`, build a study, and validate it from Python and
       the command line.
     - The **advanced automation teams** track is the curriculum's
-      [automation track](../curriculum/index.md#automation-track).
+      [automation track](../curriculum/index.en.md#automation-track).

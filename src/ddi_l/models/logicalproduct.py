@@ -791,8 +791,8 @@ class Variable(VariableFields):
     def set_coded(self, code_list: CodeList | Reference) -> Variable:
         """Mark this variable as coded by a code list. Returns ``self``.
 
-        Accepts a :class:`CodeList` (its reference is taken) or a
-        :class:`~ddi_l.models.base.Reference`.
+        Accepts a `CodeList` (its reference is taken) or a
+        `Reference`.
         """
         reference = (
             code_list if isinstance(code_list, Reference) else code_list.to_reference()
@@ -1249,7 +1249,7 @@ class VariableGroup(VariableGroupFields):
 class LogicalRecord(LogicalRecordFields):
     """A logical record: the set of variables describing one case/unit.
 
-    Use :meth:`include_all_variables` for the common rectangular case, where
+    Use `include_all_variables` for the common rectangular case, where
     every variable in the logical product belongs to the record.
     """
 
@@ -1270,8 +1270,8 @@ class LogicalRecord(LogicalRecordFields):
 class DataRelationship(DataRelationshipFields):
     """Describes the logical records in a dataset and how they relate.
 
-    Add records with :meth:`add_logical_record`. Created at the high level
-    with :meth:`ddi_l.document.Document.add_data_relationship`.
+    Add records with `add_logical_record`. Created at the high level
+    with `ddi_l.document.Document.add_data_relationship`.
     """
 
     logical_records: list[LogicalRecord] = field(  # type: ignore[assignment]
@@ -1354,8 +1354,8 @@ class NCube(NCubeFields):
     """Maintainable representation of an ``l:NCube`` (multidimensional data).
 
     An NCube relates measures to a set of dimensions (axes). Add axes with
-    :meth:`add_dimension` and measured values with :meth:`add_measure`.
-    Created at the high level with :meth:`ddi_l.document.Document.add_ncube`.
+    `add_dimension` and measured values with `add_measure`.
+    Created at the high level with `ddi_l.document.Document.add_ncube`.
     """
 
     TAG: ClassVar[str] = qn(LOGICAL_PRODUCT_NS, "NCube")
@@ -1401,7 +1401,7 @@ class NCube(NCubeFields):
 
         ``attachment_level`` says what the attribute qualifies (``"Cube"`` by
         default; also ``"Dimension"``, ``"Measure"``, ``"Cell"``, ...). Pass
-        ``attachment_region`` (from :meth:`add_coordinate_region`) to attach the
+        ``attachment_region`` (from `add_coordinate_region`) to attach the
         attribute to a specific region of the cube; the attachment level is set
         to ``"CoordinateRegion"`` automatically.
         """
@@ -1441,7 +1441,7 @@ class NCube(NCubeFields):
         """Add a ``CoordinateRegion`` (a subset of the cube). Returns the element.
 
         Select the included values on each dimension with
-        :meth:`add_dimension_value`, then attach an attribute to the region via
+        `add_dimension_value`, then attach an attribute to the region via
         ``add_attribute(variable_ref, attachment_region=region)``.
         """
         region = create_element(qn(LOGICAL_PRODUCT_NS, "CoordinateRegion"))
@@ -1467,7 +1467,7 @@ class NCube(NCubeFields):
     ) -> Element:
         """Add a ``DimensionValue`` selecting values on one dimension of ``region``.
 
-        ``rank`` identifies the dimension (matching :meth:`add_dimension`).
+        ``rank`` identifies the dimension (matching `add_dimension`).
         Provide category and/or code references for the included values. Returns
         the dimension-value element.
         """
