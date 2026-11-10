@@ -54,7 +54,7 @@ Use `doc.add_code_list(name=)` to create a new code list.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Census", agency="census.gc.ca")
+doc = ddi.new_study(title="National Census", agency="ca.statcan")
 
 cl_gender = doc.add_code_list(name="Gender Codes")
 cl_employment = doc.add_code_list(name="Employment Status Codes")
@@ -156,16 +156,18 @@ import pandas as pd
 
 df = pd.read_csv("survey_sample.csv")
 
-# Get unique values from the "gender" column
-unique_genders = df["gender"].dropna().unique()
-print(unique_genders)  # -> ['Female' 'Male' 'Other']
+# The distinct values of the "gender" column, sorted
+unique_genders = sorted(df["gender"].dropna().unique())
+print(unique_genders)  # -> ['Female', 'Male', 'Other']
 
-# Create a code list and add one category per unique value
-cl = doc.add_code_list(name="Gender Codes")
+# A study for the survey the file comes from (Module 8), with a code list
+# and one category per distinct value
+doc = ddi.new_study(title="Household Survey", agency="research.org")
+doc.add_code_list(name="Gender Codes")
 for val in unique_genders:
     doc.add_item(Category, name=str(val))
 
-print(f"Categories: {len(doc.items(Category))}")
+print(f"Categories: {len(doc.items(Category))}")  # -> Categories: 3
 ```
 
 The `dropna()` call removes missing values.
@@ -206,7 +208,7 @@ In `ddi-l`, you build these code lists the same way: one category at a time, or 
         compare them directly instead of cleaning free text such as 'M',
         'emp.' or 'working'."
 
-2. **(O2)** Create a census study with the title "National Census" and agency "census.gc.ca". Add 3 code lists (Gender Codes, Employment Status Codes, Housing Type Codes) and their categories (10 total). Print the counts.
+2. **(O2)** Create a census study with the title "National Census" and agency "ca.statcan". Add 3 code lists (Gender Codes, Employment Status Codes, Housing Type Codes) and their categories (10 total). Print the counts.
 
     **Expected output:**
 
@@ -220,7 +222,7 @@ In `ddi-l`, you build these code lists the same way: one category at a time, or 
         import ddi_l as ddi
         from ddi_l.models.logicalproduct import Category
 
-        doc = ddi.new_study(title="National Census", agency="census.gc.ca")
+        doc = ddi.new_study(title="National Census", agency="ca.statcan")
 
         doc.add_code_list(name="Gender Codes")
         doc.add_item(Category, name="Male")
@@ -365,7 +367,7 @@ In `ddi-l`, you build these code lists the same way: one category at a time, or 
     import ddi_l as ddi
     from ddi_l.models.logicalproduct import Category
 
-    census = ddi.new_study(title="Census", agency="example.org")
+    census = ddi.new_study(title="Census", agency="ca.statcan")
     census.add_code_list(name="Yes/No")
     census.add_item(Category, name="Yes")
     census.add_item(Category, name="No")
