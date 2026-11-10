@@ -456,8 +456,6 @@ Sous le tableau, rédigez trois courtes notes :
     print(f"Comparisons: {len(doc.comparisons)}")  # -> Comparisons: 1
     ```
 
-    À l'enregistrement, `ddi-l` avertit qu'une variable source n'est pas dans le document courant. C'est attendu : elle est dans l'étude du registre.
-
 7. **(O3)** **Validez et analysez le document :**
 
     ```python
@@ -877,7 +875,7 @@ Sous le tableau, rédigez trois courtes notes :
 
     doc = ddi.new_study(
         title="National Census 2024",
-        agency="census.example.gov",
+        agency="ca.statcan",
     )
     print(f"{len(columns)} columns")  # -> 22 columns
     ```
@@ -1194,7 +1192,7 @@ Sous le tableau, rédigez trois courtes notes :
         rows = list(csv.DictReader(f))
     columns = list(rows[0])
 
-    doc = ddi.new_study(title="National Census 2024", agency="census.example.gov")
+    doc = ddi.new_study(title="National Census 2024", agency="ca.statcan")
     # HouseholdID et PersonNumber sont attribués, pas demandés.
     QUESTIONS = {
         "Province": "Dans quelle province ou quel territoire habitez-vous ?",

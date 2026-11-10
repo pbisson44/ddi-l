@@ -500,9 +500,6 @@ Under the table, write three short notes:
     print(f"Comparisons: {len(doc.comparisons)}")  # -> Comparisons: 1
     ```
 
-    When you save, `ddi-l` warns that a source variable is not in the current
-    document. That is expected: it is in the register study.
-
 7. **(O3)** **Validate and lint the document:**
 
     ```python
@@ -937,7 +934,7 @@ Under the table, write three short notes:
 
     doc = ddi.new_study(
         title="National Census 2024",
-        agency="census.example.gov",
+        agency="ca.statcan",
     )
     print(f"{len(columns)} columns")  # -> 22 columns
     ```
@@ -1272,7 +1269,7 @@ Under the table, write three short notes:
         rows = list(csv.DictReader(f))
     columns = list(rows[0])
 
-    doc = ddi.new_study(title="National Census 2024", agency="census.example.gov")
+    doc = ddi.new_study(title="National Census 2024", agency="ca.statcan")
     # HouseholdID and PersonNumber are assigned, not asked.
     QUESTIONS = {
         "Province": "In which province or territory do you live?",
