@@ -224,7 +224,7 @@ GitHub's "Cite this repository" button exports
 APA or BibTeX:
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.2.0) [Computer software].
+> documents* (Version 0.2.1) [Computer software].
 > <https://github.com/pbisson44/ddi-l>
 
 ## License

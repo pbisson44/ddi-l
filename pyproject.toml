@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ddi-l"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python toolkit for DDI Lifecycle XML: read, author, validate and lint DDI 3.1, 3.2 and 3.3"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -52,7 +52,7 @@ dependencies = [
   # The native XML core, at ddi-l's own version. A compiled wheel where one
   # fits; elsewhere a pure-Python stand-in (native/fallback), and ddi-l uses
   # lxml or the standard library. Nothing is ever compiled at install time.
-  "ddi-l-native==0.2.0",
+  "ddi-l-native==0.2.1",
 ]
 
 [project.urls]

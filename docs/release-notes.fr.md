@@ -6,6 +6,60 @@ description: >-
 
 # Notes de version
 
+## 0.2.1
+
+### Ajouts
+
+- **`StatementItem.set_text(text, lang="en")`** définit le texte qu'une
+  déclaration montre aux répondants, un `d:DisplayText` par langue. Une
+  déclaration créée avec seulement un nom n'affichait rien.
+- **`Loop.set_condition(command, description=...)`** définit le
+  `d:LoopWhile` de la boucle, comme `IfThenElse.set_condition()` définit un
+  `IfCondition`.
+
+### Corrections
+
+- **Une traduction ajoutée dans le code est un texte de question à part.**
+  `question.question_texts.append(InternationalString(..., lang="fr"))`
+  plaçait le texte français dans le `d:QuestionText` anglais, comme une
+  deuxième partie du même texte. DDI 3.3 répète le `d:QuestionText` entier
+  pour chaque langue : d'autres outils lisaient donc les deux comme une
+  seule question en deux langues. Chaque langue a maintenant son propre
+  `d:QuestionText`. Les parties dans une même langue en partagent toujours
+  un, et les textes de question lus dans un fichier sont écrits tels que lus.
+- **Un module ajouté à un fichier relu reçoit son préfixe habituel.**
+  Ajouter un concept, un univers ou un autre élément dont le fichier ne
+  déclarait pas le module DDI l'écrivait `<ns0:ConceptualComponent
+  xmlns:ns0="...">` avec les moteurs natif et de la bibliothèque standard
+  (lxml écrivait `c:`). Tous les moteurs écrivent maintenant le préfixe que
+  cette bibliothèque donne à ce module dans un nouveau document (`c:`, `d:`,
+  `l:`...). Le XML voulait dire la même chose dans les deux cas.
+- **Une référence à une autre étude du même fichier n'avertit plus.**
+  Enregistrer un groupe dont une étude renvoie à une variable d'une autre de
+  ses études (couplage de données) avertissait que la variable était
+  « absente du document courant », alors que le fichier la contient : chaque
+  étude n'était vérifiée que par rapport à elle-même. Les références sont
+  maintenant vérifiées par rapport à tous les éléments du document, dans les
+  deux sens, et seule une référence à un élément qui n'est dans aucune étude
+  avertit. Les modules 12 et 17 ne disent plus d'attendre l'avertissement.
+- **Un fichier absent est signalé comme absent.** `ddi lint input.xml`,
+  `ddi roundtrip` et `ddi to-json` sur un fichier inexistant affichaient
+  `Error: input.xml` ; ils affichent maintenant `Error: [Errno 2] No such
+  file or directory: 'input.xml'`, comme Python.
+
+### Documentation
+
+- **Le module 7** enregistre le JSON avec `ddi to-json --output` (Windows
+  PowerShell 5.1 écrit de l'UTF-16 avec `>`), fait l'aller-retour de
+  `my-study.xml` plutôt que d'un `input.xml` que le lecteur n'a pas, et dit
+  qu'un aller-retour réécrit le fichier tel que lu : `--layout default` le
+  normalise. Trois tutoriels écrivaient `ddi roundtrip ENTRÉE SORTIE`, qui
+  lit `SORTIE` comme une deuxième entrée ; ils utilisent `--output`.
+- **Dans le module 10**, la déclaration d'accueil affiche son texte, et la
+  boucle de la liste du ménage dit combien de temps elle se répète. Une note
+  précise que les noms d'une condition (`age`) ne sont liés aux questions
+  qu'au module 16.
+
 ## 0.2.0
 
 ### Changements de comportement
@@ -782,7 +836,7 @@ description: >-
   deux moteurs XML chaque fois. L'intégration continue fixe uv 0.13.7, la
   première série d'uv qui installe 3.15.
 - **Une commande fixe la version.** `scripts/set_version.py 0.3.0` (ou
-  `patch`, `minor`, `major`) écrit la version dans les 11 fichiers qui
+  `patch`, `minor`, `major`) écrit la version dans les 9 fichiers qui
   l'indiquent, avec la date de publication et l'année des citations, puis
   lance `uv lock` ; il n'écrit rien tant que chaque fichier ne correspond
   pas. Un test échoue quand un autre fichier se met à indiquer la version.

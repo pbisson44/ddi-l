@@ -6,6 +6,55 @@ description: >-
 
 # Release notes
 
+## 0.2.1
+
+### Added
+
+- **`StatementItem.set_text(text, lang="en")`** sets the text a statement
+  shows respondents, one `d:DisplayText` per language. A statement built
+  with only a name showed nothing.
+- **`Loop.set_condition(command, description=...)`** sets the loop's
+  `d:LoopWhile`, as `IfThenElse.set_condition()` sets an `IfCondition`.
+
+### Fixed
+
+- **A translation added in code is a question text of its own.**
+  `question.question_texts.append(InternationalString(..., lang="fr"))` put
+  the French text inside the English `d:QuestionText`, as a second part of
+  the same text. DDI 3.3 repeats the whole `d:QuestionText` for each
+  language, so other tools read the two as one question in two languages.
+  Each language now gets its own `d:QuestionText`. Parts in one language
+  still share one, and question texts read from a file are written as read.
+- **A module added to a file read back gets its usual prefix.** Adding a
+  concept, a universe or another item whose DDI module the file did not
+  declare wrote it as `<ns0:ConceptualComponent xmlns:ns0="...">` on the
+  native and standard-library backends (lxml wrote `c:`). Every backend now
+  writes the prefix this library gives that module in a new document (`c:`,
+  `d:`, `l:`...). The XML meant the same either way.
+- **A reference to another study in the same file does not warn.** Saving a
+  group whose study refers to a variable in another of its studies (data
+  linkage) warned that the variable was "not present in the current
+  document", though the file holds it: each study was checked against itself
+  alone. References are now checked against every item in the document, in
+  both directions, and only a reference to an item in no study warns. Modules
+  12 and 17 no longer tell readers to expect the warning.
+- **A missing file is named as missing.** `ddi lint input.xml`,
+  `ddi roundtrip` and `ddi to-json` on a file that does not exist printed
+  `Error: input.xml`; they now print `Error: [Errno 2] No such file or
+  directory: 'input.xml'`, as Python does.
+
+### Documentation
+
+- **Module 7** saves JSON with `ddi to-json --output` (Windows PowerShell 5.1
+  writes UTF-16 through `>`), round-trips `my-study.xml` rather than an
+  `input.xml` the reader does not have, and says that a round trip writes
+  the file back as read: `--layout default` normalizes it. Three tutorials
+  wrote `ddi roundtrip IN OUT`, which reads `OUT` as a second input; they use
+  `--output`.
+- **Module 10's** welcome statement shows its text, and its household roster
+  loop says how long it repeats. A note says that the names in a condition
+  (`age`) are not tied to questions until Module 16.
+
 ## 0.2.0
 
 ### Behaviour changes
@@ -700,7 +749,7 @@ description: >-
   3.11 and 3.15, a push to `main` tests 3.11 to 3.15, both XML backends each
   time. CI pins uv 0.13.7, the first uv series that installs 3.15.
 - **One command sets the version.** `scripts/set_version.py 0.3.0` (or
-  `patch`, `minor`, `major`) writes the version in all 11 files that state
+  `patch`, `minor`, `major`) writes the version in all 9 files that state
   it, with the release date and the citations' year, then runs `uv lock`;
   it writes nothing unless every file matches. A test fails when another
   file starts stating the version.
