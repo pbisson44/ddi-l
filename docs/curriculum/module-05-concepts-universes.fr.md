@@ -56,7 +56,7 @@ La méthode retourne un objet concept que vous pouvez utiliser plus tard.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
 demo = doc.add_concept(name="Demographics")
 activity = doc.add_concept(name="Physical Activity")
@@ -171,7 +171,7 @@ et une phrase qui explique ce que décrit un univers.
     comme « Adultes de 18 ans et plus au Canada ».
 
 **Exercice 2 (O2).** Créez un document avec le titre « National Health
-Survey » et l'agence « health.gc.ca ». Ajoutez trois concepts (Demographics,
+Survey » et l'agence « ca.healthcan ». Ajoutez trois concepts (Demographics,
 Physical Activity, Nutrition) et un univers (Adults aged 18+ in Canada).
 Gardez chaque concept dans une variable Python : vous les lierez à
 l'exercice 3. Affichez les compteurs.
@@ -187,7 +187,7 @@ Universes: 1
     ```python
     import ddi_l as ddi
 
-    doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+    doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
     demo = doc.add_concept(name="Demographics")
     activity = doc.add_concept(name="Physical Activity")

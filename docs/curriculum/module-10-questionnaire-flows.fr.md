@@ -99,7 +99,7 @@ Chaque question devient un élément de question DDI.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
 # Section A
 q_age = doc.add_question(text="What is your age?")
@@ -188,8 +188,13 @@ Vous pouvez aussi ajouter un **StatementItem** pour introduire une section.
 Il affiche un message au lieu de poser une question :
 
 ```python
-intro_a = doc.add_item(StatementItem, name="Welcome to the National Health Survey")
+intro_a = doc.add_item(StatementItem, name="Welcome")
+intro_a.set_text("Welcome to the National Health Survey")
 ```
+
+Le `name` sert aux personnes qui conçoivent le questionnaire ; `set_text()`
+définit ce que voient les répondants. Sans lui, la déclaration n'affiche rien.
+Rappelez-le avec `lang="fr"` pour le texte français.
 
 ## 7. Étape 4 : Modéliser les sauts conditionnels avec IfThenElse
 
@@ -216,6 +221,12 @@ de 16 ans, rien ne s'exécute, et le flux continue simplement avec l'étape
 suivante de la Sequence principale (la Section C, à l'étape 7). Quand vous avez
 besoin d'une branche « sinon », définissez `else_construct_reference` de la
 même façon.
+
+Les noms d'une condition, comme `age`, désignent des réponses. Ici, ce sont du
+simple texte : rien dans le fichier ne dit que `age` est la réponse à « What
+is your age? ». Le [module 16](module-16-advanced-questionnaire-spec.fr.md)
+écrit les filtres avec des questions nommées et vérifie les filtres d'un
+instrument par rapport à un devis.
 
 ## 8. Étape 5 : Modéliser « poser seulement si » avec un IfThenElse imbriqué
 
@@ -253,10 +264,15 @@ from ddi_l.models.datacollection import Loop
 
 roster_loop = doc.add_item(Loop, name="Household roster loop")
 roster_loop.control_construct_reference = seq_demographics.to_reference()
+roster_loop.set_condition("member <= household_size", description="Each member")
 
 print(roster_loop.control_construct_reference.identifier == seq_demographics.identifier)
 # -> True
 ```
+
+Un Loop dit aussi combien de temps il se répète : `set_condition()` donne la
+condition sous laquelle il se répète, comme pour un IfThenElse. Sans elle, le
+fichier ne dit pas combien de fois la section s'exécute.
 
 Notez la différence : une Sequence liste plusieurs étapes
 (`control_construct_references`, au pluriel), tandis qu'un Loop en répète une
@@ -397,7 +413,7 @@ Suivez ces étapes quand vous traduisez un devis de questionnaire en DDI :
         import ddi_l as ddi
         from ddi_l.models.datacollection import QuestionConstruct, Sequence
 
-        doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+        doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
         q_age = doc.add_question(text="What is your age?")
         q_gender = doc.add_question(text="What is your gender?")
         q_employed = doc.add_question(text="Are you currently employed?")
@@ -490,6 +506,7 @@ Suivez ces étapes quand vous traduisez un devis de questionnaire en DDI :
 
         roster_loop = doc.add_item(Loop, name="Household roster loop")
         roster_loop.control_construct_reference = seq_demographics.to_reference()
+        roster_loop.set_condition("member <= household_size", description="Each member")
 
         print(f"Loops: {len(doc.items(Loop))}")
         repeats_a = (
@@ -512,7 +529,8 @@ Suivez ces étapes quand vous traduisez un devis de questionnaire en DDI :
         ```python
         from ddi_l.models.datacollection import Instrument, StatementItem
 
-        intro_a = doc.add_item(StatementItem, name="Welcome to the National Health Survey")
+        intro_a = doc.add_item(StatementItem, name="Welcome")
+        intro_a.set_text("Welcome to the National Health Survey")
         main_seq = doc.add_item(
             Sequence,
             name="Main Survey Flow",

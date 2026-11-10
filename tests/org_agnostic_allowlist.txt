@@ -16,6 +16,5 @@ src/ddi_l/examples/Quality_of_Life.xml  aria                # a change note in t
 docs/curriculum/*               statcan              # sample agency used throughout the course
 docs/curriculum/*               statistics canada    # course exercises naming a publisher
 docs/curriculum/*               statistique canada   # course exercises naming a publisher (FR)
-docs/curriculum/*               gc.ca                # sample agency used in the course
 docs/overrides/main.html        aria                 # WAI-ARIA, the accessibility standard
 src/ddi_l/schemas/readme.txt    statistics canada    # DDI Alliance credit for an XSD contributor

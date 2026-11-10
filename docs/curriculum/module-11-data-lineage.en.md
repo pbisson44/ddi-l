@@ -81,7 +81,7 @@ from ddi_l.models.logicalproduct import Category
 
 doc = ddi.new_study(
     title="National Health Survey: Data Documentation",
-    agency="health.gc.ca",
+    agency="ca.healthcan",
 )
 
 # Create the source questions
@@ -391,7 +391,7 @@ the original question.
         import ddi_l as ddi
         from ddi_l.models.logicalproduct import Category
 
-        doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+        doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
         q_age = doc.add_question(text="What is your age?")
         q_gender = doc.add_question(text="What is your gender?")

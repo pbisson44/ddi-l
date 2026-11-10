@@ -97,7 +97,7 @@ Each question becomes a DDI question item.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
 # Section A
 q_age = doc.add_question(text="What is your age?")
@@ -183,8 +183,13 @@ You can also add a **StatementItem** to introduce a section. It shows a
 message instead of asking a question:
 
 ```python
-intro_a = doc.add_item(StatementItem, name="Welcome to the National Health Survey")
+intro_a = doc.add_item(StatementItem, name="Welcome")
+intro_a.set_text("Welcome to the National Health Survey")
 ```
+
+The `name` is for the people who design the questionnaire; `set_text()` sets
+what respondents see. Without it, the statement shows nothing. Call it again
+with `lang="fr"` for the French text.
 
 ## 7. Step 4: Model skip patterns with IfThenElse
 
@@ -210,6 +215,11 @@ The age gate needs no "else" branch. When the respondent is under 16, nothing
 runs, and the flow simply continues with the next step of the main Sequence
 (Section C, in Step 7). When you do need an else branch, set
 `else_construct_reference` the same way.
+
+The names in a condition, such as `age`, stand for answers. Here they are
+plain text: nothing in the file says that `age` is the answer to "What is your
+age?". [Module 16](module-16-advanced-questionnaire-spec.en.md) writes gates
+against named questions and checks an instrument's gates against a spec.
 
 ## 8. Step 5: Model "ask only if" with a nested IfThenElse
 
@@ -245,10 +255,15 @@ from ddi_l.models.datacollection import Loop
 
 roster_loop = doc.add_item(Loop, name="Household roster loop")
 roster_loop.control_construct_reference = seq_demographics.to_reference()
+roster_loop.set_condition("member <= household_size", description="Each member")
 
 print(roster_loop.control_construct_reference.identifier == seq_demographics.identifier)
 # -> True
 ```
+
+A loop also says how long it repeats: `set_condition()` gives the condition it
+repeats while it holds, as on an IfThenElse. Without one, the file does not
+say how many times the section runs.
 
 Note the difference: a Sequence lists many steps
 (`control_construct_references`, plural), while a Loop repeats one
@@ -386,7 +401,7 @@ Follow these steps when you map any questionnaire spec to DDI:
         import ddi_l as ddi
         from ddi_l.models.datacollection import QuestionConstruct, Sequence
 
-        doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+        doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
         q_age = doc.add_question(text="What is your age?")
         q_gender = doc.add_question(text="What is your gender?")
         q_employed = doc.add_question(text="Are you currently employed?")
@@ -479,6 +494,7 @@ Follow these steps when you map any questionnaire spec to DDI:
 
         roster_loop = doc.add_item(Loop, name="Household roster loop")
         roster_loop.control_construct_reference = seq_demographics.to_reference()
+        roster_loop.set_condition("member <= household_size", description="Each member")
 
         print(f"Loops: {len(doc.items(Loop))}")
         repeats_a = (
@@ -501,7 +517,8 @@ Follow these steps when you map any questionnaire spec to DDI:
         ```python
         from ddi_l.models.datacollection import Instrument, StatementItem
 
-        intro_a = doc.add_item(StatementItem, name="Welcome to the National Health Survey")
+        intro_a = doc.add_item(StatementItem, name="Welcome")
+        intro_a.set_text("Welcome to the National Health Survey")
         main_seq = doc.add_item(
             Sequence,
             name="Main Survey Flow",
