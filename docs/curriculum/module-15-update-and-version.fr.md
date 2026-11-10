@@ -73,7 +73,7 @@ l'an dernier ; si vous avez déjà un fichier DDI, ouvrez le vôtre et sautez-le
 import ddi_l as ddi
 
 # Stand-in for last year's file
-last_year = ddi.new_study(title="Labour Force Survey 2023", agency="example.org")
+last_year = ddi.new_study(title="Labour Force Survey 2023", agency="ca.statcan")
 last_year.add_question(text="Do you use a fax machine at work?")
 last_year.save("lfs-2023.xml")
 
@@ -287,7 +287,7 @@ def add_codes(doc, code_list, answers):
 
 
 # Stand-in for last year's file
-last_year = ddi.new_study(title="Labour Force Survey 2023", agency="example.org")
+last_year = ddi.new_study(title="Labour Force Survey 2023", agency="ca.statcan")
 question = last_year.add_question(text="Do you work from home?", label="Work from home")
 yes_no = last_year.add_code_list(name="Yes/No", label="Yes/No")
 add_codes(last_year, yes_no, [("1", "Yes"), ("2", "No")])
@@ -544,7 +544,7 @@ Saved with 3 questions and 1 variable.
     import ddi_l as ddi
     from ddi_l.models.base import InternationalString
 
-    doc = ddi.new_study(title="Labour Force Survey v1", agency="stats.example.org")
+    doc = ddi.new_study(title="Labour Force Survey v1", agency="ca.statcan")
     q1 = doc.add_question(text="What is your current employment status?")
     q1.question_texts.append(
         InternationalString(
