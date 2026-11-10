@@ -3241,6 +3241,10 @@ class ValidationContext:
             self._by_key[(obj.agency, ident, obj.version)] = obj
             self._identifiers.add(ident)
 
+    def register_identifier(self, identifier: str) -> None:
+        """Resolve references to ``identifier``, an item known only by its ID."""
+        self._identifiers.add(identifier)
+
     # ------------------------------------------------------------------
     # Resolution
     # ------------------------------------------------------------------

@@ -29,6 +29,7 @@ from .base import (
     Reference,
     UserAttributePair,
     UserID,
+    ValidationContext,
     VersionRationale,
     clone_element,
     qn,
@@ -458,7 +459,12 @@ class StudyUnit(StudyUnitFields):
             nsmap[None] = STUDY_UNIT_NS
         return nsmap
 
-    def to_xml(self, *, validate_refs: bool = True) -> Element:
+    def to_xml(
+        self,
+        *,
+        validate_refs: bool = True,
+        context: ValidationContext | None = None,
+    ) -> Element:
         """Serialize to XML, optionally validating cross-references first.
 
         When ``validate_refs`` is ``True`` every `Reference` in the
@@ -468,6 +474,8 @@ class StudyUnit(StudyUnitFields):
 
         Args:
             validate_refs: Whether to check cross-references first.
+            context: What references may point at, when more than the study:
+                a document passes every item it holds.
 
         Returns:
             XML Element representation.
@@ -476,7 +484,7 @@ class StudyUnit(StudyUnitFields):
             self.validate()
 
         if validate_refs:
-            unresolved = self.validate_tree()
+            unresolved = self.validate_tree(context)
             if unresolved:
                 warn_at_caller(DDIReferenceWarning(unresolved))
 
