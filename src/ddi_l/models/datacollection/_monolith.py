@@ -957,12 +957,18 @@ def _group_question_texts(
 ) -> list[list[InternationalString]]:
     """Group question strings by the d:QuestionText they came from.
 
-    Strings built in code have no group and share one container, as
-    ``QuestionItem`` has always written them.
+    Strings built in code have no group: each language gets a container of
+    its own, since DDI repeats the whole d:QuestionText per language rather
+    than mixing languages in one.
     """
     groups: list[list[InternationalString]] = []
     for string in strings:
-        if groups and groups[-1][0]._group == string._group:
+        last = groups[-1][-1] if groups else None
+        if (
+            last is not None
+            and last._group == string._group
+            and (string._group is not None or last.lang == string.lang)
+        ):
             groups[-1].append(string)
         else:
             groups.append([string])
@@ -3780,6 +3786,24 @@ class Loop(ControlConstructBase):
         self._append_other_elements(element)
         return element
 
+    def set_condition(
+        self,
+        command: str,
+        *,
+        description: str | None = None,
+        language: str = "python",
+        lang: str = "en",
+    ) -> Loop:
+        """Set ``loop_while``, the condition the loop repeats while it holds.
+
+        Takes the same arguments as `IfThenElse.set_condition`, for example
+        ``"member <= household_size"``. Returns ``self``.
+        """
+        self.loop_while = _command_code(
+            "LoopWhile", command, description=description, language=language, lang=lang
+        )
+        return self
+
 
 @dataclass
 class StatementItem(ControlConstructBase):
@@ -3807,6 +3831,23 @@ class StatementItem(ControlConstructBase):
             element.append(_normalize_statement_display_text(node))
         self._append_other_elements(element)
         return element
+
+    def set_text(self, text: str, *, lang: str = "en") -> StatementItem:
+        """Set the text the statement shows in ``lang``. Returns ``self``.
+
+        Each language is a ``d:DisplayText`` of its own, since DDI repeats the
+        whole text per language; the one already in ``lang`` is replaced.
+        """
+        lang_attribute = qn(XML_NS, "lang")
+        text_tag = qn(DATA_COLLECTION_NS, "Text")
+        self.display_texts = [
+            node
+            for node in self.display_texts
+            if {t.get(lang_attribute) for t in node.iter(text_tag)} != {lang}
+        ]
+        shown = DynamicText(texts=[InternationalString(text=text, lang=lang)])
+        self.display_texts.append(shown.to_xml("DisplayText"))
+        return self
 
 
 def _normalize_statement_display_text(element: Element) -> Element:
@@ -3886,7 +3927,21 @@ def make_if_condition(
     Returns:
         Element: A ``d:IfCondition`` element ready to assign to a construct.
     """
-    element = create_element(qn(DATA_COLLECTION_NS, "IfCondition"))
+    return _command_code(
+        "IfCondition", command, description=description, language=language, lang=lang
+    )
+
+
+def _command_code(
+    tag: str,
+    command: str,
+    *,
+    description: str | None,
+    language: str,
+    lang: str,
+) -> Element:
+    """A ``d:{tag}`` CommandCode: an optional description and one command."""
+    element = create_element(qn(DATA_COLLECTION_NS, tag))
     if description is not None:
         description_el = create_element(qn(REUSABLE_NS, "Description"))
         description_el.append(
