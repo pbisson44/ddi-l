@@ -253,11 +253,8 @@ for col in columns:
         # ...and append the French wording to the same question
         q.question_texts.append(InternationalString(text=french, lang="fr"))
 
-    # Create the variable with an English name
-    v = doc.add_variable(name=col, question=q)
-
-    # Append the French variable name
-    v.names.append(InternationalString(text=col, lang="fr", child_tag="String"))
+    # The variable's name is the column name, the same in every language
+    doc.add_variable(name=col, question=q)
 
 # Bilingual concepts
 demo = doc.add_concept(name="Demographics")
@@ -293,9 +290,12 @@ The pattern is the same for every item type:
 You can add as many languages as you need. Just append one
 `InternationalString` per language.
 
+A variable's name is not translated: it is the column name, the same in
+every language. To describe a variable in French, give it a French label.
+
 To confirm that both languages were saved, open the XML file in a text editor:
 you will see both `xml:lang="en"` and `xml:lang="fr"` entries for each
-question, variable, concept, and universe. Or let Python check: read the saved
+question, concept, and universe. Or let Python check: read the saved
 file as text and look for both wordings of a question.
 
 ```python
