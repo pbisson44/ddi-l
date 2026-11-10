@@ -251,6 +251,24 @@ def test_a_document_with_other_prefixes_gets_the_canonical_ones() -> None:
     assert 'xmlns:c="ddi:conceptualcomponent:3_3"' in written
 
 
+def test_a_module_the_file_did_not_declare_gets_its_canonical_prefix(
+    tmp_path: Path,
+) -> None:
+    # The file declares d:, l:, r: and s: only; the concept added below needs
+    # the conceptual component namespace, declared where it is first used.
+    study = ddi_l.new_study(title="Pet survey", agency="example.org")
+    study.add_variable(name="PetCount", question=study.add_question(text="Pets?"))
+    study.save(tmp_path / "pets.xml")
+    document = open_ddi(tmp_path / "pets.xml")
+    document.add_concept(name="Pet ownership")
+
+    document.save(tmp_path / "pets-updated.xml")
+    written = (tmp_path / "pets-updated.xml").read_text(encoding="utf-8")
+
+    assert "ns0" not in written
+    assert '<c:ConceptualComponent xmlns:c="ddi:conceptualcomponent:3_3">' in written
+
+
 def test_a_span_is_copied_only_where_its_prefixes_mean_the_same() -> None:
     source = (
         b'<?xml version="1.0" encoding="UTF-8"?>\n'
