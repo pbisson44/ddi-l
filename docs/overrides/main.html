@@ -87,8 +87,16 @@
 
         var main = document.querySelector("main.md-main");
         if (main) {
-          if (!main.id) {
-            main.id = "main-content";
+          // The skip link's target is an empty element at the start of
+          // <main>, not <main> itself: Material names each code block after
+          // its nearest ancestor with an id, so an id on <main> gave every
+          // block on the page the same one, and each copy button copied the
+          // first block.
+          if (!document.getElementById("main-content")) {
+            var target = document.createElement("div");
+            target.id = "main-content";
+            target.setAttribute("tabindex", "-1");
+            main.insertBefore(target, main.firstChild);
           }
           main.setAttribute("role", "main");
           main.setAttribute("aria-label", {{ config.extra.main_aria_label | default("Documentation content") | tojson }});

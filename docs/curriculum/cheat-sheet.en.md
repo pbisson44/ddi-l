@@ -252,7 +252,7 @@ gate.then_construct_reference = section_a.to_reference()
 gate.else_construct_reference = section_c.to_reference()
 
 # Show a message; tie the whole thing together with an Instrument
-doc.add_item(StatementItem, name="Welcome to the survey")
+doc.add_item(StatementItem, name="Welcome").set_text("Welcome to the survey")
 doc.add_item(Instrument, name="Survey Instrument")
 ```
 
@@ -407,14 +407,14 @@ from ddi_l.models.base import Reference
 
 v_age_group = doc.add_variable(name="age_group")
 v_age_group.source_variable_references = [
-    Reference(agency="health.gc.ca", identifier=v_age.identifier, version="1"),
+    Reference(agency="ca.healthcan", identifier=v_age.identifier, version="1"),
 ]
 
 # Multi-source derivation
 v_bmi = doc.add_variable(name="bmi")
 v_bmi.source_variable_references = [
-    Reference(agency="health.gc.ca", identifier=v_height.identifier, version="1"),
-    Reference(agency="health.gc.ca", identifier=v_weight.identifier, version="1"),
+    Reference(agency="ca.healthcan", identifier=v_height.identifier, version="1"),
+    Reference(agency="ca.healthcan", identifier=v_weight.identifier, version="1"),
 ]
 ```
 
@@ -431,7 +431,7 @@ import ddi_l as ddi
 from ddi_l.models.base import Reference
 
 # Source 1: survey (the primary study)
-doc = ddi.new_study(title="Survey", agency="statcan.gc.ca")
+doc = ddi.new_study(title="Survey", agency="ca.statcan")
 survey_key = doc.add_variable(name="anon_id")
 survey_key.set_property("linkage_role", "key")  # tag the common key
 survey_health = doc.add_variable(name="health_rating")
@@ -455,8 +455,8 @@ cmp.set_property("match_rate", "0.94")
 # Linked variable: provenance to BOTH sources
 linked = doc.add_variable(name="health_by_hospital_use")
 linked.source_variable_references = [
-    Reference(agency="statcan.gc.ca", identifier=survey_health.identifier, version="1"),
-    Reference(agency="statcan.gc.ca", identifier=admin_visits.identifier, version="1"),
+    Reference(agency="ca.statcan", identifier=survey_health.identifier, version="1"),
+    Reference(agency="ca.statcan", identifier=admin_visits.identifier, version="1"),
 ]
 ```
 
