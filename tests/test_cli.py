@@ -1225,6 +1225,20 @@ def test_errors_are_one_line_without_debug(tmp_path: Path, capsys):
     assert "Traceback" not in captured.err
 
 
+@pytest.mark.parametrize("command", ["lint", "roundtrip", "to-json"])
+def test_a_missing_file_is_named_as_missing(
+    command: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    monkeypatch.chdir(tmp_path)
+
+    exit_code = cli.main([command, "input.xml"])
+
+    assert exit_code == 1
+    assert capsys.readouterr().err == (
+        "Error: [Errno 2] No such file or directory: 'input.xml'\n"
+    )
+
+
 def test_validate_json_format_is_consistent(cli_fixtures: Path, capsys):
     """`--format json` prints a JSON array for valid and invalid documents alike."""
 

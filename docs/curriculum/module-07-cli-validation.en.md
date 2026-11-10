@@ -12,7 +12,7 @@ description: >-
     - **O1.** Run `ddi validate` on a DDI file and state from its output whether the file is valid.
     - **O2.** Interpret a `ddi validate` error: say what is wrong and where, using the message and the path after `at`, then fix the file so it validates.
     - **O3.** Run `ddi lint` on a file and name one finding by its severity, rule and message.
-    - **O4.** Convert a DDI file to JSON with `ddi to-json` and write a normalized copy with `ddi roundtrip`.
+    - **O4.** Convert a DDI file to JSON with `ddi to-json`, and write a copy with `ddi roundtrip`: as read, or normalized with `--layout default`.
     - **O5.** Check the exit code of a command after a valid and an invalid file, and predict the code (0 or 1) a script will get.
 
 **Prerequisites:** [Module 6](module-06-open-modify.en.md).
@@ -167,13 +167,15 @@ ddi to-json my-study.xml --indent 2
 The `--indent 2` option adds spaces to make the output easier to read. Without
 it, the JSON is printed on one long line.
 
-You can save the output to a file by using the `>` symbol:
+To save the JSON in a file, give its name with `--output`:
 
 ```bash
-ddi to-json my-study.xml --indent 2 > my-study.json
+ddi to-json my-study.xml --indent 2 --output my-study.json
 ```
 
 This creates a new file called `my-study.json` with the JSON content.
+`--output` writes UTF-8 on every system. Redirecting with `>` works too, but
+Windows PowerShell 5.1 then writes UTF-16, which some tools cannot read.
 
 ---
 
@@ -184,15 +186,21 @@ is called a **round-trip** because the data travels in a circle: file to
 memory and back to file.
 
 ```bash
-ddi roundtrip input.xml --output output.xml
+ddi roundtrip my-study.xml --output my-study-copy.xml
 ```
 
 Why is this useful?
 
-- **Normalize formatting.** Different tools may write XML with different
-  spacing and ordering. A round-trip produces a clean, consistent format.
-- **Test for data loss.** If the output file is the same as the input,
-  nothing was lost. You can compare the two files to check.
+- **Test for data loss.** `ddi-l` writes back every part it did not change
+  as it was read, so the copy is the same file, byte for byte. If the two
+  files differ, something was lost or changed on the way.
+- **Normalize formatting.** Different tools write XML with different
+  spacing. Add `--layout default` to lay the whole file out in this
+  library's clean, consistent format:
+
+```bash
+ddi roundtrip my-study.xml --output my-study-clean.xml --layout default
+```
 
 ---
 
@@ -328,7 +336,7 @@ filename).
 
 ??? success "Answer"
     ```bash
-    ddi to-json census-2024.xml --indent 2 > census-2024.json
+    ddi to-json census-2024.xml --indent 2 --output census-2024.json
     wc -l census-2024.json
     ```
 
@@ -348,10 +356,11 @@ Expected output: two files of the same size, about 4 KB each.
     ls -l census-2024.xml census-2024-roundtrip.xml
     ```
 
-    The `ls -l` command shows the file sizes (use `dir` on Windows). A file
-    that `ddi-l` wrote itself comes back with exactly the same size. A file
-    from another tool may differ a little, because of spacing; that is the
-    normalization at work.
+    The `ls -l` command shows the file sizes (use `dir` on Windows). The copy
+    is the same file, byte for byte: `ddi-l` writes back what it did not
+    change as it was read, whichever tool wrote the file. To lay it out in
+    this library's format instead, add `--layout default`; a file from
+    another tool may then change size, because of spacing.
 
 **Exercise 6 (O5, O2).** Check the exit codes.
 
@@ -456,27 +465,28 @@ Expected output (the exit codes, in order):
 
     **C.** `ddi lint my-study.json`
 
-    **D.** `ddi to-json my-study.xml --indent 2 > my-study.json`
+    **D.** `ddi to-json my-study.xml --indent 2 --output my-study.json`
 
     ??? success "Answer"
-        **D.** `ddi to-json` converts DDI XML to JSON, and `>` saves the output
+        **D.** `ddi to-json` converts DDI XML to JSON, and `--output` saves it
         in a file. `ddi roundtrip` writes XML, and the `ddi validate` command
         in option B saves the validation report, not the document.
 
 ???+ question "Question 5 (O4): Why would you run ddi roundtrip on a file from another tool?"
     **A.** To delete the elements that `ddi-l` does not model.
 
-    **B.** To write a copy with clean, consistent formatting, and to check
-    that nothing is lost on the way.
+    **B.** To check that nothing is lost on the way, or, with
+    `--layout default`, to write a copy with clean, consistent formatting.
 
     **C.** To validate the file against the schema.
 
     **D.** To convert the file to JSON.
 
     ??? success "Answer"
-        **B.** A round-trip reads the file and writes it back out in a
-        normalized format. `ddi-l` keeps the elements it does not model, so
-        nothing is deleted.
+        **B.** A round-trip writes back what it did not change as it was
+        read, so an identical copy shows nothing was lost; `--layout default`
+        lays the file out afresh. `ddi-l` keeps the elements it does not
+        model, so nothing is deleted.
 
 ???+ question "Question 6 (O5): What does this script print?"
     `broken.xml` has three schema errors. A script runs:
@@ -506,7 +516,7 @@ Expected output (the exit codes, in order):
 - [ ] I can run `ddi validate` on a file and say from the output whether it is valid. (O1)
 - [ ] I can read a `ddi validate` error, say what is wrong and where, and fix the file so it validates. (O2)
 - [ ] I can run `ddi lint` and name one finding by its severity, rule and message. (O3)
-- [ ] I can convert a file to JSON with `ddi to-json` and write a normalized copy with `ddi roundtrip`. (O4)
+- [ ] I can convert a file to JSON with `ddi to-json`, and write a copy with `ddi roundtrip`, as read or normalized with `--layout default`. (O4)
 - [ ] I can check the exit code after a valid and an invalid file, and predict what a script will get. (O5)
 
 ---

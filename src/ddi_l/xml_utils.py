@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import errno
+import os
 from pathlib import Path
 from typing import IO, Any, Literal, cast, overload
 
@@ -19,6 +21,11 @@ __all__ = [
     "resolve_xml_source",
     "sniff_bom",
 ]
+
+
+def _not_found(path: Path) -> FileNotFoundError:
+    """The error ``open()`` raises, so the message says the file is missing."""
+    return FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), str(path))
 
 
 def _is_file_like(value: Any) -> bool:
@@ -93,7 +100,7 @@ def resolve_xml_source(
 
     if isinstance(source, Path):
         if require_existing_path and not source.exists():
-            raise FileNotFoundError(source)
+            raise _not_found(source)
         return "path", source
 
     if isinstance(source, str):
@@ -115,7 +122,7 @@ def resolve_xml_source(
             return "path", potential_path
 
         if require_existing_path and path_like:
-            raise FileNotFoundError(potential_path)
+            raise _not_found(potential_path)
 
         return "text", source
 
