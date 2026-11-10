@@ -184,7 +184,7 @@ generation and release process in depth.
 If you use `ddi-l` in research or in an archive's workflow, please cite it:
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.2.0) [Computer software].
+> documents* (Version 0.2.1) [Computer software].
 > <https://github.com/pbisson44/ddi-l>
 
 ```bibtex
@@ -192,7 +192,7 @@ If you use `ddi-l` in research or in an archive's workflow, please cite it:
   author  = {Bisson, Philippe},
   title   = {ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents},
   year    = {2026},
-  version = {0.2.0},
+  version = {0.2.1},
   url     = {https://github.com/pbisson44/ddi-l},
   license = {MIT}
 }

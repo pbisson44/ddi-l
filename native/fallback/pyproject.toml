@@ -10,7 +10,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ddi-l-native"
-version = "0.2.0"
+version = "0.2.1"
 description = "Stand-in for ddi-l's native XML core where no compiled wheel exists"
 readme = "README.md"
 requires-python = ">=3.11"

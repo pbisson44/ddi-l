@@ -191,7 +191,7 @@ Si vous utilisez `ddi-l` dans une recherche ou dans le flux de travail d'une
 archive, merci de le citer :
 
 > Bisson, P. (2026). *ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML
-> documents* (Version 0.2.0) [Logiciel].
+> documents* (Version 0.2.1) [Logiciel].
 > <https://github.com/pbisson44/ddi-l>
 
 ```bibtex
@@ -199,7 +199,7 @@ archive, merci de le citer :
   author  = {Bisson, Philippe},
   title   = {ddi-l: a Python toolkit for DDI Lifecycle 3.3 XML documents},
   year    = {2026},
-  version = {0.2.0},
+  version = {0.2.1},
   url     = {https://github.com/pbisson44/ddi-l},
   license = {MIT}
 }
