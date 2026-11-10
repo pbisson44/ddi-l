@@ -592,14 +592,16 @@ token), with PEP 740 attestations.
     `pyproject.toml` (with the `ddi-l-native==X.Y.Z` dependency),
     `native/pyproject.toml`, `native/Cargo.toml`, `native/Cargo.lock`,
     `native/fallback/pyproject.toml`, `CITATION.cff`, the citations in the
-    README and on the home page, and the "(unreleased)" heading of the
-    release notes; it sets `date-released` and the citations' year, then runs
-    `uv lock`. It writes nothing unless every file matches. When it starts a
-    new series, add it to the table in `SECURITY.md`; the script says so.
-    `tests/test_release_metadata.py` and the publish workflow refuse a
-    release where the versions differ, and `tests/test_set_version.py` fails
-    when another file starts stating the version.
-2. Date the heading in `docs/release-notes.en.md` and `docs/release-notes.fr.md`.
+    README and on the home page; it sets `date-released` and the citations'
+    year, then runs `uv lock`. It writes nothing unless every file matches.
+    When it starts a new series, add it to the table in `SECURITY.md`; the
+    script says so. `tests/test_release_metadata.py` and the publish workflow
+    refuse a release where the versions differ, and
+    `tests/test_set_version.py` fails when another file starts stating the
+    version.
+2. In `docs/release-notes.en.md` and `docs/release-notes.fr.md`, change the
+   heading `## X.Y.Z (unreleased)` (`(non publiée)`) to `## X.Y.Z` by hand.
+   The release notes are history, so the script leaves them alone.
 3. Run the local gate: `uv run make release-check` and the full test suite.
 4. Dry run: trigger **Publish to PyPI** from the Actions tab with target
    `testpypi`, then install from TestPyPI in a clean environment:

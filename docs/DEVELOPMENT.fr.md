@@ -641,15 +641,16 @@ de la [publication de confiance](https://docs.pypi.org/trusted-publishers/)
     `pyproject.toml` (avec la dépendance `ddi-l-native==X.Y.Z`),
     `native/pyproject.toml`, `native/Cargo.toml`, `native/Cargo.lock`,
     `native/fallback/pyproject.toml`, `CITATION.cff`, les citations du
-    README et de la page d'accueil, et le titre « (non publiée) » des notes
-    de version ; il règle `date-released` et l'année des citations, puis
-    lance `uv lock`. Il n'écrit rien tant que chaque fichier ne correspond
-    pas. Quand il ouvre une nouvelle série, ajoutez-la au tableau de
-    `SECURITY.md` ; le script le signale. `tests/test_release_metadata.py`
+    README et de la page d'accueil ; il règle `date-released` et l'année des
+    citations, puis lance `uv lock`. Il n'écrit rien tant que chaque fichier
+    ne correspond pas. Quand il ouvre une nouvelle série, ajoutez-la au
+    tableau de `SECURITY.md` ; le script le signale. `tests/test_release_metadata.py`
     et le workflow de publication refusent une version où elles diffèrent,
     et `tests/test_set_version.py` échoue quand un autre fichier se met à
     indiquer la version.
-2. Datez le titre dans `docs/release-notes.en.md` et `docs/release-notes.fr.md`.
+2. Dans `docs/release-notes.en.md` et `docs/release-notes.fr.md`, remplacez à
+   la main le titre `## X.Y.Z (unreleased)` (`(non publiée)`) par `## X.Y.Z`.
+   Les notes de version sont un historique, le script n'y touche pas.
 3. Lancez les contrôles locaux : `uv run make release-check` et la suite de
    tests complète.
 4. Essai à blanc : déclenchez **Publish to PyPI** depuis l'onglet Actions avec

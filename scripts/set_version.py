@@ -8,6 +8,7 @@ ddi-l and ddi-l-native share one version. The argument is the new version
 (X.Y.Z) or the part to bump (major, minor or patch). --date is the release
 date for CITATION.cff, whose year the citations repeat; it defaults to today.
 Nothing is written unless every file below matches, then `uv lock` runs.
+The release notes are history: their headings are written by hand.
 
 tests/test_set_version.py fails when another file starts stating the version.
 """
@@ -42,8 +43,6 @@ EDITS: list[tuple[str, str, str]] = [
     ),
     ("CITATION.cff", r"^version: " + _V, "version"),
     ("CITATION.cff", r'^date-released: "(\d{4}-\d{2}-\d{2})"', "date"),
-    ("docs/release-notes.en.md", r"^## " + _V + r" \(unreleased\)", "version"),
-    ("docs/release-notes.fr.md", r"^## " + _V + r" \(non publiée\)", "version"),
 ]
 for _page in ("README.md", "docs/index.en.md", "docs/index.fr.md"):
     EDITS.append((_page, r"\(Version " + _V + r"\)", "version"))
