@@ -212,6 +212,13 @@ ignore_errors = true
 module = "z3"
 ignore_missing_imports = true
 
+# lxml ships no type information either. Said here rather than at each
+# import, so mypy agrees on every platform: on Windows it reports lxml.etree
+# as not found where Linux reports it as untyped.
+[[tool.mypy.overrides]]
+module = ["lxml", "lxml.*"]
+ignore_missing_imports = true
+
 # The native extension is untyped (and only a stand-in in this repository);
 # ddi_l types its elements by the protocol in _etree.pyi.
 [[tool.mypy.overrides]]
