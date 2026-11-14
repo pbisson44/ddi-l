@@ -42,6 +42,8 @@ nav:
       - "Module 15: Update and version": curriculum/module-15-update-and-version.md
       - "Module 16: Advanced questionnaire specification": curriculum/module-16-advanced-questionnaire-spec.md
       - "Module 17: Capstone projects": curriculum/module-17-capstone.md
+      - "Module 18 (optional): Decide gates exactly": curriculum/module-18-exact-gates.md
+      - "Module 19 (optional): Serve ddi-l over HTTP": curriculum/module-19-http-api.md
       - Instructor guide: curriculum/instructor-guide.md
       - Cheat sheet: curriculum/cheat-sheet.md
       - Answer keys: curriculum/answer-keys.md
@@ -166,7 +168,7 @@ plugins:
             filters: ["!^_"]
   - mike:
       canonical_version: latest
-      version_selector: true
+      version_selector: false
   - i18n:
       docs_structure: suffix
       languages:
@@ -196,6 +198,8 @@ plugins:
                 - "Module 15: Update and version": curriculum/module-15-update-and-version.md
                 - "Module 16: Advanced questionnaire specification": curriculum/module-16-advanced-questionnaire-spec.md
                 - "Module 17: Capstone projects": curriculum/module-17-capstone.md
+                - "Module 18 (optional): Decide gates exactly": curriculum/module-18-exact-gates.md
+                - "Module 19 (optional): Serve ddi-l over HTTP": curriculum/module-19-http-api.md
                 - Instructor guide: curriculum/instructor-guide.md
                 - Cheat sheet: curriculum/cheat-sheet.md
                 - Answer keys: curriculum/answer-keys.md
@@ -277,6 +281,8 @@ plugins:
                 - "Module 15 : Mise \xE0 jour et versionnage": curriculum/module-15-update-and-version.md
                 - "Module 16 : Sp\xE9cification avanc\xE9e de questionnaires": curriculum/module-16-advanced-questionnaire-spec.md
                 - "Module 17 : Projets de synth\xE8se": curriculum/module-17-capstone.md
+                - "Module 18 (facultatif) : Comparer exactement des filtres": curriculum/module-18-exact-gates.md
+                - "Module 19 (facultatif) : Servir ddi-l par HTTP": curriculum/module-19-http-api.md
                 - "Guide de l’instructeur": curriculum/instructor-guide.md
                 - "Aide-m\xE9moire": curriculum/cheat-sheet.md
                 - "Corrig\xE9s": curriculum/answer-keys.md
@@ -357,7 +363,6 @@ markdown_extensions:
   - md_in_html
 hooks:
   - hooks/copy_sitemap.py
-  - hooks/version_selector.py
   - hooks/quiet_i18n_logs.py
   - hooks/answer_keys.py
   - hooks/lint_rules.py
@@ -366,8 +371,6 @@ extra_css:
   - assets/stylesheets/accessibility.css
   - assets/stylesheets/landing.css
 extra:
-  version:
-    provider: mike
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/pbisson44/ddi-l

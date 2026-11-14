@@ -173,13 +173,14 @@ item = doc.add_variable(name="age")  # or any DDI item
 # Read the current version
 print(item.version)  # "1": newly created items start at "1"
 
-# Set a three-part version if you want major/minor/patch semantics
-item.version = "1.0.0"
+# Give it its next version
+item.increment_version()  # 1 → 2
 
-# Bump the version
+# Only if your organization uses dotted versions (major.minor.patch)
+item.version = "1.0.0"
 item.increment_major_version()  # 1.0.0 → 2.0.0
-item.increment_minor_version()  # 1.0.0 → 1.1.0
-item.increment_subversion()  # 1.0.0 → 1.0.1
+item.increment_minor_version()  # 2.0.0 → 2.1.0
+item.increment_subversion()  # 2.1.0 → 2.1.1
 
 # Record why you changed something
 from ddi_l.models.base import VersionRationale, InternationalString
@@ -197,9 +198,9 @@ Edit an item that is already in the file, then version it (see Module 15, sectio
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
 question.question_texts[0].text = "In a typical week, do you work from home?"
-question.increment_subversion()
+question.increment_version()
 variable.set_coded(new_code_list)  # switch to another code list
-variable.increment_major_version()
+variable.increment_version()
 
 # After a version bump, point references at the new version
 variable.question_references = [
@@ -530,6 +531,8 @@ Run these in your terminal.
 | `ddi versions file.xml` | Show version info from the file |
 | `ddi spec validate spec.yaml` | Check a questionnaire spec ([Module 16](module-16-advanced-questionnaire-spec.en.md)) |
 | `ddi conform file.xml --spec spec.yaml` | Compare an instrument with its spec |
+| `ddi conform file.xml --spec spec.yaml --semantics syntactic` | Compare gates by normal form only, as without the `logic` extra ([Module 18](module-18-exact-gates.en.md)) |
+| `ddi serve` | Run the HTTP service on this machine, port 8000 ([Module 19](module-19-http-api.en.md)) |
 
 Exit code `0` means success. Exit code `1` means failure.
 
@@ -780,7 +783,7 @@ q = doc.add_question(text="What is your email address?")
 doc.add_variable(name="Email", question=q)
 
 study = doc.study_unit
-study.increment_minor_version(allow_dotted=True)
+study.increment_version()
 study.version_rationales.append(
     VersionRationale(
         descriptions=[InternationalString(text="Added email question for wave 2")]

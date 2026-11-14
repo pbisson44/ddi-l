@@ -256,6 +256,28 @@ ou un conteneur préconfiguré avec tout installé.
   à la piste (flux, traçabilité, couplage, champs personnalisés ou
   spécification).
 
+### Module 18 (facultatif) : Comparer exactement des filtres
+
+- Pour les rédacteurs de spécifications et les testeurs qui ont suivi le
+  module 16, sur des postes où l'extra `logic` s'installe (il apporte le
+  solveur Z3).
+- Demandez à la salle si les deux filtres de Q6 du module 16 sont pareils
+  avant de lancer `decide()` : la réponse « ne sait pas » est la leçon.
+- Sans l'extra, la section 1 et le premier exemple de la section 6
+  fonctionnent quand même : `equivalent(exact=False)` et `evaluate()` n'ont
+  pas besoin du solveur.
+- Durée : 60 min.
+
+### Module 19 (facultatif) : Servir ddi-l par HTTP
+
+- Pour qui fera tourner `ddi-l` comme service, ou écrira des programmes qui
+  l'appellent. Le module 7 suffit comme bagage Python.
+- Lancez `ddi serve` au projecteur et montrez **Try it out** dans `/schema`
+  avant tout code.
+- Windows PowerShell 5.1 a son propre `curl` : utilisez `Invoke-RestMethod`
+  comme le montre le module, ou `curl.exe`.
+- Durée : 60 min.
+
 ## Erreurs courantes dans tous les modules
 
 | Erreur | Module | Correction |

@@ -13,10 +13,19 @@ description: >-
     - **O2.** Construire le document DDI à partir des données avec `ddi-l`, de sorte que chaque colonne demandée soit une variable liée à sa question, que les colonnes codées utilisent des listes de codes avec catégories, et que l'étude ait des concepts et un univers.
     - **O3.** Valider et analyser (lint) votre document, de sorte que `doc.validate()` ne renvoie aucune erreur, que `doc.lint()` ne signale aucune erreur et que `ddi validate` réussisse sur chaque fichier que vous enregistrez.
     - **O4.** Consigner le flux de questionnaire, la traçabilité, le couplage, les champs personnalisés ou la spécification que demande votre piste, de sorte qu'un lecteur du XML puisse les suivre sans votre script.
-    - **O5.** Versionner un changement : augmenter la version, consigner une justification et le responsable, et enregistrer chaque version dans son propre fichier.
+    - **O5.** Versionner un changement : donner à l'élément sa version suivante, consigner une justification et le responsable, et enregistrer chaque version dans son propre fichier.
     - **O6.** Présenter votre projet en 5 minutes et justifier deux choix de conception, en nommant pour chacun l'option écartée et pourquoi.
 
 **Prérequis :** Tous les modules précédents, du [Module 1](module-01-what-is-metadata.fr.md) au [Module 16](module-16-advanced-questionnaire-spec.fr.md). Le tableau sous « Choisissez votre piste » indique les modules sur lesquels chaque piste s'appuie le plus.
+
+!!! warning "Installez d'abord"
+    La piste D (la spécification) demande l'extra `spec`, et la piste B lit
+    un classeur Excel avec pandas. `pip install ddi-l` seul n'installe ni
+    l'un ni l'autre :
+
+    ```bash
+    pip install -U "ddi-l[spec]" pandas openpyxl
+    ```
 
 **Durée :** 60 à 90 min en autonomie / 90 min avec instructeur.
 
@@ -156,7 +165,7 @@ Sous le tableau, rédigez trois courtes notes :
     anxiety.set_property("scoring", "Somme d'une échelle d'anxiété standard à 10 items")
     ```
 
-7. **(O3)** **Validez, analysez et enregistrez en version 1.0 :**
+7. **(O3)** **Validez, analysez et enregistrez en version 1 :**
 
     ```python
     errors = doc.validate()
@@ -180,13 +189,13 @@ Sous le tableau, rédigez trois courtes notes :
     # -> StressIndex sources: 2
     ```
 
-9. **(O5)** **Versionnez le changement.** Augmentez la version à 1.1, et consignez pourquoi et par qui.
+9. **(O5)** **Versionnez le changement.** Donnez à l'étude sa version suivante, 2, et consignez pourquoi et par qui.
 
     ```python
     from ddi_l.models.base import VersionRationale, InternationalString
 
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -195,17 +204,17 @@ Sous le tableau, rédigez trois courtes notes :
         )
     )
     study.version_responsibility = "Thesis Author"
-    print(study.version)  # -> 1.1
+    print(study.version)  # -> 2
     ```
 
-10. **(O3)** **Validez, analysez et enregistrez en version 1.1 :**
+10. **(O3)** **Validez, analysez et enregistrez en version 2 :**
 
     ```python
     errors = doc.validate()
     lint_errors = [f for f in doc.lint() if f.severity == "error"]
     if not errors and not lint_errors:
-        doc.save("thesis-v1.1.xml")
-        print("Saved thesis-v1.1.xml")  # -> Saved thesis-v1.1.xml
+        doc.save("thesis-v2.xml")
+        print("Saved thesis-v2.xml")  # -> Saved thesis-v2.xml
     else:
         print("Errors:", errors, lint_errors)
     ```
@@ -214,7 +223,7 @@ Sous le tableau, rédigez trois courtes notes :
 
 - Votre plan : une ligne par colonne, et les trois notes.
 - `thesis-v1.xml` : document DDI valide avec une variable pour chaque colonne.
-- `thesis-v1.1.xml` : version 1.1, avec StressIndex, ses deux sources et une justification.
+- `thesis-v2.xml` : version 2, avec StressIndex, ses deux sources et une justification.
 
 ??? success "Exemple de solution"
     Un script complet pour toutes les étapes ci-dessus, avec
@@ -248,7 +257,7 @@ Sous le tableau, rédigez trois courtes notes :
         rows = list(csv.DictReader(f))
     columns = list(rows[0])
 
-    # Version 1.0
+    # Version 1
     doc = ddi.new_study(title="Student Stress Survey 2024", agency="university.example.org")
     # Comment chaque colonne a été demandée. StudentID est attribué et AnxietyScore
     # est calculé à partir d'un questionnaire : ni l'un ni l'autre n'a de question.
@@ -290,7 +299,7 @@ Sous le tableau, rédigez trois courtes notes :
     print(f"v1: {len(doc.validate())} validation errors, {len(lint_errors)} lint errors")
     doc.save("thesis-v1.xml")
 
-    # Version 1.1 : une variable dérivée et sa traçabilité
+    # Version 2 : une variable dérivée et sa traçabilité
     doc = ddi.open_ddi("thesis-v1.xml")
     by_name = {v.names[0].text: v for v in doc.variables}
     stress_index = doc.add_variable(name="StressIndex")
@@ -300,7 +309,7 @@ Sous le tableau, rédigez trois courtes notes :
     ]
 
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -311,9 +320,9 @@ Sous le tableau, rédigez trois courtes notes :
     study.version_responsibility = "Thesis Author"
 
     lint_errors = [f for f in doc.lint() if f.severity == "error"]
-    print(f"v1.1: {len(doc.validate())} validation errors, {len(lint_errors)} lint errors")
-    # -> v1.1: 0 validation errors, 0 lint errors
-    doc.save("thesis-v1.1.xml")
+    print(f"v2: {len(doc.validate())} validation errors, {len(lint_errors)} lint errors")
+    # -> v2: 0 validation errors, 0 lint errors
+    doc.save("thesis-v2.xml")
     ```
 
 ---
@@ -465,7 +474,7 @@ Sous le tableau, rédigez trois courtes notes :
     # -> Validation errors: 0, lint errors: 0
     ```
 
-8. **(O3)** **Enregistrez en version 1.0 :**
+8. **(O3)** **Enregistrez en version 1 :**
 
     ```python
     doc.save("health-survey-v1.xml")
@@ -474,10 +483,10 @@ Sous le tableau, rédigez trois courtes notes :
     Puis **exportez-le en JSON** depuis la ligne de commande :
 
     ```bash
-    ddi to-json health-survey-v1.xml --indent 2 > health-survey-v1.json
+    ddi to-json health-survey-v1.xml --indent 2 --output health-survey-v1.json
     ```
 
-9. **(O5)** **Mettez à jour en version 1.1** avec une justification. Ajoutez une nouvelle variable ou corrigez un libellé.
+9. **(O5)** **Mettez à jour en version 2** avec une justification. Ajoutez une nouvelle variable ou corrigez un libellé.
 
     ```python
     from ddi_l.models.base import VersionRationale, InternationalString
@@ -488,29 +497,30 @@ Sous le tableau, rédigez trois courtes notes :
     )
     doc.add_variable(name="DentistVisitsLastYear", question=q_dentist)
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[InternationalString(text="Added dental visit frequency question")]
         )
     )
     study.version_responsibility = "Principal Investigator"
-    doc.save("health-survey-v1.1.xml")
+    doc.save("health-survey-v2.xml")
     ```
 
-    Vérifiez le nouveau fichier depuis la ligne de commande avec `ddi validate health-survey-v1.1.xml`.
+    Vérifiez le nouveau fichier depuis la ligne de commande avec `ddi validate health-survey-v2.xml`.
 
 ### Livrables
 
 - Votre plan : une ligne par colonne, et les trois notes.
 - `health-survey-v1.xml` : document DDI valide, avec la traçabilité de l'IMC et le couplage avec le registre.
 - `health-survey-v1.json` : export JSON du document.
-- `health-survey-v1.1.xml` : version mise à jour avec justification.
+- `health-survey-v2.xml` : version mise à jour avec justification.
 
 ??? success "Exemple de solution"
     Un script complet, avec
     [`health-survey.csv`](health-survey.csv){ download="health-survey.csv" }.
-    Exécutez ensuite `ddi to-json health-survey-v1.xml --indent 2 > health-survey-v1.json`.
+    Exécutez ensuite
+    `ddi to-json health-survey-v1.xml --indent 2 --output health-survey-v1.json`.
 
     ```python
     import csv
@@ -617,23 +627,23 @@ Sous le tableau, rédigez trois courtes notes :
     # -> v1: 0 validation errors, 0 lint errors
     doc.save("health-survey-v1.xml")
 
-    # Version 1.1
+    # Version 2
     dentist = doc.add_question(
         text="Combien de fois avez-vous consulté un dentiste au cours des 12 derniers mois ?",
         lang="fr",
     )
     doc.add_variable(name="DentistVisitsLastYear", question=dentist)
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[InternationalString(text="Added dental visit frequency question")]
         )
     )
     study.version_responsibility = "Principal Investigator"
-    print(f"v1.1: {len(doc.validate())} validation errors")
-    # -> v1.1: 0 validation errors
-    doc.save("health-survey-v1.1.xml")
+    print(f"v2: {len(doc.validate())} validation errors")
+    # -> v2: 0 validation errors
+    doc.save("health-survey-v2.xml")
     ```
 
 ---
@@ -727,12 +737,12 @@ Sous le tableau, rédigez trois courtes notes :
     # -> Items with archive fields: 2
     ```
 
-5. **(O5)** **Augmentez la version avec une justification :**
+5. **(O5)** **Donnez à l'étude sa version suivante, avec une justification :**
 
     ```python
     from ddi_l.models.base import VersionRationale, InternationalString
 
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -825,7 +835,7 @@ Sous le tableau, rédigez trois courtes notes :
         set_archive_field(study, "archive:retention", "permanent")
         set_archive_field(variable, "archive:access", "open")
 
-        study.increment_minor_version(allow_dotted=True)
+        study.increment_version()
         study.version_rationales.append(
             VersionRationale(
                 descriptions=[
@@ -857,7 +867,7 @@ Sous le tableau, rédigez trois courtes notes :
     construire un document DDI complet, créer des listes de codes à partir
     des données, décrire le flux du questionnaire et rédiger sa
     spécification, gérer plusieurs versions et automatiser la validation
-    avec un script bash.
+    avec un script (bash, ou PowerShell sous Windows).
 
 ### Étapes
 
@@ -1036,7 +1046,7 @@ Sous le tableau, rédigez trois courtes notes :
     ddi spec validate census.spec.yaml
     ```
 
-7. **(O3)** **Validez, analysez et enregistrez en version 1.0 :**
+7. **(O3)** **Validez, analysez et enregistrez en version 1 :**
 
     ```python
     errors = doc.validate()
@@ -1046,7 +1056,7 @@ Sous le tableau, rédigez trois courtes notes :
     doc.save("census-v1.xml")
     ```
 
-8. **(O5)** **Mettez à jour en version 1.1** : ajoutez une nouvelle question et une variable :
+8. **(O5)** **Mettez à jour en version 2** : ajoutez une nouvelle question et une variable :
 
     ```python
     from ddi_l.models.base import VersionRationale, InternationalString
@@ -1056,17 +1066,17 @@ Sous le tableau, rédigez trois courtes notes :
     )
     doc.add_variable(name="HighSpeedInternet", question=q_internet)
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[InternationalString(text="Added internet access question")]
         )
     )
     study.version_responsibility = "Census Content Team"
-    doc.save("census-v1.1.xml")
+    doc.save("census-v2.xml")
     ```
 
-9. **(O5)** **Mettez à jour en version 2.0** : refonte majeure (ajoutez 5 nouvelles questions, retirez-en 3 anciennes). Retirer une question retire aussi la variable qui enregistrait ses réponses ; sinon, elle continuerait de pointer vers une question qui n'est plus dans le fichier (voir le [Module 15](module-15-update-and-version.fr.md)). Ne retirez que des questions que le flux n'utilise pas. Une version contient une seule justification : remplacez donc celle de la version 1.1 ; `census-v1.1.xml` la conserve.
+9. **(O5)** **Mettez à jour en version 3** : une refonte (ajoutez 5 nouvelles questions, retirez-en 3 anciennes). Retirer une question retire aussi la variable qui enregistrait ses réponses ; sinon, elle continuerait de pointer vers une question qui n'est plus dans le fichier (voir le [Module 15](module-15-update-and-version.fr.md)). Ne retirez que des questions que le flux n'utilise pas. Une version contient une seule justification : remplacez donc celle de la version 2 ; `census-v2.xml` la conserve.
 
     ```python
     # Ajoutez les nouvelles questions
@@ -1084,7 +1094,7 @@ Sous le tableau, rédigez trois courtes notes :
         doc.remove(variables[col].identifier)
         doc.remove(questions[col].identifier)
 
-    study.increment_major_version()
+    study.increment_version()
     study.version_rationales = [
         VersionRationale(
             descriptions=[
@@ -1097,18 +1107,18 @@ Sous le tableau, rédigez trois courtes notes :
     errors = [finding for finding in doc.lint() if finding.severity == "error"]
     print(f"Lint errors: {len(errors)}")  # -> Lint errors: 0
     print(f"Validation errors: {len(doc.validate())}")  # -> Validation errors: 0
-    doc.save("census-v2.xml")
+    doc.save("census-v3.xml")
     ```
 
 10. **(O3)** **Validation par lots** des trois fichiers depuis la ligne de commande :
 
     ```bash
     ddi validate census-v1.xml
-    ddi validate census-v1.1.xml
     ddi validate census-v2.xml
+    ddi validate census-v3.xml
     ```
 
-11. **(O3)** **Écrivez un script bash** qui exécute le pipeline complet :
+11. **(O3)** **Écrivez un script** qui exécute le pipeline complet, en bash :
 
     ```bash
     #!/bin/bash
@@ -1138,19 +1148,40 @@ Sous le tableau, rédigez trois courtes notes :
     ./validate.sh
     ```
 
+    Sous Windows, écrivez le même script en PowerShell, `validate.ps1` :
+
+    ```powershell
+    # validate.ps1: check the spec, then validate all census DDI files.
+
+    Write-Output "=== Checking the spec ==="
+    ddi spec validate census.spec.yaml
+
+    Write-Output "=== Validating census files ==="
+    foreach ($f in Get-ChildItem census-v*.xml) {
+        Write-Output "--- $($f.Name) ---"
+        ddi validate $f.Name
+        if ($LASTEXITCODE -eq 0) { Write-Output "PASS" } else { Write-Output "FAIL" }
+        Write-Output ""
+    }
+    Write-Output "=== Done ==="
+    ```
+
+    et lancez-le avec `powershell -ExecutionPolicy Bypass -File validate.ps1`
+    (Windows n'exécute pas les fichiers de script par défaut).
+
 ### Livrables
 
 - Votre plan : une ligne par colonne, les trois notes, et ce que fait le filtre quand l'âge manque.
-- `census-v1.xml` : version 1.0, valide, avec l'instrument et son filtre.
+- `census-v1.xml` : version 1, valide, avec l'instrument et son filtre.
 - `census.spec.yaml` : la spécification, qui passe `ddi spec validate`.
-- `census-v1.1.xml` : version 1.1, valide, avec justification.
-- `census-v2.xml` : version 2.0, valide, avec justification.
-- `validate.sh` : script bash qui vérifie la spécification et valide tous les fichiers.
+- `census-v2.xml` : version 2, valide, avec justification.
+- `census-v3.xml` : version 3, valide, avec justification.
+- `validate.sh` (ou `validate.ps1` sous Windows) : script qui vérifie la spécification et valide tous les fichiers.
 
 ??? success "Exemple de solution"
     Un script complet, avec
     [`census-data.csv`](census-data.csv){ download="census-data.csv" }.
-    Exécutez ensuite `validate.sh` de l'étape 11.
+    Exécutez ensuite `validate.sh` (ou `validate.ps1`) de l'étape 11.
 
     ```python
     import csv
@@ -1298,18 +1329,18 @@ Sous le tableau, rédigez trois courtes notes :
     print(f"v1: {len(doc.validate())} validation errors, {len(lint_errors)} lint errors")
     doc.save("census-v1.xml")
 
-    # Version 1.1 : une question ajoutée
+    # Version 2 : une question ajoutée
     q_internet = doc.add_question(
         text="Avez-vous accès à Internet haute vitesse ?", lang="fr"
     )
     doc.add_variable(name="HighSpeedInternet", question=q_internet)
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(rationale("Added internet access question"))
     study.version_responsibility = "Census Content Team"
-    doc.save("census-v1.1.xml")
+    doc.save("census-v2.xml")
 
-    # Version 2.0 : cinq questions ajoutées, trois retirées avec leurs variables
+    # Version 3 : cinq questions ajoutées, trois retirées avec leurs variables
     for texte in [
         "Quelle langue parlez-vous le plus souvent à la maison ?",
         "Vous identifiez-vous comme Autochtone ?",
@@ -1321,7 +1352,7 @@ Sous le tableau, rédigez trois courtes notes :
     for col in ("Province", "MaritalStatus", "HousingType"):
         doc.remove(variables[col].identifier)
         doc.remove(questions[col].identifier)
-    study.increment_major_version()
+    study.increment_version()
     study.version_rationales = [
         rationale("Major redesign: added equity and income questions")
     ]
@@ -1329,7 +1360,7 @@ Sous le tableau, rédigez trois courtes notes :
     lint_errors = [f for f in doc.lint() if f.severity == "error"]
     print(f"v2: {len(doc.validate())} validation errors, {len(lint_errors)} lint errors")
     # -> v2: 0 validation errors, 0 lint errors
-    doc.save("census-v2.xml")
+    doc.save("census-v3.xml")
     ```
 
 ---
@@ -1348,7 +1379,7 @@ Des choix qui valent la peine d'être justifiés :
 
 - Codé ou texte libre pour une colonne comme Program ou Occupation.
 - Quelles colonnes ont une question, et lesquelles sont attribuées ou calculées.
-- Une version mineure ou majeure pour votre changement.
+- Ce que dit votre justification de version, et si les réponses restent comparables.
 - Un champ personnalisé, ou un champ que DDI possède déjà.
 - Ce que fait un filtre quand la réponse qu'il teste manque (Piste D).
 
@@ -1461,7 +1492,9 @@ Ce sont des questions ouvertes. Il n'y a pas de bonne ou de mauvaise réponse. �
       validation). La liste de vérification aide à détecter ces oublis.
     - **Extension :** Les apprenants avancés peuvent essayer une deuxième
       piste ou combiner des éléments de deux pistes (par exemple, le
-      couplage de la Piste B avec les scripts bash de la Piste D).
-    - **Célébration.** C'est le dernier module. Reconnaissez l'effort que
-      les apprenants ont fourni. Distribuez des certificats ou des badges
-      si votre organisation le permet.
+      couplage de la Piste B avec le script de validation de la Piste D).
+    - **Célébration.** C'est le dernier module de base. Reconnaissez
+      l'effort que les apprenants ont fourni. Distribuez des certificats ou
+      des badges si votre organisation le permet. Orientez ceux qui
+      utilisent l'extra `logic` ou `server` vers les modules facultatifs 18
+      et 19.

@@ -16,6 +16,14 @@ description: >-
 
 **Prérequis :** [Module 8](module-08-csv-to-ddi.fr.md).
 
+!!! warning "Installez d'abord"
+    La section 7 lit un fichier CSV avec pandas, que `pip install ddi-l`
+    n'installe pas :
+
+    ```bash
+    pip install pandas
+    ```
+
 **Durée :** 40 min en autonomie / 50 min avec instructeur.
 
 **Nouveau dans ce module :** `doc.add_code_list()`, `doc.code_lists`, `Category`, `doc.add_item()`, `doc.items()`, `item.names[0].text`.

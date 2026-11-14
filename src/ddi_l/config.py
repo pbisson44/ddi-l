@@ -9,10 +9,10 @@ own thread or task only::
     import ddi_l as ddi
 
     ddi.configure(version_responsibility="Questionnaire design team")
-    item.increment_major_version()  # records that responsibility
+    item.increment_version()  # records that responsibility
 
     with ddi.configured(version_responsibility=None):
-        item.increment_major_version()  # records none
+        item.increment_version()  # records none
 """
 
 from __future__ import annotations

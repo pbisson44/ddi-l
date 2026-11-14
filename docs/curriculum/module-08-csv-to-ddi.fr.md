@@ -17,6 +17,14 @@ description: >-
 
 **Prérequis :** [Module 7](module-07-cli-validation.fr.md).
 
+!!! warning "Installez d'abord"
+    La section 4 lit un fichier Excel avec pandas, que
+    `pip install ddi-l` n'installe pas :
+
+    ```bash
+    pip install pandas openpyxl
+    ```
+
 **Durée :** 45 min en autonomie / 60 min avec instructeur.
 
 **Nouveau dans ce module :** `csv.DictReader`, `reader.fieldnames`, `pd.read_excel()`, `df.columns`, `question_texts.append()`, `issue.message`, `issue.xpath`.

@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pbisson44/ddi-l/blob/main/LICENSE)
 
 [![CI](https://img.shields.io/github/actions/workflow/status/pbisson44/ddi-l/ci.yml?branch=main&label=CI&logo=github)](https://github.com/pbisson44/ddi-l/actions/workflows/ci.yml)
-[![Docs](https://img.shields.io/github/actions/workflow/status/pbisson44/ddi-l/deploy-docs.yml?branch=main&label=docs&logo=readthedocs&logoColor=white)](https://pbisson44.github.io/ddi-l/)
+[![Docs](https://img.shields.io/github/actions/workflow/status/pbisson44/ddi-l/deploy-docs.yml?label=docs&logo=readthedocs&logoColor=white)](https://pbisson44.github.io/ddi-l/)
 [![Coverage](https://img.shields.io/badge/coverage-%E2%89%A590%25%20%28CI%20gate%29-brightgreen.svg)](https://github.com/pbisson44/ddi-l/blob/main/pyproject.toml)
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)

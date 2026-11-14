@@ -1,5 +1,4 @@
 ---
-title: Programme de formation
 description: >-
   Un cours en 17 modules pour documenter enquêtes et jeux de données avec DDI
   et Python, de la première étude à un paquet validé et versionné.
@@ -30,6 +29,10 @@ demandent davantage. Vous vérifiez votre travail dès le module 3 et, à la fin
 du niveau 1, vous savez ouvrir, modifier et valider n'importe quel fichier
 DDI.
 
+Deux **modules facultatifs** suivent, pour qui utilise l'un des extras de
+`ddi-l`. Aucun n'est nécessaire au projet de synthèse, et les horaires
+ci-dessous les laissent de côté.
+
 Les durées sont celles que donne chaque module : en autonomie, ou en classe
 avec un instructeur.
 
@@ -55,6 +58,9 @@ avec un instructeur.
 | **Niveau 3 : Pratique appliquée** | | | | |
 | 16 | [Spécification avancée de questionnaires](module-16-advanced-questionnaire-spec.fr.md) | 75 min | 90 min | Modules 7, 10 et 15 |
 | 17 | [Projets de synthèse](module-17-capstone.fr.md) | 60-90 min | 90 min | Tous (1 à 16) |
+| **Modules facultatifs** | | | | |
+| 18 | [Comparer exactement des filtres](module-18-exact-gates.fr.md) (extra `logic`) | 45 min | 60 min | Module 16 |
+| 19 | [Servir ddi-l par HTTP](module-19-http-api.fr.md) (extra `server`) | 45 min | 60 min | Module 7 |
 
 Chaque module commence par des **objectifs d'apprentissage** numérotés (O1,
 O2, ...) : ce que vous saurez faire à la fin, comme écrire un script ou
@@ -86,7 +92,7 @@ guides dans l'ordre :
 | ------ | -------- | ----- |
 | Bases du pipeline (45 min) | Exécuter et configurer la validation et le lint | [Valider et analyser le contenu DDI](../validation.fr.md), [Recettes CLI](../cli-recipes.fr.md) |
 | Automatisation (45 min) | Scripter la CLI, conserver les rapports, faire échouer la CI en cas d'erreur | [Carnet d'automatisation en ligne de commande](../tutorials/automation-playbook.fr.md), [Clinique de dépannage des schémas](../tutorials/schema-troubleshooting-clinic.fr.md) |
-| Réutilisation et intégration (45 min) | Partager des fragments, appeler `ddi-l` depuis d'autres systèmes | [Atelier de réutilisation de fragments](../tutorials/fragment-reuse-lab.fr.md), [API HTTP](../server.fr.md), [Construire des outils et applications](../tutorials/building-tools.fr.md) |
+| Réutilisation et intégration (45 min) | Partager des fragments, appeler `ddi-l` depuis d'autres systèmes | [Atelier de réutilisation de fragments](../tutorials/fragment-reuse-lab.fr.md), [Module 19 : Servir ddi-l par HTTP](module-19-http-api.fr.md), [Construire des outils et applications](../tutorials/building-tools.fr.md) |
 
 Consultez le [playbook de performance](../performance.fr.md) avant de planifier
 de gros traitements par lots.

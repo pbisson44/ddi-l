@@ -863,6 +863,43 @@ class TestReopenAndEdit:
         final = open_ddi(path2)
         assert final.variables[0].get_property("myorg:source_system") == "CRM-2024"
 
+    @pytest.mark.parametrize("kind", ["code list", "variable", "category"])
+    def test_an_item_removed_after_reopen_is_not_saved(self, kind, tmp_path):
+        from ddi_l.models.logicalproduct import Category
+
+        doc = new_study(title="T", agency="a.org")
+        code_lists = [doc.add_code_list(name=n) for n in ("Yes/No", "Frequency")]
+        variables = [doc.add_variable(name=n) for n in ("age", "income")]
+        categories = [doc.add_item(Category, name=n) for n in ("Yes", "No")]
+        doc.save(tmp_path / "a.xml")
+        by_kind: dict[str, MaintainableBase] = {
+            "code list": code_lists[0],
+            "variable": variables[0],
+            "category": categories[0],
+        }
+        removed = by_kind[kind]
+
+        reopened = open_ddi(tmp_path / "a.xml")
+        assert reopened.remove(removed.identifier)
+        reopened.save(tmp_path / "b.xml")
+
+        saved = (tmp_path / "b.xml").read_text(encoding="utf-8")
+        assert removed.identifier not in saved
+        final = open_ddi(tmp_path / "b.xml")
+        assert final.find(removed.identifier) is None
+        assert final.validate() == []
+
+    def test_every_code_list_removed_after_reopen_is_not_saved(self, tmp_path):
+        doc = new_study(title="T", agency="a.org")
+        only = doc.add_code_list(name="Yes/No")
+        doc.save(tmp_path / "a.xml")
+
+        reopened = open_ddi(tmp_path / "a.xml")
+        reopened.remove(only.identifier)
+        reopened.save(tmp_path / "b.xml")
+
+        assert only.identifier not in (tmp_path / "b.xml").read_text(encoding="utf-8")
+
     def test_add_variable_after_reopen_is_kept(self, tmp_path):
         # Regression: appending to a parsed logical product must serialize.
         doc = new_study(title="T", agency="a.org")

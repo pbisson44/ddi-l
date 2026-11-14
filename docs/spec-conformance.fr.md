@@ -309,6 +309,7 @@ print(serialize_condition(compiled.condition))
 lié, et `codes` le `l:Code` de chaque valeur codée.
 
 Tout le reste est écrit en code Blaise, et `fallback_reason` dit pourquoi :
+
 - un `not` devant une comparaison : `not (x = 3)` est vrai quand `x` n'a pas
   de réponse, et on ne sait pas si `NotEqual` l'est ;
 - de l'arithmétique, des dates ou `today()` ;

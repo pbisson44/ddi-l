@@ -19,6 +19,10 @@ from .._etree import Element
 from ..models.base import MaintainableBase
 from . import _more
 from ._common import (
+    AGENCY_RE,
+    NOT_A_VERSION,
+    NOT_AN_AGENCY,
+    VERSION_RE,
     Context,
     Entry,
     Identity,
@@ -139,6 +143,14 @@ def read_settings(
                 "settings",
                 "no agency: add a row `agency` to settings, or pass agency=",
             )
+        )
+    if resolved["agency"] and not AGENCY_RE.fullmatch(resolved["agency"]):
+        problems.append(
+            TableProblem("settings", f"agency {resolved['agency']!r} {NOT_AN_AGENCY}")
+        )
+    if resolved["version"] and not VERSION_RE.fullmatch(resolved["version"]):
+        problems.append(
+            TableProblem("settings", f"version {resolved['version']!r} {NOT_A_VERSION}")
         )
     if resolved["language"] and not LANGUAGE_TAG.match(resolved["language"]):
         problems.append(

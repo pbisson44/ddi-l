@@ -25,8 +25,15 @@ description: >-
 
 **Prerequisites:** [Module 7](module-07-cli-validation.en.md),
 [Module 10](module-10-questionnaire-flows.en.md) and
-[Module 15](module-15-update-and-version.en.md). Install the spec extra:
-`pip install "ddi-l[spec]"`.
+[Module 15](module-15-update-and-version.en.md).
+
+!!! warning "Install the spec extra first"
+    This module's commands (`ddi spec`, `ddi conform`) and functions need
+    the `spec` extra, which `pip install ddi-l` alone does not install:
+
+    ```bash
+    pip install -U "ddi-l[spec]"
+    ```
 
 **Time:** 75 min self-paced / 90 min instructor-led.
 
@@ -71,7 +78,7 @@ spec schema and against itself (every id appears once, every gate names a
 question or variable of the spec, every minimum is below its maximum):
 
 ```bash
-ddi spec example > pet-survey.spec.yaml
+ddi spec example --output pet-survey.spec.yaml
 ddi spec validate pet-survey.spec.yaml
 ```
 
@@ -189,7 +196,8 @@ The rule that matters most: **a comparison is false when the question has no ans
 `not PetAge > 30` shows a question to someone who never gave the age;
 `PetAge <= 30` does not. Neither is wrong. Choose the one you mean, and write
 it so a reader can see the choice: `PetAge <= 30 or missing(PetAge)` says out
-loud what `not PetAge > 30` says quietly.
+loud that an empty or refused age passes. (It still differs from
+`not PetAge > 30` for a "don't know", as the end of this section shows.)
 
 The same holds for "not equal": `PetKind != 1` is false when `PetKind` has no
 answer, and `not PetKind = 1` is true.
@@ -360,6 +368,8 @@ def ask(name, en, fr=None):
 
 count = ask("PetCount", "How many pets live here?", "Combien d'animaux vivent ici ?")
 intro = draft.add_item(StatementItem, name="PetsIntro")
+intro.set_text("Now some questions about your pets.")
+intro.set_text("Voici quelques questions sur vos animaux.", lang="fr")
 kind = ask("PetKind", "What kind of pet is it?", "Quelle sorte d'animal est-ce ?")
 name = ask("PetName", "What is its name?", "Quel est son nom ?")
 age = ask("PetAge", "How old is it?")
@@ -518,7 +528,7 @@ the new version, and keep its output with the release.
     ```
 
     ??? success "Answer"
-        Q5 is `PetAge > 10`. Q6 shows when Q5 does not, including a missing age, so it is `not PetAge > 10` (or, saying the same out loud, `PetAge <= 10 or missing(PetAge)`; pick one form and keep it).
+        Q5 is `PetAge > 10`. Q6 shows when Q5 does not, including a missing age, so it is `not PetAge > 10`. Saying it out loud gives `PetAge <= 10 or missing(PetAge)`, which is almost the same: the two differ only for a "don't know" answer, which is answered but has no age to compare. Optional Module 18 shows how to find such differences.
 
         ```python
         print(normal("PetAge > 10"))  # -> PetAge > 10

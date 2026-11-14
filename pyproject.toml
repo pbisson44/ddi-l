@@ -194,6 +194,11 @@ exclude = [
     "demo/",
     "benchmarks/",
     "hooks/",
+    # `mypy src tests` never reaches these; `mypy .` would. native/ holds two
+    # copies of `ddi_l_native` (the extension's and the stand-in), mutants/
+    # is mutation-testing output.
+    "^native/",
+    "^mutants/",
 ]
 
 # The fixture generator, moved out of src/ddi_l/examples/, which mypy skips;

@@ -1,9 +1,5 @@
 """The documentation site's build configuration, pinned where it is fragile.
 
-* ``hooks/version_selector.py`` -- the theme resolves the version manifest as
-  ``new URL("../versions.json", base)``, which is right under ``mike``
-  (``/ddi-l/latest/``) but overshoots on a plain local build (``/ddi-l/``).
-
 * ``hooks/quiet_i18n_logs.py`` -- a logging filter narrow enough that it must
   be shown to drop only the config echoes, never a warning.
 
@@ -45,10 +41,6 @@ def _load(hook_name: str):
     return module
 
 
-def _load_hook():
-    return _load("version_selector")
-
-
 @pytest.fixture
 def mkdocs_logging():
     """Stand in for mkdocs' own logging setup: one stderr handler at INFO."""
@@ -63,47 +55,6 @@ def mkdocs_logging():
         yield logger, handler, stream
     finally:
         logger.handlers, logger.level = saved_handlers, saved_level
-
-
-def test_the_version_selector_is_dropped_outside_a_mike_build(monkeypatch):
-    """No ``mike`` in the environment means no ``versions.json`` request."""
-    monkeypatch.delenv("MIKE_DOCS_VERSION", raising=False)
-    config = {"extra": {"version": {"provider": "mike"}, "generator": False}}
-
-    result = _load_hook().on_config(config)
-
-    assert "version" not in result["extra"]
-    assert result["extra"]["generator"] is False, "unrelated keys must survive"
-
-
-def test_the_version_selector_survives_a_mike_build(monkeypatch):
-    """``mike`` sets ``MIKE_DOCS_VERSION``; the selector must reach production."""
-    monkeypatch.setenv("MIKE_DOCS_VERSION", "latest")
-    config = {"extra": {"version": {"provider": "mike"}}}
-
-    result = _load_hook().on_config(config)
-
-    assert result["extra"]["version"] == {"provider": "mike"}
-
-
-def test_the_hook_mutates_extra_rather_than_replacing_it(monkeypatch):
-    """mkdocs-static-i18n sets attributes on ``extra`` that templates read.
-
-    Swapping in a replacement mapping drops them, and the build fails with
-    ``'dict' object has no attribute 'alternate'``.
-    """
-    monkeypatch.delenv("MIKE_DOCS_VERSION", raising=False)
-
-    class ExtraWithAttributes(dict):
-        alternate = ("en", "fr")
-
-    extra = ExtraWithAttributes(version={"provider": "mike"})
-    config = {"extra": extra}
-
-    result = _load_hook().on_config(config)
-
-    assert result["extra"] is extra
-    assert result["extra"].alternate == ("en", "fr")
 
 
 # Every plugin mkdocs.yml activates, mapped to the distribution providing it.
@@ -395,6 +346,71 @@ def test_the_link_check_catches_a_link_github_cannot_follow(tmp_path) -> None:
         "page.en.md:1: other.md",
         "page.en.md:2: other.md",
         "page.en.md:3: other.md",
+    ]
+
+
+# A link to a heading on the same page, `(#part)`, must also work on GitHub
+# and in editors (markdownlint's MD051). They keep accents in a heading's
+# anchor, `référence`, where the site drops them, `reference`; the site build
+# checks its own anchors. A heading can give both the same anchor with `{#id}`.
+_SAME_PAGE_LINK = re.compile(r"\]\(#(?P<fragment>[^)\s]+)\)")
+_HEADING = re.compile(r"^#{1,6}\s+(?P<text>.*?)\s*(?:\{#(?P<id>[^}\s]+)\})?\s*$")
+
+
+def _github_anchor(text: str) -> str:
+    text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+    return re.sub(r"[^\w\- ]", "", text.lower()).replace(" ", "-")
+
+
+def _broken_fragments(path: Path) -> list[str]:
+    anchors: set[str] = set()
+    links: list[tuple[int, str]] = []
+    fence: str | None = None
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            marker = stripped[:3]
+            fence = marker if fence is None else (None if marker == fence else fence)
+            continue
+        if fence is not None:
+            continue
+        heading = _HEADING.match(line)
+        if heading:
+            anchor = heading["id"] or _github_anchor(heading["text"])
+            suffix = 0
+            while (f"{anchor}-{suffix}" if suffix else anchor) in anchors:
+                suffix += 1
+            anchors.add(f"{anchor}-{suffix}" if suffix else anchor)
+        for match in _SAME_PAGE_LINK.finditer(re.sub(r"`[^`]*`", "", line)):
+            links.append((number, match["fragment"]))
+    return [f"{path.name}:{n}: #{f}" for n, f in links if f not in anchors]
+
+
+def test_every_same_page_link_finds_its_heading_on_github() -> None:
+    pages = sorted((PROJECT_ROOT / "docs").rglob("*.md"))
+
+    problems = [p for page in pages for p in _broken_fragments(page)]
+
+    assert problems == []
+
+
+def test_the_fragment_check_reads_anchors_as_github_does(tmp_path) -> None:
+    page = tmp_path / "page.fr.md"
+    page.write_text(
+        "## Garder chaque référence à jour\n"
+        "## Charger des données {#charger-des-donnees}\n"
+        "## Notes\n## Notes\n"
+        "```markdown\n## In a fence\n```\n"
+        "[a](#garder-chaque-reference-a-jour) [b](#garder-chaque-référence-à-jour)\n"
+        "[c](#charger-des-donnees) [d](#notes-1) [e](#in-a-fence)\n",
+        encoding="utf-8",
+    )
+
+    problems = _broken_fragments(page)
+
+    assert problems == [
+        "page.fr.md:8: #garder-chaque-reference-a-jour",
+        "page.fr.md:9: #in-a-fence",
     ]
 
 

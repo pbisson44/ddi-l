@@ -226,6 +226,26 @@ pre-built container with everything installed.
   skills every track shares, and 20 for the track's own techniques (flow,
   lineage, linkage, custom fields or specification).
 
+### Module 18 (optional): Decide gates exactly
+
+- For spec writers and testers who already took Module 16, on machines where
+  the `logic` extra installs (it brings the Z3 solver).
+- Ask the room whether Module 16's two gates for Q6 are the same before you
+  run `decide()`: the "don't know" answer is the lesson.
+- Without the extra, section 1 and the first example of section 6 still
+  work: `equivalent(exact=False)` and `evaluate()` need no solver.
+- Time: 60 min.
+
+### Module 19 (optional): Serve ddi-l over HTTP
+
+- For people who will run `ddi-l` as a service, or write programs that call
+  one. Module 7 is enough Python.
+- Run `ddi serve` on the projector and show **Try it out** at `/schema`
+  before any code.
+- Windows PowerShell 5.1 has its own `curl`: use `Invoke-RestMethod` as the
+  module shows, or `curl.exe`.
+- Time: 60 min.
+
 ## Common mistakes across all modules
 
 | Mistake | Module | Fix |

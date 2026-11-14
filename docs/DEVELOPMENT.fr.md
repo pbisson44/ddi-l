@@ -566,23 +566,6 @@ mise à jour sous forme de pull request testée. `tests/test_docs_site_config.py
 vérifie que chaque plugin activé dans `mkdocs.yml` est fourni par le groupe
 `docs`.
 
-### Le sélecteur de version n'apparaît que sous `mike`
-
-`extra.version.provider: mike` fait récupérer `versions.json` par le thème, en
-le résolvant comme `../versions.json` relativement à la base du site, car
-`mike` publie chaque version sous `<site_url>/<version>/` et place le manifeste
-à côté.
-
-C'est correct en production et faux en local. Un simple `mkdocs serve` ne
-construit aucune version : la base reste `/ddi-l/` et `../versions.json` dépasse
-vers `/versions.json`, que rien ne sert : une 404 à chaque chargement de page,
-pour un sélecteur qui ne pourrait de toute façon pas fonctionner en local.
-
-`hooks/version_selector.py` retire `extra.version` sauf si `MIKE_DOCS_VERSION`
-est définie (la variable que `mike` exporte quand il pilote la construction.
-Pour prévisualiser le sélecteur lui-même, lancez `uv run mike serve`, ou
-définissez la variable à la main.
-
 ### Pourquoi le journal de construction est court
 
 `mkdocs-static-i18n` journalise, en INFO, la valeur entière par laquelle il

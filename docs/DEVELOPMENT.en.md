@@ -522,21 +522,6 @@ deliberately; Dependabot opens that update as a CI-tested pull request.
 `tests/test_docs_site_config.py` checks that every plugin `mkdocs.yml`
 activates has a requirement in the `docs` group.
 
-### The version selector only appears under `mike`
-
-`extra.version.provider: mike` makes the theme fetch `versions.json`, resolving
-it as `../versions.json` relative to the site base, because `mike` publishes
-each version under `<site_url>/<version>/` and keeps the manifest beside them.
-
-That is right in production and wrong locally. A plain `mkdocs serve` builds no
-version, so the base stays `/ddi-l/` and `../versions.json` overshoots to
-`/versions.json`, which nothing serves: a 404 on every page load, for a
-selector that could not work locally anyway.
-
-`hooks/version_selector.py` drops `extra.version` unless `MIKE_DOCS_VERSION` is
-set (the variable `mike` exports when it drives a build. If you need to preview
-the selector itself, run `uv run mike serve`, or set the variable by hand.
-
 ### Why the build log is short
 
 `mkdocs-static-i18n` logs, at INFO, the entire value it overrides each config

@@ -7,6 +7,7 @@ any row, in any table, before or after it. The second builds the items.
 
 from __future__ import annotations
 
+import re
 import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass, field
@@ -41,6 +42,34 @@ from ._spec import MULTI_VALUE_SEPARATOR, RESPONSE_TYPES, audience_language
 # Identifiers derived from (agency, table, id) live under this namespace, so
 # the same workbook always yields the same UUIDs.
 _ID_NAMESPACE = uuid.UUID("0f1f2bb6-6c55-4b11-9d3b-9f2a5f1c6e0a")
+
+# DDI 3.3's identification patterns (reusable.xsd): an agency is DNS labels
+# separated by dots; an identifier is one part, or two (a maintainable's ID, a
+# dot, the item's); a version is whole numbers separated by dots.
+_AGENCY = r"[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63})*"
+_ID_PART = r"[A-Za-z0-9*@$_-]+"
+_ID = rf"{_ID_PART}(?:\.{_ID_PART})?"
+_VERSION = r"[0-9]+(?:\.[0-9]+)*"
+AGENCY_RE = re.compile(_AGENCY)
+VERSION_RE = re.compile(_VERSION)
+_ID_RE = re.compile(_ID)
+# "urn" and "ddi" may be in either case (DDIURNType).
+_URN_RE = re.compile(
+    rf"urn:ddi:(?P<agency>{_AGENCY}):(?P<id>{_ID}):(?P<version>{_VERSION})",
+    re.IGNORECASE,
+)
+# The deprecated form names object types: urn:ddi:agency:Type:ID[:Type:ID]:version.
+_DEPRECATED_URN_RE = re.compile(
+    rf"urn:ddi:{_AGENCY}:[A-Za-z]+:{_ID_PART}(?::[A-Za-z]+:{_ID_PART})?:{_VERSION}",
+    re.IGNORECASE,
+)
+NOT_AN_AGENCY = (
+    "is not a DDI agency: letters, digits and hyphens, in parts separated by "
+    "dots, such as example.org"
+)
+NOT_A_VERSION = (
+    "is not a DDI version: whole numbers separated by dots, such as 1, 2 or 1.1"
+)
 
 _TRUE = {"true", "yes", "y", "1", "vrai", "oui", "o"}
 _FALSE = {"false", "no", "n", "0", "faux", "non"}
@@ -113,6 +142,8 @@ class Context:
     processing_schemes: dict[str, Element] = field(default_factory=dict)
     # study id -> the methodologies row that gave its methodology
     methodologies: dict[str, int] = field(default_factory=dict)
+    # a DDI identifier given in a ddi_id cell -> the row that gave it first
+    ddi_ids: dict[str, str] = field(default_factory=dict)
 
     def problem(
         self, raw: RawTable, row: Row | None, column: str | None, message: str
@@ -152,13 +183,78 @@ def reserve(ctx: Context, raw: RawTable, row: Row) -> Identity | None:
         first = entries[key].row
         ctx.problem(raw, row, "id", f"{key!r} is already the id of row {first.number}")
         return None
-    identity = Identity(
-        ctx.agency,
-        row.cells.get("ddi_id") or ctx.identifier(raw.table.name, key),
-        row.cells.get("version") or ctx.version,
-    )
+    identity = Identity(ctx.agency, *_identifier_and_version(ctx, raw, row, key))
     entries[key] = Entry(identity, raw, row)
     return identity
+
+
+def _identifier_and_version(
+    ctx: Context, raw: RawTable, row: Row, key: str
+) -> tuple[str, str]:
+    """The row's DDI identifier and version, from ``ddi_id`` and ``version``.
+
+    ``ddi_id`` holds a DDI identifier or a canonical DDI URN of the tables'
+    agency; empty, the identifier is derived from the agency, table and key. A
+    value that cannot be used is a problem, and the derived identifier or the
+    default version stands in, so references to the row still resolve.
+    """
+    derived = ctx.identifier(raw.table.name, key)
+    version = row.cells.get("version", "")
+    if version and not VERSION_RE.fullmatch(version):
+        ctx.problem(raw, row, "version", f"{version!r} {NOT_A_VERSION}")
+        version = ""
+    given = row.cells.get("ddi_id", "")
+    if not given:
+        return derived, version or ctx.version
+    identifier = None
+    urn = _URN_RE.fullmatch(given)
+    if _ID_RE.fullmatch(given):
+        identifier = given
+    elif urn and urn["agency"].casefold() != ctx.agency.casefold():
+        ctx.problem(
+            raw,
+            row,
+            "ddi_id",
+            f"the URN's agency {urn['agency']!r} is not the tables' agency, "
+            f"{ctx.agency!r}",
+        )
+    elif urn:
+        identifier = urn["id"]
+        version = version or urn["version"]
+    elif _DEPRECATED_URN_RE.fullmatch(given):
+        ctx.problem(
+            raw,
+            row,
+            "ddi_id",
+            f"{given!r} is a deprecated DDI URN; give its canonical form, "
+            "urn:ddi:agency:id:version",
+        )
+    elif given.casefold().startswith("urn:"):
+        ctx.problem(
+            raw,
+            row,
+            "ddi_id",
+            f"{given!r} is not a DDI URN: expected urn:ddi:agency:id:version",
+        )
+    else:
+        ctx.problem(
+            raw,
+            row,
+            "ddi_id",
+            f"{given!r} is neither a DDI identifier nor a DDI URN "
+            "(urn:ddi:agency:id:version)",
+        )
+    if identifier is None:
+        return derived, version or ctx.version
+    first = ctx.ddi_ids.setdefault(identifier, raw.where(row))
+    if first != raw.where(row):
+        ctx.problem(
+            raw,
+            row,
+            "ddi_id",
+            f"{identifier!r} is already the DDI identifier of {first}",
+        )
+    return identifier, version or ctx.version
 
 
 def entry_of(ctx: Context, raw: RawTable, row: Row) -> Entry | None:

@@ -10,11 +10,19 @@ description: >-
 
 ### Added
 
+- **`increment_version()`** gives an item its next version: `"1"` becomes
+  `"2"`, as Colectica numbers versions. It is `increment_major_version()`
+  under a name that reads right for whole-number versions; the major, minor
+  and subversion methods stay for dotted ones.
 - **`StatementItem.set_text(text, lang="en")`** sets the text a statement
   shows respondents, one `d:DisplayText` per language. A statement built
   with only a name showed nothing.
 - **`Loop.set_condition(command, description=...)`** sets the loop's
   `d:LoopWhile`, as `IfThenElse.set_condition()` sets an `IfCondition`.
+- **A URN in a table's `ddi_id`.** Besides an identifier, `ddi_id` takes the
+  item's canonical URN, `urn:ddi:agency:id:version`, as Colectica shows it.
+  Its agency must be the tables' agency, and its version is the item's when
+  the row's `version` is empty.
 
 ### Fixed
 
@@ -31,6 +39,11 @@ description: >-
   native and standard-library backends (lxml wrote `c:`). Every backend now
   writes the prefix this library gives that module in a new document (`c:`,
   `d:`, `l:`...). The XML meant the same either way.
+- **An item removed from a file read back is not saved.** Opening a file,
+  then removing a code list, a variable or a category with `doc.remove()`
+  took it out of `doc.code_lists` (and the like) but the save still wrote
+  it: its scheme kept a copy of its own. A scheme now holds what the list
+  holds. Questions were not affected.
 - **A reference to another study in the same file does not warn.** Saving a
   group whose study refers to a variable in another of its studies (data
   linkage) warned that the variable was "not present in the current
@@ -38,6 +51,19 @@ description: >-
   alone. References are now checked against every item in the document, in
   both directions, and only a reference to an item in no study warns. Modules
   12 and 17 no longer tell readers to expect the warning.
+- **A spec in UTF-16 is read.** `ddi spec example > spec.yaml` in Windows
+  PowerShell 5.1 writes UTF-16 with a byte-order mark, which `ddi spec
+  validate` and `load_spec()` refused as "not UTF-8". A spec in UTF-16 or
+  UTF-32 with a byte-order mark is now read, as YAML 1.2 requires.
+- **An unusable `ddi_id` or version is reported where it is.** Metadata
+  tables took any `ddi_id` and `version` as written: a value DDI does not
+  accept (`my concept`, a URN, `v2`) loaded without a word, then failed
+  later, at `to_fragment()` or `to_study()`, naming one item and not its row,
+  and `POST /v1/tables/import` answered 400. Both columns, and the agency and
+  version of `settings`, are now checked as the tables are read; each value
+  that cannot be used is reported with its file, row and column, with every
+  other problem (`TableImportError`, or 422 over HTTP). Two rows with the same
+  `ddi_id` are reported too.
 - **A missing file is named as missing.** `ddi lint input.xml`,
   `ddi roundtrip` and `ddi to-json` on a file that does not exist printed
   `Error: input.xml`; they now print `Error: [Errno 2] No such file or
@@ -51,9 +77,37 @@ description: >-
   the file back as read: `--layout default` normalizes it. Three tutorials
   wrote `ddi roundtrip IN OUT`, which reads `OUT` as a second input; they use
   `--output`.
+- **Modules 8, 9, 16 and 17** open with an "Install first" box when they
+  need more than `pip install ddi-l`: the `spec` extra, or pandas. Module 16
+  writes its example spec with `ddi spec example --output`.
 - **Module 10's** welcome statement shows its text, and its household roster
   loop says how long it repeats. A note says that the names in a condition
   (`age`) are not tied to questions until Module 16.
+- **Module 17** exports Track B's JSON with `ddi to-json --output`, and its
+  Track D validation script comes in PowerShell too (`validate.ps1`), for
+  readers on Windows.
+- **Two optional modules.** Module 18 decides gates exactly with the `logic`
+  extra (`decide()`, `evaluate()`), and Module 19 runs `ddi-l` as an HTTP
+  service with the `server` extra; its shell commands come for Windows
+  PowerShell and for macOS and Linux. Module 16 no longer says that
+  `not PetAge > 10` and `PetAge <= 10 or missing(PetAge)` are the same: they
+  differ for a "don't know" answer.
+- **Versions are taught as whole numbers.** Module 15 gives an item its next
+  version with `increment_version()` (1, 2, 3) and keeps major, minor and
+  patch for a short section on dotted versions; how big a change is goes in
+  the rationale. Module 17's tracks go from version 1 to 2 (and 3 in Track D)
+  instead of forcing `1.1` with `allow_dotted=True`, so their files are
+  `thesis-v2.xml`, `health-survey-v2.xml`, `census-v2.xml` and
+  `census-v3.xml`. The cheat sheet and the Colectica guide follow.
+- **A list and two links.** On the spec-conformance page, the list of
+  conditions written as tool code rendered as one paragraph; it is a list
+  again. Two French links to a section of the same page (Module 15 and the
+  HTTP API page) now work on GitHub and in editors too, which keep the
+  accents in a heading's anchor.
+- **The site shows the newest release only.** The version menu is gone: a
+  release publishes its documentation and removes the older versions, and
+  pushes to `main` no longer publish a `dev` copy. A link to an older
+  version, or to `dev`, opens the same page in the newest release.
 
 ## 0.2.0
 

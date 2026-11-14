@@ -166,6 +166,22 @@ def test_without_the_extra_the_hint(
     )
 
 
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-16-be", "utf-32"])
+def test_a_spec_in_utf_16_or_32_with_a_byte_order_mark_is_read(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    encoding: str,
+) -> None:
+    # What `ddi spec example > spec.yaml` writes in Windows PowerShell 5.1:
+    # UTF-16 with a byte-order mark. YAML 1.2 readers must accept UTF-16.
+    text = Path(SPEC).read_text(encoding="utf-8")
+    path = tmp_path / "spec.yaml"
+    bom = {"utf-16-be": "﻿"}.get(encoding, "")
+    path.write_bytes((bom + text).encode(encoding))
+
+    assert cli.main(["spec", "validate", str(path)]) == 0, capsys.readouterr().err
+
+
 @pytest.mark.parametrize(
     ("text", "encoding", "error"),
     [

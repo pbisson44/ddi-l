@@ -177,13 +177,14 @@ item = doc.add_variable(name="age")  # ou n'importe quel élément DDI
 # Lire la version actuelle
 print(item.version)  # "1" : les éléments créés démarrent à "1"
 
-# Définir une version en trois parties si vous voulez majeur/mineur/correctif
-item.version = "1.0.0"
+# Lui donner sa version suivante
+item.increment_version()  # 1 → 2
 
-# Incrémenter la version
+# Seulement si votre organisation utilise des versions à points (majeur.mineur.correctif)
+item.version = "1.0.0"
 item.increment_major_version()  # 1.0.0 → 2.0.0
-item.increment_minor_version()  # 1.0.0 → 1.1.0
-item.increment_subversion()  # 1.0.0 → 1.0.1
+item.increment_minor_version()  # 2.0.0 → 2.1.0
+item.increment_subversion()  # 2.1.0 → 2.1.1
 
 # Documenter pourquoi vous avez fait un changement
 from ddi_l.models.base import VersionRationale, InternationalString
@@ -205,9 +206,9 @@ Modifier un élément déjà présent dans le fichier, puis le versionner (voir 
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
 question.question_texts[0].text = "In a typical week, do you work from home?"
-question.increment_subversion()
+question.increment_version()
 variable.set_coded(new_code_list)  # passer à une autre liste de codes
-variable.increment_major_version()
+variable.increment_version()
 
 # Après une augmentation de version, pointer les références vers la nouvelle version
 variable.question_references = [
@@ -537,6 +538,8 @@ Exécutez ces commandes dans votre terminal.
 | `ddi versions fichier.xml` | Afficher les informations de version du fichier |
 | `ddi spec validate spec.yaml` | Vérifier une spécification de questionnaire ([Module 16](module-16-advanced-questionnaire-spec.fr.md)) |
 | `ddi conform fichier.xml --spec spec.yaml` | Comparer un instrument à sa spécification |
+| `ddi conform fichier.xml --spec spec.yaml --semantics syntactic` | Comparer les filtres par forme normale seulement, comme sans l'extra `logic` ([Module 18](module-18-exact-gates.fr.md)) |
+| `ddi serve` | Faire tourner le service HTTP sur cette machine, port 8000 ([Module 19](module-19-http-api.fr.md)) |
 
 Le code de sortie `0` signifie succès. Le code de sortie `1` signifie échec.
 
@@ -792,7 +795,7 @@ q = doc.add_question(text="Quelle est votre adresse courriel ?")
 doc.add_variable(name="Courriel", question=q)
 
 study = doc.study_unit
-study.increment_minor_version(allow_dotted=True)
+study.increment_version()
 study.version_rationales.append(
     VersionRationale(
         descriptions=[

@@ -77,12 +77,18 @@ _ID = Column(
 )
 _DDI_ID = Column(
     "ddi_id",
-    "The DDI identifier (a UUID) to give the item. Leave empty and one is "
-    "derived from the agency, the table and `id`, so loading the same tables "
-    "again gives the same identifiers. Fill it to update an item that already "
+    "The DDI identifier (a UUID) to give the item, or its URN "
+    "(urn:ddi:agency:id:version), whose agency must be the tables' and whose "
+    "version is used when `version` is empty. Leave empty and one is derived "
+    "from the agency, the table and `id`, so loading the same tables again "
+    "gives the same identifiers. Fill it to update an item that already "
     "exists in Colectica.",
 )
-_VERSION = Column("version", "The item's version. Defaults to `version` in `settings`.")
+_VERSION = Column(
+    "version",
+    "The item's version: whole numbers separated by dots, such as 1, 2 or 1.1. "
+    "Defaults to `version` in `settings`.",
+)
 _NAME = Column(
     "name",
     "The item's name, in the `settings` language. Defaults to `id`.",
