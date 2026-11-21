@@ -1,0 +1,4375 @@
+
+
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Module 10 du cours ddi-l : modéliser les sections, les sauts et les boucles d&#x27;un questionnaire avec les constructions de contrôle DDI.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/curriculum/module-10-questionnaire-flows/">
+      
+      
+      
+      
+        <link rel="prev" href="../module-09-code-lists/">
+      
+      
+        <link rel="next" href="../module-11-data-lineage/">
+      
+      
+        
+          <link rel="alternate" href="/ddi-l/latest/" hreflang="en">
+        
+          <link rel="alternate" href="/ddi-l/latest/fr/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.1.3">
+    
+    
+      
+        <title>10. Flux de questionnaire - ddi-l</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e2cf241e.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/site.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Ne plus montrer cela">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            
+            
+  
+  
+    <p class="ddi-announce">
+      <span class="ddi-announce__icon twemoji" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+      </span>
+      <span>Nouveau dans le cours : des modules facultatifs sur DDI-Codebook et DDI-CDI.</span>
+      
+        <a class="ddi-announce__link" href="../">Voir le cours<span aria-hidden="true"> &rarr;</span></a>
+      
+    </p>
+  
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="ddi-l" class="md-header__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              10. Flux de questionnaire
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode clair"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au mode clair" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode sombre"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au mode sombre" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Suivre le réglage du système"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Suivre le réglage du système" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/curriculum/module-10-questionnaire-flows/" hreflang="en" lang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/fr/curriculum/module-10-questionnaire-flows/" hreflang="fr" lang="fr" class="md-select__link" aria-current="true">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Recherche</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Accueil
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+  Guides pratiques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../release-notes/" class="md-tabs__link">
+          
+  
+  À propos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ddi-l" class="md-nav__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Accueil
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installer
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Apprendre
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Apprendre
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 : Fondements
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 : Fondements
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  1. Qu’est-ce que les métadonnées ?
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  2. Préparez votre environnement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  3. Créez votre première étude
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  4. Variables et questions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  5. Concepts et univers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  6. Ouvrir et modifier des fichiers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  7. Valider depuis la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 : Compétences pratiques
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 : Compétences pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  8. Du CSV/Excel au DDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  9. Listes de codes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Flux de questionnaire
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Flux de questionnaire
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-du-papier-au-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Du papier au DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-un-exemple-de-devis-de-questionnaire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Un exemple de devis de questionnaire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-les-elements-de-base-du-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Les éléments de base du DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-etape-1-creer-letude-et-les-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Étape 1 : Créer l'étude et les questions
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-etape-2-creer-les-questionconstructs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Étape 2 : Créer les QuestionConstructs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etape-3-construire-les-sequences-de-chaque-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Étape 3 : Construire les Sequences de chaque section
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-etape-4-modeliser-les-sauts-conditionnels-avec-ifthenelse" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Étape 4 : Modéliser les sauts conditionnels avec IfThenElse
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-etape-5-modeliser-poser-seulement-si-avec-un-ifthenelse-imbrique" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Étape 5 : Modéliser « poser seulement si » avec un IfThenElse imbriqué
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-etape-6-modeliser-une-liste-de-menage-avec-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Étape 6 : Modéliser une liste de ménage avec Loop
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-etape-7-construire-la-sequence-principale-et-linstrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Étape 7 : Construire la Sequence principale et l'Instrument
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-la-correspondance-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. La correspondance complète
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-etapes-de-la-correspondance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Étapes de la correspondance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-facultatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin (facultatif)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pour aller plus loin (facultatif)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#routage-a-plusieurs-voies-avec-elseif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Routage à plusieurs voies avec ElseIf
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Traçabilité des données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Couplage de données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Propriétés, recherche et validation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Champs personnalisés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Mise à jour et versionnage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 : Pratique appliquée
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 : Pratique appliquée
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Spécification avancée de questionnaires
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Projets de synthèse
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modules facultatifs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Modules facultatifs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-18-exact-gates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Comparer exactement des filtres
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-19-http-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  19. Servir ddi-l par HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-20-codebook-to-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  20. De DDI-Codebook à DDI-Lifecycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-21-ddi-cdi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  21. Décrire vos données avec DDI-CDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ressources du cours
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Ressources du cours
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide-mémoire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Corrigés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de l’instructeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7 17 3.2-6.8L17 7l-3.2 6.8zm5-5.9a.9.9 0 0 0-.9.9.9.9 0 0 0 .9.9.9.9 0 0 0 .9-.9.9.9 0 0 0-.9-.9M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Guides pratiques
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guides pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier vos métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Vérifier vos métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Valider et analyser
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dépanner les erreurs de schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier un questionnaire par rapport à une spécification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Automatiser la validation en CI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faire entrer et sortir les métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Faire entrer et sortir les métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Charger du DDI depuis des tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modèles de tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec d’autres outils
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec les exports Colectica
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Passer du XML aux objets
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Réutiliser des fragments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l ailleurs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Utiliser ddi-l ailleurs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Servir l’API HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l depuis R
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Construire des outils et applications
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 1-5 5v11l5-4.5zm2 4v13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6c-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1M10 18.41C8.75 18.09 7.5 18 6.5 18c-1.06 0-2.32.19-3.5.5V7.13c.91-.4 2.14-.63 3.5-.63s2.59.23 3.5.63z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Référence
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide d’utilisation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence de l’API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence des modèles
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Règles lint
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Catalogue des espaces de noms
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Couverture du schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  À propos
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  À propos
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Playbook de performance
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Playbook de performance
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Benchmark de conversion de schémas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Paquets Python associés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de développement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-du-papier-au-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Du papier au DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-un-exemple-de-devis-de-questionnaire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Un exemple de devis de questionnaire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-les-elements-de-base-du-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Les éléments de base du DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-etape-1-creer-letude-et-les-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Étape 1 : Créer l'étude et les questions
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-etape-2-creer-les-questionconstructs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Étape 2 : Créer les QuestionConstructs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etape-3-construire-les-sequences-de-chaque-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Étape 3 : Construire les Sequences de chaque section
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-etape-4-modeliser-les-sauts-conditionnels-avec-ifthenelse" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Étape 4 : Modéliser les sauts conditionnels avec IfThenElse
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-etape-5-modeliser-poser-seulement-si-avec-un-ifthenelse-imbrique" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Étape 5 : Modéliser « poser seulement si » avec un IfThenElse imbriqué
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-etape-6-modeliser-une-liste-de-menage-avec-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Étape 6 : Modéliser une liste de ménage avec Loop
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-etape-7-construire-la-sequence-principale-et-linstrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Étape 7 : Construire la Sequence principale et l'Instrument
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-la-correspondance-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. La correspondance complète
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-etapes-de-la-correspondance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Étapes de la correspondance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-facultatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin (facultatif)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pour aller plus loin (facultatif)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#routage-a-plusieurs-voies-avec-elseif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Routage à plusieurs voies avec ElseIf
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Apprendre
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../module-08-csv-to-ddi/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Niveau 2 : Compétences pratiques
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/curriculum/module-10-questionnaire-flows.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/pbisson44/ddi-l/raw/main/docs/curriculum/module-10-questionnaire-flows.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="module-10-traduire-un-devis-de-questionnaire-en-logique-de-flux-ddi">Module 10 : Traduire un devis de questionnaire en logique de flux DDI<a class="headerlink" href="#module-10-traduire-un-devis-de-questionnaire-en-logique-de-flux-ddi" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
+<ul>
+<li><strong>O1.</strong> Repérer les questions, les sections, les règles de saut et les règles de répétition d'un devis de questionnaire, et nommer la construction DDI de chacune (<code>QuestionConstruct</code>, <code>Sequence</code>, <code>IfThenElse</code>, <code>Loop</code>, <code>StatementItem</code>, <code>Instrument</code>).</li>
+<li><strong>O2.</strong> Écrire un script qui enveloppe chaque question dans un <code>QuestionConstruct</code> et liste les constructions, dans l'ordre, dans une <code>Sequence</code> par section avec <code>.to_reference()</code>.</li>
+<li><strong>O3.</strong> Ajouter un <code>IfThenElse</code> qui définit sa condition avec <code>set_condition()</code> et n'exécute une section ou une question que si la condition est vraie.</li>
+<li><strong>O4.</strong> Ajouter un <code>Loop</code> qui répète une section, comme une liste de ménage, en le pointant vers cette section.</li>
+<li><strong>O5.</strong> Créer un <code>Instrument</code> qui pointe vers la <code>Sequence</code> principale, et vérifier que <code>doc.validate()</code> renvoie <code>[]</code> pour tout le flux.</li>
+</ul>
+</div>
+<p><strong>Prérequis :</strong> <a href="../module-09-code-lists/">Module 9</a>.</p>
+<p><strong>Durée :</strong> 50 min en autonomie / 60 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>QuestionConstruct</code>, <code>Sequence</code>, <code>StatementItem</code>, <code>IfThenElse</code>, <code>set_condition()</code>, <code>Loop</code>, <code>Instrument</code>, <code>.to_reference()</code>.</p>
+<hr />
+<h2 id="1-du-papier-au-ddi">1. Du papier au DDI<a class="headerlink" href="#1-du-papier-au-ddi" title="Permanent link">&para;</a></h2>
+<p>La plupart des questionnaires commencent par un devis écrit.
+Le devis liste les questions dans l'ordre et décrit les <strong>sauts conditionnels</strong> : des règles comme « Si le répondant a moins de 18 ans, passer à la section C. »</p>
+<p>Votre travail est de transformer ce devis en métadonnées DDI pour que la logique de flux soit lisible par une machine.
+Ce module vous apprend comment faire.</p>
+<h2 id="2-un-exemple-de-devis-de-questionnaire">2. Un exemple de devis de questionnaire<a class="headerlink" href="#2-un-exemple-de-devis-de-questionnaire" title="Permanent link">&para;</a></h2>
+<p>Voici un devis simple d'enquête sur la santé.
+Lisez-le attentivement ; nous allons associer chaque partie au DDI.</p>
+<div class="admonition example">
+<p class="admonition-title">Devis de l'enquête sur la santé</p>
+<p><strong>Section A : Démographie</strong></p>
+<ul>
+<li>A1. Quel est votre âge ? <em>(numérique)</em></li>
+<li>A2. Quel est votre genre ? <em>(liste de codes : Male, Female, Other)</em></li>
+</ul>
+<p><strong>Section B : Emploi</strong> <em>(sauter si âge &lt; 16)</em></p>
+<ul>
+<li>B1. Êtes-vous actuellement employé ? <em>(Oui / Non)</em></li>
+<li>B2. Quelle est votre profession ? <em>(texte, poser seulement si B1 = Oui)</em></li>
+</ul>
+<p><strong>Section C : Santé</strong></p>
+<ul>
+<li>C1. Comment évaluez-vous votre santé générale ? <em>(liste de codes : Excellent, Good, Fair, Poor)</em></li>
+<li>C2. Fumez-vous ? <em>(Oui / Non)</em></li>
+</ul>
+<p><strong>Liste du ménage</strong> <em>(répéter la section A pour chaque membre du ménage)</em></p>
+</div>
+<h2 id="3-les-elements-de-base-du-ddi">3. Les éléments de base du DDI<a class="headerlink" href="#3-les-elements-de-base-du-ddi" title="Permanent link">&para;</a></h2>
+<p>Chaque partie du devis correspond à une <strong>construction de contrôle</strong> DDI :</p>
+<table>
+<thead>
+<tr>
+<th>Élément du devis</th>
+<th>Construction DDI</th>
+<th>Ce qu'elle fait</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Introduction de section</td>
+<td><code>StatementItem</code></td>
+<td>Affiche du texte sans poser de question</td>
+</tr>
+<tr>
+<td>Une question</td>
+<td><code>QuestionConstruct</code></td>
+<td>Pose une question</td>
+</tr>
+<tr>
+<td>Une section ordonnée</td>
+<td><code>Sequence</code></td>
+<td>Regroupe des étapes dans l'ordre</td>
+</tr>
+<tr>
+<td>« Sauter si... »</td>
+<td><code>IfThenElse</code></td>
+<td>Branche selon une condition</td>
+</tr>
+<tr>
+<td>« Poser seulement si... »</td>
+<td><code>IfThenElse</code></td>
+<td>Même chose ; la condition décide du chemin</td>
+</tr>
+<tr>
+<td>« Répéter pour chaque... »</td>
+<td><code>Loop</code></td>
+<td>Répète une section pour une liste d'éléments</td>
+</tr>
+<tr>
+<td>Le questionnaire complet</td>
+<td><code>Instrument</code></td>
+<td>Pointe vers la Sequence principale</td>
+</tr>
+</tbody>
+</table>
+<p>Tous ces éléments se trouvent dans le module <code>ddi_l.models.datacollection</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">Instrument</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">IfThenElse</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">Loop</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">StatementItem</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Deux choses à retenir</p>
+<ul>
+<li>Vous créez chaque construction avec le même appel
+  <code>doc.add_item(&lt;Type&gt;, name="...")</code> que celui que vous utilisez déjà pour
+  les catégories au module 9.</li>
+<li>Vous <strong>reliez</strong> les constructions entre elles avec <code>.to_reference()</code>.
+  Une référence dit « cette construction pointe vers celle-là ». Elle
+  porte l'identifiant et le type de la cible pour que le fichier reste
+  valide.</li>
+</ul>
+</div>
+<h2 id="4-etape-1-creer-letude-et-les-questions">4. Étape 1 : Créer l'étude et les questions<a class="headerlink" href="#4-etape-1-creer-letude-et-les-questions" title="Permanent link">&para;</a></h2>
+<p>D'abord, créez l'étude et toutes les questions du devis.
+Chaque question devient un élément de question DDI.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"National Health Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"ca.healthcan"</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Section A</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">q_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">q_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your gender?"</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Section B</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">q_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Are you currently employed?"</span><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">q_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your occupation?"</span><span class="p">)</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Section C</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">q_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your general health?"</span><span class="p">)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">q_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Do you smoke?"</span><span class="p">)</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Questions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Questions: 6</span>
+</span></code></pre></div>
+<h2 id="5-etape-2-creer-les-questionconstructs">5. Étape 2 : Créer les QuestionConstructs<a class="headerlink" href="#5-etape-2-creer-les-questionconstructs" title="Permanent link">&para;</a></h2>
+<p>Un <strong>QuestionConstruct</strong> enveloppe une question pour qu'elle puisse être placée dans une Sequence.
+Pensez-y comme l'instruction « maintenant, posez cette question ».</p>
+<p>Ajoutez-en un pour chaque question et pointez-le vers la question avec
+<code>.to_reference()</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">qc_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Age"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_age</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">qc_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Gender"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_gender</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">qc_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Employed"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_employed</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">qc_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Occupation"</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">question_reference</span><span class="o">=</span><span class="n">q_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">qc_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Health Rating"</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">question_reference</span><span class="o">=</span><span class="n">q_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="p">)</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">qc_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Smoke"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_smoke</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">)</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"QuestionConstructs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">QuestionConstruct</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># -&gt; QuestionConstructs: 6</span>
+</span></code></pre></div>
+<h2 id="6-etape-3-construire-les-sequences-de-chaque-section">6. Étape 3 : Construire les Sequences de chaque section<a class="headerlink" href="#6-etape-3-construire-les-sequences-de-chaque-section" title="Permanent link">&para;</a></h2>
+<p>Le devis a trois sections (A, B, C).
+Chaque section devient une <code>Sequence</code> qui liste ses étapes dans l'ordre. Vous
+listez les étapes avec <code>control_construct_references</code>, une référence par
+étape :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">seq_demographics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section A - Demographics"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_age</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">qc_gender</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">seq_employment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section B - Employment"</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_employed</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">seq_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section C - Health"</span><span class="p">,</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">qc_smoke</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">)</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps in Section A: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_demographics</span><span class="o">.</span><span class="n">control_construct_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># -&gt; Steps in Section A: 2</span>
+</span></code></pre></div>
+<p>Une Sequence liste des <strong>constructions</strong>, pas des questions : elle pointe vers
+<code>qc_age</code>, l'instruction de poser la question, et non vers <code>q_age</code>, le contenu
+de la question.</p>
+<p>Vous pouvez aussi ajouter un <strong>StatementItem</strong> pour introduire une section.
+Il affiche un message au lieu de poser une question :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">intro_a</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">StatementItem</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Welcome"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">intro_a</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s2">"Welcome to the National Health Survey"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le <code>name</code> sert aux personnes qui conçoivent le questionnaire ; <code>set_text()</code>
+définit ce que voient les répondants. Sans lui, la déclaration n'affiche rien.
+Rappelez-le avec <code>lang="fr"</code> pour le texte français.</p>
+<h2 id="7-etape-4-modeliser-les-sauts-conditionnels-avec-ifthenelse">7. Étape 4 : Modéliser les sauts conditionnels avec IfThenElse<a class="headerlink" href="#7-etape-4-modeliser-les-sauts-conditionnels-avec-ifthenelse" title="Permanent link">&para;</a></h2>
+<p>Le devis dit : <em>« Sauter la section B si âge &lt; 16. »</em>
+En DDI, cela devient une construction <code>IfThenElse</code>.</p>
+<p>Un <code>IfThenElse</code> a jusqu'à trois parties :</p>
+<ul>
+<li><strong>Condition Si</strong> : la règle à vérifier (âge &gt;= 16)</li>
+<li><strong>Alors</strong> : quelle construction exécuter si la règle est vraie (Section B)</li>
+<li><strong>Sinon</strong> (facultatif) : quelle construction exécuter si elle est fausse</li>
+</ul>
+<p>Créez-le avec <code>add_item()</code>, définissez la règle avec <code>set_condition()</code>, puis
+connectez la branche « alors » avec <code>.to_reference()</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">skip_employment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Age gate for employment"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"age &gt;= 16"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Working age"</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">seq_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span></code></pre></div>
+<p>La porte d'âge n'a pas besoin de branche « sinon ». Quand le répondant a moins
+de 16 ans, rien ne s'exécute, et le flux continue simplement avec l'étape
+suivante de la Sequence principale (la Section C, à l'étape 7). Quand vous avez
+besoin d'une branche « sinon », définissez <code>else_construct_reference</code> de la
+même façon.</p>
+<p>Les noms d'une condition, comme <code>age</code>, désignent des réponses. Ici, ce sont du
+simple texte : rien dans le fichier ne dit que <code>age</code> est la réponse à « What
+is your age? ». Le <a href="../module-16-advanced-questionnaire-spec/">module 16</a>
+écrit les filtres avec des questions nommées et vérifie les filtres d'un
+instrument par rapport à un devis.</p>
+<h2 id="8-etape-5-modeliser-poser-seulement-si-avec-un-ifthenelse-imbrique">8. Étape 5 : Modéliser « poser seulement si » avec un IfThenElse imbriqué<a class="headerlink" href="#8-etape-5-modeliser-poser-seulement-si-avec-un-ifthenelse-imbrique" title="Permanent link">&para;</a></h2>
+<p>Le devis dit : <em>« Poser B2 (profession) seulement si B1 = Oui. »</em>
+C'est un autre <code>IfThenElse</code>, cette fois à l'intérieur de la Section B.
+Le chemin « alors » exécute le QuestionConstruct de la profession ; il n'y a
+pas de chemin « sinon », donc la question est sautée quand la condition est
+fausse :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ask_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Occupation routing"</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">ask_occupation</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"employed == 1"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Employed"</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">ask_occupation</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">qc_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># La section B pose B1, puis exécute cette porte</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">seq_employment</span><span class="o">.</span><span class="n">control_construct_references</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ask_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">())</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps in Section B: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_employment</span><span class="o">.</span><span class="n">control_construct_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># -&gt; Steps in Section B: 2</span>
+</span></code></pre></div>
+<h2 id="9-etape-6-modeliser-une-liste-de-menage-avec-loop">9. Étape 6 : Modéliser une liste de ménage avec Loop<a class="headerlink" href="#9-etape-6-modeliser-une-liste-de-menage-avec-loop" title="Permanent link">&para;</a></h2>
+<p>Le devis dit : <em>« Répéter la section A pour chaque membre du ménage. »</em>
+DDI représente cela avec une construction <strong>Loop</strong>.</p>
+<p>Un Loop répète une construction de contrôle (habituellement une Sequence)
+pour chaque élément d'une liste. Par exemple, il exécute la section
+démographique une fois par membre du ménage. Ajoutez-le comme toute autre
+construction et pointez-le vers la section qu'il répète avec
+<code>control_construct_reference</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Loop</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">roster_loop</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Household roster loop"</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">roster_loop</span><span class="o">.</span><span class="n">control_construct_reference</span> <span class="o">=</span> <span class="n">seq_demographics</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">roster_loop</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"member &lt;= household_size"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Each member"</span><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">roster_loop</span><span class="o">.</span><span class="n">control_construct_reference</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">seq_demographics</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>Un Loop dit aussi combien de temps il se répète : <code>set_condition()</code> donne la
+condition sous laquelle il se répète, comme pour un IfThenElse. Sans elle, le
+fichier ne dit pas combien de fois la section s'exécute.</p>
+<p>Notez la différence : une Sequence liste plusieurs étapes
+(<code>control_construct_references</code>, au pluriel), tandis qu'un Loop en répète une
+seule (<code>control_construct_reference</code>, au singulier).</p>
+<h2 id="10-etape-7-construire-la-sequence-principale-et-linstrument">10. Étape 7 : Construire la Sequence principale et l'Instrument<a class="headerlink" href="#10-etape-7-construire-la-sequence-principale-et-linstrument" title="Permanent link">&para;</a></h2>
+<p>La <strong>Sequence principale</strong> définit le flux global du questionnaire.
+Elle référence le message de bienvenue, les séquences de section, la porte
+IfThenElse et la boucle, dans l'ordre.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">main_seq</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Main Survey Flow"</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="n">intro_a</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="n">seq_demographics</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">skip_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">seq_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">roster_loop</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">],</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>L'ordre est :</p>
+<ol>
+<li><code>StatementItem</code> : Bienvenue</li>
+<li><code>Sequence</code> : Section A (Démographie)</li>
+<li><code>IfThenElse</code> : Porte d'âge (→ Section B, ou la sauter)</li>
+<li><code>Sequence</code> : Section C (Santé)</li>
+<li><code>Loop</code> : Liste du ménage</li>
+</ol>
+<p>Enfin, créez un <strong>Instrument</strong> qui pointe vers la Sequence principale.
+L'Instrument est le point d'entrée principal : il dit « ceci est le
+questionnaire ».</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">instrument</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Instrument</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Health Survey Instrument"</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">instrument</span><span class="o">.</span><span class="n">control_construct_reference</span> <span class="o">=</span> <span class="n">main_seq</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Instruments: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Instrument</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; Instruments: 1</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Tout le flux est du DDI valide :</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">assert</span> <span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span> <span class="o">==</span> <span class="p">[]</span>
+</span></code></pre></div>
+<p>C'est la deuxième ligne qui compte. Sans elle, l'Instrument porte un nom et
+rien d'autre (un questionnaire qui n'administre rien), et le document reste
+parfaitement valide, car le schéma n'exige pas ce lien. Seule la
+<code>ControlConstructReference</code> relie le point d'entrée au flux que vous venez
+de construire.</p>
+<h2 id="11-la-correspondance-complete">11. La correspondance complète<a class="headerlink" href="#11-la-correspondance-complete" title="Permanent link">&para;</a></h2>
+<p>Voici le devis complet traduit en DDI, sous forme de diagramme. Chaque flèche
+est une référence dans le XML. Les étapes numérotées d'une Sequence
+s'exécutent dans l'ordre. Un IfThenElse exécute sa construction « alors »
+seulement quand sa condition est vraie ; aucun des deux filtres n'a de
+« sinon », et DDI n'a pas de « aller à ». Quand une construction se termine, le
+flux reprend à l'étape suivante de la Sequence qui la contient.</p>
+<pre class="mermaid"><code>flowchart TD
+    I["Instrument : Enquête santé"] --&gt;|ControlConstructReference| M["Sequence : Flux principal"]
+    M --&gt;|1| W["StatementItem : Bienvenue"]
+    M --&gt;|2| SA["Sequence : Section A"]
+    M --&gt;|3| ITE1["IfThenElse : Âge &gt;= 16 ?"]
+    M --&gt;|4| SC["Sequence : Section C"]
+    M --&gt;|5| L["Loop : Liste du ménage"]
+    SA --&gt;|1| QC1["QuestionConstruct : Poser l'âge"]
+    SA --&gt;|2| QC2["QuestionConstruct : Poser le genre"]
+    ITE1 --&gt;|alors| SB["Sequence : Section B"]
+    SB --&gt;|1| QC3["QuestionConstruct : Poser l'emploi"]
+    SB --&gt;|2| ITE2["IfThenElse : Employé = Oui ?"]
+    ITE2 --&gt;|alors| QC4["QuestionConstruct : Poser la profession"]
+    SC --&gt;|1| QC5["QuestionConstruct : Poser la santé"]
+    SC --&gt;|2| QC6["QuestionConstruct : Poser le tabac"]
+    L --&gt;|répète| SA</code></pre>
+<h2 id="12-etapes-de-la-correspondance">12. Étapes de la correspondance<a class="headerlink" href="#12-etapes-de-la-correspondance" title="Permanent link">&para;</a></h2>
+<p>Suivez ces étapes quand vous traduisez un devis de questionnaire en DDI :</p>
+<ol>
+<li>Lister toutes les questions → <code>add_question()</code>, puis <code>add_item(QuestionConstruct, ...)</code> pour chacune.</li>
+<li>Identifier les sections → <code>add_item(Sequence, ...)</code> pour chacune.</li>
+<li>Trouver les règles « sauter si... » → <code>add_item(IfThenElse, ...)</code> pour chacune.</li>
+<li>Trouver les règles « poser seulement si... » → <code>add_item(IfThenElse, ...)</code> pour chacune.</li>
+<li>Trouver les règles « répéter pour chaque... » → <code>add_item(Loop, ...)</code> pour chacune.</li>
+<li>Trouver les introductions de section → <code>add_item(StatementItem, ...)</code> pour chacune.</li>
+<li>Construire la <code>Sequence</code> principale qui relie tout.</li>
+<li>Créer l'<code>Instrument</code> qui pointe vers la Sequence principale, et exécuter <code>doc.validate()</code>.</li>
+</ol>
+<hr />
+<div class="admonition example">
+<p class="admonition-title">Scénario</p>
+<p>Vous avez reçu le devis de l'enquête sur la santé ci-dessus de votre
+équipe de recherche. Votre tâche : créer le document DDI avec toutes
+les questions, construire la logique de flux avec des Sequences, des
+portes IfThenElse et un Loop, et tout connecter à un Instrument.</p>
+</div>
+<hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>(O1)</strong> Lisez ce court devis. Pour chaque ligne, nommez la ou les constructions DDI que vous utiliseriez. N'écrivez pas encore de code.</p>
+<ul>
+<li>Introduction : « Cette enquête porte sur vos trajets vers le travail. »</li>
+<li>T1. Vous déplacez-vous vers un lieu de travail ? <em>(Oui / Non)</em></li>
+<li>T2. Comment vous déplacez-vous habituellement ? <em>(poser seulement si T1 = Oui)</em></li>
+<li>T3. Combien de minutes le trajet a-t-il duré ? <em>(répéter pour chaque trajet effectué la semaine dernière)</em></li>
+</ul>
+<details class="success">
+<summary>Réponse</summary>
+<ul>
+<li>Introduction → un <code>StatementItem</code>.</li>
+<li>T1, T2 et T3 → une question chacune, enveloppée dans un
+  <code>QuestionConstruct</code>.</li>
+<li>« poser seulement si T1 = Oui » → un <code>IfThenElse</code> dont la condition
+  teste T1 et dont la branche « alors » exécute le <code>QuestionConstruct</code>
+  de T2.</li>
+<li>« répéter pour chaque trajet » → un <code>Loop</code> qui pointe vers le
+  <code>QuestionConstruct</code> de T3 (ou vers une <code>Sequence</code> qui le contient).</li>
+<li>L'ordre des étapes → la <code>Sequence</code> principale.</li>
+<li>Le questionnaire complet → un <code>Instrument</code> qui pointe vers la
+  <code>Sequence</code> principale.</li>
+</ul>
+</details>
+</li>
+<li>
+<p><strong>(O2)</strong> Créez une étude pour l'enquête sur la santé et ajoutez ses 6 questions. Enveloppez chaque question dans un <code>QuestionConstruct</code>, puis ajoutez une <code>Sequence</code> pour chaque section (A, B, C) qui liste ses constructions dans l'ordre. Affichez les compteurs et le nombre d'étapes de la section A.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>QuestionConstructs: 6
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Sequences: 3
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Steps in Section A: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">Sequence</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"National Health Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"ca.healthcan"</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">q_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your age?"</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">q_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your gender?"</span><span class="p">)</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">q_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Are you currently employed?"</span><span class="p">)</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">q_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your occupation?"</span><span class="p">)</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">q_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your general health?"</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">q_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Do you smoke?"</span><span class="p">)</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="n">qc_age</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Age"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_age</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="p">)</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="n">qc_gender</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Gender"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_gender</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="p">)</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="n">qc_employed</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Employed"</span><span class="p">,</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>    <span class="n">question_reference</span><span class="o">=</span><span class="n">q_employed</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="p">)</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="n">qc_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Occupation"</span><span class="p">,</span>
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>    <span class="n">question_reference</span><span class="o">=</span><span class="n">q_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="p">)</span>
+</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="n">qc_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Health"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="p">)</span>
+</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="n">qc_smoke</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-32"><a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Smoke"</span><span class="p">,</span> <span class="n">question_reference</span><span class="o">=</span><span class="n">q_smoke</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-11-33"><a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="p">)</span>
+</span><span id="__span-11-34"><a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>
+</span><span id="__span-11-35"><a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="n">seq_demographics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-36"><a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-11-37"><a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section A - Demographics"</span><span class="p">,</span>
+</span><span id="__span-11-38"><a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_age</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">qc_gender</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-11-39"><a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="p">)</span>
+</span><span id="__span-11-40"><a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="n">seq_employment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-41"><a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-11-42"><a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section B - Employment"</span><span class="p">,</span>
+</span><span id="__span-11-43"><a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_employed</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-11-44"><a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="p">)</span>
+</span><span id="__span-11-45"><a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="n">seq_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-11-46"><a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-11-47"><a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section C - Health"</span><span class="p">,</span>
+</span><span id="__span-11-48"><a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">qc_smoke</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-11-49"><a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="p">)</span>
+</span><span id="__span-11-50"><a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>
+</span><span id="__span-11-51"><a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"QuestionConstructs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">QuestionConstruct</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-52"><a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sequences: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Sequence</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-53"><a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps in Section A: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_demographics</span><span class="o">.</span><span class="n">control_construct_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O3)</strong> Ajoutez les deux portes du devis. La porte d'âge n'exécute la section B que si <code>age &gt;= 16</code>. La porte de la profession n'exécute B2 que si <code>employed == 1</code> ; placez-la dans la section B, après B1. Affichez le nombre d'éléments <code>IfThenElse</code> et le nombre d'étapes de la section B.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>IfThenElse: 2
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Steps in Section B: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">IfThenElse</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">skip_employment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Age gate for employment"</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"age &gt;= 16"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Working age"</span><span class="p">)</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">seq_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="n">ask_occupation</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Occupation routing"</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">ask_occupation</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"employed == 1"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Employed"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">ask_occupation</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">qc_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="n">seq_employment</span><span class="o">.</span><span class="n">control_construct_references</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ask_occupation</span><span class="o">.</span><span class="n">to_reference</span><span class="p">())</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IfThenElse: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps in Section B: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_employment</span><span class="o">.</span><span class="n">control_construct_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O4)</strong> Ajoutez la liste du ménage : un <code>Loop</code> qui répète la section A. Affichez le nombre de boucles, et vérifiez que la boucle pointe vers la section A.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Loops: 1
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Repeats Section A: True
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Loop</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">roster_loop</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Household roster loop"</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">roster_loop</span><span class="o">.</span><span class="n">control_construct_reference</span> <span class="o">=</span> <span class="n">seq_demographics</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">roster_loop</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"member &lt;= household_size"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Each member"</span><span class="p">)</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loops: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Loop</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="n">repeats_a</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">roster_loop</span><span class="o">.</span><span class="n">control_construct_reference</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">seq_demographics</span><span class="o">.</span><span class="n">identifier</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="p">)</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Repeats Section A: </span><span class="si">{</span><span class="n">repeats_a</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Ajoutez un <code>StatementItem</code> de bienvenue et la <code>Sequence</code> principale (bienvenue, section A, porte d'âge, section C, boucle de la liste du ménage). Créez un <code>Instrument</code> qui pointe vers la Sequence principale. Affichez le nombre d'étapes du flux principal, le nombre d'instruments et le nombre d'erreurs de validation.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Steps in main flow: 5
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Instruments: 1
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Validation errors: 0
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.datacollection</span><span class="w"> </span><span class="kn">import</span> <span class="n">Instrument</span><span class="p">,</span> <span class="n">StatementItem</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">intro_a</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">StatementItem</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Welcome"</span><span class="p">)</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">intro_a</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s2">"Welcome to the National Health Survey"</span><span class="p">)</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">main_seq</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Main Survey Flow"</span><span class="p">,</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="n">intro_a</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>        <span class="n">seq_demographics</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>        <span class="n">skip_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>        <span class="n">seq_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        <span class="n">roster_loop</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    <span class="p">],</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="p">)</span>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="n">instrument</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Instrument</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Health Survey Instrument"</span><span class="p">)</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="n">instrument</span><span class="o">.</span><span class="n">control_construct_reference</span> <span class="o">=</span> <span class="n">main_seq</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps in main flow: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">main_seq</span><span class="o">.</span><span class="n">control_construct_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Instruments: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">Instrument</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Validation errors: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O1, O5)</strong> <em>(Facultatif)</em> Dessinez sur papier l'organigramme de votre propre enquête (réelle ou imaginaire). Étiquetez chaque boîte avec le type de construction DDI. Puis construisez-le en Python avec <code>add_item()</code>, reliez les constructions avec <code>.to_reference()</code> et validez-le.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p>Les réponses varient. Vérifiez que chaque <code>QuestionConstruct</code> référence une
+question, que chaque <code>Sequence</code> liste ses étapes dans l'ordre où les
+répondants les voient, et que l'<code>Instrument</code> pointe vers la <code>Sequence</code> de
+premier niveau. Exécutez <code>doc.validate()</code> avant d'enregistrer : il doit
+renvoyer <code>[]</code>.</p>
+</details>
+</li>
+</ol>
+<hr />
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<details class="question" open="open">
+<summary>Question 1 (O1) : De quelles constructions cette ligne du devis a-t-elle besoin ?</summary>
+<p>Le devis dit : « B2. Quelle est votre profession ? <em>(poser seulement si B1 = Oui)</em> ».</p>
+<p><strong>A.</strong> Un <code>QuestionConstruct</code> pour B2, exécuté par la branche « alors » d'un <code>IfThenElse</code> dont la condition teste B1.</p>
+<p><strong>B.</strong> Un <code>Loop</code> qui répète B2 pour chaque réponse à B1.</p>
+<p><strong>C.</strong> Un <code>StatementItem</code> qui affiche le texte de B2.</p>
+<p><strong>D.</strong> Un deuxième <code>Instrument</code> pour les répondants employés.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> « Poser seulement si » est une condition, donc un <code>IfThenElse</code>.
+Sa branche « alors » exécute le <code>QuestionConstruct</code> qui pose B2.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 2 (O2) : Qu'est-ce qui ne va pas dans cette Sequence ?</summary>
+<p><!-- docs-test: skip -- deliberately wrong: it lists questions, not constructs -->
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">seq_a</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section A"</span><span class="p">,</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">q_age</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">q_gender</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">)</span>
+</span></code></pre></div></p>
+<p><strong>A.</strong> Rien. Une Sequence peut lister des questions directement.</p>
+<p><strong>B.</strong> Une Sequence ne peut contenir qu'une seule étape.</p>
+<p><strong>C.</strong> Elle liste les questions elles-mêmes. Elle devrait lister les <code>QuestionConstruct</code> qui les posent (<code>qc_age</code>, <code>qc_gender</code>).</p>
+<p><strong>D.</strong> <code>.to_reference()</code> doit être appelé sur la Sequence, pas sur ses étapes.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> Une Sequence ordonne des <strong>constructions de contrôle</strong>. La
+question porte le contenu ; le <code>QuestionConstruct</code> est l'instruction
+« posez-la maintenant », et c'est lui qu'une Sequence liste.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 (O3) : Un répondant de 12 ans arrive à cette porte. Que se passe-t-il ensuite ?</summary>
+<p>La Sequence principale est : bienvenue, section A, <code>skip_employment</code>, section C.</p>
+<p><!-- docs-test: skip -- fragment: seq_employment is the reader's own Section B -->
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">skip_employment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Age gate for employment"</span><span class="p">)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"age &gt;= 16"</span><span class="p">)</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">skip_employment</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">seq_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span></code></pre></div></p>
+<p><strong>A.</strong> La section B, puis la section C.</p>
+<p><strong>B.</strong> La section B seulement, puis l'enquête se termine.</p>
+<p><strong>C.</strong> Plus rien : l'enquête se termine à la porte.</p>
+<p><strong>D.</strong> La section B est sautée, et le flux continue avec la section C, l'étape suivante de la Sequence principale.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>D.</strong> La condition <code>age &gt;= 16</code> est fausse, et la porte n'a pas de
+branche « sinon », donc rien ne s'exécute à l'intérieur. La Sequence
+principale passe ensuite à son étape suivante, la section C.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 (O4) : Quelle ligne fait répéter la section A par la liste du ménage ?</summary>
+<p>Vous voulez que <code>roster_loop</code> répète la section A (<code>seq_demographics</code>) pour
+chaque membre du ménage. Quelle ligne fait cela ?</p>
+<p><strong>A.</strong> <code>seq_demographics.control_construct_references.append(roster_loop.to_reference())</code></p>
+<p><strong>B.</strong> <code>roster_loop.control_construct_reference = seq_demographics.to_reference()</code></p>
+<p><strong>C.</strong> <code>roster_loop.set_condition("household members")</code></p>
+<p><strong>D.</strong> <code>roster_loop = doc.add_item(Sequence, name="Household roster")</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Un <code>Loop</code> pointe vers la construction unique qu'il répète au
+moyen de <code>control_construct_reference</code>. L'option A placerait la boucle
+dans la section A, ce qui est l'inverse de ce qu'on veut.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O5) : Et si l'Instrument n'est pas relié au flux ?</summary>
+<p>Vous créez l'Instrument mais oubliez
+<code>instrument.control_construct_reference = main_seq.to_reference()</code>.
+Qu'est-ce qui est vrai ?</p>
+<p><strong>A.</strong> <code>doc.validate()</code> signale une erreur sur le lien manquant.</p>
+<p><strong>B.</strong> Python lève une <code>AttributeError</code> à l'enregistrement.</p>
+<p><strong>C.</strong> <code>doc.validate()</code> renvoie toujours <code>[]</code>, mais l'Instrument ne pointe vers aucun flux, donc il n'administre rien.</p>
+<p><strong>D.</strong> L'Instrument trouve la Sequence principale tout seul.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> Le schéma n'exige pas ce lien, donc le fichier est valide. Mais
+seule <code>control_construct_reference</code> relie le point d'entrée du
+questionnaire au flux. Définissez-la toujours, puis validez.</p>
+</details>
+</details>
+<hr />
+<h2 id="pour-aller-plus-loin-facultatif">Pour aller plus loin (facultatif)<a class="headerlink" href="#pour-aller-plus-loin-facultatif" title="Permanent link">&para;</a></h2>
+<p>Cette section n'a ni objectif ni question de quiz. Lisez-la quand vous avez
+besoin d'un routage à plus de deux chemins.</p>
+<h3 id="routage-a-plusieurs-voies-avec-elseif">Routage à plusieurs voies avec ElseIf<a class="headerlink" href="#routage-a-plusieurs-voies-avec-elseif" title="Permanent link">&para;</a></h3>
+<p>Certains devis dirigent les répondants vers l'une de plusieurs sections : « si
+65 ans ou plus, poser des questions sur la retraite ; si 16 à 64 ans, poser des
+questions sur l'emploi ; sinon, sauter les deux. » Un seul <code>IfThenElse</code> peut
+porter des conditions supplémentaires sous forme de branches <strong>ElseIf</strong>,
+ajoutées avec <code>add_elseif()</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">q_retired</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"In what year did you retire?"</span><span class="p">)</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">qc_retired</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">QuestionConstruct</span><span class="p">,</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Ask Retirement Year"</span><span class="p">,</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">question_reference</span><span class="o">=</span><span class="n">q_retired</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="p">)</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="n">seq_retirement</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="n">Sequence</span><span class="p">,</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Section B2 - Retirement"</span><span class="p">,</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>    <span class="n">control_construct_references</span><span class="o">=</span><span class="p">[</span><span class="n">qc_retired</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()],</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="p">)</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="n">age_router</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">IfThenElse</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Age router"</span><span class="p">)</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="n">age_router</span><span class="o">.</span><span class="n">set_condition</span><span class="p">(</span><span class="s2">"age &gt;= 65"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Retirement age"</span><span class="p">)</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="n">age_router</span><span class="o">.</span><span class="n">then_construct_reference</span> <span class="o">=</span> <span class="n">seq_retirement</span><span class="o">.</span><span class="n">to_reference</span><span class="p">()</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="n">age_router</span><span class="o">.</span><span class="n">add_elseif</span><span class="p">(</span><span class="n">seq_employment</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span> <span class="n">command</span><span class="o">=</span><span class="s2">"age &gt;= 16"</span><span class="p">)</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+</span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ElseIf branches: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">age_router</span><span class="o">.</span><span class="n">else_if_branches</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="c1"># -&gt; ElseIf branches: 1</span>
+</span></code></pre></div>
+<p>Les conditions sont vérifiées dans l'ordre : testez donc d'abord le groupe le
+plus étroit. Si la première condition était <code>age &gt;= 16</code>, un répondant de 70 ans
+la satisferait et n'atteindrait jamais la branche de la retraite. Un répondant
+de moins de 16 ans ne satisfait aucune des deux conditions, donc rien ne
+s'exécute ; définissez <code>else_construct_reference</code> si ce cas a besoin de sa
+propre branche.</p>
+<p><em>Essayez :</em> ajoutez à <code>age_router</code> une branche « sinon » qui exécute un
+<code>StatementItem</code> remerciant les répondants de moins de 16 ans, puis exécutez
+<code>doc.validate()</code>.</p>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux repérer les questions, les sections, les règles de saut et les règles de répétition d'un devis, et nommer la construction DDI de chacune. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un script qui enveloppe chaque question dans un <code>QuestionConstruct</code> et liste les constructions, dans l'ordre, dans une <code>Sequence</code> par section. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter un <code>IfThenElse</code> avec <code>set_condition()</code> qui n'exécute une section ou une question que si sa condition est vraie. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter un <code>Loop</code> qui répète une section, comme une liste de ménage. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux créer un <code>Instrument</code> qui pointe vers la <code>Sequence</code> principale, et vérifier que <code>doc.validate()</code> renvoie <code>[]</code>. (O5)</li>
+</ul>
+<hr />
+<div class="admonition tip">
+<p class="admonition-title">Notes pour l'instructeur</p>
+<ul>
+<li>Commencez avec le devis papier à l'écran. Demandez aux apprenants d'encercler chaque question, de souligner chaque règle de saut et d'encadrer chaque instruction « répéter ». Cela rend la correspondance concrète avant de toucher au code.</li>
+<li>Dessinez l'organigramme au tableau. Étiquetez chaque boîte avec le nom de la construction DDI. Puis traduisez boîte par boîte en Python.</li>
+<li>Insistez sur l'habitude du <code>.to_reference()</code> : chaque fois qu'une construction pointe vers une autre (une Sequence vers ses étapes, un IfThenElse vers ses branches), le lien est une référence, pas l'objet lui-même. Les références gardent le fichier valide car elles portent l'identifiant et le type de la cible.</li>
+<li>Confusion courante : « Pourquoi ai-je besoin à la fois d'une Question et d'un QuestionConstruct ? » Réponse : la Question est le contenu (« Quel est votre âge ? »). Le QuestionConstruct est l'instruction (« maintenant, posez cette question »). La Sequence dit « posez celles-ci dans cet ordre ». Séparer le contenu du flux permet de réutiliser la même question dans différents instruments. La question 2 du quiz vérifie ce point.</li>
+<li>Une porte qui n'a qu'une branche « alors » est la façon dont DDI dit « sauter ». Si des apprenants ajoutent une branche « sinon » qui pointe vers la section C alors que la section C est aussi l'étape suivante de la Sequence principale, les répondants de moins de 16 ans verraient la section C deux fois. Demandez-leur de suivre un répondant de 12 ans dans le flux.</li>
+<li>Pour le Loop : montrez un formulaire de liste de ménage où la même section se répète par personne. Demandez : « Combien de fois cette section s'exécute-t-elle ? » Réponse : « Ça dépend du nombre de personnes dans le ménage. » C'est une boucle.</li>
+<li>ElseIf se trouve dans « Pour aller plus loin ». Utilisez-le avec les apprenants plus rapides : « Si 65+ → poser la retraite. Si 16-64 → poser l'emploi. Sinon → sauter. » Faites remarquer que l'ordre des conditions compte.</li>
+<li>L'exercice 6 (dessinez votre propre devis) est excellent pour le travail en groupe. Les paires peuvent échanger leurs devis et traduire le questionnaire de l'autre.</li>
+</ul>
+</div>
+<hr />
+<p><strong>Voir aussi :</strong> <a href="../module-09-code-lists/">Module 9 : Listes de codes</a> | <a href="../../user-guide/#travailler-avec-nimporte-quel-type-delement">Guide utilisateur : Tout type d'élément</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../module-09-code-lists/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: 9. Listes de codes">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                9. Listes de codes
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../module-11-data-lineage/" class="md-footer__link md-footer__link--next" aria-label="Suivant: 11. Traçabilité des données">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                11. Traçabilité des données
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/ddi-l/" target="_blank" rel="noopener" title="ddi-l on PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.action.edit","content.action.view","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.share","search.suggest","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
+      
+    
+  </body>
+</html>

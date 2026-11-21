@@ -2,14 +2,15 @@
 <!--
   Root 404 page for the gh-pages branch, published by deploy-docs.yml.
 
-  mike serves every page under a version directory (/ddi-l/latest/,
-  /ddi-l/dev/, /ddi-l/0.1.0/, ...), so a link without one, such as
+  Every page is under /ddi-l/latest/, so a link without it, such as
   /ddi-l/server/, has nothing to serve. GitHub Pages answers any missing path
-  on the site with this file, which sends an unversioned path to the same page
-  under /ddi-l/latest/ and maps pages that were renamed to their new names.
+  on the site with this file, which sends such a path to the same page under
+  /ddi-l/latest/ and maps pages that were renamed to their new names.
 
-  A path that already starts with a version is a real 404 and gets a plain
-  "not found" message instead, so a redirect can never loop.
+  The site once kept a directory per release; it now holds the newest release
+  only, so a path under a version (/ddi-l/0.1.0/server/, /ddi-l/dev/server/)
+  goes to the same page under /ddi-l/latest/. A path under latest/ that is still missing is a real 404 and
+  gets a plain "not found" message instead, so a redirect can never loop.
 -->
 <html lang="en">
 <head>
@@ -51,9 +52,8 @@
     "curriculum/module-16-capstone/": "curriculum/module-17-capstone/"
   };
 
-  // mike's version names and aliases, including pre-release and build suffixes
-  // (a v0.2.0-rc.1 tag deploys to 0.2.0-rc.1/). versions.json is not consulted
-  // so the redirect does not wait on a second request.
+  // The version directories older links may name, including pre-release and
+  // build suffixes (a v0.2.0-rc.1 tag deployed to 0.2.0-rc.1/).
   var VERSION = /^(latest|dev|next|v?\d+(\.\d+)*([-+][0-9A-Za-z.+-]+)?)$/;
 
   function moved(rest) {
@@ -74,11 +74,14 @@
   var tail = window.location.search + window.location.hash;
   var target;
 
-  if (VERSION.test(first)) {
+  if (first === "latest") {
     var renamed = moved(rest.slice(first.length + 1));
     if (renamed !== null) {
-      target = BASE + first + "/" + renamed;
+      target = BASE + "latest/" + renamed;
     }
+  } else if (VERSION.test(first)) {
+    var page = rest.slice(first.length + 1);
+    target = BASE + "latest/" + (moved(page) || page);
   } else {
     target = BASE + "latest/" + (moved(rest) || rest);
   }

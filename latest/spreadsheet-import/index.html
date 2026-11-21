@@ -1,0 +1,5924 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Document a study in CSV files or an Excel workbook, then load it into DDI in bulk: studies and people, concepts, variables, code lists and classifications, questions and the questionnaire flow, data files, methodology and comparisons, in any number of languages.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/spreadsheet-import/">
+      
+      
+      
+      
+        <link rel="prev" href="../tutorials/automation-playbook/">
+      
+      
+        <link rel="next" href="../spreadsheet-templates/">
+      
+      
+        
+          <link rel="alternate" href="/ddi-l/latest/" hreflang="en">
+        
+          <link rel="alternate" href="/ddi-l/latest/fr/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.1.3">
+    
+    
+      
+        <title>Load DDI from spreadsheets - ddi-l</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e2cf241e.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../assets/stylesheets/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            
+            
+  
+  
+    <p class="ddi-announce">
+      <span class="ddi-announce__icon twemoji" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+      </span>
+      <span>New in the course: optional modules on DDI-Codebook and DDI-CDI.</span>
+      
+        <a class="ddi-announce__link" href="../curriculum/">See the course<span aria-hidden="true"> &rarr;</span></a>
+      
+    </p>
+  
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="ddi-l" class="md-header__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Load DDI from spreadsheets
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/spreadsheet-import/" hreflang="en" lang="en" class="md-select__link" aria-current="true">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/fr/spreadsheet-import/" hreflang="fr" lang="fr" class="md-select__link">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/pbisson44/ddi-l" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="./.." class="md-tabs__link">
+          
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../curriculum/" class="md-tabs__link">
+          
+  
+  Learn
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../guides/" class="md-tabs__link">
+          
+  
+  How-to guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../release-notes/" class="md-tabs__link">
+          
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="ddi-l" class="md-nav__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Home
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Install
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../curriculum/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Learn
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Learn
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tier 1: Foundations
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Tier 1: Foundations
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  1. What is metadata?
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  2. Set up your environment
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  3. Create your first study
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  4. Variables and questions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  5. Concepts and universes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  6. Open and modify files
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  7. Validate from the command line
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tier 2: Real-world skills
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Tier 2: Real-world skills
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  8. From CSV/Excel to DDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  9. Code lists
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Questionnaire flows
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Data lineage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Data linkage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Properties, find, and validate
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Custom fields
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Update and version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tier 3: Applied practice
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Tier 3: Applied practice
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Advanced questionnaire specification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Capstone projects
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Optional modules
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Optional modules
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-18-exact-gates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Decide gates exactly
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-19-http-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  19. Serve ddi-l over HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-20-codebook-to-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  20. From DDI-Codebook to DDI-Lifecycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/module-21-ddi-cdi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  21. Describe your data with DDI-CDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Course resources
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Course resources
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Cheat sheet
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Answer keys
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../curriculum/instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Instructor guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../guides/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7 17 3.2-6.8L17 7l-3.2 6.8zm5-5.9a.9.9 0 0 0-.9.9.9.9 0 0 0 .9.9.9.9 0 0 0 .9-.9.9.9 0 0 0-.9-.9M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  How-to guides
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  How-to guides
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Check your metadata
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Check your metadata
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Validate and lint
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Troubleshoot schema errors
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Check a questionnaire against a spec
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Automate validation in CI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Bring metadata in and out
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_3_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Bring metadata in and out
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load DDI from spreadsheets
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Load DDI from spreadsheets
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tables-cover" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What the tables cover
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-tables-fit-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        How the tables fit together
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules-every-table-follows" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rules every table follows
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules every table follows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identifiers-and-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Identifiers and versions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-and-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Names and labels
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#several-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Several languages
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#question-wording-for-different-audiences" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Question wording for different audiences
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Custom properties
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-questionnaire-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The questionnaire flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tables-add" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What the tables add
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#each-table-column-by-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Each table, column by column
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Each table, column by column">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        settings
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#columns-most-tables-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Columns most tables have
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        studies
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        organizations
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#individuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        individuals
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        concepts
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        universes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unit_types" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        unit_types
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conceptual_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        conceptual_variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#represented_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        represented_variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code_lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        code_lists
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        codes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        instructions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        questions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_texts
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_grids
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_blocks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruments" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        instruments
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        variable_groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        datasets
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ncubes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ncubes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        methodologies
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processing_events" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        processing_events
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality_statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        quality_statements
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        comparisons
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-the-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Load the tables
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Load the tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-fragment-or-a-study-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A fragment or a study document
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-something-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        When something is wrong
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#excel-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Excel tips
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#into-colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Into Colectica
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Spreadsheet templates
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Work with other tools
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Work with Colectica exports
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Move between XML and objects
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reuse fragments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Run ddi-l elsewhere
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Run ddi-l elsewhere
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Use the command line
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Serve the HTTP API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Use ddi-l from R
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Build tools and applications
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 1-5 5v11l5-4.5zm2 4v13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6c-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1M10 18.41C8.75 18.09 7.5 18 6.5 18c-1.06 0-2.32.19-3.5.5V7.13c.91-.4 2.14-.63 3.5-.63s2.59.23 3.5.63z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  User guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Models reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lint rules
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Namespace catalog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Schema coverage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  About
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  About
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Release notes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance playbook
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Performance playbook
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Schema conversion benchmark
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Related Python packages
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tables-cover" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What the tables cover
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-tables-fit-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        How the tables fit together
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules-every-table-follows" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Rules every table follows
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rules every table follows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identifiers-and-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Identifiers and versions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-and-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Names and labels
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#several-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Several languages
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#question-wording-for-different-audiences" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Question wording for different audiences
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Custom properties
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-questionnaire-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The questionnaire flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-tables-add" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What the tables add
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#each-table-column-by-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Each table, column by column
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Each table, column by column">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        settings
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#columns-most-tables-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Columns most tables have
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#studies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        studies
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        organizations
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#individuals" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        individuals
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        concepts
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#universes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        universes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unit_types" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        unit_types
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conceptual_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        conceptual_variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#represented_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        represented_variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code_lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        code_lists
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        codes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        instructions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        questions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_texts
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_grids
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_blocks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        question_groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instruments" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        instruments
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        flow
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        variables
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        variable_groups
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        datasets
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ncubes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ncubes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        methodologies
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processing_events" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        processing_events
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality_statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        quality_statements
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        comparisons
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-the-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Load the tables
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Load the tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-fragment-or-a-study-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        A fragment or a study document
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-something-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        When something is wrong
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#excel-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Excel tips
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#into-colectica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Into Colectica
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../guides/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    How-to guides
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Bring metadata in and out
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/spreadsheet-import.en.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/pbisson44/ddi-l/raw/main/docs/spreadsheet-import.en.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="load-ddi-from-spreadsheets">Load DDI from spreadsheets<a class="headerlink" href="#load-ddi-from-spreadsheets" title="Permanent link">&para;</a></h1>
+<p>Many teams keep their metadata in spreadsheets: one row per variable, one per
+question, one per code. <code>ddi-l</code> loads those spreadsheets into DDI in one step,
+as long as they follow the layout on this page: one table per kind of item,
+with rows that point at each other by <code>id</code>.</p>
+<p>The tables can be a folder of CSV files, the same zipped, or one Excel
+workbook with a sheet per table. The result is a <code>FragmentInstance</code> laid out as Colectica Designer writes
+one, or a DDI study.</p>
+<p>Start from a template: the <a href="../spreadsheet-templates/">spreadsheet templates</a>
+page has blank tables and a filled-in bilingual example, as CSV files and as
+an Excel workbook.</p>
+<h2 id="what-the-tables-cover">What the tables cover<a class="headerlink" href="#what-the-tables-cover" title="Permanent link">&para;</a></h2>
+<p>The tables cover what most organizations document about a study, from its
+citation to its questionnaire, variables and data files.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Tables</th>
+<th>DDI items</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The study</td>
+<td><code>studies</code>, <code>groups</code>, <code>organizations</code>, <code>individuals</code></td>
+<td>StudyUnit, Group, Organization, Individual</td>
+</tr>
+<tr>
+<td>Concepts</td>
+<td><code>concepts</code>, <code>universes</code>, <code>unit_types</code></td>
+<td>Concept, Universe, UnitType</td>
+</tr>
+<tr>
+<td>Variables</td>
+<td><code>conceptual_variables</code>, <code>represented_variables</code>, <code>variables</code></td>
+<td>ConceptualVariable, RepresentedVariable, Variable</td>
+</tr>
+<tr>
+<td>Codes</td>
+<td><code>code_lists</code>, <code>codes</code></td>
+<td>CodeList (flat or hierarchical), Category</td>
+</tr>
+<tr>
+<td>Questions</td>
+<td><code>instructions</code>, <code>questions</code>, <code>question_texts</code>, <code>question_grids</code>, <code>question_blocks</code>, <code>question_groups</code></td>
+<td>Instruction, QuestionItem, QuestionGrid, QuestionBlock, QuestionGroup</td>
+</tr>
+<tr>
+<td>Questionnaire</td>
+<td><code>instruments</code>, <code>flow</code></td>
+<td>Instrument, Sequence, QuestionConstruct, StatementItem, IfThenElse, Loop</td>
+</tr>
+<tr>
+<td>Data</td>
+<td><code>variable_groups</code>, <code>datasets</code>, <code>ncubes</code></td>
+<td>VariableGroup, PhysicalInstance, DataRelationship, NCube</td>
+</tr>
+<tr>
+<td>Methods and quality</td>
+<td><code>methodologies</code>, <code>processing_events</code>, <code>quality_statements</code></td>
+<td>Methodology, ProcessingEvent, QualityStatement</td>
+</tr>
+<tr>
+<td>Comparison</td>
+<td><code>comparisons</code></td>
+<td>ConceptMap, UniverseMap, QuestionMap, VariableMap, CategoryMap</td>
+</tr>
+</tbody>
+</table>
+<p><code>settings</code> holds the agency, version and language every table uses.</p>
+<p>Use the tables you need and leave out the rest: a folder with only
+<code>settings</code>, <code>concepts</code> and <code>variables</code> is fine.</p>
+<p>Some things are not in the tables: column positions of fixed-width files,
+classification levels and families, geography, sampling plans, derivation
+and computation code, and managed missing-value schemes. Load the tables,
+then add those to the typed models in Python, or in Colectica.</p>
+<h2 id="how-the-tables-fit-together">How the tables fit together<a class="headerlink" href="#how-the-tables-fit-together" title="Permanent link">&para;</a></h2>
+<p>A column that points at another table holds that table's <code>id</code>s. The diagrams
+show every link, one area at a time. A crow's foot marks the side that can
+have many rows; a column that holds several ids (<code>a|b</code>) makes a many-to-many
+link. In DDI each link is a reference, such as a variable's
+<code>r:QuestionReference</code> or a universe's <code>r:DefiningConceptReference</code>.</p>
+<p>Concepts, universes and codes, and the variables they define:</p>
+<pre class="mermaid"><code>erDiagram
+    concepts }o--o{ concepts : "parent"
+    concepts |o--o{ universes : "concept"
+    concepts |o--o{ unit_types : "concept"
+    concepts |o--o{ conceptual_variables : "concept"
+    universes }o--o{ conceptual_variables : "universe"
+    unit_types |o--o{ conceptual_variables : "unit_type"
+    concepts |o--o{ represented_variables : "concept"
+    unit_types |o--o{ represented_variables : "unit_type"
+    conceptual_variables |o--o{ represented_variables : "conceptual_variable"
+    code_lists |o--o{ represented_variables : "code_list"
+    code_lists ||--o{ codes : "code_list"
+    codes |o--o{ codes : "parent"</code></pre>
+<p>Variables, their groups, data files and n-cubes:</p>
+<pre class="mermaid"><code>erDiagram
+    concepts |o--o{ variables : "concept"
+    universes }o--o{ variables : "universe"
+    unit_types |o--o{ variables : "unit_type"
+    code_lists |o--o{ variables : "code_list"
+    conceptual_variables |o--o{ variables : "conceptual_variable"
+    represented_variables |o--o{ variables : "represented_variable"
+    questions }o--o{ variables : "question"
+    datasets }o--o{ variables : "dataset"
+    variable_groups }o--o{ variables : "group"
+    variable_groups |o--o{ variable_groups : "parent"
+    concepts |o--o{ variable_groups : "concept"
+    universes }o--o{ variable_groups : "universe"
+    variables }o--o{ ncubes : "dimensions"
+    universes }o--o{ ncubes : "universe"</code></pre>
+<p>Questions, grids, blocks and groups:</p>
+<pre class="mermaid"><code>erDiagram
+    questions ||--o{ question_texts : "question"
+    concepts |o--o{ questions : "concept"
+    code_lists |o--o{ questions : "code_list"
+    instructions }o--o{ questions : "instruction"
+    question_groups }o--o{ questions : "group"
+    concepts |o--o{ question_grids : "concept"
+    code_lists |o--o{ question_grids : "rows, columns, code_list"
+    instructions }o--o{ question_grids : "instruction"
+    question_groups }o--o{ question_grids : "group"
+    questions }o--o{ question_blocks : "questions"
+    question_grids }o--o{ question_blocks : "questions"
+    concepts |o--o{ question_blocks : "concept"
+    instructions }o--o{ question_blocks : "instruction"
+    question_groups }o--o{ question_blocks : "group"
+    question_groups |o--o{ question_groups : "parent"
+    concepts |o--o{ question_groups : "concept"</code></pre>
+<p>The questionnaire flow. A <code>question</code> step names a question, a grid or a block:</p>
+<pre class="mermaid"><code>erDiagram
+    instruments ||--o{ flow : "instrument"
+    flow |o--o{ flow : "parent"
+    questions |o--o{ flow : "question"
+    question_grids |o--o{ flow : "question"
+    question_blocks |o--o{ flow : "question"</code></pre>
+<p>The study, its people and what hangs from it. A creator or publisher is an
+organization or an individual; a study has at most one methodology:</p>
+<pre class="mermaid"><code>erDiagram
+    studies }o--o{ groups : "studies"
+    groups |o--o{ groups : "parent"
+    organizations }o--o{ studies : "creator, publisher, funder"
+    individuals }o--o{ studies : "creator, publisher"
+    universes |o--o{ studies : "universe"
+    concepts |o--o{ studies : "concept"
+    studies ||--o{ instruments : "study"
+    studies ||--o{ datasets : "study"
+    studies ||--o| methodologies : "study"
+    studies ||--o{ processing_events : "study"
+    studies ||--o{ quality_statements : "study"</code></pre>
+<p>Comparisons. The <code>type</code> column says which table <code>source</code> and <code>target</code> name;
+for <code>category</code> they name codes:</p>
+<pre class="mermaid"><code>erDiagram
+    concepts |o--o{ comparisons : "source, target"
+    universes |o--o{ comparisons : "source, target"
+    questions |o--o{ comparisons : "source, target"
+    variables |o--o{ comparisons : "source, target"
+    codes |o--o{ comparisons : "source, target"</code></pre>
+<h2 id="rules-every-table-follows">Rules every table follows<a class="headerlink" href="#rules-every-table-follows" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>One file or sheet per table</strong>, named as in the tables above:
+  <code>concepts.csv</code>, or a sheet called <code>concepts</code>. The first row holds the column
+  names; every other row is one item.</li>
+<li><strong><code>id</code> is your key.</strong> Give every row an <code>id</code>, unique within its table: the
+  variable name, a question number, anything without spaces. Other tables use
+  it to point at the row: a variable's <code>question</code> column holds a question's
+  <code>id</code>.</li>
+<li><strong>Several ids in one cell</strong> are separated by <code>|</code>: <code>Q_AGE|Q_AGE_PROXY</code>.</li>
+<li><strong>Empty cells are fine.</strong> Only the columns marked required below must be
+  filled.</li>
+<li><strong>Notes columns are ignored.</strong> A column whose name starts with <code>#</code> or <code>_</code> is
+  yours, for comments or working notes.</li>
+<li><strong>Unknown columns are errors</strong>, so a misspelled <code>lable@en</code> is caught rather
+  than silently dropped.</li>
+<li><strong>One study needs no <code>study</code> column.</strong> When <code>studies</code> has a single row,
+  instruments, data files, methodologies, processing events and quality
+  statements with an empty <code>study</code> belong to it.</li>
+</ul>
+<h3 id="identifiers-and-versions">Identifiers and versions<a class="headerlink" href="#identifiers-and-versions" title="Permanent link">&para;</a></h3>
+<p>Every item gets a DDI identifier (a UUID). Leave <code>ddi_id</code> empty and one is
+derived from the agency, the table and the row's <code>id</code>, so loading the same
+tables again gives the same identifiers, and a re-import updates items instead
+of duplicating them. Fill <code>ddi_id</code> to update an item that is already in
+Colectica, with either of:</p>
+<ul>
+<li>its identifier, such as <code>4bf610ee-6771-44da-ab0b-00655b53b79b</code>, or
+  <code>VS1.V1</code> for one scoped to its scheme;</li>
+<li>its URN, such as <code>urn:ddi:example.org:4bf610ee-6771-44da-ab0b-00655b53b79b:3</code>.
+  The URN's agency must be the tables' agency, and its version is the item's
+  when the row's <code>version</code> is empty.</li>
+</ul>
+<p>Every item takes the <code>version</code> from <code>settings</code>, unless its own <code>version</code>
+column says otherwise. A version is whole numbers separated by dots: <code>1</code>, <code>2</code>,
+<code>1.1</code>.</p>
+<p>Each value is checked as the tables are read, and one that DDI does not
+accept is reported with its file, row and column, with every other problem:
+an identifier with a space or more than one dot, a URN of another agency or
+missing a part, the older URN form that names object types
+(<code>urn:ddi:example.org:VariableScheme:VS1:Variable:V1:1</code>), a version such as
+<code>v2</code>, or two rows with the same identifier. The agency and version in
+<code>settings</code>, or passed in, are checked too.</p>
+<h3 id="names-and-labels">Names and labels<a class="headerlink" href="#names-and-labels" title="Permanent link">&para;</a></h3>
+<p><code>name</code> is the item's short name, such as <code>AGE</code> or <code>Q_AGE</code>, written in the
+language set in <code>settings</code>. It defaults to <code>id</code>. <code>label</code> and <code>description</code> are
+for people, in as many languages as you have.</p>
+<h2 id="several-languages">Several languages<a class="headerlink" href="#several-languages" title="Permanent link">&para;</a></h2>
+<p>Text that people read goes in one column per language: the column name, <code>@</code>,
+and a language tag.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label@en</code>, <code>label@fr</code></td>
+<td>the label in English and in French</td>
+</tr>
+<tr>
+<td><code>description@fr-CA</code></td>
+<td>the description in Canadian French</td>
+</tr>
+<tr>
+<td><code>text@en</code>, <code>text@fr</code></td>
+<td>a question's wording in English and in French</td>
+</tr>
+</tbody>
+</table>
+<p>Any <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> tag works: <code>en</code>, <code>fr</code>,
+<code>fr-CA</code>, <code>iu</code>. Add a column per language you document; a cell left empty means
+that language has no text for that row. All the languages of one row are
+written into one DDI element, as Colectica writes them.</p>
+<h2 id="question-wording-for-different-audiences">Question wording for different audiences<a class="headerlink" href="#question-wording-for-different-audiences" title="Permanent link">&para;</a></h2>
+<p><code>text@en</code> is the wording everyone sees. When a question is worded differently
+for some respondents (asked of a proxy, or read by an interviewer), add one
+row per wording to <code>question_texts</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>question</code></th>
+<th><code>language</code></th>
+<th><code>audience</code></th>
+<th><code>text</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Q_WORK</code></td>
+<td><code>en</code></td>
+<td><code>proxy</code></td>
+<td>Last week, did this person work at a job or business?</td>
+</tr>
+<tr>
+<td><code>Q_WORK</code></td>
+<td><code>fr</code></td>
+<td><code>proxy</code></td>
+<td>La semaine dernière, cette personne a-t-elle travaillé à un emploi ou à une entreprise?</td>
+</tr>
+<tr>
+<td><code>Q_AGE</code></td>
+<td><code>en</code></td>
+<td><code>intvwr</code></td>
+<td>INTERVIEWER: Record the age in completed years.</td>
+</tr>
+</tbody>
+</table>
+<p>Each wording becomes its own <code>d:QuestionText</code>. DDI 3.3 records who a wording
+is for in its <code>audienceLanguage</code> attribute, a language tag, so the audience is
+added to the language as a private-use subtag:</p>
+<table>
+<thead>
+<tr>
+<th>Wording</th>
+<th><code>audienceLanguage</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text@en</code> in <code>questions</code></td>
+<td><code>en</code></td>
+</tr>
+<tr>
+<td><code>proxy</code> wording in English</td>
+<td><code>en-x-proxy</code></td>
+</tr>
+<tr>
+<td><code>intvwr</code> wording in French</td>
+<td><code>fr-x-intvwr</code></td>
+</tr>
+</tbody>
+</table>
+<p>Because it goes into a language tag, an audience is letters and digits, at
+most 8 between hyphens: <code>proxy</code>, <code>intvwr</code>, <code>self-resp</code>. A question can have
+one wording per language and audience.</p>
+<h2 id="custom-properties">Custom properties<a class="headerlink" href="#custom-properties" title="Permanent link">&para;</a></h2>
+<p>Any property DDI has no column for goes in a column named <code>custom:</code> and the
+property name: <code>custom:Steward</code>, <code>custom:Sensitivity</code>, <code>custom:Mode</code>. Each
+filled cell becomes an <code>r:UserAttributePair</code> on the item, with the key
+<code>extension:</code> and the property name, which is how Colectica Designer stores its
+custom fields. A name that already has a prefix, such as <code>custom:x:Source</code>,
+keeps it as it is.</p>
+<p>Every table whose rows are items takes custom columns. Four tables do not:
+<code>settings</code>, <code>codes</code> (a category can be shared by several codes),
+<code>question_texts</code> and <code>comparisons</code>.</p>
+<h2 id="the-questionnaire-flow">The questionnaire flow<a class="headerlink" href="#the-questionnaire-flow" title="Permanent link">&para;</a></h2>
+<p>An instrument's content is in <code>flow</code>, one row per step, in the order the
+steps run. <code>type</code> says what a step is:</p>
+<table>
+<thead>
+<tr>
+<th><code>type</code></th>
+<th>What it is</th>
+<th>Needs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>question</code></td>
+<td>asks a question, grid or block</td>
+<td><code>question</code></td>
+</tr>
+<tr>
+<td><code>statement</code></td>
+<td>shows a text</td>
+<td><code>text@&lt;language&gt;</code></td>
+</tr>
+<tr>
+<td><code>sequence</code></td>
+<td>holds the steps whose <code>parent</code> it is, in order</td>
+<td></td>
+</tr>
+<tr>
+<td><code>if</code></td>
+<td>runs its <code>then</code> steps when <code>condition</code> holds, else its <code>else</code> steps</td>
+<td><code>condition</code></td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td>repeats its steps while <code>condition</code> holds</td>
+<td><code>condition</code></td>
+</tr>
+</tbody>
+</table>
+<p>A step without a <code>parent</code> is at the top of its instrument. A step inside an
+<code>if</code> says which side it is on with <code>branch</code> (<code>then</code> by default, or <code>else</code>).
+The example's flow:</p>
+<table>
+<thead>
+<tr>
+<th><code>id</code></th>
+<th><code>type</code></th>
+<th><code>parent</code></th>
+<th><code>branch</code></th>
+<th><code>question</code></th>
+<th><code>condition</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>F_INTRO</code></td>
+<td><code>statement</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_DEMO</code></td>
+<td><code>sequence</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_AGE</code></td>
+<td><code>question</code></td>
+<td><code>F_DEMO</code></td>
+<td></td>
+<td><code>Q_AGE</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_SEX</code></td>
+<td><code>question</code></td>
+<td><code>F_DEMO</code></td>
+<td></td>
+<td><code>Q_SEX</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_IF_15</code></td>
+<td><code>if</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td><code>AGE &gt;= 15</code></td>
+</tr>
+<tr>
+<td><code>F_WORK</code></td>
+<td><code>question</code></td>
+<td><code>F_IF_15</code></td>
+<td><code>then</code></td>
+<td><code>Q_WORK</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_IF_WORKED</code></td>
+<td><code>if</code></td>
+<td><code>F_IF_15</code></td>
+<td><code>then</code></td>
+<td></td>
+<td><code>WORKED = 1</code></td>
+</tr>
+<tr>
+<td><code>F_JOBS</code></td>
+<td><code>loop</code></td>
+<td><code>F_IF_WORKED</code></td>
+<td></td>
+<td></td>
+<td><code>job &lt;= JOB_COUNT</code></td>
+</tr>
+<tr>
+<td><code>F_JOB</code></td>
+<td><code>question</code></td>
+<td><code>F_JOBS</code></td>
+<td></td>
+<td><code>B_JOB</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_TOO_YOUNG</code></td>
+<td><code>statement</code></td>
+<td><code>F_IF_15</code></td>
+<td><code>else</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>F_END</code></td>
+<td><code>statement</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Conditions are text, recorded with the language named in
+<code>condition_language</code> (<code>pseudo-code</code> by default): write them in the syntax your
+collection system uses.</p>
+<h2 id="what-the-tables-add">What the tables add<a class="headerlink" href="#what-the-tables-add" title="Permanent link">&para;</a></h2>
+<p>Some items follow from the rows without a table of their own. Their
+identifiers are derived like a row's, so they too are the same on every load.</p>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>Comes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>each code</td>
+<td>a category holding its labels, or the one its <code>category</code> key shares</td>
+</tr>
+<tr>
+<td>each study</td>
+<td>a data collection holding its instruments, methodology and processing events</td>
+</tr>
+<tr>
+<td>each study's processing events</td>
+<td>a processing event scheme listing them</td>
+</tr>
+<tr>
+<td>each instrument</td>
+<td>a sequence holding its top-level flow steps</td>
+</tr>
+<tr>
+<td>each <code>if</code> and <code>loop</code></td>
+<td>a sequence for each of its branches or its body</td>
+</tr>
+<tr>
+<td>each dataset</td>
+<td>a data relationship with a logical record listing its variables</td>
+</tr>
+<tr>
+<td>each <code>map</code> of <code>comparisons</code></td>
+<td>one map holding its rows</td>
+</tr>
+</tbody>
+</table>
+<p>A unit type with no <code>concept</code> gets the placeholder concept reference Colectica
+writes, since the DDI 3.3 schema requires one by mistake.</p>
+<h2 id="each-table-column-by-column">Each table, column by column<a class="headerlink" href="#each-table-column-by-column" title="Permanent link">&para;</a></h2>
+<p>Columns marked <strong>required</strong> must be present and filled on every row.</p>
+<h3 id="settings">settings<a class="headerlink" href="#settings" title="Permanent link">&para;</a></h3>
+<p>Two columns, <code>setting</code> and <code>value</code>, one row per setting:</p>
+<table>
+<thead>
+<tr>
+<th><code>setting</code></th>
+<th>Meaning</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agency</code></td>
+<td>the maintenance agency of every item, such as <code>org.example</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>the version of every item without its own</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>the language of names</td>
+<td><code>en</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="columns-most-tables-have">Columns most tables have<a class="headerlink" href="#columns-most-tables-have" title="Permanent link">&para;</a></h3>
+<p>Every table whose rows are items, except <code>studies</code>, <code>groups</code>,
+<code>organizations</code> and <code>individuals</code>, starts with these:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>yes</td>
+<td>your key for the row</td>
+</tr>
+<tr>
+<td><code>ddi_id</code></td>
+<td></td>
+<td>an existing DDI identifier or URN to keep</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td></td>
+<td>the item's version (<code>1</code>, <code>2</code>, <code>1.1</code>), if not the one in <code>settings</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td></td>
+<td>the short name; defaults to <code>id</code></td>
+</tr>
+<tr>
+<td><code>label@&lt;language&gt;</code></td>
+<td></td>
+<td>a short label, per language</td>
+</tr>
+<tr>
+<td><code>description@&lt;language&gt;</code></td>
+<td></td>
+<td>a longer definition, per language</td>
+</tr>
+<tr>
+<td><code>custom:&lt;name&gt;</code></td>
+<td></td>
+<td>a property of your own</td>
+</tr>
+</tbody>
+</table>
+<p><code>studies</code>, <code>groups</code>, <code>organizations</code> and <code>individuals</code> have <code>id</code>, <code>ddi_id</code>,
+<code>version</code> and custom columns too, and the columns listed for each.</p>
+<h3 id="studies">studies<a class="headerlink" href="#studies" title="Permanent link">&para;</a></h3>
+<p>One row per study: a survey cycle, a census, an administrative source.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title@&lt;language&gt;</code></td>
+<td>the study's title; defaults to <code>id</code></td>
+</tr>
+<tr>
+<td><code>subtitle@&lt;language&gt;</code></td>
+<td>a subtitle</td>
+</tr>
+<tr>
+<td><code>alternate_title@&lt;language&gt;</code></td>
+<td>another title, such as an acronym</td>
+</tr>
+<tr>
+<td><code>abstract@&lt;language&gt;</code></td>
+<td>what the study is about</td>
+</tr>
+<tr>
+<td><code>purpose@&lt;language&gt;</code></td>
+<td>why it was done</td>
+</tr>
+<tr>
+<td><code>creator</code></td>
+<td>who made it: <code>organizations</code> or <code>individuals</code> ids, or names</td>
+</tr>
+<tr>
+<td><code>publisher</code></td>
+<td>who publishes it: ids or names, as for <code>creator</code></td>
+</tr>
+<tr>
+<td><code>publication_date</code></td>
+<td>when it was published: <code>2024</code>, <code>2024-05</code> or <code>2024-05-31</code></td>
+</tr>
+<tr>
+<td><code>identifier</code></td>
+<td>a persistent identifier, such as a DOI: <code>10.1234/abcd</code></td>
+</tr>
+<tr>
+<td><code>identifier_agency</code></td>
+<td>who manages the identifier: <code>DOI</code>, <code>Handle</code>, <code>ARK</code>...</td>
+</tr>
+<tr>
+<td><code>copyright@&lt;language&gt;</code></td>
+<td>its copyright statement</td>
+</tr>
+<tr>
+<td><code>license</code></td>
+<td>the licence it is published under, as a web address: <code>https://creativecommons.org/licenses/by/4.0/</code></td>
+</tr>
+<tr>
+<td><code>kind_of_data</code></td>
+<td><code>Survey data</code>, <code>Administrative records</code>...</td>
+</tr>
+<tr>
+<td><code>analysis_unit</code></td>
+<td><code>Persons</code>, <code>Households</code>, <code>Businesses</code>...</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td>who the study covers, as a <code>universes</code> id</td>
+</tr>
+<tr>
+<td><code>concept</code></td>
+<td>the concept that defines the study, as a <code>concepts</code> id</td>
+</tr>
+<tr>
+<td><code>keywords@&lt;language&gt;</code></td>
+<td>topics, separated by vertical bars</td>
+</tr>
+<tr>
+<td><code>start_date</code>, <code>end_date</code></td>
+<td>the period covered: <code>2024-01-01</code></td>
+</tr>
+<tr>
+<td><code>countries</code></td>
+<td>country codes covered, such as <code>CA</code></td>
+</tr>
+<tr>
+<td><code>funder</code></td>
+<td>who funds it, as <code>organizations</code> ids</td>
+</tr>
+<tr>
+<td><code>grant_number</code></td>
+<td>the funding grant numbers</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>creator</code> or <code>publisher</code> that is an id in <code>organizations</code> or <code>individuals</code>
+becomes a reference to it; anything else is written as a name.</p>
+<h3 id="groups">groups<a class="headerlink" href="#groups" title="Permanent link">&para;</a></h3>
+<p>One row per group of studies, such as every cycle of a survey.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title@&lt;language&gt;</code></td>
+<td>the group's title; defaults to <code>id</code></td>
+</tr>
+<tr>
+<td><code>abstract@&lt;language&gt;</code></td>
+<td>what the group holds</td>
+</tr>
+<tr>
+<td><code>purpose@&lt;language&gt;</code></td>
+<td>why the studies are grouped</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>the kind of group: <code>Series</code>, <code>Program</code>...</td>
+</tr>
+<tr>
+<td><code>studies</code></td>
+<td>the studies in it, as <code>studies</code> ids</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td>the group it sits in, as a <code>groups</code> id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="organizations">organizations<a class="headerlink" href="#organizations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name@&lt;language&gt;</code></td>
+<td>yes</td>
+<td>the organization's name, per language</td>
+</tr>
+<tr>
+<td><code>abbreviation</code></td>
+<td></td>
+<td>a short name or acronym</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td></td>
+<td>a contact email address</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td></td>
+<td>its web site</td>
+</tr>
+<tr>
+<td><code>description@&lt;language&gt;</code></td>
+<td></td>
+<td>a description, per language</td>
+</tr>
+</tbody>
+</table>
+<h3 id="individuals">individuals<a class="headerlink" href="#individuals" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>first_name</code></td>
+<td>given name</td>
+</tr>
+<tr>
+<td><code>last_name</code></td>
+<td>family name</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>a contact email address</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>a web page</td>
+</tr>
+<tr>
+<td><code>description@&lt;language&gt;</code></td>
+<td>a description, per language, such as the role</td>
+</tr>
+</tbody>
+</table>
+<p>At least one of <code>first_name</code> and <code>last_name</code> is needed.</p>
+<h3 id="concepts">concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parent</code></td>
+<td>the broader concept(s) this one narrows, as <code>concepts</code> ids</td>
+</tr>
+</tbody>
+</table>
+<h3 id="universes">universes<a class="headerlink" href="#universes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>concept</code></td>
+<td>the concept that defines the universe, as a <code>concepts</code> id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="unit_types">unit_types<a class="headerlink" href="#unit_types" title="Permanent link">&para;</a></h3>
+<p>The kinds of unit described: person, household, business.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>concept</code></td>
+<td>the concept of the unit, as a <code>concepts</code> id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conceptual_variables">conceptual_variables<a class="headerlink" href="#conceptual_variables" title="Permanent link">&para;</a></h3>
+<p>A concept measured on a unit type, with no representation yet.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>concept</code></td>
+<td>the concept, as a <code>concepts</code> id</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td>who it describes, as <code>universes</code> ids</td>
+</tr>
+<tr>
+<td><code>unit_type</code></td>
+<td>the kind of unit, as a <code>unit_types</code> id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="represented_variables">represented_variables<a class="headerlink" href="#represented_variables" title="Permanent link">&para;</a></h3>
+<p>A conceptual variable with a representation, shared by the variables that
+record it the same way.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conceptual_variable</code></td>
+<td>the conceptual variable, as a <code>conceptual_variables</code> id</td>
+</tr>
+<tr>
+<td><code>concept</code>, <code>unit_type</code></td>
+<td>without a <code>conceptual_variable</code>: the concept and unit type</td>
+</tr>
+<tr>
+<td><code>representation</code></td>
+<td><strong>required</strong>: <code>code</code>, <code>numeric</code>, <code>text</code> or <code>datetime</code></td>
+</tr>
+<tr>
+<td><code>code_list</code>, <code>numeric_type</code>, <code>min</code>, <code>max</code>, <code>max_length</code>, <code>date_type</code></td>
+<td>as for <code>questions</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="code_lists">code_lists<a class="headerlink" href="#code_lists" title="Permanent link">&para;</a></h3>
+<p>Only the columns most tables have. The codes go in <code>codes</code>.</p>
+<h3 id="codes">codes<a class="headerlink" href="#codes" title="Permanent link">&para;</a></h3>
+<p>One row per code, in the order the codes are listed. Each code gets a category
+holding its labels.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code_list</code></td>
+<td>yes</td>
+<td>the code list, as a <code>code_lists</code> id</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>yes</td>
+<td>the code as stored in the data: <code>1</code>, <code>01</code>, <code>M</code></td>
+</tr>
+<tr>
+<td><code>label@&lt;language&gt;</code></td>
+<td></td>
+<td>the category label, per language</td>
+</tr>
+<tr>
+<td><code>description@&lt;language&gt;</code></td>
+<td></td>
+<td>a longer definition, per language</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td></td>
+<td>a key to share one category between code lists</td>
+</tr>
+<tr>
+<td><code>missing</code></td>
+<td></td>
+<td><code>true</code> for a missing-value code, such as Refusal</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td></td>
+<td>for a hierarchy: the <code>value</code> of the code this one sits under</td>
+</tr>
+</tbody>
+</table>
+<p>Codes with the same <code>category</code> key share one category, labelled from the
+first of them: a "Not stated" category used by every code list, for example.</p>
+<p>A classification is a code list whose codes nest: give each code below the top
+level the <code>value</code> of its parent, in the same code list, and list the parent
+first.</p>
+<table>
+<thead>
+<tr>
+<th><code>code_list</code></th>
+<th><code>value</code></th>
+<th><code>label@en</code></th>
+<th><code>parent</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OCCUPATIONS</code></td>
+<td><code>1</code></td>
+<td>Management</td>
+<td></td>
+</tr>
+<tr>
+<td><code>OCCUPATIONS</code></td>
+<td><code>11</code></td>
+<td>Senior managers</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>OCCUPATIONS</code></td>
+<td><code>12</code></td>
+<td>Middle managers</td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>OCCUPATIONS</code></td>
+<td><code>2</code></td>
+<td>Sales and service</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="instructions">instructions<a class="headerlink" href="#instructions" title="Permanent link">&para;</a></h3>
+<p>Instructions to respondents or interviewers, attached to questions with their
+<code>instruction</code> column.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text@&lt;language&gt;</code></td>
+<td>the instruction, per language</td>
+</tr>
+</tbody>
+</table>
+<h3 id="questions">questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text@&lt;language&gt;</code></td>
+<td>the wording, per language</td>
+</tr>
+<tr>
+<td><code>concept</code></td>
+<td>the concept the question measures, as a <code>concepts</code> id</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td>the kind of answer: <code>code</code>, <code>numeric</code>, <code>text</code> or <code>datetime</code></td>
+</tr>
+<tr>
+<td><code>code_list</code></td>
+<td>for <code>code</code>: the code list, as a <code>code_lists</code> id</td>
+</tr>
+<tr>
+<td><code>numeric_type</code></td>
+<td>for <code>numeric</code>: <code>Integer</code>, <code>Decimal</code>, <code>Float</code>, <code>Double</code>, <code>Long</code> or <code>Short</code></td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td>for <code>numeric</code>: the lowest valid value</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>for <code>numeric</code>: the highest valid value</td>
+</tr>
+<tr>
+<td><code>max_length</code></td>
+<td>for <code>text</code>: the longest valid answer, in characters</td>
+</tr>
+<tr>
+<td><code>date_type</code></td>
+<td>for <code>datetime</code>: <code>Date</code>, <code>DateTime</code>, <code>Time</code>, <code>Year</code>, <code>YearMonth</code> or <code>Duration</code></td>
+</tr>
+<tr>
+<td><code>instruction</code></td>
+<td>instructions shown with it, as <code>instructions</code> ids</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td>the question groups it belongs to, as <code>question_groups</code> ids</td>
+</tr>
+</tbody>
+</table>
+<h3 id="question_texts">question_texts<a class="headerlink" href="#question_texts" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>question</code></td>
+<td>yes</td>
+<td>the question, as a <code>questions</code> id</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>yes</td>
+<td>the wording's language</td>
+</tr>
+<tr>
+<td><code>audience</code></td>
+<td></td>
+<td>who the wording is for; empty for everyone</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>yes</td>
+<td>the wording</td>
+</tr>
+</tbody>
+</table>
+<h3 id="question_grids">question_grids<a class="headerlink" href="#question_grids" title="Permanent link">&para;</a></h3>
+<p>A question asked for each row of a grid: rows from one code list, columns
+from another if any, and one response per cell.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text@&lt;language&gt;</code></td>
+<td>the question, per language</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td><strong>required</strong>: the rows, as a <code>code_lists</code> id</td>
+</tr>
+<tr>
+<td><code>columns</code></td>
+<td>the columns, as a <code>code_lists</code> id</td>
+</tr>
+<tr>
+<td><code>response</code> and its details</td>
+<td>the answer in each cell, as for <code>questions</code></td>
+</tr>
+<tr>
+<td><code>concept</code>, <code>instruction</code>, <code>group</code></td>
+<td>as for <code>questions</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="question_blocks">question_blocks<a class="headerlink" href="#question_blocks" title="Permanent link">&para;</a></h3>
+<p>Questions presented together.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>intent@&lt;language&gt;</code></td>
+<td>what the block is for</td>
+</tr>
+<tr>
+<td><code>questions</code></td>
+<td>its questions in order, as <code>questions</code> or <code>question_grids</code> ids</td>
+</tr>
+<tr>
+<td><code>concept</code>, <code>instruction</code>, <code>group</code></td>
+<td>as for <code>questions</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="question_groups">question_groups<a class="headerlink" href="#question_groups" title="Permanent link">&para;</a></h3>
+<p>Groups of questions, such as the modules of a questionnaire. Questions, grids
+and blocks join with their <code>group</code> column.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>the kind of group: <code>Module</code>, <code>Topic</code>...</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td>the group it sits in, as a <code>question_groups</code> id</td>
+</tr>
+<tr>
+<td><code>concept</code></td>
+<td>the concept it covers, as a <code>concepts</code> id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="instruments">instruments<a class="headerlink" href="#instruments" title="Permanent link">&para;</a></h3>
+<p>One row per questionnaire. Its content is in <code>flow</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>study</code></td>
+<td>the study, as a <code>studies</code> id</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>the kind of instrument: <code>CAWI</code>, <code>CATI</code>, <code>Paper</code>...</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flow">flow<a class="headerlink" href="#flow" title="Permanent link">&para;</a></h3>
+<p>The steps of each instrument, as explained in
+<a href="#the-questionnaire-flow">The questionnaire flow</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>instrument</code></td>
+<td>yes</td>
+<td>the instrument, as an <code>instruments</code> id</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>yes</td>
+<td><code>question</code>, <code>statement</code>, <code>sequence</code>, <code>if</code> or <code>loop</code></td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td></td>
+<td>the <code>sequence</code>, <code>if</code> or <code>loop</code> it is inside, as a <code>flow</code> id</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td></td>
+<td>inside an <code>if</code>: <code>then</code> or <code>else</code>; defaults to <code>then</code></td>
+</tr>
+<tr>
+<td><code>question</code></td>
+<td></td>
+<td>for <code>question</code>: a <code>questions</code>, <code>question_grids</code> or <code>question_blocks</code> id</td>
+</tr>
+<tr>
+<td><code>text@&lt;language&gt;</code></td>
+<td></td>
+<td>for <code>statement</code>: the text shown</td>
+</tr>
+<tr>
+<td><code>condition</code></td>
+<td></td>
+<td>for <code>if</code> and <code>loop</code>: the condition, such as <code>AGE &gt;= 15</code></td>
+</tr>
+<tr>
+<td><code>condition_language</code></td>
+<td></td>
+<td>the language of the condition; defaults to <code>pseudo-code</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="variables">variables<a class="headerlink" href="#variables" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>concept</code></td>
+<td>the concept the variable measures, as a <code>concepts</code> id</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td>who the variable describes, as <code>universes</code> ids</td>
+</tr>
+<tr>
+<td><code>question</code></td>
+<td>the question(s) its values come from, as <code>questions</code> ids</td>
+</tr>
+<tr>
+<td><code>representation</code></td>
+<td>how values are recorded: <code>code</code>, <code>numeric</code>, <code>text</code> or <code>datetime</code></td>
+</tr>
+<tr>
+<td><code>code_list</code>, <code>numeric_type</code>, <code>min</code>, <code>max</code>, <code>max_length</code>, <code>date_type</code></td>
+<td>as for <code>questions</code></td>
+</tr>
+<tr>
+<td><code>unit_type</code></td>
+<td>the kind of unit, as a <code>unit_types</code> id</td>
+</tr>
+<tr>
+<td><code>conceptual_variable</code></td>
+<td>its conceptual variable, as a <code>conceptual_variables</code> id</td>
+</tr>
+<tr>
+<td><code>represented_variable</code></td>
+<td>its represented variable, as a <code>represented_variables</code> id</td>
+</tr>
+<tr>
+<td><code>dataset</code></td>
+<td>the data file(s) it is a column of, as <code>datasets</code> ids</td>
+</tr>
+<tr>
+<td><code>group</code></td>
+<td>its variable groups, as <code>variable_groups</code> ids</td>
+</tr>
+</tbody>
+</table>
+<p>A variable with an empty <code>representation</code> takes the one of its represented
+variable, or else the response of its first question, so a variable fed by a
+coded question does not repeat the code list. A data file lists its variables
+in the order of the <code>variables</code> table.</p>
+<h3 id="variable_groups">variable_groups<a class="headerlink" href="#variable_groups" title="Permanent link">&para;</a></h3>
+<p>Groups of variables, such as topics. Variables join with their <code>group</code>
+column.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>the kind of group: <code>Topic</code>, <code>Derived</code>...</td>
+</tr>
+<tr>
+<td><code>parent</code></td>
+<td>the group it sits in, as a <code>variable_groups</code> id</td>
+</tr>
+<tr>
+<td><code>concept</code></td>
+<td>the concept it covers, as a <code>concepts</code> id</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td>who its variables describe, as <code>universes</code> ids</td>
+</tr>
+</tbody>
+</table>
+<h3 id="datasets">datasets<a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h3>
+<p>One row per data file. Variables join with their <code>dataset</code> column.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title@&lt;language&gt;</code></td>
+<td>the file's title; defaults to <code>name</code></td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>where the file is: a path or URL</td>
+</tr>
+<tr>
+<td><code>study</code></td>
+<td>the study, as a <code>studies</code> id</td>
+</tr>
+</tbody>
+</table>
+<p>In DDI a physical instance has no label, so <code>label</code> and <code>description</code>
+describe the file's record of variables (its logical record).</p>
+<h3 id="ncubes">ncubes<a class="headerlink" href="#ncubes" title="Permanent link">&para;</a></h3>
+<p>Multidimensional tables of aggregates.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dimensions</code></td>
+<td><strong>required</strong>: its dimensions in order, as <code>variables</code> ids</td>
+</tr>
+<tr>
+<td><code>purpose@&lt;language&gt;</code></td>
+<td>what the n-cube is for</td>
+</tr>
+<tr>
+<td><code>universe</code></td>
+<td>who it describes, as <code>universes</code> ids</td>
+</tr>
+</tbody>
+</table>
+<h3 id="methodologies">methodologies<a class="headerlink" href="#methodologies" title="Permanent link">&para;</a></h3>
+<p>How a study's data were collected. A study has at most one methodology.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>study</code></td>
+<td>the study, as a <code>studies</code> id</td>
+</tr>
+<tr>
+<td><code>data_collection@&lt;language&gt;</code></td>
+<td>how data were collected</td>
+</tr>
+<tr>
+<td><code>time_method@&lt;language&gt;</code></td>
+<td>cross-section, panel, time series...</td>
+</tr>
+<tr>
+<td><code>sampling@&lt;language&gt;</code></td>
+<td>how the sample was drawn</td>
+</tr>
+<tr>
+<td><code>deviation@&lt;language&gt;</code></td>
+<td>how the sample departs from its design</td>
+</tr>
+<tr>
+<td><code>weighting@&lt;language&gt;</code></td>
+<td>how weights were derived</td>
+</tr>
+</tbody>
+</table>
+<h3 id="processing_events">processing_events<a class="headerlink" href="#processing_events" title="Permanent link">&para;</a></h3>
+<p>What was done to a study's data after collection.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>study</code></td>
+<td>the study, as a <code>studies</code> id</td>
+</tr>
+<tr>
+<td><code>control@&lt;language&gt;</code></td>
+<td>checks made on the data</td>
+</tr>
+<tr>
+<td><code>cleaning@&lt;language&gt;</code></td>
+<td>how the data were cleaned or edited</td>
+</tr>
+<tr>
+<td><code>weighting@&lt;language&gt;</code></td>
+<td>how the data were weighted</td>
+</tr>
+<tr>
+<td><code>appraisal@&lt;language&gt;</code></td>
+<td>response rates, sampling error...</td>
+</tr>
+</tbody>
+</table>
+<h3 id="quality_statements">quality_statements<a class="headerlink" href="#quality_statements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>study</code></td>
+<td>the study, as a <code>studies</code> id</td>
+</tr>
+<tr>
+<td><code>text@&lt;language&gt;</code></td>
+<td>the statement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="comparisons">comparisons<a class="headerlink" href="#comparisons" title="Permanent link">&para;</a></h3>
+<p>How items compare, across studies or cycles: one row per pair. Rows with the
+same <code>map</code> form one map.</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>map</code></td>
+<td>yes</td>
+<td>your key for the map the row belongs to</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>yes</td>
+<td>what is compared: <code>concept</code>, <code>universe</code>, <code>question</code>, <code>variable</code> or <code>category</code></td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>yes</td>
+<td>the item compared from, as an id in that table</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td>yes</td>
+<td>the item compared to, as an id in that table</td>
+</tr>
+<tr>
+<td><code>commonality@&lt;language&gt;</code></td>
+<td></td>
+<td>what they share</td>
+</tr>
+<tr>
+<td><code>difference@&lt;language&gt;</code></td>
+<td></td>
+<td>how they differ</td>
+</tr>
+<tr>
+<td><code>weight</code></td>
+<td></td>
+<td>how alike they are, from <code>0</code> to <code>1</code></td>
+</tr>
+</tbody>
+</table>
+<p>For <code>category</code>, write <code>code_list/value</code> (<code>SEX_CODES/1</code>), or a <code>category</code> key
+of <code>codes</code>.</p>
+<h2 id="load-the-tables">Load the tables<a class="headerlink" href="#load-the-tables" title="Permanent link">&para;</a></h2>
+<p>From Python, <code>load_tables()</code> reads a folder of CSV files or a workbook and
+gives back typed models you can check or edit before writing:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_tables</span><span class="p">,</span> <span class="n">write_table_templates</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># The bilingual example from the templates page, written to a folder.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">write_table_templates</span><span class="p">(</span><span class="s2">"my-survey"</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">tables</span> <span class="o">=</span> <span class="n">load_tables</span><span class="p">(</span><span class="s2">"my-survey"</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">variables</span><span class="p">))</span>  <span class="c1"># -&gt; 5</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"variables"</span><span class="p">,</span> <span class="s2">"AGE"</span><span class="p">)</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># -&gt; Âge en années</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="s2">"flow"</span><span class="p">]))</span>  <span class="c1"># -&gt; 16</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># A Colectica FragmentInstance, one item per fragment.</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">tables</span><span class="o">.</span><span class="n">to_fragment</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"my-survey.xml"</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>tables.tables</code> holds the items of each table, and those it implies, in row
+order: the 16 items of <code>flow</code> are its 11 steps and the 5 sequences they imply.
+<code>tables.items</code> holds them all.</p>
+<p>The same tables as one Excel workbook load the same way:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">write_table_templates</span><span class="p">(</span><span class="s2">"my-survey.xlsx"</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"xlsx"</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">tables</span> <span class="o">=</span> <span class="n">load_tables</span><span class="p">(</span><span class="s2">"my-survey.xlsx"</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># A zip of the CSV files, at its top or in one folder, loads too.</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">write_table_templates</span><span class="p">(</span><span class="s2">"my-survey.zip"</span><span class="p">,</span> <span class="n">example</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"zip"</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">tables</span> <span class="o">=</span> <span class="n">load_tables</span><span class="p">(</span><span class="s2">"my-survey.zip"</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># So do the bytes of a workbook or a zip, received from an upload: they are</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># read in memory, and problems name them workbook.xlsx or tables.zip.</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">tables</span> <span class="o">=</span> <span class="n">load_tables</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"my-survey.xlsx"</span><span class="p">)</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">())</span>
+</span></code></pre></div>
+<p><code>load_tables()</code> takes <code>agency=</code>, <code>version=</code> and <code>language=</code> to override
+<code>settings</code>.</p>
+<h3 id="a-fragment-or-a-study-document">A fragment or a study document<a class="headerlink" href="#a-fragment-or-a-study-document" title="Permanent link">&para;</a></h3>
+<p><code>to_fragment()</code> writes every item, whatever the tables. Its top-level item is
+the only group, or else the only study; pass <code>top_level=</code> to choose another.</p>
+<p><code>to_study()</code> puts the items inside a new study of a <code>DDIInstance</code> document. A
+study document has one study and no place for groups, people, variable
+groups, processing events, quality statements or comparisons, so it takes the
+other tables only, and says which tables to remove otherwise:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"questionnaire"</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="s2">"settings.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s2">"setting,value</span><span class="se">\n</span><span class="s2">agency,example.org</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="s2">"concepts.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"id,label@en</span><span class="se">\n</span><span class="s2">AGE,Age</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="s2">"variables.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="s2">"id,concept,representation,numeric_type</span><span class="se">\n</span><span class="s2">AGE,AGE,numeric,Integer</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">study</span> <span class="o">=</span> <span class="n">load_tables</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">to_study</span><span class="p">(</span><span class="s2">"Labour Force Survey"</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">validate</span><span class="p">())</span>  <span class="c1"># -&gt; []</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">study</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"labour-force-survey.xml"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>From the command line:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ddi<span class="w"> </span>tables<span class="w"> </span>template<span class="w"> </span>my-survey<span class="w"> </span>--example<span class="w">        </span><span class="c1"># the example, as CSV files</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ddi<span class="w"> </span>tables<span class="w"> </span>import<span class="w"> </span>my-survey<span class="w"> </span>-o<span class="w"> </span>my-survey.xml<span class="w">   </span><span class="c1"># a Colectica FragmentInstance</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ddi<span class="w"> </span>tables<span class="w"> </span>import<span class="w"> </span>questionnaire<span class="w"> </span>--study<span class="w"> </span><span class="s2">"Labour Force Survey"</span><span class="w"> </span>-o<span class="w"> </span>study.xml
+</span></code></pre></div>
+<p>Over HTTP, <a href="../server/#load-metadata-tables"><code>ddi serve</code></a> offers the same:
+<code>POST /v1/tables/import</code> takes a workbook or a zip and answers with the
+fragment, or with every problem as a <code>422</code>; <code>GET /v1/tables/template</code> gives
+the templates, and <code>GET /v1/tables</code> describes every table and column as JSON.</p>
+<h2 id="when-something-is-wrong">When something is wrong<a class="headerlink" href="#when-something-is-wrong" title="Permanent link">&para;</a></h2>
+<p>Loading checks every table before writing anything, and reports every problem
+at once, each with its file (or sheet), row and column:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Error: my-survey has 3 problems:
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  - variables.csv, row 4, column question: no row in questions has id 'Q_AGEE'
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  - codes.csv, row 7, column missing: 'maybe' is not true or false
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  - flow.csv, row 6, column parent: 'F_AGE' is a question step; only a
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    sequence, if or loop holds other steps
+</span></code></pre></div>
+<p>Row numbers are the spreadsheet's, header included, so row 4 is the fourth
+row you see in Excel.</p>
+<h2 id="excel-tips">Excel tips<a class="headerlink" href="#excel-tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Keep codes and dates as text.</strong> Excel turns <code>01</code> into the number 1 and
+  <code>2024-05</code> into a date. The template workbooks format every cell as text; in
+  your own workbook, format the columns as Text before typing.</li>
+<li><strong>Save CSV as "CSV UTF-8"</strong>, so accented letters survive. Files saved with
+  semicolons by a French-language Excel are read too.</li>
+<li><strong>One workbook or one folder.</strong> In a workbook, a sheet named <code>README</code>, or
+  with a name starting with <code>_</code>, is ignored; any other sheet must be one of the
+  tables.</li>
+</ul>
+<h2 id="into-colectica">Into Colectica<a class="headerlink" href="#into-colectica" title="Permanent link">&para;</a></h2>
+<p>The <code>FragmentInstance</code> from <code>to_fragment()</code> is written the way Colectica
+Designer writes an export, with one item per <code>&lt;Fragment&gt;</code>, for importing into
+a Colectica repository; try the import in a test repository first. See <a href="../colectica/">Work with Colectica exports</a> for
+reading and editing such files. Because identifiers are derived from your ids,
+loading the same tables again after editing them gives the same items with the
+same identifiers: bump <code>version</code> in <code>settings</code> (or per row) and import again.</p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../tutorials/automation-playbook/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Automate validation in CI">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Automate validation in CI
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../spreadsheet-templates/" class="md-footer__link md-footer__link--next" aria-label="Next: Spreadsheet templates">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Spreadsheet templates
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/ddi-l/" target="_blank" rel="noopener" title="ddi-l on PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.action.edit","content.action.view","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.share","search.suggest","toc.follow"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
+      
+    
+  </body>
+</html>

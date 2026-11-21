@@ -1,0 +1,4405 @@
+
+
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Module 12 du cours ddi-l : documenter un couplage entre une enquête et un registre administratif, déterministe ou probabiliste.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/curriculum/module-12-data-linkage/">
+      
+      
+      
+      
+        <link rel="prev" href="../module-11-data-lineage/">
+      
+      
+        <link rel="next" href="../module-13-properties-find-validate/">
+      
+      
+        
+          <link rel="alternate" href="/ddi-l/latest/" hreflang="en">
+        
+          <link rel="alternate" href="/ddi-l/latest/fr/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.1.3">
+    
+    
+      
+        <title>12. Couplage de données - ddi-l</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e2cf241e.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/site.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Ne plus montrer cela">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            
+            
+  
+  
+    <p class="ddi-announce">
+      <span class="ddi-announce__icon twemoji" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+      </span>
+      <span>Nouveau dans le cours : des modules facultatifs sur DDI-Codebook et DDI-CDI.</span>
+      
+        <a class="ddi-announce__link" href="../">Voir le cours<span aria-hidden="true"> &rarr;</span></a>
+      
+    </p>
+  
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="ddi-l" class="md-header__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              12. Couplage de données
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode clair"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au mode clair" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode sombre"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au mode sombre" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Suivre le réglage du système"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Suivre le réglage du système" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/curriculum/module-12-data-linkage/" hreflang="en" lang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/fr/curriculum/module-12-data-linkage/" hreflang="fr" lang="fr" class="md-select__link" aria-current="true">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Recherche</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Accueil
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+  Guides pratiques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../release-notes/" class="md-tabs__link">
+          
+  
+  À propos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ddi-l" class="md-nav__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Accueil
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installer
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Apprendre
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Apprendre
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 : Fondements
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 : Fondements
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  1. Qu’est-ce que les métadonnées ?
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  2. Préparez votre environnement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  3. Créez votre première étude
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  4. Variables et questions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  5. Concepts et univers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  6. Ouvrir et modifier des fichiers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  7. Valider depuis la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 : Compétences pratiques
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 : Compétences pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  8. Du CSV/Excel au DDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  9. Listes de codes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Flux de questionnaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Traçabilité des données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Couplage de données
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Couplage de données
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-quest-ce-que-le-couplage-de-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Qu'est-ce que le couplage de données ?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-pourquoi-les-instituts-de-statistique-et-les-chercheurs-couplent-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Pourquoi les instituts de statistique et les chercheurs couplent des données
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-deux-facons-de-coupler-deterministe-et-probabiliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Deux façons de coupler : déterministe et probabiliste
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-notre-exemple" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Notre exemple
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modeliser-chaque-source-comme-sa-propre-etude" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Modéliser chaque source comme sa propre étude
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etiqueter-les-cles-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Étiqueter les clés de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-enregistrer-la-correspondance-des-cles-une-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Enregistrer la correspondance des clés : une Comparison
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-enregistrer-la-methode-et-la-qualite-du-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Enregistrer la méthode et la qualité du couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-construire-la-variable-couplee-avec-une-provenance-inter-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Construire la variable couplée avec une provenance inter-sources
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-enregistrer-le-document-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Enregistrer le document de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-le-modele-complet-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Le modèle complet de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-facultatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin (facultatif)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pour aller plus loin (facultatif)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environnements-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Environnements de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consigner-la-confidentialite-et-la-gouvernance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consigner la confidentialité et la gouvernance
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Propriétés, recherche et validation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Champs personnalisés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Mise à jour et versionnage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 : Pratique appliquée
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 : Pratique appliquée
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Spécification avancée de questionnaires
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Projets de synthèse
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modules facultatifs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Modules facultatifs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-18-exact-gates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Comparer exactement des filtres
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-19-http-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  19. Servir ddi-l par HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-20-codebook-to-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  20. De DDI-Codebook à DDI-Lifecycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-21-ddi-cdi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  21. Décrire vos données avec DDI-CDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ressources du cours
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Ressources du cours
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide-mémoire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Corrigés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de l’instructeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7 17 3.2-6.8L17 7l-3.2 6.8zm5-5.9a.9.9 0 0 0-.9.9.9.9 0 0 0 .9.9.9.9 0 0 0 .9-.9.9.9 0 0 0-.9-.9M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Guides pratiques
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guides pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier vos métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Vérifier vos métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Valider et analyser
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dépanner les erreurs de schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier un questionnaire par rapport à une spécification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Automatiser la validation en CI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faire entrer et sortir les métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Faire entrer et sortir les métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Charger du DDI depuis des tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modèles de tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec d’autres outils
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec les exports Colectica
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Passer du XML aux objets
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Réutiliser des fragments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l ailleurs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Utiliser ddi-l ailleurs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Servir l’API HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l depuis R
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Construire des outils et applications
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 1-5 5v11l5-4.5zm2 4v13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6c-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1M10 18.41C8.75 18.09 7.5 18 6.5 18c-1.06 0-2.32.19-3.5.5V7.13c.91-.4 2.14-.63 3.5-.63s2.59.23 3.5.63z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Référence
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide d’utilisation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence de l’API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence des modèles
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Règles lint
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Catalogue des espaces de noms
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Couverture du schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  À propos
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  À propos
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Playbook de performance
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Playbook de performance
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Benchmark de conversion de schémas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Paquets Python associés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de développement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-quest-ce-que-le-couplage-de-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Qu'est-ce que le couplage de données ?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-pourquoi-les-instituts-de-statistique-et-les-chercheurs-couplent-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Pourquoi les instituts de statistique et les chercheurs couplent des données
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-deux-facons-de-coupler-deterministe-et-probabiliste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Deux façons de coupler : déterministe et probabiliste
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-notre-exemple" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Notre exemple
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-modeliser-chaque-source-comme-sa-propre-etude" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Modéliser chaque source comme sa propre étude
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-etiqueter-les-cles-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Étiqueter les clés de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-enregistrer-la-correspondance-des-cles-une-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Enregistrer la correspondance des clés : une Comparison
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-enregistrer-la-methode-et-la-qualite-du-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Enregistrer la méthode et la qualité du couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-construire-la-variable-couplee-avec-une-provenance-inter-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Construire la variable couplée avec une provenance inter-sources
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-enregistrer-le-document-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Enregistrer le document de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-le-modele-complet-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Le modèle complet de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin-facultatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin (facultatif)
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pour aller plus loin (facultatif)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environnements-de-couplage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Environnements de couplage
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consigner-la-confidentialite-et-la-gouvernance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Consigner la confidentialité et la gouvernance
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Apprendre
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../module-08-csv-to-ddi/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Niveau 2 : Compétences pratiques
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/curriculum/module-12-data-linkage.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/pbisson44/ddi-l/raw/main/docs/curriculum/module-12-data-linkage.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="module-12-couplage-de-donnees-combiner-des-enregistrements-entre-jeux-de-donnees">Module 12 : Couplage de données : combiner des enregistrements entre jeux de données<a class="headerlink" href="#module-12-couplage-de-donnees-combiner-des-enregistrements-entre-jeux-de-donnees" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
+<ul>
+<li><strong>O1.</strong> Expliquer en deux ou trois phrases ce qu'est le couplage de microdonnées, et pourquoi un institut national de statistique ou un chercheur couple des fichiers existants au lieu de collecter de nouvelles données.</li>
+<li><strong>O2.</strong> Choisir un couplage déterministe ou probabiliste pour une paire de fichiers, et justifier ce choix d'après les variables qu'ils partagent.</li>
+<li><strong>O3.</strong> Modéliser chaque jeu de données source comme sa propre étude avec <code>doc.add_study()</code>, et y ajouter ses variables au moyen de <code>doc.study()</code>.</li>
+<li><strong>O4.</strong> Étiqueter la clé de couplage des deux côtés avec <code>set_property("linkage_role", "key")</code>, et la relire avec <code>get_property()</code>.</li>
+<li><strong>O5.</strong> Ajouter une <code>Comparison</code> qui cartographie les deux clés avec <code>add_variable_map()</code> et un poids de correspondance, et y consigner la méthode de couplage et le taux d'appariement.</li>
+<li><strong>O6.</strong> Enregistrer les sources d'une variable couplée dans les deux études avec <code>source_variable_references</code>.</li>
+</ul>
+</div>
+<p><strong>Prérequis :</strong> <a href="../module-11-data-lineage/">Module 11</a>.</p>
+<p><strong>Durée :</strong> 60 min en autonomie / 75 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>doc.add_study()</code>, <code>doc.study()</code>, <code>set_property()</code>, <code>get_property()</code>, <code>doc.add_comparison()</code>, <code>correspondence()</code>, <code>add_variable_map()</code>, <code>doc.comparisons</code>.</p>
+<hr />
+<h2 id="1-quest-ce-que-le-couplage-de-donnees">1. Qu'est-ce que le couplage de données ?<a class="headerlink" href="#1-quest-ce-que-le-couplage-de-donnees" title="Permanent link">&para;</a></h2>
+<p>Le <strong>couplage de données</strong> (aussi appelé <strong>couplage de microdonnées</strong> ou
+<strong>couplage d'enregistrements</strong>) est le processus qui consiste à combiner des
+enregistrements de deux fichiers ou plus qui se rapportent à la <strong>même unité</strong> :
+un individu, un ménage ou une entreprise.</p>
+<p>Statistique Canada le décrit ainsi :</p>
+<div class="admonition quote">
+<p class="admonition-title">Statistique Canada : Couplage de microdonnées</p>
+<p>Le couplage de microdonnées est une méthode statistique reconnue à l'échelle
+internationale qui optimise l'utilisation des renseignements existants en
+couplant différents fichiers et variables afin de créer de nouveaux
+renseignements. [...] Nous couplons d'abord les différents enregistrements
+au moyen des variables qu'ils ont en commun. Afin de protéger la
+confidentialité, tous les renseignements personnels sont retirés, de sorte
+que les fichiers couplés sont anonymisés, ou dépersonnalisés.</p>
+</div>
+<p>L'idée clé : au lieu de mener une nouvelle enquête pour collecter une variable,
+vous <strong>couplez</strong> une enquête existante à un fichier administratif existant et
+réutilisez ce qui s'y trouve déjà.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Fichier d'enquête\n(health_rating)"] --&gt;|"clé commune\n(anon_id)"| C["Fichier analytique couplé\n(health_rating + hospital_visits)"]
+    B["Fichier administratif\n(hospital_visits)"] --&gt;|"clé commune\n(anon_id)"| C
+    C --&gt; D["Sorties dépersonnalisées /\nsynthétiques"]</code></pre>
+<h2 id="2-pourquoi-les-instituts-de-statistique-et-les-chercheurs-couplent-des-donnees">2. Pourquoi les instituts de statistique et les chercheurs couplent des données<a class="headerlink" href="#2-pourquoi-les-instituts-de-statistique-et-les-chercheurs-couplent-des-donnees" title="Permanent link">&para;</a></h2>
+<p>Un <strong>institut national de statistique</strong> (INS) est l'organisme public qui
+produit les statistiques officielles d'un pays. Les INS et les chercheurs
+universitaires couplent des données pour des raisons semblables :</p>
+<table>
+<thead>
+<tr>
+<th>Qui</th>
+<th>Couplage typique</th>
+<th>Pourquoi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INS</strong></td>
+<td>Enquête → fichiers fiscaux/administratifs</td>
+<td>Ajouter le revenu sans le redemander ; réduire le fardeau</td>
+</tr>
+<tr>
+<td><strong>INS</strong></td>
+<td>Recensement → registres de santé/d'éducation</td>
+<td>Étudier les résultats entre domaines</td>
+</tr>
+<tr>
+<td><strong>INS</strong></td>
+<td>Mêmes répondants à travers les vagues</td>
+<td>Bâtir un fichier longitudinal</td>
+</tr>
+<tr>
+<td><strong>Universitaire</strong></td>
+<td>Enquête → admissions hospitalières</td>
+<td>Rechercher les résultats de santé</td>
+</tr>
+<tr>
+<td><strong>Universitaire</strong></td>
+<td>Registres de naissances → dossiers scolaires</td>
+<td>Étudier les trajectoires de vie</td>
+</tr>
+</tbody>
+</table>
+<p>Pour les deux, le bénéfice est le même : le couplage transforme deux fichiers
+étroits en un fichier riche capable de répondre à des questions qu'aucun des
+deux ne pourrait résoudre seul, sans rien demander de nouveau aux répondants.</p>
+<h2 id="3-deux-facons-de-coupler-deterministe-et-probabiliste">3. Deux façons de coupler : déterministe et probabiliste<a class="headerlink" href="#3-deux-facons-de-coupler-deterministe-et-probabiliste" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Comment elle apparie</th>
+<th>Quand l'utiliser</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Déterministe</strong></td>
+<td>Appariement exact sur une <strong>clé</strong> unique (p. ex. un identifiant anonymisé)</td>
+<td>Un identifiant commun fiable existe</td>
+</tr>
+<tr>
+<td><strong>Probabiliste</strong></td>
+<td>Accord pondéré sur plusieurs <strong>quasi-identifiants</strong> (nom, date de naissance, sexe, code postal) avec un seuil de décision</td>
+<td>Aucune clé fiable unique ; certains champs comportent des erreurs ou des valeurs manquantes</td>
+</tr>
+</tbody>
+</table>
+<p>Un <strong>quasi-identifiant</strong> est une variable qui n'identifie pas une personne à
+elle seule, mais qui précise l'appariement quand on la combine à d'autres.</p>
+<p>Pour choisir, regardez ce que les deux fichiers partagent. S'ils portent tous
+deux le même identifiant fiable, couplez de façon déterministe. S'ils ne
+partagent que des quasi-identifiants, ou si l'identifiant comporte des erreurs,
+couplez de façon probabiliste.</p>
+<p>Le couplage déterministe est plus simple et c'est celui que nous modélisons en
+détail ci-dessous. Le couplage probabiliste enregistre la même structure mais
+ajoute un <strong>poids</strong> d'accord et marque plusieurs variables <strong>d'appariement</strong>
+plutôt qu'une seule clé.</p>
+<h2 id="4-notre-exemple">4. Notre exemple<a class="headerlink" href="#4-notre-exemple" title="Permanent link">&para;</a></h2>
+<p>Nous allons coupler deux fichiers d'une étude sur la santé :</p>
+<div class="admonition example">
+<p class="admonition-title">Deux fichiers sources</p>
+<p><strong>Fichier d'enquête</strong> : collecté auprès des répondants.</p>
+<table>
+<thead>
+<tr>
+<th>anon_id</th>
+<th>age</th>
+<th>health_rating</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A17</td>
+<td>34</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>A22</td>
+<td>68</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td>A31</td>
+<td>17</td>
+<td>Fair</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fichier administratif</strong> : registre des admissions hospitalières.</p>
+<table>
+<thead>
+<tr>
+<th>anon_id</th>
+<th>hospital_visits</th>
+<th>last_admission</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A17</td>
+<td>2</td>
+<td>2021-03</td>
+</tr>
+<tr>
+<td>A22</td>
+<td>5</td>
+<td>2021-07</td>
+</tr>
+<tr>
+<td>A31</td>
+<td>0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Les deux fichiers partagent la colonne <strong><code>anon_id</code></strong>, une clé de couplage
+anonymisée. Cette variable commune nous permet de joindre le <code>health_rating</code>
+d'un répondant à ses <code>hospital_visits</code> pour créer un <strong>fichier analytique
+couplé</strong>.</p>
+</div>
+<h2 id="5-modeliser-chaque-source-comme-sa-propre-etude">5. Modéliser chaque source comme sa propre étude<a class="headerlink" href="#5-modeliser-chaque-source-comme-sa-propre-etude" title="Permanent link">&para;</a></h2>
+<p>En DDI, chaque jeu de données source est son propre <code>StudyUnit</code>. Quand vous
+ajoutez une deuxième étude, <code>ddi-l</code> enveloppe automatiquement les deux dans un
+<strong>groupe</strong> (une série d'études). La première étude est l'enquête ; nous ajoutons
+le registre administratif comme deuxième étude.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Source 1 : l'enquête (l'étude primaire)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Canadian Community Health Survey 2021"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">agency</span><span class="o">=</span><span class="s2">"ca.statcan"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">q_key</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Anonymized linkage key"</span><span class="p">)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">q_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your general health?"</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">survey_key</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"anon_id"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_key</span><span class="p">)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">survey_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_rating"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_health</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Survey variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># -&gt; Survey variables: 2</span>
+</span></code></pre></div>
+<p>Ajoutez maintenant le registre administratif comme <strong>deuxième étude</strong> et
+ciblez-le avec un <a href="../../user-guide/">curseur d'étude</a> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Source 2 : le registre administratif (une deuxième étude du groupe)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">admin</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Hospital Admissions Register 2021"</span><span class="p">)</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">admin_ds</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">admin_key</span> <span class="o">=</span> <span class="n">admin_ds</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"anon_id"</span><span class="p">)</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">admin_visits</span> <span class="o">=</span> <span class="n">admin_ds</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"hospital_visits"</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>doc.add_study()</code> renvoie la nouvelle étude. <code>doc.study(identifier)</code> renvoie un
+<strong>curseur</strong> sur elle : un objet doté des mêmes méthodes <code>add_*</code> que <code>doc</code>, qui
+ajoutent les éléments à cette étude plutôt qu'à la première.</p>
+<div class="admonition note">
+<p class="admonition-title">Où vivent les compteurs ?</p>
+<p><code>doc.variables</code> ne compte que les variables de l'étude <strong>primaire</strong>. Les
+variables du registre administratif vivent dans leur propre unité d'étude,
+accessible via le curseur <code>doc.study(admin.identifier)</code>. Cela reflète la
+réalité : chaque fichier source est un jeu de données distinct, maintenu
+indépendamment. <code>doc.find()</code> (module 11) trouve quand même un élément dans
+n'importe quelle étude.</p>
+</div>
+<h2 id="6-etiqueter-les-cles-de-couplage">6. Étiqueter les clés de couplage<a class="headerlink" href="#6-etiqueter-les-cles-de-couplage" title="Permanent link">&para;</a></h2>
+<p>La <strong>clé de couplage</strong> est la variable commune qui relie les sources.
+Marquez-la des deux côtés afin que quiconque lit les métadonnées sache quelle
+variable réalise la jointure.</p>
+<p>DDI n'a pas de champ dédié pour dire « ceci est la clé de couplage » ; vous
+l'enregistrez donc comme <strong>propriété personnalisée</strong> : une paire clé-valeur que
+vous attachez à n'importe quel élément. Deux méthodes suffisent ici :</p>
+<ul>
+<li><code>item.set_property(key, value)</code> stocke une valeur sous une clé.</li>
+<li><code>item.get_property(key)</code> la relit, ou renvoie <code>None</code> si l'élément n'a pas
+  cette clé.</li>
+</ul>
+<p>Le <a href="../module-13-properties-find-validate/">module 13</a> couvre entièrement les
+propriétés personnalisées.</p>
+<p>Étiquetez les <strong>deux</strong> côtés :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">survey_key</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">admin_key</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">survey_key</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">))</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># -&gt; key</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">survey_health</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">))</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># -&gt; None</span>
+</span></code></pre></div>
+<p>Pour un couplage <strong>probabiliste</strong>, vous étiquetteriez plutôt plusieurs variables
+comme <code>"matching"</code> (p. ex. <code>date_of_birth</code>, <code>sex</code>, <code>postal_code</code>) et,
+facultativement, celles servant à regrouper les paires candidates comme
+<code>"blocking"</code>.</p>
+<h2 id="7-enregistrer-la-correspondance-des-cles-une-comparison">7. Enregistrer la correspondance des clés : une Comparison<a class="headerlink" href="#7-enregistrer-la-correspondance-des-cles-une-comparison" title="Permanent link">&para;</a></h2>
+<p>Une <code>Comparison</code> est le conteneur DDI qui enregistre comment des éléments de
+différentes études se <strong>correspondent</strong>. Ajoutez une <strong>carte de variables</strong> de
+la clé d'enquête vers la clé administrative, et décrivez la qualité de
+l'appariement avec une <strong>correspondance</strong>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">cmp</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_comparison</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Survey-to-Admin Microdata Linkage 2021"</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Décrire l'appariement : communauté totale (poids 1.0) pour une clé exacte</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">key_match</span> <span class="o">=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">correspondence</span><span class="p">(</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">commonality</span><span class="o">=</span><span class="s2">"Anonymized personal identifier common to both sources."</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">cmp</span><span class="o">.</span><span class="n">add_variable_map</span><span class="p">(</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">survey_key</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">admin_key</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">correspondence</span><span class="o">=</span><span class="n">key_match</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Comparisons: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">comparisons</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># -&gt; Comparisons: 1</span>
+</span></code></pre></div>
+<p>Pour un couplage probabiliste, fixez <code>weight</code> sous <code>1.0</code> pour enregistrer que
+l'accord est partiel, et ajoutez une carte de variables pour chaque variable
+d'appariement.</p>
+<h2 id="8-enregistrer-la-methode-et-la-qualite-du-couplage">8. Enregistrer la méthode et la qualité du couplage<a class="headerlink" href="#8-enregistrer-la-methode-et-la-qualite-du-couplage" title="Permanent link">&para;</a></h2>
+<p>Stockez la <strong>méthode</strong> de couplage et les <strong>indicateurs de qualité</strong> comme
+propriétés personnalisées sur la comparaison. Ce sont exactement les faits qu'un
+auditeur, un gestionnaire de données ou un futur chercheur demandera.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">,</span> <span class="s2">"deterministic"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"match_rate"</span><span class="p">,</span> <span class="s2">"0.94"</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"false_match_rate"</span><span class="p">,</span> <span class="s2">"0.01"</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">))</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># -&gt; deterministic</span>
+</span></code></pre></div>
+<h2 id="9-construire-la-variable-couplee-avec-une-provenance-inter-sources">9. Construire la variable couplée avec une provenance inter-sources<a class="headerlink" href="#9-construire-la-variable-couplee-avec-une-provenance-inter-sources" title="Permanent link">&para;</a></h2>
+<p>Le <strong>fichier analytique couplé</strong> contient des variables tirées des <em>deux</em>
+sources. Chaque variable couplée enregistre son origine avec
+<code>source_variable_references</code>, comme une variable dérivée du
+<a href="../module-11-data-lineage/">Module 11</a>, sauf que maintenant les sources se
+trouvent dans des <strong>études différentes</strong>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">linked</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_by_hospital_use"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">linked</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">survey_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">admin_visits</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">]</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Linked variable sources: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">linked</span><span class="o">.</span><span class="n">source_variable_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># -&gt; Linked variable sources: 2</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Références entre études</p>
+<p><code>admin_visits</code> vit dans une étude <em>différente</em> au sein du groupe. La
+référence est un lien inter-études complet, ce qui est précisément le but
+du couplage de données. <code>ddi-l</code> vérifie les références par rapport à toutes
+les études du fichier : l'enregistrement ne donne donc aucun
+avertissement ; il n'avertit que pour un élément qui n'est dans aucune.</p>
+</div>
+<h2 id="10-enregistrer-le-document-de-couplage">10. Enregistrer le document de couplage<a class="headerlink" href="#10-enregistrer-le-document-de-couplage" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"health-linkage-2021.xml"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Le fichier enregistré consigne, en un seul endroit : les deux études sources, la
+clé de couplage de chaque côté, la comparaison qui cartographie les clés, la
+méthode et la qualité du couplage, et la provenance de la variable couplée vers
+les deux sources.</p>
+<h2 id="11-le-modele-complet-de-couplage">11. Le modèle complet de couplage<a class="headerlink" href="#11-le-modele-complet-de-couplage" title="Permanent link">&para;</a></h2>
+<p>Le fichier enregistré contient un groupe avec la comparaison et les deux
+études. La variable couplée se trouve dans l'étude d'enquête, l'étude
+principale. Les flèches suivent le sens des références du XML : de la
+correspondance d'éléments de la carte vers les deux clés, et de la variable
+couplée vers ses deux sources.</p>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Group["Group"]
+        subgraph Comparison["Comparison"]
+            VM["VariableMap\nCorrespondence : CommonalityWeight 1.0"]
+        end
+        subgraph Survey["StudyUnit 1 : Enquête"]
+            SK["anon_id\n(UserAttributePair linkage_role = key)"]
+            SH["health_rating"]
+            L["health_by_hospital_use"]
+        end
+        subgraph Admin["StudyUnit 2 : Registre administratif"]
+            AK["anon_id\n(UserAttributePair linkage_role = key)"]
+            AV["hospital_visits"]
+        end
+    end
+
+    VM --&gt;|"ItemMap : SourceItemReference"| SK
+    VM --&gt;|"ItemMap : TargetItemReference"| AK
+    L --&gt;|SourceVariableReference| SH
+    L --&gt;|SourceVariableReference| AV</code></pre>
+<p>Chaque flèche est une <code>Reference</code> en DDI. En lisant le modèle, quiconque peut
+voir quelle variable a joint les fichiers, la qualité de l'appariement, et
+d'où vient chaque valeur du fichier couplé.</p>
+<hr />
+<div class="admonition example">
+<p class="admonition-title">Scénario</p>
+<p>Vous documentez un couplage de microdonnées dans un institut national de
+statistique. Une enquête sur la santé et un registre des admissions
+hospitalières partagent un identifiant anonymisé, <code>anon_id</code>. Vous les
+couplez de façon déterministe pour étudier les résultats de santé au
+regard de l'utilisation hospitalière. Vous devez enregistrer : les deux
+jeux de données sources, la clé de couplage de chaque côté, la carte entre
+les clés, la méthode et le taux d'appariement, et la provenance de la
+variable couplée vers les deux sources.</p>
+</div>
+<hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>(O1)</strong> Votre gestionnaire demande pourquoi l'équipe devrait coupler l'enquête sur la santé au registre hospitalier au lieu d'ajouter une question sur les visites à l'hôpital dans l'enquête de l'an prochain. Répondez en deux ou trois phrases.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p>Une réponse possible : « Le couplage combine les enregistrements des
+deux fichiers qui décrivent la même personne, au moyen d'une variable
+qu'ils partagent. Le registre contient déjà chaque visite à l'hôpital ;
+le couplage nous donne donc cette information sans rien demander de
+nouveau aux répondants, ce qui réduit leur fardeau. Les comptes
+proviennent aussi de dossiers plutôt que de la mémoire, et le fichier
+couplé peut répondre à des questions qu'aucun des deux fichiers ne
+résout seul, par exemple si les personnes qui jugent leur santé
+mauvaise vont plus souvent à l'hôpital. »</p>
+</details>
+</li>
+<li>
+<p><strong>(O2)</strong> Pour chaque paire de fichiers, choisissez un couplage déterministe ou probabiliste, et donnez la raison en une phrase.</p>
+<ul>
+<li>(a) Une enquête et un fichier fiscal qui portent tous deux le même identifiant anonymisé de personne.</li>
+<li>(b) Un registre des naissances et des dossiers scolaires qui ne partagent que le nom, la date de naissance, le sexe et le code postal, avec quelques fautes de frappe dans les noms.</li>
+<li>(c) Deux vagues d'une enquête par panel qui gardent l'identifiant de chaque répondant d'une vague à l'autre.</li>
+</ul>
+<details class="success">
+<summary>Réponse</summary>
+<ul>
+<li>(a) <strong>Déterministe</strong> : les deux fichiers portent le même identifiant
+  fiable, donc un appariement exact sur celui-ci suffit.</li>
+<li>(b) <strong>Probabiliste</strong> : il n'y a pas d'identifiant commun, et les noms
+  comportent des erreurs ; vous pondérez donc l'accord sur plusieurs
+  quasi-identifiants et appliquez un seuil.</li>
+<li>(c) <strong>Déterministe</strong> : l'identifiant du répondant est stable d'une
+  vague à l'autre.</li>
+</ul>
+</details>
+</li>
+<li>
+<p><strong>(O3)</strong> Créez l'étude d'enquête avec deux variables (<code>anon_id</code>, <code>health_rating</code>). Ajoutez le registre hospitalier comme deuxième étude avec deux variables (<code>anon_id</code>, <code>hospital_visits</code>). Affichez le nombre de variables de l'enquête, et vérifiez avec <code>doc.find()</code> que <code>hospital_visits</code> se trouve dans le document.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Survey variables: 2
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>hospital_visits found: True
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Canadian Community Health Survey 2021"</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">agency</span><span class="o">=</span><span class="s2">"ca.statcan"</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">q_key</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Anonymized linkage key"</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">q_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"How would you rate your general health?"</span><span class="p">)</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">survey_key</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"anon_id"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_key</span><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">survey_health</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_rating"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_health</span><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">admin</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Hospital Admissions Register 2021"</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">admin_ds</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">admin_key</span> <span class="o">=</span> <span class="n">admin_ds</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"anon_id"</span><span class="p">)</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="n">admin_visits</span> <span class="o">=</span> <span class="n">admin_ds</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"hospital_visits"</span><span class="p">)</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Survey variables: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"hospital_visits found: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">admin_visits</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>doc.variables</code> ne compte que les deux variables de l'enquête. Les
+variables du registre sont dans la deuxième étude, et <code>doc.find()</code> les
+atteint quand même.</p>
+</details>
+</li>
+<li>
+<p><strong>(O4)</strong> Étiquetez <code>anon_id</code> comme clé de couplage dans les deux études. Affichez le <code>linkage_role</code> des deux clés, et celui de <code>health_rating</code>.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Survey anon_id: key
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Register anon_id: key
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>health_rating: None
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">survey_key</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">admin_key</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">)</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Survey anon_id: </span><span class="si">{</span><span class="n">survey_key</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">'linkage_role'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Register anon_id: </span><span class="si">{</span><span class="n">admin_key</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">'linkage_role'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"health_rating: </span><span class="si">{</span><span class="n">survey_health</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">'linkage_role'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>health_rating</code> n'a jamais été étiquetée, donc <code>get_property()</code> renvoie
+<code>None</code>.</p>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Ajoutez une <code>Comparison</code> qui cartographie la clé d'enquête vers la clé du registre avec un poids de correspondance de <code>1.0</code>. Consignez la méthode de couplage (<code>deterministic</code>) et un <code>match_rate</code> de <code>0.94</code> comme propriétés sur la comparaison. Affichez les compteurs et les deux propriétés.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Comparisons: 1
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Variable maps: 1
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>deterministic, match rate 0.94
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">cmp</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_comparison</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Survey-to-Admin Microdata Linkage 2021"</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">key_match</span> <span class="o">=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">correspondence</span><span class="p">(</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">commonality</span><span class="o">=</span><span class="s2">"Anonymized personal identifier common to both sources."</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">cmp</span><span class="o">.</span><span class="n">add_variable_map</span><span class="p">(</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">survey_key</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">admin_key</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">correspondence</span><span class="o">=</span><span class="n">key_match</span><span class="p">,</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">)</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">,</span> <span class="s2">"deterministic"</span><span class="p">)</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"match_rate"</span><span class="p">,</span> <span class="s2">"0.94"</span><span class="p">)</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Comparisons: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">comparisons</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variable maps: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cmp</span><span class="o">.</span><span class="n">variable_maps</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="n">method</span> <span class="o">=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">)</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">, match rate </span><span class="si">{</span><span class="n">cmp</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">'match_rate'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O6)</strong> Créez une variable couplée <code>health_by_hospital_use</code> avec <code>source_variable_references</code> pointant vers <strong>les deux</strong> <code>health_rating</code> (enquête) et <code>hospital_visits</code> (registre). Affichez le nombre de sources.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Linked variable sources: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">linked</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"health_by_hospital_use"</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">linked</span><span class="o">.</span><span class="n">source_variable_references</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">survey_health</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">admin_visits</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">]</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Linked variable sources: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">linked</span><span class="o">.</span><span class="n">source_variable_references</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>(O2, O4, O5)</strong> <em>(Facultatif)</em> Modélisez plutôt un couplage <strong>probabiliste</strong>. Ajoutez <code>date_of_birth</code>, <code>sex</code> et <code>postal_code</code> aux deux études et étiquetez chacune avec <code>linkage_role="matching"</code>. Ajoutez une deuxième comparaison avec la méthode <code>probabilistic</code>, et cartographiez chaque paire de variables avec un poids de correspondance de <code>0.85</code>. Affichez le nombre de cartes et la méthode.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Variable maps: 3
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>probabilistic
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">prob</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_comparison</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Probabilistic Linkage"</span><span class="p">)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">prob</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">,</span> <span class="s2">"probabilistic"</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">partial</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">correspondence</span><span class="p">(</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">commonality</span><span class="o">=</span><span class="s2">"Agreement across date of birth, sex, and postal code."</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="n">weight</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">)</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"date_of_birth"</span><span class="p">,</span> <span class="s2">"sex"</span><span class="p">,</span> <span class="s2">"postal_code"</span><span class="p">):</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">survey_var</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="n">register_var</span> <span class="o">=</span> <span class="n">admin_ds</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="n">survey_var</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"matching"</span><span class="p">)</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    <span class="n">register_var</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"matching"</span><span class="p">)</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>    <span class="n">prob</span><span class="o">.</span><span class="n">add_variable_map</span><span class="p">(</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>        <span class="n">survey_var</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>        <span class="n">register_var</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>        <span class="n">correspondence</span><span class="o">=</span><span class="n">partial</span><span class="p">,</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>    <span class="p">)</span>
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Variable maps: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">variable_maps</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="nb">print</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_method"</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Un poids inférieur à <code>1.0</code> indique que l'accord sur ces champs est une
+forte présomption d'appariement, mais pas une preuve.</p>
+</details>
+</li>
+</ol>
+<hr />
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<details class="question" open="open">
+<summary>Question 1 (O1) : Pourquoi coupler au lieu de poser une nouvelle question ?</summary>
+<p>Une équipe dispose d'une enquête avec des évaluations de l'état de santé et
+d'un registre hospitalier. Elle veut savoir si les personnes qui jugent
+leur santé mauvaise vont plus souvent à l'hôpital. Pourquoi coupler les
+deux fichiers au lieu d'ajouter une question sur les visites à l'hôpital
+dans l'enquête ?</p>
+<p><strong>A.</strong> Le couplage réutilise des dossiers que le registre contient déjà : les répondants ne répondent à rien de nouveau, et les comptes ne dépendent pas de leur mémoire.</p>
+<p><strong>B.</strong> DDI ne peut pas stocker de question sur les visites à l'hôpital.</p>
+<p><strong>C.</strong> Le couplage réduit la taille du fichier d'enquête.</p>
+<p><strong>D.</strong> Le couplage supprime le besoin de toute variable commune.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> Le couplage combine des enregistrements sur la même personne
+tirés de fichiers existants. Il réduit le fardeau des répondants et
+crée une information qu'aucun des deux fichiers ne contient seul. Il
+lui faut quand même une variable commune pour joindre les
+enregistrements.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 2 (O2) : Quelle méthode de couplage convient à ces fichiers ?</summary>
+<p>Deux fichiers ne partagent aucun identifiant. Tous deux contiennent le nom,
+la date de naissance, le sexe et le code postal, et certains noms
+comportent des fautes de frappe. Quel couplage convient ?</p>
+<p><strong>A.</strong> Déterministe, sur le nom.</p>
+<p><strong>B.</strong> Probabiliste : pondérer l'accord sur plusieurs champs et appliquer un seuil.</p>
+<p><strong>C.</strong> Aucun : des fichiers sans identifiant commun ne peuvent pas être couplés.</p>
+<p><strong>D.</strong> Déterministe, sur le code postal.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Sans clé fiable et avec des erreurs dans certains champs, un
+appariement exact sur un seul champ manquerait de vraies paires (fautes
+dans les noms) ou joindrait les mauvaises personnes (beaucoup partagent
+un code postal). Le couplage probabiliste combine les indices de
+plusieurs quasi-identifiants.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 (O3) : Comment ajouter une variable à l'étude du registre ?</summary>
+<p>Vous avez ajouté le registre avec
+<code>admin = doc.add_study(title="Hospital Admissions Register 2021")</code>.
+Quelle ligne ajoute <code>hospital_visits</code> au registre, et non à l'enquête ?</p>
+<p><strong>A.</strong> <code>doc.add_variable(name="hospital_visits")</code></p>
+<p><strong>B.</strong> <code>doc.add_study(title="hospital_visits")</code></p>
+<p><strong>C.</strong> <code>doc.study(admin.identifier).add_variable(name="hospital_visits")</code></p>
+<p><strong>D.</strong> <code>doc.variables.append("hospital_visits")</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> <code>doc.study()</code> renvoie un curseur sur cette étude, et ses
+méthodes <code>add_*</code> y ajoutent les éléments. <code>doc.add_variable()</code> ajoute
+toujours à l'étude primaire, l'enquête.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 (O4) : Qu'affiche ce code ?</summary>
+<p><!-- docs-test: skip -- fragment: survey_key and survey_health are the reader's own variables -->
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">survey_key</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">,</span> <span class="s2">"key"</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">print</span><span class="p">(</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">survey_key</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">),</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">survey_health</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"linkage_role"</span><span class="p">),</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">)</span>
+</span></code></pre></div></p>
+<p><strong>A.</strong> <code>key key</code></p>
+<p><strong>B.</strong> <code>None None</code></p>
+<p><strong>C.</strong> <code>linkage_role key</code></p>
+<p><strong>D.</strong> <code>key None</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>D.</strong> Seule <code>survey_key</code> a été étiquetée. <code>get_property()</code> renvoie la
+valeur stockée sous la clé, ou <code>None</code> quand l'élément n'a pas cette
+clé.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O5) : Quel appel enregistre que les deux clés se correspondent exactement ?</summary>
+<p><strong>A.</strong> <code>cmp.add_variable_map(survey_key.to_reference(), admin_key.to_reference(), correspondence=cmp.correspondence(weight=1.0))</code></p>
+<p><strong>B.</strong> <code>survey_key.set_property("linkage_role", "key")</code></p>
+<p><strong>C.</strong> <code>cmp.set_property("match_rate", "1.0")</code></p>
+<p><strong>D.</strong> <code>linked.source_variable_references = [survey_key.to_reference()]</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> Une carte de variables dans la <code>Comparison</code> enregistre que la clé
+d'enquête correspond à la clé du registre, et le poids de
+correspondance <code>1.0</code> dit qu'il s'agit du même identifiant. L'option B
+n'étiquette qu'un côté ; l'option C consigne un indicateur de qualité ;
+l'option D consigne une provenance.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 6 (O6) : Comment enregistrer qu'une variable couplée s'appuie sur deux fichiers sources ?</summary>
+<p><strong>A.</strong> Définir <code>question=</code> deux fois.</p>
+<p><strong>B.</strong> Mettre les deux sources dans <code>source_variable_references</code>.</p>
+<p><strong>C.</strong> Renommer la variable.</p>
+<p><strong>D.</strong> Augmenter le numéro de version.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> <code>source_variable_references</code> contient une <code>Reference</code> vers chaque
+variable source (ici, une vers la variable d'enquête et une vers la
+variable administrative), même si elles vivent dans des études
+différentes.</p>
+</details>
+</details>
+<hr />
+<h2 id="pour-aller-plus-loin-facultatif">Pour aller plus loin (facultatif)<a class="headerlink" href="#pour-aller-plus-loin-facultatif" title="Permanent link">&para;</a></h2>
+<p>Cette section n'a ni objectif ni question de quiz.</p>
+<h3 id="environnements-de-couplage">Environnements de couplage<a class="headerlink" href="#environnements-de-couplage" title="Permanent link">&para;</a></h3>
+<p>Certains instituts nationaux de statistique exploitent des environnements
+dédiés au couplage. Statistique Canada, par exemple, exploite
+l'<strong>Environnement de couplage de données sociales (ECDS / SDLE)</strong>,
+l'<strong>Environnement de fichiers couplables des entreprises (B-LFE)</strong> et les
+<strong>Fichiers analytiques longitudinaux des employés et des entreprises (LEBAF)</strong>,
+précisément pour bâtir des <strong>fichiers analytiques couplés sans collecter de
+données supplémentaires</strong> auprès des Canadiens.</p>
+<h3 id="consigner-la-confidentialite-et-la-gouvernance">Consigner la confidentialité et la gouvernance<a class="headerlink" href="#consigner-la-confidentialite-et-la-gouvernance" title="Permanent link">&para;</a></h3>
+<p>Le couplage de microdonnées est régi par des règles de protection de la vie
+privée strictes. La <strong>Directive sur le couplage de microdonnées</strong> de Statistique
+Canada exige que la valeur publique d'un couplage l'emporte sur toute atteinte à
+la vie privée, et que les identifiants personnels soient retirés pour que le
+fichier couplé soit <strong>dépersonnalisé</strong>. Les chercheurs travaillent souvent avec
+des versions <strong>synthétiques</strong> plutôt qu'avec les enregistrements originaux.</p>
+<p>Consignez ce contexte de gouvernance comme propriétés personnalisées afin qu'il
+accompagne les métadonnées :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="s2">"confidentiality"</span><span class="p">,</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="s2">"de-identified; synthetic file for researcher access"</span><span class="p">,</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">)</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"governance"</span><span class="p">,</span> <span class="s2">"Directive on Microdata Linkage"</span><span class="p">)</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="n">cmp</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"approval"</span><span class="p">,</span> <span class="s2">"Directive on Microdata Linkage - pre-approved"</span><span class="p">)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"confidentiality"</span><span class="p">))</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># -&gt; de-identified; synthetic file for researcher access</span>
+</span></code></pre></div>
+<p>Enregistrez de nouveau après ces appels, pour que le fichier porte aussi le
+contexte de gouvernance.</p>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux expliquer en deux ou trois phrases ce qu'est le couplage de microdonnées et pourquoi les INS et les chercheurs couplent des fichiers existants. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux choisir un couplage déterministe ou probabiliste pour une paire de fichiers, et dire pourquoi. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux modéliser chaque jeu de données source comme sa propre étude avec <code>doc.add_study()</code> et <code>doc.study()</code>. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux étiqueter la clé de couplage des deux côtés avec <code>set_property()</code> et la relire avec <code>get_property()</code>. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter une <code>Comparison</code> qui cartographie les clés avec un poids de correspondance, et consigner la méthode et le taux d'appariement. (O5)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux enregistrer les sources d'une variable couplée dans les deux études avec <code>source_variable_references</code>. (O6)</li>
+</ul>
+<hr />
+<div class="admonition tip">
+<p class="admonition-title">Notes pour l'instructeur</p>
+<ul>
+<li>Ancrez le concept avec l'argument du fardeau : « Pourquoi demander leur
+  revenu aux gens dans une enquête si le fichier fiscal l'a déjà ?
+  Couplez plutôt. » Le couplage réutilise des données existantes pour créer
+  de nouveaux renseignements.</li>
+<li>Dessinez deux icônes de fichiers partageant une colonne (<code>anon_id</code>). La
+  colonne partagée est la clé. Tout le reste du module découle de cette image.</li>
+<li>Opposez les deux régimes de qualité : déterministe (une clé fiable unique,
+  poids 1.0) vs probabiliste (plusieurs champs bruités, poids &lt; 1.0, révision
+  manuelle). L'exercice 2 demande aux apprenants de choisir ; demandez
+  lequel convient à un fichier comportant des fautes de frappe dans les noms.</li>
+<li>Les apprenants ne rencontrent ici les propriétés personnalisées que comme
+  outil pour étiqueter les clés et consigner la méthode. Limitez-vous à
+  <code>set_property()</code> et <code>get_property()</code> ; le module 13 couvre entièrement
+  les propriétés.</li>
+<li>Soulignez que <code>source_variable_references</code> traversant les frontières
+  d'étude est le cœur technique du couplage.</li>
+<li>Pour le personnel des INS : « Pour aller plus loin » relie à
+  l'infrastructure réelle (ECDS/SDLE, B-LFE, LEBAF) et à la gouvernance :
+  couplages pré-approuvés vs ceux nécessitant une proposition documentée et
+  un examen en vertu de la Directive sur le couplage de microdonnées.</li>
+<li>Pour les universitaires : insistez sur la reproductibilité. Un évaluateur
+  doit pouvoir voir quelle clé a joint les fichiers, le taux d'appariement et
+  la provenance de chaque variable couplée. C'est exactement ce que ces
+  métadonnées capturent.</li>
+<li>Le cadrage de la vie privée compte : tout couplage réel se termine par une
+  dépersonnalisation et, souvent, des données synthétiques pour l'accès. Si
+  vous avez le temps, faites en classe l'étape de gouvernance de « Pour
+  aller plus loin » comme dernière étape, pas comme une réflexion après
+  coup.</li>
+</ul>
+</div>
+<hr />
+<p><strong>Voir aussi :</strong> <a href="../module-11-data-lineage/">Module 11 : Traçabilité des données</a> | <a href="../module-13-properties-find-validate/">Module 13 : Propriétés, recherche et validation</a> | <a href="../../user-guide/">Guide utilisateur : Comparer et harmoniser des études</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../module-11-data-lineage/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: 11. Traçabilité des données">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                11. Traçabilité des données
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../module-13-properties-find-validate/" class="md-footer__link md-footer__link--next" aria-label="Suivant: 13. Propriétés, recherche et validation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                13. Propriétés, recherche et validation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/ddi-l/" target="_blank" rel="noopener" title="ddi-l on PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.action.edit","content.action.view","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.share","search.suggest","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
+      
+    
+  </body>
+</html>

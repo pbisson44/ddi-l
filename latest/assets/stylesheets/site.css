@@ -1,0 +1,299 @@
+/* ---------------------------------------------------------------------------
+   Layout and components for the ddi-l documentation. Colours come from
+   palette.css; this file only refers to its variables.
+   --------------------------------------------------------------------------- */
+
+/* Headings: a little tighter and heavier than the theme's. */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* Keyboard focus is always visible, in orange. */
+:focus-visible {
+  outline: 0.15rem solid var(--ddi-focus-color);
+  outline-offset: 0.15rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Announcement bar (docs/overrides/main.html)
+   --------------------------------------------------------------------------- */
+
+.ddi-announce {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem 0.6rem;
+  margin: 0;
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.ddi-announce__icon {
+  display: inline-flex;
+  color: var(--md-typeset-a-color);
+}
+
+.ddi-announce__icon svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentcolor;
+}
+
+.ddi-announce__link {
+  font-weight: 600;
+  color: var(--md-typeset-a-color);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ddi-announce__link:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* ---------------------------------------------------------------------------
+   Cards
+
+   A card whose title is a link (the section landing pages) is clickable as a
+   whole: the link's ::after covers the card. Its icon takes the brand blue.
+   --------------------------------------------------------------------------- */
+
+.md-typeset .grid.cards > ul > li {
+  position: relative;
+  border-radius: 0.6rem;
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child a::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset .grid.cards > ul > li:hover > p:first-child a {
+  color: var(--md-typeset-a-color);
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child .twemoji {
+  color: var(--md-typeset-a-color);
+}
+
+/* ---------------------------------------------------------------------------
+   Landing page (docs/overrides/home.html)
+   --------------------------------------------------------------------------- */
+
+.ddi-hero {
+  background:
+    radial-gradient(48rem 24rem at 90% -20%, var(--ddi-glow), transparent 70%),
+    radial-gradient(36rem 20rem at -10% 120%, var(--ddi-glow-2), transparent 70%);
+  border-bottom: 0.05rem solid var(--md-default-fg-color--lightest);
+}
+
+.ddi-hero__inner {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  padding: 2.4rem 0.8rem 2.8rem;
+}
+
+@media screen and (min-width: 60em) {
+  .ddi-hero__inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 3rem;
+    padding: 3.2rem 0.8rem 3.6rem;
+  }
+}
+
+.ddi-hero__eyebrow {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-typeset-a-color);
+  background-color: var(--md-accent-fg-color--transparent);
+  border-radius: 1rem;
+}
+
+.ddi-hero__title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.3rem);
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--md-default-fg-color);
+}
+
+.ddi-hero__lead {
+  max-width: 34em;
+  margin: 0 0 1.6rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ddi-muted);
+}
+
+.ddi-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* Buttons at least 44px high, the WCAG target size for touch. */
+.ddi-hero__actions .md-button {
+  display: inline-flex;
+  gap: 0.4em;
+  align-items: center;
+  min-height: 2.2rem;
+  padding: 0.5rem 1.4rem;
+  font-size: 0.75rem;
+}
+
+.ddi-hero__actions .md-button:not(.md-button--primary) {
+  color: var(--md-default-fg-color);
+}
+
+.ddi-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin: 1.6rem 0 0;
+  font-size: 0.7rem;
+  color: var(--ddi-muted);
+}
+
+.ddi-hero__facts span::before {
+  display: inline-block;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-right: 0.45rem;
+  vertical-align: 0.12em;
+  content: "";
+  background-color: var(--md-typeset-a-color);
+  border-radius: 50%;
+}
+
+/* The terminal is dark in both schemes, like a real one. */
+.ddi-terminal {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #e2e8f0;
+  background-color: #0f172a;
+  border-radius: 0.6rem;
+  box-shadow:
+    0 1.2rem 2.4rem -0.8rem rgba(15, 23, 42, 0.45),
+    0 0 0 0.05rem rgba(148, 163, 184, 0.25);
+}
+
+.ddi-terminal__bar {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.6rem 0.8rem;
+  background-color: #1e293b;
+}
+
+.ddi-terminal__bar span {
+  width: 0.55rem;
+  height: 0.55rem;
+  background-color: #475569;
+  border-radius: 50%;
+}
+
+.ddi-terminal__body {
+  margin: 0;
+  padding: 1rem 1.2rem 1.2rem;
+  overflow-x: auto;
+  font-family: var(--md-code-font-family);
+  font-size: 0.75rem;
+  line-height: 1.9;
+}
+
+.ddi-terminal__body code {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+}
+
+.ddi-terminal__prompt {
+  color: #60a5fa;
+  user-select: none;
+}
+
+.ddi-terminal__output {
+  color: #86efac;
+}
+
+.ddi-terminal__copy {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  display: inline-flex;
+  padding: 0.3rem;
+  color: #94a3b8;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 0.3rem;
+}
+
+.ddi-terminal__copy:hover,
+.ddi-terminal__copy:focus-visible {
+  color: #ffffff;
+  background-color: rgba(148, 163, 184, 0.18);
+}
+
+.ddi-terminal__copy svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: currentcolor;
+}
+
+/* The page under the hero: wider spacing between sections, and prose kept
+   to a readable width while cards and code use the full width. */
+.ddi-home h2 {
+  margin-top: 2.4em;
+  font-size: 1.4em;
+}
+
+.ddi-home h2:first-child {
+  margin-top: 0.8em;
+}
+
+.ddi-home > p,
+.ddi-home > blockquote {
+  max-width: 42rem;
+}
+
+/* Six features in three columns; four paths in four. */
+.md-typeset .grid.ddi-features {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.md-typeset .grid.ddi-paths {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}

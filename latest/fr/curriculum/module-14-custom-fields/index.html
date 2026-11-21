@@ -1,0 +1,4250 @@
+
+
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Module 14 du cours ddi-l : étendre le DDI avec des champs personnalisés, des identifiants externes et des vocabulaires contrôlés.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/curriculum/module-14-custom-fields/">
+      
+      
+      
+      
+        <link rel="prev" href="../module-13-properties-find-validate/">
+      
+      
+        <link rel="next" href="../module-15-update-and-version/">
+      
+      
+        
+          <link rel="alternate" href="/ddi-l/latest/" hreflang="en">
+        
+          <link rel="alternate" href="/ddi-l/latest/fr/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.1.3">
+    
+    
+      
+        <title>14. Champs personnalisés - ddi-l</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e2cf241e.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/site.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Ne plus montrer cela">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            
+            
+  
+  
+    <p class="ddi-announce">
+      <span class="ddi-announce__icon twemoji" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+      </span>
+      <span>Nouveau dans le cours : des modules facultatifs sur DDI-Codebook et DDI-CDI.</span>
+      
+        <a class="ddi-announce__link" href="../">Voir le cours<span aria-hidden="true"> &rarr;</span></a>
+      
+    </p>
+  
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="ddi-l" class="md-header__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              14. Champs personnalisés
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode clair"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au mode clair" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode sombre"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au mode sombre" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Suivre le réglage du système"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Suivre le réglage du système" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/curriculum/module-14-custom-fields/" hreflang="en" lang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/fr/curriculum/module-14-custom-fields/" hreflang="fr" lang="fr" class="md-select__link" aria-current="true">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Recherche</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Accueil
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+  Guides pratiques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../release-notes/" class="md-tabs__link">
+          
+  
+  À propos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ddi-l" class="md-nav__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Accueil
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installer
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Apprendre
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Apprendre
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 : Fondements
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 : Fondements
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  1. Qu’est-ce que les métadonnées ?
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  2. Préparez votre environnement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  3. Créez votre première étude
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  4. Variables et questions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  5. Concepts et univers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  6. Ouvrir et modifier des fichiers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  7. Valider depuis la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 : Compétences pratiques
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 : Compétences pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  8. Du CSV/Excel au DDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  9. Listes de codes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Flux de questionnaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Traçabilité des données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Couplage de données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Propriétés, recherche et validation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Champs personnalisés
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Champs personnalisés
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Pourquoi les organisations ont besoin de champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-louverture-de-la-norme-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. L'ouverture de la norme DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ou-peuvent-vivre-les-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Où peuvent vivre les champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ajouter-des-champs-propres-a-lorganisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Ajouter des champs propres à l'organisation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-les-champs-personnalises-font-un-aller-retour-ils-survivent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Les champs personnalisés font un aller-retour : ils survivent
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-identifiants-propres-a-lorganisation-avec-userid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Identifiants propres à l'organisation avec UserID
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Un champ personnalisé adossé à un vocabulaire contrôlé (une liste de codes)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-concevoir-un-catalogue-de-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Concevoir un catalogue de champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-auditer-quels-elements-portent-vos-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Auditer quels éléments portent vos champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-bonnes-pratiques-et-une-mise-en-garde" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Bonnes pratiques : et une mise en garde
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Mise à jour et versionnage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 : Pratique appliquée
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 : Pratique appliquée
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Spécification avancée de questionnaires
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Projets de synthèse
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modules facultatifs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Modules facultatifs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-18-exact-gates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Comparer exactement des filtres
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-19-http-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  19. Servir ddi-l par HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-20-codebook-to-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  20. De DDI-Codebook à DDI-Lifecycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-21-ddi-cdi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  21. Décrire vos données avec DDI-CDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ressources du cours
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Ressources du cours
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide-mémoire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Corrigés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de l’instructeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7 17 3.2-6.8L17 7l-3.2 6.8zm5-5.9a.9.9 0 0 0-.9.9.9.9 0 0 0 .9.9.9.9 0 0 0 .9-.9.9.9 0 0 0-.9-.9M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Guides pratiques
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guides pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier vos métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Vérifier vos métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Valider et analyser
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dépanner les erreurs de schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier un questionnaire par rapport à une spécification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Automatiser la validation en CI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faire entrer et sortir les métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Faire entrer et sortir les métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Charger du DDI depuis des tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modèles de tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec d’autres outils
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec les exports Colectica
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Passer du XML aux objets
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Réutiliser des fragments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l ailleurs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Utiliser ddi-l ailleurs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Servir l’API HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l depuis R
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Construire des outils et applications
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 1-5 5v11l5-4.5zm2 4v13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6c-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1M10 18.41C8.75 18.09 7.5 18 6.5 18c-1.06 0-2.32.19-3.5.5V7.13c.91-.4 2.14-.63 3.5-.63s2.59.23 3.5.63z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Référence
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide d’utilisation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence de l’API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence des modèles
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Règles lint
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Catalogue des espaces de noms
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Couverture du schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  À propos
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  À propos
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Playbook de performance
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Playbook de performance
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Benchmark de conversion de schémas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Paquets Python associés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de développement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Pourquoi les organisations ont besoin de champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-louverture-de-la-norme-ddi" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. L'ouverture de la norme DDI
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ou-peuvent-vivre-les-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Où peuvent vivre les champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ajouter-des-champs-propres-a-lorganisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Ajouter des champs propres à l'organisation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-les-champs-personnalises-font-un-aller-retour-ils-survivent" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Les champs personnalisés font un aller-retour : ils survivent
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-identifiants-propres-a-lorganisation-avec-userid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Identifiants propres à l'organisation avec UserID
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Un champ personnalisé adossé à un vocabulaire contrôlé (une liste de codes)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-concevoir-un-catalogue-de-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Concevoir un catalogue de champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-auditer-quels-elements-portent-vos-champs-personnalises" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Auditer quels éléments portent vos champs personnalisés
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-bonnes-pratiques-et-une-mise-en-garde" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Bonnes pratiques : et une mise en garde
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Apprendre
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../module-08-csv-to-ddi/" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Niveau 2 : Compétences pratiques
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/curriculum/module-14-custom-fields.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/pbisson44/ddi-l/raw/main/docs/curriculum/module-14-custom-fields.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="module-14-champs-personnalises-etendre-la-norme-pour-votre-organisation">Module 14 : Champs personnalisés : étendre la norme pour votre organisation<a class="headerlink" href="#module-14-champs-personnalises-etendre-la-norme-pour-votre-organisation" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
+<ul>
+<li><strong>O1.</strong> Ajouter des champs personnalisés préfixés (des clés comme
+  <code>myorg:retention_policy</code>) avec <code>set_property()</code> : sur l'étude pour des
+  faits sur l'ensemble du jeu de données, et sur une variable ou une
+  question pour des faits sur cet élément.</li>
+<li><strong>O2.</strong> Ajouter un identifiant externe avec <code>UserID</code>, et choisir entre
+  un <code>UserID</code> et une propriété personnalisée pour une valeur donnée.</li>
+<li><strong>O3.</strong> Adosser un champ personnalisé à un vocabulaire contrôlé :
+  construire une liste de codes et stocker son URN dans une propriété.</li>
+<li><strong>O4.</strong> Écrire un catalogue des clés autorisées et une fonction qui
+  refuse toute clé absente du catalogue.</li>
+<li><strong>O5.</strong> Écrire un audit qui compte les questions et les variables
+  portant un champ avec votre préfixe.</li>
+<li><strong>O6.</strong> Enregistrer et rouvrir un document, montrer que ses champs
+  personnalisés survivent, et trouver dans le XML le <code>UserAttributePair</code>
+  qui contient un champ.</li>
+</ul>
+</div>
+<p><strong>Prérequis :</strong> <a href="../module-13-properties-find-validate/">Module 13</a>.</p>
+<p><strong>Durée :</strong> 45 min en autonomie / 55 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>doc.study_unit</code>, <code>UserID</code>, <code>item.user_ids</code>,
+<code>CodeItem</code>, <code>r:UserAttributePair</code>.</p>
+<hr />
+<h2 id="1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises">1. Pourquoi les organisations ont besoin de champs personnalisés<a class="headerlink" href="#1-pourquoi-les-organisations-ont-besoin-de-champs-personnalises" title="Permanent link">&para;</a></h2>
+<p>DDI décrit des centaines de choses : questions, variables, concepts, listes de
+codes, provenance, et plus. Mais aucune norme ne peut anticiper <strong>tous</strong> les
+champs dont <strong>chaque</strong> organisation a besoin.</p>
+<p>Une archive ou un institut de statistique réel a presque toujours des
+métadonnées locales pour lesquelles DDI n'a aucun élément intégré :</p>
+<table>
+<thead>
+<tr>
+<th>Champ personnalisé</th>
+<th>Exemple de valeur</th>
+<th>Qui l'utilise</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Politique de conservation</td>
+<td>« détruire après 7 ans »</td>
+<td>Gestion des documents</td>
+</tr>
+<tr>
+<td>Classification de sécurité</td>
+<td>« Confidentiel »</td>
+<td>Sécurité de l'information</td>
+</tr>
+<tr>
+<td>Gestionnaire des données</td>
+<td>« Bureau de gouvernance des données »</td>
+<td>Gouvernance</td>
+</tr>
+<tr>
+<td>Système source</td>
+<td>« CRM-2024 »</td>
+<td>Ingénierie des données</td>
+</tr>
+<tr>
+<td>Numéro de catalogue interne</td>
+<td>« CAT-000734 »</td>
+<td>L'archive</td>
+</tr>
+<tr>
+<td>Date d'embargo</td>
+<td>« 2026-01-01 »</td>
+<td>Diffusion</td>
+</tr>
+<tr>
+<td>Code de projet / subvention</td>
+<td>« GRANT-2023-435 »</td>
+<td>Administration de la recherche</td>
+</tr>
+</tbody>
+</table>
+<p>Sans endroit où les consigner, les équipes finissent par les garder dans un
+<strong>chiffrier séparé</strong> qui se désynchronise des données. Le but de ce module est
+de les garder <strong>dans le fichier DDI lui-même</strong>, où ils voyagent avec les
+métadonnées.</p>
+<h2 id="2-louverture-de-la-norme-ddi">2. L'ouverture de la norme DDI<a class="headerlink" href="#2-louverture-de-la-norme-ddi" title="Permanent link">&para;</a></h2>
+<p>Voici l'idée importante :</p>
+<div class="admonition quote">
+<p class="admonition-title">DDI est conçu pour être étendu</p>
+<p>DDI ne vous force pas à choisir entre « n'utiliser que les champs intégrés »
+et « abandonner la norme ». Il fournit un <strong>point d'extension normalisé</strong>,
+<code>UserAttributePair</code>, afin que vous puissiez ajouter vos propres champs
+<strong>sans forker le schéma et sans quitter le DDI valide</strong>.</p>
+</div>
+<p>Cette ouverture est un choix de conception délibéré. Comparez les possibilités :</p>
+<ul>
+<li>Un format <strong>fermé</strong> vous forcerait soit à abandonner vos métadonnées
+  personnalisées, soit à inventer une variante privée et incompatible qu'aucun
+  autre outil ne comprend.</li>
+<li>La conception <strong>ouverte</strong> de DDI vous laisse ajouter <code>myorg:retention_policy</code>
+  aujourd'hui, et le fichier reste un document DDI valide que n'importe quel
+  outil compatible DDI peut lire, valider et préserver, même s'il ne sait pas
+  ce que <code>myorg:retention_policy</code> signifie.</li>
+</ul>
+<p>Chaque champ personnalisé que vous ajoutez dans ce module se sérialise en un
+petit bloc standard de XML DDI :</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;r:UserAttributePair&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&lt;r:AttributeKey&gt;</span>myorg:retention_policy<span class="nt">&lt;/r:AttributeKey&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&lt;r:AttributeValue&gt;</span>détruire<span class="w"> </span>après<span class="w"> </span>7<span class="w"> </span>ans<span class="nt">&lt;/r:AttributeValue&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&lt;/r:UserAttributePair&gt;</span>
+</span></code></pre></div>
+<p>C'est l'ouverture de la norme, rendue concrète :</p>
+<pre class="mermaid"><code>flowchart TD
+    STD["Norme DDI\n(des centaines de champs intégrés)"]
+    EXT["Points d'extension de tout élément identifiable :\nUserAttributePair (AttributeKey, AttributeValue)\net UserID"]
+    ORG["Vos champs personnalisés\nmyorg:retention_policy, myorg:security_class\nen UserAttributePair ; CAT-000734 en UserID"]
+    FILE["Toujours un fichier DDI valide\n(il se valide contre le schéma DDI)"]
+
+    STD --&gt; EXT
+    EXT --&gt; ORG
+    ORG --&gt; FILE
+    STD --&gt; FILE</code></pre>
+<h2 id="3-ou-peuvent-vivre-les-champs-personnalises">3. Où peuvent vivre les champs personnalisés<a class="headerlink" href="#3-ou-peuvent-vivre-les-champs-personnalises" title="Permanent link">&para;</a></h2>
+<p>Un champ personnalisé peut être attaché à <strong>n'importe quel</strong> élément DDI : une
+étude, une question, une variable, une liste de codes, tout. Placez-le au niveau
+que le champ décrit :</p>
+<ul>
+<li><strong>Niveau étude</strong> : des faits sur l'ensemble du jeu de données (conservation,
+  classification de sécurité). <code>doc.study_unit</code> est l'étude elle-même.</li>
+<li><strong>Niveau élément</strong> : des faits sur une variable ou une question (système
+  source, indicateur de qualité).</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Study-level custom fields describe the whole dataset</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># -&gt; {'myorg:retention_policy': 'destroy after 7 years',</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1">#     'myorg:security_class': 'Confidential'}</span>
+</span></code></pre></div>
+<h2 id="4-ajouter-des-champs-propres-a-lorganisation">4. Ajouter des champs propres à l'organisation<a class="headerlink" href="#4-ajouter-des-champs-propres-a-lorganisation" title="Permanent link">&para;</a></h2>
+<p>Vous avez déjà rencontré <code>set_property</code> au
+<a href="../module-13-properties-find-validate/">Module 13</a>. Ici, nous l'utilisons
+délibérément, avec un <strong>préfixe d'espace de noms</strong> sur chaque clé afin que vos
+champs n'entrent jamais en collision avec ceux d'un autre :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Item-level custom fields describe one variable</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># -&gt; CRM-2024</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Préfixez vos clés</p>
+<p>Préfixez chaque clé personnalisée d'une courte étiquette d'organisation,
+comme <code>myorg:</code> ou <code>acme:</code>. C'est une convention, pas une exigence, mais
+elle garde <em>vos</em> champs distincts de ceux d'un partenaire si deux fichiers
+DDI sont un jour fusionnés.</p>
+</div>
+<h2 id="5-les-champs-personnalises-font-un-aller-retour-ils-survivent">5. Les champs personnalisés font un aller-retour : ils survivent<a class="headerlink" href="#5-les-champs-personnalises-font-un-aller-retour-ils-survivent" title="Permanent link">&para;</a></h2>
+<p>Le bénéfice d'utiliser le point d'extension propre à la norme : vos champs
+personnalisés sont écrits dans le XML DDI et relus directement. Ils ne sont pas
+perdus à l'enregistrement.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># -&gt; CRM-2024</span>
+</span></code></pre></div>
+<p>Parce qu'ils vivent dans du DDI standard, une autre équipe utilisant un logiciel
+différent peut ouvrir votre fichier et voir encore <code>myorg:source_system</code>, même
+si son outil ignore ce que cela signifie. <strong>Rien n'est silencieusement
+supprimé.</strong> C'est l'interopérabilité. Ouvrez <code>household-survey.xml</code> dans un
+éditeur de texte et cherchez <code>UserAttributePair</code> pour voir chaque champ sous
+la forme du bloc XML de la section 2.</p>
+<div class="admonition tip">
+<p class="admonition-title">Continuer après un enregistrement</p>
+<p><code>income</code> et <code>q_income</code> restent attachés à <code>doc</code> après <code>doc.save()</code> : vous
+pouvez continuer à leur ajouter des propriétés, et l'enregistrement suivant
+les inclut.</p>
+</div>
+<h2 id="6-identifiants-propres-a-lorganisation-avec-userid">6. Identifiants propres à l'organisation avec UserID<a class="headerlink" href="#6-identifiants-propres-a-lorganisation-avec-userid" title="Permanent link">&para;</a></h2>
+<p>Parfois le champ personnalisé dont vous avez besoin est un <strong>identifiant</strong>
+provenant d'un autre système : un numéro de catalogue interne, un identifiant de
+gestion documentaire, une clé de base de données source. DDI a un deuxième point
+d'extension exactement pour cela : <code>UserID</code>, qui porte une valeur <strong>et</strong> un type.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
+</span></code></pre></div>
+<p>Utilisez <code>UserID</code> quand la valeur <strong>identifie</strong> l'élément dans un autre système,
+et une propriété personnalisée (<code>set_property</code>) quand la valeur le <strong>décrit</strong>.
+Un test rapide : si un autre système pourrait retrouver l'élément par cette
+valeur, c'est un identifiant.</p>
+<h2 id="7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes">7. Un champ personnalisé adossé à un vocabulaire contrôlé (une liste de codes)<a class="headerlink" href="#7-un-champ-personnalise-adosse-a-un-vocabulaire-controle-une-liste-de-codes" title="Permanent link">&para;</a></h2>
+<p>Les valeurs en texte libre sont flexibles mais faciles à mal saisir
+(« validated », « Validated », « valid »). Pour un champ qui devrait prendre un
+ensemble fixe de valeurs, adossez-le à une <strong>liste de codes</strong>, un vocabulaire
+contrôlé. Construisez d'abord le vocabulaire (comme au
+<a href="../module-09-code-lists/">Module 9</a>), puis faites qu'un champ personnalisé le
+<strong>référence</strong>. Passer un élément DDI comme valeur stocke son <strong>URN</strong>, un lien
+stable vers cette liste de codes.</p>
+<p>Une liste de codes n'est pas un simple sac de catégories. Une <code>Category</code> porte le
+<em>sens</em> (« validated ») ; la liste de codes contient des entrées <strong><code>Code</code></strong>, et
+chaque code <strong>référence</strong> une catégorie. Ajouter une catégorie seule ne la place
+dans aucune liste ; vous devez ajouter un <code>Code</code> qui pointe vers elle. Donnez à
+chaque code son propre URN fondé sur un UUID4, tout comme <code>add_code_list</code> et
+<code>add_item</code> le font pour la liste et les catégories :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># 1. Build the controlled vocabulary. For each allowed value, create the</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">#    Category (its meaning) and a Code in the list that references it.</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="n">CodeItem</span><span class="p">(</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>  <span class="c1"># UUID4 → this code's URN id</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="p">)</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="p">)</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Allowed codes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; 3</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># 2. A custom field holding one value drawn from that vocabulary</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 3. A custom field that references the code list defining the allowed values</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>  <span class="c1"># -&gt; validated</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>Le champ <code>myorg:quality_flag_codes</code> stocke l'URN de la liste de codes, et cette
+liste définit trois codes, de sorte que quiconque lit les
+métadonnées sait que <code>myorg:quality_flag</code> doit être l'un de <code>validated</code>,
+<code>provisional</code> ou <code>suppressed</code>, et non du texte libre. Le champ
+personnalisé est régi par un vocabulaire contrôlé, et ce lien voyage à
+l'intérieur du fichier DDI.</p>
+<h2 id="8-concevoir-un-catalogue-de-champs-personnalises">8. Concevoir un catalogue de champs personnalisés<a class="headerlink" href="#8-concevoir-un-catalogue-de-champs-personnalises" title="Permanent link">&para;</a></h2>
+<p>L'ouverture est puissante, ce qui signifie qu'elle a besoin de <strong>gouvernance</strong>.
+Si chaque analyste invente sa propre clé, les champs deviennent aussi
+désordonnés que le chiffrier que vous essayiez de remplacer. Convenez d'un petit
+<strong>catalogue</strong> et appliquez-le de manière cohérente.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># A documented catalog your whole team shares</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">"myorg:retention_policy"</span><span class="p">:</span> <span class="s2">"How long to keep the data (records schedule)."</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="s2">"myorg:security_class"</span><span class="p">:</span> <span class="s2">"Security classification (e.g. Confidential)."</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Apply a field only if it is in the catalog (a guard against typos)</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Data Governance Office"</span><span class="p">)</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">))</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># -&gt; Data Governance Office</span>
+</span></code></pre></div>
+<p>Un catalogue vous donne trois choses : des <strong>clés</strong> cohérentes, des
+<strong>significations</strong> documentées, et un seul endroit pour réviser les extensions de
+votre organisation.</p>
+<h2 id="9-auditer-quels-elements-portent-vos-champs-personnalises">9. Auditer quels éléments portent vos champs personnalisés<a class="headerlink" href="#9-auditer-quels-elements-portent-vos-champs-personnalises" title="Permanent link">&para;</a></h2>
+<p>Parce que les champs personnalisés ne sont que des propriétés, vous pouvez
+<strong>parcourir</strong> un document et en faire rapport, ce qui est utile pour les revues de
+gouvernance et l'assurance qualité.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">return</span> <span class="n">count</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># -&gt; Items with custom fields: 2</span>
+</span></code></pre></div>
+<h2 id="10-bonnes-pratiques-et-une-mise-en-garde">10. Bonnes pratiques : et une mise en garde<a class="headerlink" href="#10-bonnes-pratiques-et-une-mise-en-garde" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Préfixez vos clés</strong> (<code>myorg:...</code>) pour qu'elles n'entrent jamais en collision.</li>
+<li><strong>Tenez un catalogue</strong> pour que les clés et les significations restent cohérentes.</li>
+<li><strong>Préférez les vocabulaires contrôlés</strong> pour les champs à ensemble fixe de valeurs.</li>
+<li><strong>Ne réinventez pas le DDI intégré.</strong> Si DDI a déjà un élément (un concept, un
+  univers, une justification de version), utilisez-le. Les champs personnalisés
+  sont pour ce que la norme ne couvre vraiment pas.</li>
+<li><strong>Documentez vos champs</strong> pour les lecteurs externes. Un champ personnalisé
+  n'est utile que par la définition qui l'accompagne. Votre fichier reste du DDI
+  valide, mais seul <em>votre</em> catalogue explique ce que <code>myorg:security_class</code>
+  signifie.</li>
+</ul>
+<hr />
+<div class="admonition example">
+<p class="admonition-title">Scénario</p>
+<p>Votre archive reçoit une enquête à cataloguer. La gestion documentaire a
+besoin d'une politique de conservation, la sécurité de l'information d'une
+classification, et l'archive de son propre numéro de catalogue, et aucun n'a
+de champ intégré dans DDI. Plutôt que de tenir un chiffrier parallèle, vous
+les consignez comme champs personnalisés sur l'étude et ses variables, faites
+pointer l'indicateur de qualité vers une liste de codes, et confirmez qu'ils
+survivent à un aller-retour enregistrement/réouverture afin qu'ils voyagent
+avec le fichier.</p>
+</div>
+<hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>(O1)</strong> Créez une étude avec une question et une variable <code>income</code>.
+   Définissez deux champs personnalisés au niveau étude :
+   <code>myorg:retention_policy</code> = <code>"destroy after 7 years"</code> et
+   <code>myorg:security_class</code> = <code>"Confidential"</code>. Définissez un champ au niveau
+   élément sur la variable <code>income</code> : <code>myorg:source_system</code> = <code>"CRM-2024"</code>.
+   Affichez les propriétés de l'étude, puis le système source de la variable.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>{'myorg:retention_policy': 'destroy after 7 years', 'myorg:security_class': 'Confidential'}
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>CRM-2024
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ddi_l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddi</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">new_study</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Household Survey"</span><span class="p">,</span> <span class="n">agency</span><span class="o">=</span><span class="s2">"survey.example.org"</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">q_income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_question</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"What is your household income?"</span><span class="p">)</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">income</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span> <span class="n">question</span><span class="o">=</span><span class="n">q_income</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">study</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">study_unit</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:retention_policy"</span><span class="p">,</span> <span class="s2">"destroy after 7 years"</span><span class="p">)</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">study</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:security_class"</span><span class="p">,</span> <span class="s2">"Confidential"</span><span class="p">)</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">,</span> <span class="s2">"CRM-2024"</span><span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">study</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
+</span></code></pre></div>
+<p>La politique de conservation et la classification décrivent tout le
+jeu de données : elles vont sur l'étude. Le système source décrit
+une seule variable.</p>
+</details>
+</li>
+<li>
+<p><strong>(O2)</strong> Attachez un identifiant externe propre à l'organisation à la
+   variable <code>income</code> : un <code>UserID</code> de valeur <code>"CAT-000734"</code> et de type
+   <code>"InternalCatalogue"</code>. Affichez-le sous la forme <code>type: valeur</code>. Ensuite,
+   pour chaque valeur ci-dessous, dites si elle va dans un <code>UserID</code> ou dans
+   une propriété personnalisée : (a) <code>RM-2291</code>, le numéro de cette variable
+   dans le système de gestion documentaire ; (b) <code>"validated"</code>, son statut de
+   qualité ; (c) <code>"Data Governance Office"</code>, l'équipe qui en répond.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>InternalCatalogue: CAT-000734
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserID</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UserID</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">"CAT-000734"</span><span class="p">,</span> <span class="n">type_of_user_id</span><span class="o">=</span><span class="s2">"InternalCatalogue"</span><span class="p">))</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">uid</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">user_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">type_of_user_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uid</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># -&gt; InternalCatalogue: CAT-000734</span>
+</span></code></pre></div>
+<p>(a) <code>UserID</code> : un autre système peut retrouver la variable par ce
+numéro, il identifie donc l'élément. (b) et (c) sont des propriétés
+personnalisées : elles décrivent l'élément.</p>
+</details>
+</li>
+<li>
+<p><strong>(O3)</strong> Construisez une liste de codes <code>Quality Flag Codes</code> avec trois
+   codes (<code>validated</code>, <code>provisional</code>, <code>suppressed</code>), un vocabulaire contrôlé.
+   Définissez <code>myorg:quality_flag</code> = <code>"validated"</code> sur la variable <code>income</code>, et
+   définissez <code>myorg:quality_flag_codes</code> sur l'objet liste de codes pour que le
+   champ <strong>référence</strong> ce vocabulaire. Affichez l'indicateur, et si la
+   référence stockée est un URN (commence par <code>"urn:ddi:"</code>).</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>validated
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>True
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid4</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.models.logicalproduct</span><span class="w"> </span><span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">CodeItem</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Build the controlled vocabulary. Each allowed value needs a Category (its</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># meaning) AND a Code in the list that references it; a Category alone is not</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># in any list. Each Code gets its own UUID4-based URN.</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">quality_codes</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_code_list</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Quality Flag Codes"</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"validated"</span><span class="p">,</span> <span class="s2">"provisional"</span><span class="p">,</span> <span class="s2">"suppressed"</span><span class="p">):</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">category</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="n">quality_codes</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="n">CodeItem</span><span class="p">(</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>            <span class="n">agency</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">agency</span><span class="p">,</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>            <span class="n">identifier</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>            <span class="n">version</span><span class="o">=</span><span class="n">quality_codes</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>            <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">to_reference</span><span class="p">(),</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>        <span class="p">)</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>    <span class="p">)</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># A field whose value is drawn from the vocabulary, plus a field that</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># references the code list defining the allowed values</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">,</span> <span class="s2">"validated"</span><span class="p">)</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="n">income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">,</span> <span class="n">quality_codes</span><span class="p">)</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag"</span><span class="p">))</span>  <span class="c1"># -&gt; validated</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:quality_flag_codes"</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"urn:ddi:"</span><span class="p">))</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Les objets restent attachés</p>
+<p>Les variables que vous tenez restent les objets que le document
+sérialise, avant comme après <code>save()</code>.</p>
+</div>
+</details>
+</li>
+<li>
+<p><strong>(O4)</strong> Écrivez un catalogue <code>CUSTOM_FIELDS</code> avec trois clés,
+   <code>myorg:source_system</code>, <code>myorg:quality_flag</code> et <code>myorg:steward</code>, chacune
+   avec une signification d'une ligne. Écrivez
+   <code>set_catalog_field(item, key, value)</code>, qui ne définit le champ que si la
+   clé est dans le catalogue et lève une <code>ValueError</code> sinon. Utilisez-la pour
+   définir <code>myorg:steward</code> = <code>"Survey Methods"</code> sur la variable <code>income</code> et
+   affichez la valeur. Essayez ensuite la clé mal orthographiée
+   <code>myorg:stewart</code>, attrapez l'erreur et affichez son message.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Survey Methods
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Refused: 'myorg:stewart' is not in the custom-field catalog
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">CUSTOM_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="s2">"myorg:source_system"</span><span class="p">:</span> <span class="s2">"The system the data was extracted from."</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="s2">"myorg:quality_flag"</span><span class="p">:</span> <span class="s2">"Data-quality status (see Quality Flag Codes)."</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="s2">"myorg:steward"</span><span class="p">:</span> <span class="s2">"The team accountable for the item."</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">}</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_catalog_field</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">CUSTOM_FIELDS</span><span class="p">:</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">!r}</span><span class="s2"> is not in the custom-field catalog"</span><span class="p">)</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">item</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">income</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">))</span>  <span class="c1"># -&gt; Survey Methods</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>    <span class="n">set_catalog_field</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"myorg:stewart"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Refused: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># -&gt; Refused: 'myorg:stewart' is not in the custom-field catalog</span>
+</span></code></pre></div>
+<p>Sans le garde-fou, la faute de frappe créerait un second champ, mal
+orthographié, qu'aucun audit ni lecteur ne cherche.</p>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Définissez <code>myorg:steward</code> = <code>"Survey Methods"</code> sur la question du
+   revenu. Écrivez un audit qui parcourt toutes les questions et variables et
+   compte combien portent un champ <code>myorg:</code>. Affichez le compteur.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Items with custom fields: 2
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">q_income</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">"myorg:steward"</span><span class="p">,</span> <span class="s2">"Survey Methods"</span><span class="p">)</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"myorg:"</span><span class="p">):</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">questions</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">variables</span><span class="p">):</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="k">return</span> <span class="n">count</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Items with custom fields: </span><span class="si">{</span><span class="n">items_with_custom_fields</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># -&gt; Items with custom fields: 2</span>
+</span></code></pre></div>
+<p>L'audit compte des éléments, pas des champs : la variable <code>income</code>
+porte plusieurs champs <code>myorg:</code> et compte une fois.</p>
+</details>
+</li>
+<li>
+<p><strong>(O6)</strong> Enregistrez le document, rouvrez-le avec <code>ddi.open_ddi()</code>, et
+   relisez <code>myorg:source_system</code> depuis la variable rouverte pour prouver que
+   le champ personnalisé fait un aller-retour. Lisez ensuite le fichier
+   enregistré comme texte et vérifiez qu'il contient un élément
+   <code>r:AttributeKey</code> avec la clé <code>myorg:source_system</code>.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>CRM-2024
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>True
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="n">reopened</span> <span class="o">=</span> <span class="n">ddi</span><span class="o">.</span><span class="n">open_ddi</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">reopened</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s2">"myorg:source_system"</span><span class="p">))</span>  <span class="c1"># -&gt; CRM-2024</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="n">xml</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"household-survey.xml"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"&lt;r:AttributeKey&gt;myorg:source_system&lt;/r:AttributeKey&gt;"</span> <span class="ow">in</span> <span class="n">xml</span><span class="p">)</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<p>La clé est dans un <code>r:AttributeKey</code>, à l'intérieur du
+<code>r:UserAttributePair</code> qui contient aussi son <code>r:AttributeValue</code>.</p>
+</details>
+</li>
+</ol>
+<hr />
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<details class="question" open="open">
+<summary>Question 1 (O1) : Quel appel consigne que tout le jeu de données est classé Confidential ?</summary>
+<p><strong>A.</strong> <code>income.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>B.</strong> <code>doc.study_unit.set_property("myorg:security_class", "Confidential")</code></p>
+<p><strong>C.</strong> <code>q_income.set_property("security_class", "Confidential")</code></p>
+<p><strong>D.</strong> <code>doc.add_variable(name="myorg:security_class")</code></p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Un fait sur tout le jeu de données va sur l'étude,
+<code>doc.study_unit</code>. A et C le placent sur un seul élément (et C perd le
+préfixe). D crée une variable, pas un champ.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 2 (O6) : Vous enregistrez un document et cherchez votre clé myorg:source_system dans le XML. Où la trouvez-vous ?</summary>
+<p><strong>A.</strong> Dans un élément <code>r:UserID</code>.</p>
+<p><strong>B.</strong> Dans le <code>r:Label</code> de la variable.</p>
+<p><strong>C.</strong> Dans un <code>r:AttributeKey</code>, à l'intérieur d'un <code>r:UserAttributePair</code>.</p>
+<p><strong>D.</strong> Nulle part : les champs personnalisés ne sont pas enregistrés.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> <code>set_property</code> écrit un <code>r:UserAttributePair</code> avec un
+<code>r:AttributeKey</code> et un <code>r:AttributeValue</code>, le point d'extension de la
+norme pour les champs personnalisés. C'est pourquoi le champ survit à
+l'enregistrement et à la réouverture.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 (O2) : RM-2291 est le numéro d'une variable dans le système de gestion documentaire. Où le consignez-vous ?</summary>
+<p><strong>A.</strong> Dans un <code>UserID</code>, avec un type comme <code>"RecordsManagement"</code>.</p>
+<p><strong>B.</strong> Dans l'étiquette de la variable.</p>
+<p><strong>C.</strong> Dans une propriété personnalisée, puisque toute valeur en plus est une propriété.</p>
+<p><strong>D.</strong> Dans un chiffrier séparé.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> La valeur <strong>identifie</strong> la variable dans un autre système :
+c'est un <code>UserID</code>. Utilisez une propriété personnalisée quand la
+valeur <strong>décrit</strong> l'élément.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 (O3) : quality_codes est une liste de codes. Que retourne get_property après cet appel ?</summary>
+<p><code>income.set_property("myorg:quality_flag_codes", quality_codes)</code></p>
+<p><strong>A.</strong> L'objet <code>CodeList</code> lui-même.</p>
+<p><strong>B.</strong> La chaîne <code>"Quality Flag Codes"</code>.</p>
+<p><strong>C.</strong> La liste <code>['validated', 'provisional', 'suppressed']</code>.</p>
+<p><strong>D.</strong> L'URN de la liste de codes, une chaîne qui commence par <code>urn:ddi:</code>.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>D.</strong> Passer un élément DDI comme valeur stocke son URN, un lien
+stable vers la liste de codes. Les propriétés contiennent toujours
+des chaînes.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O4) : Avec le garde-fou de catalogue de la section 8, que fait set_catalog_field(income, 'myorg:stewart', 'X') ?</summary>
+<p><strong>A.</strong> Définit <code>myorg:stewart</code> sur <code>income</code>.</p>
+<p><strong>B.</strong> Corrige la clé en <code>myorg:steward</code> et la définit.</p>
+<p><strong>C.</strong> Ne fait rien et ne dit rien.</p>
+<p><strong>D.</strong> Lève une <code>ValueError</code> et ne définit rien.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>D.</strong> La clé n'est pas dans <code>CUSTOM_FIELDS</code> : la fonction lève une
+erreur avant d'appeler <code>set_property</code>. La faute de frappe est
+attrapée au lieu de créer un champ mal orthographié.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 6 (O5) : Une question n'a aucune propriété ; la variable v1 a myorg:a et myorg:b ; la variable v2 a other:flag. Que retourne items_with_custom_fields(doc) ?</summary>
+<p><strong>A.</strong> 1</p>
+<p><strong>B.</strong> 2</p>
+<p><strong>C.</strong> 3</p>
+<p><strong>D.</strong> 0</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>A.</strong> Seule <code>v1</code> a une clé qui commence par <code>myorg:</code>. L'audit
+compte des éléments, pas des champs : ses deux champs comptent une
+fois, et <code>other:flag</code> ne correspond pas au préfixe.</p>
+</details>
+</details>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter des champs personnalisés préfixés au niveau étude et au niveau élément, en choisissant le niveau que chaque champ décrit. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux ajouter un <code>UserID</code> et choisir entre un <code>UserID</code> et une propriété personnalisée pour une valeur. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux adosser un champ personnalisé à une liste de codes en stockant l'URN de la liste dans une propriété. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un catalogue des clés autorisées et une fonction qui refuse toute autre clé. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux écrire un audit qui compte les éléments portant mon préfixe. (O5)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux montrer que les champs personnalisés survivent à l'enregistrement et à la réouverture, et trouver leur <code>UserAttributePair</code> dans le XML. (O6)</li>
+</ul>
+<hr />
+<div class="admonition tip">
+<p class="admonition-title">Notes pour l'instructeur</p>
+<ul>
+<li>Commencez par le problème du « chiffrier parallèle » : chaque organisation
+  a des métadonnées locales, et elles se désynchronisent toujours quand elles
+  sont gardées hors du fichier. Les champs personnalisés corrigent cela en
+  les gardant dans le DDI.</li>
+<li>Faites le point d'ouverture explicitement : DDI vous donne une façon
+  <em>normalisée</em> de l'étendre. Montrez le XML <code>UserAttributePair</code> à l'écran pour
+  que les apprenants voient que le champ personnalisé est toujours du DDI
+  valide, pas un bricolage. L'exercice 6 le leur fait trouver eux-mêmes.</li>
+<li>Tracez la ligne entre le Module 13 et ce module : le Module 13 enseignait la
+  <em>mécanique</em> de <code>set_property</code> ; ce module porte sur la <em>gouvernance</em> des
+  extensions pour une organisation : catalogues, espaces de noms, valeurs
+  contrôlées, audit.</li>
+<li>La distinction <code>UserID</code> vs propriété personnalisée (identifier vs décrire)
+  est une source de confusion courante. Donnez deux exemples rapides de
+  chaque.</li>
+<li>Pour le personnel des instituts de statistique et des archives : reliez à
+  la gouvernance réelle : calendriers de conservation, classifications de
+  sécurité, affectation de gestionnaires de données. Ce sont des choses
+  auditées en pratique, et la boucle d'audit de la section 9 est la façon
+  d'en faire rapport.</li>
+<li>Insistez sur la mise en garde : ne réinventez pas le DDI intégré. Les champs
+  personnalisés sont pour de véritables lacunes, pas pour refaire les
+  concepts, les univers ou le versionnage.</li>
+</ul>
+</div>
+<hr />
+<p><strong>Voir aussi :</strong> <a href="../module-13-properties-find-validate/">Module 13 : Propriétés personnalisées, recherche, suppression et validation</a> | <a href="../module-15-update-and-version/">Module 15 : Mise à jour et versionnage</a> | <a href="../../user-guide/">Guide utilisateur : Propriétés personnalisées</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../module-13-properties-find-validate/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: 13. Propriétés, recherche et validation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                13. Propriétés, recherche et validation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../module-15-update-and-version/" class="md-footer__link md-footer__link--next" aria-label="Suivant: 15. Mise à jour et versionnage">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                15. Mise à jour et versionnage
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/ddi-l/" target="_blank" rel="noopener" title="ddi-l on PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.action.edit","content.action.view","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.share","search.suggest","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
+      
+    
+  </body>
+</html>

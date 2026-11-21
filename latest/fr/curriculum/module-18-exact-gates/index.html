@@ -1,0 +1,4123 @@
+
+
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Module 18 facultatif du cours ddi-l : avec l&#x27;extra logic, décider si deux filtres valent pour les mêmes répondants, nommer un répondant sur lequel ils divergent, et tester un filtre sur des répondants de votre choix.">
+      
+      
+      
+        <link rel="canonical" href="https://pbisson44.github.io/ddi-l/latest/fr/curriculum/module-18-exact-gates/">
+      
+      
+      
+      
+        <link rel="prev" href="../module-17-capstone/">
+      
+      
+        <link rel="next" href="../module-19-http-api/">
+      
+      
+        
+          <link rel="alternate" href="/ddi-l/latest/" hreflang="en">
+        
+          <link rel="alternate" href="/ddi-l/latest/fr/" hreflang="fr">
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="zensical-0.1.3">
+    
+    
+      
+        <title>18. Comparer exactement des filtres - ddi-l</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e2cf241e.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/palette.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/site.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Ne plus montrer cela">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            
+            
+  
+  
+    <p class="ddi-announce">
+      <span class="ddi-announce__icon twemoji" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9zm6.82 6L12 12.72 5.18 9 12 5.28zM17 16l-5 2.72L7 16v-3.73L12 15l5-2.73z"/></svg>
+      </span>
+      <span>Nouveau dans le cours : des modules facultatifs sur DDI-Codebook et DDI-CDI.</span>
+      
+        <a class="ddi-announce__link" href="../">Voir le cours<span aria-hidden="true"> &rarr;</span></a>
+      
+    </p>
+  
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="ddi-l" class="md-header__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ddi-l
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              18. Comparer exactement des filtres
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode clair"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Passer au mode clair" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Passer au mode sombre"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Passer au mode sombre" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Suivre le réglage du système"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Suivre le réglage du système" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Sélectionner la langue">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/curriculum/module-18-exact-gates/" hreflang="en" lang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/ddi-l/latest/fr/curriculum/module-18-exact-gates/" hreflang="fr" lang="fr" class="md-select__link" aria-current="true">
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Recherche</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Onglets" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Accueil
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  Apprendre
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guides/" class="md-tabs__link">
+          
+  
+  Guides pratiques
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  Référence
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../release-notes/" class="md-tabs__link">
+          
+  
+  À propos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ddi-l" class="md-nav__button md-logo" aria-label="ddi-l" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+     aria-hidden="true" focusable="false">
+  <!--
+    Drawn in `currentColor` so the mark takes the header's foreground in every
+    palette, including high contrast, without a second asset. That only works
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
+    whereas `theme.logo` would load it as an <img>, where currentColor falls
+    back to black. Material inlines it twice (header and navigation drawer),
+    so it carries no ids, and it is decorative: the logo link has the site name
+    as its label. `fill="none"` sits on the group, not the <svg>: Material's
+    stylesheet sets `fill: currentColor` on the <svg>, which would otherwise
+    fill every outline.
+
+    The motif is the package: stacked records (a dataset) wrapped by an open
+    circular arrow (the DDI *Lifecycle*).
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+     stroke-linejoin="round">
+    <!-- Lifecycle arc, open at the top right for the arrowhead. -->
+    <path d="M38.5 14.2A18 18 0 1 1 24 6" />
+    <path d="M24 6l-5.6-3.8M24 6l-5.6 4.2" />
+    <!-- Stacked records. -->
+    <ellipse cx="24" cy="18.4" rx="9.2" ry="3.4" />
+    <path d="M14.8 18.4v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4v-5.6" />
+    <path d="M14.8 24v5.6c0 1.9 4.1 3.4 9.2 3.4s9.2-1.5 9.2-3.4V24" />
+  </g>
+</svg>
+
+    </a>
+    ddi-l
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pbisson44/ddi-l" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pbisson44/ddi-l
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Accueil
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installer
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Apprendre
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Apprendre
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 : Fondements
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 : Fondements
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-01-what-is-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  1. Qu’est-ce que les métadonnées ?
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-02-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  2. Préparez votre environnement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-03-first-study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  3. Créez votre première étude
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-04-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  4. Variables et questions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-05-concepts-universes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  5. Concepts et univers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-06-open-modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  6. Ouvrir et modifier des fichiers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-07-cli-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  7. Valider depuis la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 : Compétences pratiques
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 : Compétences pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-08-csv-to-ddi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  8. Du CSV/Excel au DDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-09-code-lists/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  9. Listes de codes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-10-questionnaire-flows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  10. Flux de questionnaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-11-data-lineage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  11. Traçabilité des données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-12-data-linkage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  12. Couplage de données
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-13-properties-find-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  13. Propriétés, recherche et validation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-14-custom-fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  14. Champs personnalisés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-15-update-and-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  15. Mise à jour et versionnage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 : Pratique appliquée
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 : Pratique appliquée
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-16-advanced-questionnaire-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  16. Spécification avancée de questionnaires
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-17-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  17. Projets de synthèse
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modules facultatifs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Modules facultatifs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Comparer exactement des filtres
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  18. Comparer exactement des filtres
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-ce-quune-forme-normale-ne-peut-pas-vous-dire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Ce qu'une forme normale ne peut pas vous dire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-verifier-que-lextra-est-installe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Vérifier que l'extra est installé
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-trois-verdicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Trois verdicts
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-quest-ce-quun-repondant" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Qu'est-ce qu'un répondant ?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-dire-au-solveur-ce-quest-chaque-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Dire au solveur ce qu'est chaque question
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-tester-un-filtre-sur-des-repondants-de-votre-choix" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Tester un filtre sur des répondants de votre choix
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-relire-des-filtres-traduits" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Relire des filtres traduits
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dans-ddi-conform" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Dans <code>ddi conform</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Limites
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-19-http-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  19. Servir ddi-l par HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-20-codebook-to-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  20. De DDI-Codebook à DDI-Lifecycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-21-ddi-cdi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  21. Décrire vos données avec DDI-CDI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ressources du cours
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Ressources du cours
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide-mémoire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../answer-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Corrigés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de l’instructeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../guides/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7 17 3.2-6.8L17 7l-3.2 6.8zm5-5.9a.9.9 0 0 0-.9.9.9.9 0 0 0 .9.9.9.9 0 0 0 .9-.9.9.9 0 0 0-.9-.9M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Guides pratiques
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Guides pratiques
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier vos métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Vérifier vos métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Valider et analyser
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/schema-troubleshooting-clinic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dépanner les erreurs de schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spec-conformance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Vérifier un questionnaire par rapport à une spécification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/automation-playbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Automatiser la validation en CI
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faire entrer et sortir les métadonnées
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Faire entrer et sortir les métadonnées
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-import/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Charger du DDI depuis des tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../spreadsheet-templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modèles de tableurs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interoperability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec d’autres outils
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../colectica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Travailler avec les exports Colectica
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/xml-to-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Passer du XML aux objets
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/fragment-reuse-lab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Réutiliser des fragments
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l ailleurs
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Utiliser ddi-l ailleurs
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser la ligne de commande
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Servir l’API HTTP
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../r-users/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utiliser ddi-l depuis R
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/building-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Construire des outils et applications
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 1-5 5v11l5-4.5zm2 4v13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6c-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1M10 18.41C8.75 18.09 7.5 18 6.5 18c-1.06 0-2.32.19-3.5.5V7.13c.91-.4 2.14-.63 3.5-.63s2.59.23 3.5.63z"/></svg>
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Référence
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide d’utilisation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence de l’API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Référence des modèles
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lint-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Règles lint
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../namespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Catalogue des espaces de noms
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Couverture du schéma
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  À propos
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  À propos
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Playbook de performance
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Playbook de performance
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/schema_conversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Benchmark de conversion de schémas
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ddi-l-friendly-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Paquets Python associés
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../DEVELOPMENT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Guide de développement
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-ce-quune-forme-normale-ne-peut-pas-vous-dire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Ce qu'une forme normale ne peut pas vous dire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-verifier-que-lextra-est-installe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Vérifier que l'extra est installé
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-trois-verdicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Trois verdicts
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-quest-ce-quun-repondant" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Qu'est-ce qu'un répondant ?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-dire-au-solveur-ce-quest-chaque-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Dire au solveur ce qu'est chaque question
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-tester-un-filtre-sur-des-repondants-de-votre-choix" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Tester un filtre sur des répondants de votre choix
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-relire-des-filtres-traduits" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Relire des filtres traduits
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-dans-ddi-conform" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Dans <code>ddi conform</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Limites
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercices" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exercices
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quiz" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quiz
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faites-le-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Faites le point
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+      
+        
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Apprendre
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Modules facultatifs
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+
+
+
+  
+    <a href="https://github.com/pbisson44/ddi-l/edit/main/docs/curriculum/module-18-exact-gates.fr.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.06 9 .94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/pbisson44/ddi-l/raw/main/docs/curriculum/module-18-exact-gates.fr.md" title="Consulter la source de cette page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="module-18-facultatif-comparer-exactement-des-filtres">Module 18 (facultatif) : Comparer exactement des filtres<a class="headerlink" href="#module-18-facultatif-comparer-exactement-des-filtres" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Objectifs d'apprentissage</p>
+<p>À la fin de ce module, vous pouvez :</p>
+<ul>
+<li><strong>O1.</strong> Vérifier avec <code>decide()</code> si deux filtres valent pour les mêmes
+  répondants, et lire son verdict : <code>equivalent</code>, <code>different</code> avec un
+  répondant qui les distingue, ou <code>unknown</code> avec une raison.</li>
+<li><strong>O2.</strong> Donner à <code>decide()</code> le type de chaque question, tiré des
+  domaines de réponse de la spécification, et expliquer pourquoi une
+  question dont la réponse est un nombre entier peut faire concorder deux
+  filtres.</li>
+<li><strong>O3.</strong> Tester un filtre avec <code>evaluate()</code> sur des répondants de votre
+  choix : un qui a laissé la question vide, un qui l'a refusée, un qui y a
+  répondu sans valeur, et un qui a donné une valeur.</li>
+<li><strong>O4.</strong> Relire des filtres traduits d'un document de spécification et,
+  pour chaque filtre qui diffère du filtre voulu, nommer un répondant
+  qu'il achemine mal.</li>
+<li><strong>O5.</strong> Dire ce que l'extra <code>logic</code> change dans <code>equivalent()</code> et
+  <code>ddi conform</code>, et ce qu'ils font sans lui.</li>
+</ul>
+</div>
+<p><strong>Prérequis :</strong> <a href="../module-16-advanced-questionnaire-spec/">Module 16</a>.
+Ce module est facultatif : le projet de synthèse n'en a pas besoin.</p>
+<div class="admonition warning">
+<p class="admonition-title">Installez d'abord les extras spec et logic</p>
+<p>Ce module demande l'extra <code>spec</code> du Module 16 et l'extra <code>logic</code>, qui
+ajoute le solveur Z3 (environ 57 Mo). <code>pip install ddi-l</code> seul
+n'installe ni l'un ni l'autre :</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s2">"ddi-l[spec,logic]"</span>
+</span></code></pre></div>
+</div>
+<p><strong>Durée :</strong> 45 min en autonomie / 60 min avec instructeur.</p>
+<p><strong>Nouveau dans ce module :</strong> <code>decide()</code>, son verdict (<code>outcome</code>, <code>example</code>,
+<code>reason</code>), <code>Example.describe()</code>, <code>evaluate()</code>, <code>Answer</code>, l'argument <code>types</code>,
+<code>equivalent(exact=...)</code> et <code>ddi conform --semantics</code>.</p>
+<hr />
+<h2 id="1-ce-quune-forme-normale-ne-peut-pas-vous-dire">1. Ce qu'une forme normale ne peut pas vous dire<a class="headerlink" href="#1-ce-quune-forme-normale-ne-peut-pas-vous-dire" title="Permanent link">&para;</a></h2>
+<p>Au Module 16, <code>normalise()</code> a mis chaque filtre sous une forme normale, et
+<code>equivalent()</code> a comparé ces formes. Une forme normale développe ce qui est
+abrégé et déplace <code>not</code> vers l'intérieur, mais elle ne calcule rien. Deux
+filtres qui concordent toujours peuvent donc avoir des formes normales
+différentes :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">equivalent</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">equivalent</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="s2">"PetCount &gt;= 1"</span><span class="p">,</span> <span class="n">exact</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>  <span class="c1"># -&gt; False</span>
+</span></code></pre></div>
+<p><code>exact=False</code> ne demande que les formes normales, ce qui est tout ce que fait
+<code>equivalent()</code> sans l'extra <code>logic</code>. <code>False</code> veut alors seulement dire
+« écrits différemment ». Cela ne veut pas dire qu'un ménage est acheminé
+autrement.</p>
+<p>L'extra <code>logic</code> ajoute un <strong>solveur</strong> : un programme qui cherche, parmi tous
+les répondants possibles, un répondant sur lequel deux filtres divergent.
+S'il n'en trouve aucun, les filtres sont équivalents. S'il en trouve un, il
+vous montre ce répondant.</p>
+<h2 id="2-verifier-que-lextra-est-installe">2. Vérifier que l'extra est installé<a class="headerlink" href="#2-verifier-que-lextra-est-installe" title="Permanent link">&para;</a></h2>
+<p><code>decide()</code> interroge le solveur. Sans l'extra, il lève
+<code>LogicDependencyError</code>, qui dit quoi installer :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogicDependencyError</span><span class="p">,</span> <span class="n">decide</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">try</span><span class="p">:</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s2">"x &gt; 3"</span><span class="p">,</span> <span class="s2">"x &gt;= 4"</span><span class="p">)</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; different</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">except</span> <span class="n">LogicDependencyError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Si vous voyez <code>different</code>, l'extra fonctionne. Si vous voyez
+<code>Deciding expressions needs z3-solver: pip install "ddi-l[logic]"</code>, lancez
+cette commande.</p>
+<h2 id="3-trois-verdicts">3. Trois verdicts<a class="headerlink" href="#3-trois-verdicts" title="Permanent link">&para;</a></h2>
+<p><code>decide(left, right)</code> renvoie un <strong>verdict</strong> en trois parties :</p>
+<table>
+<thead>
+<tr>
+<th>Partie</th>
+<th>Ce qu'elle contient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>outcome</code></td>
+<td><code>"equivalent"</code>, <code>"different"</code> ou <code>"unknown"</code></td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td>Pour <code>different</code> : un répondant pour qui un filtre vaut et l'autre non</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>Pour <code>unknown</code> : pourquoi le solveur n'a pas pu décider</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">same</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"PetAge + 1 &gt; 11"</span><span class="p">,</span> <span class="s2">"PetAge &gt; 10"</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">same</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; equivalent</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">apart</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"answered(PetKind) and PetAge &gt; 30"</span><span class="p">,</span> <span class="s2">"PetAge &gt; 30"</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">apart</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; different</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">apart</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>  <span class="c1"># -&gt; PetAge is 31 and PetKind is empty</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">unsure</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s1">'PetName = "Rex"'</span><span class="p">,</span> <span class="s1">'PetName &lt; "S"'</span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">unsure</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; unknown</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">unsure</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>  <span class="c1"># -&gt; PetName &lt; "S" compares text by order</span>
+</span></code></pre></div>
+<ul>
+<li>La première paire fait de l'arithmétique : <code>PetAge + 1 &gt; 11</code> est vrai
+  exactement quand <code>PetAge &gt; 10</code> l'est. La normalisation ne pouvait pas le
+  voir ; le solveur, si.</li>
+<li>La deuxième paire diffère pour un animal de 31 ans dont la sorte a été
+  laissée vide. Seul le premier filtre demande une réponse à <code>PetKind</code>.</li>
+<li>La troisième paire compare du texte par ordre alphabétique, ce que le
+  solveur ne modélise pas. <code>unknown</code> est honnête : vérifiez un tel filtre à
+  la main.</li>
+</ul>
+<p><code>describe()</code> décrit le répondant par une phrase, en anglais. Une question que
+la phrase ne nomme pas a été laissée vide, sauf si la phrase dit autre chose.</p>
+<div class="admonition tip">
+<p class="admonition-title">Un répondant suffit</p>
+<p>Un verdict <code>different</code> donne un répondant, pas tous. Corrigez le filtre,
+puis relancez <code>decide()</code> : il peut en trouver un autre. Une autre version
+du solveur peut aussi choisir un autre répondant que ceux affichés ici ;
+tout répondant qu'il donne est un répondant sur lequel les deux filtres
+divergent.</p>
+</div>
+<h2 id="4-quest-ce-quun-repondant">4. Qu'est-ce qu'un répondant ?<a class="headerlink" href="#4-quest-ce-quun-repondant" title="Permanent link">&para;</a></h2>
+<p>Le solveur essaie toutes les sortes de répondants. Pour chaque question, un
+répondant peut :</p>
+<table>
+<thead>
+<tr>
+<th>Un répondant...</th>
+<th>Dans <code>describe()</code></th>
+<th>Une comparaison comme <code>PetAge &gt; 10</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>l'a laissée vide</td>
+<td><code>PetAge is empty</code></td>
+<td>est fausse</td>
+</tr>
+<tr>
+<td>l'a refusée</td>
+<td><code>PetAge is refused</code></td>
+<td>est fausse</td>
+</tr>
+<tr>
+<td>y a répondu sans valeur, comme « ne sait pas »</td>
+<td><code>PetAge is answered with no value</code></td>
+<td>est fausse</td>
+</tr>
+<tr>
+<td>a donné une valeur</td>
+<td><code>PetAge is 12</code></td>
+<td>compare la valeur</td>
+</tr>
+<tr>
+<td>a donné plusieurs valeurs (une question comparée seulement avec <code>=</code> et <code>!=</code>)</td>
+<td><code>PetKind is 1 and 2</code></td>
+<td><code>PetKind = 1</code> est vraie si 1 est parmi elles</td>
+</tr>
+</tbody>
+</table>
+<p><code>missing(x)</code> veut dire vide ou refusée. Une réponse sans valeur est une
+réponse : elle ne manque donc pas. Cette troisième ligne est celle qu'on
+oublie. Le Module 16 disait ces deux filtres de Q6 presque pareils :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"not PetAge &gt; 10"</span><span class="p">,</span> <span class="s2">"PetAge &lt;= 10 or missing(PetAge)"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; different</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>  <span class="c1"># -&gt; PetAge is answered with no value</span>
+</span></code></pre></div>
+<p>Un répondant qui répond « ne sait pas » voit Q6 avec le premier filtre et la
+saute avec le second. L'un comme l'autre peut être ce que veut une enquête ;
+le solveur vous oblige à choisir sciemment.</p>
+<h2 id="5-dire-au-solveur-ce-quest-chaque-question">5. Dire au solveur ce qu'est chaque question<a class="headerlink" href="#5-dire-au-solveur-ce-quest-chaque-question" title="Permanent link">&para;</a></h2>
+<p>Sauf indication contraire, le solveur permet à un nombre d'être une fraction :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="s2">"PetCount &gt;= 1"</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>  <span class="c1"># -&gt; PetCount is 0.25</span>
+</span></code></pre></div>
+<p>Aucun ménage n'a un quart d'animal. La spécification le dit : <code>PetCount</code> a
+<code>decimals: 0</code>. L'argument <code>types</code> transmet cette information. Il associe à
+chaque nom <code>numeric</code>, <code>integer</code>, <code>date</code>, <code>text</code> ou <code>code</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="s2">"PetCount &gt;= 1"</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="p">{</span><span class="s2">"PetCount"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">})</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># -&gt; equivalent</span>
+</span></code></pre></div>
+<p>Plutôt que d'écrire ces types à la main, lisez-les dans la spécification.
+Cette fonction fait ce que fait <code>ddi conform</code> avec les domaines de réponse de
+la spécification :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">example_spec</span><span class="p">,</span> <span class="n">load_spec</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">Path</span><span class="p">(</span><span class="s2">"pet-survey.spec.yaml"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">example_spec</span><span class="p">(),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">spec</span> <span class="o">=</span> <span class="n">load_spec</span><span class="p">(</span><span class="s2">"pet-survey.spec.yaml"</span><span class="p">)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">spec_types</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="sd">"""Ce que la spécification dit de chaque question, sous la forme que prend decide()."""</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">types</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="k">for</span> <span class="n">question</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">questions</span><span class="p">:</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="n">domain</span> <span class="o">=</span> <span class="n">question</span><span class="o">.</span><span class="n">domain</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="k">if</span> <span class="n">domain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>            <span class="k">continue</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>        <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"numeric"</span><span class="p">:</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="n">types</span><span class="p">[</span><span class="n">question</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"integer"</span> <span class="k">if</span> <span class="n">domain</span><span class="o">.</span><span class="n">decimals</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"numeric"</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>            <span class="n">types</span><span class="p">[</span><span class="n">question</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">kind</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="k">return</span> <span class="n">types</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="n">types</span> <span class="o">=</span> <span class="n">spec_types</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="nb">print</span><span class="p">(</span><span class="n">types</span><span class="p">[</span><span class="s2">"PetCount"</span><span class="p">],</span> <span class="n">types</span><span class="p">[</span><span class="s2">"PetKind"</span><span class="p">],</span> <span class="n">types</span><span class="p">[</span><span class="s2">"VisitDate"</span><span class="p">])</span>  <span class="c1"># -&gt; integer code date</span>
+</span></code></pre></div>
+<p>Avec l'extra, <code>equivalent()</code> utilise lui aussi le solveur, et prend les mêmes
+<code>types</code> :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">equivalent</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="s2">"PetCount &gt;= 1"</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">))</span>  <span class="c1"># -&gt; True</span>
+</span></code></pre></div>
+<h2 id="6-tester-un-filtre-sur-des-repondants-de-votre-choix">6. Tester un filtre sur des répondants de votre choix<a class="headerlink" href="#6-tester-un-filtre-sur-des-repondants-de-votre-choix" title="Permanent link">&para;</a></h2>
+<p><code>decide()</code> cherche un répondant. <code>evaluate()</code> fait l'inverse : vous lui
+donnez un répondant, et il dit si un filtre vaut pour lui. Un répondant est
+un dictionnaire qui associe des noms de questions à des objets <code>Answer</code>. Un
+<code>Answer</code> a un état (<code>"empty"</code>, <code>"refused"</code> ou <code>"answered"</code>) et, quand la
+question a une réponse, un ensemble de valeurs. Les nombres sont des
+<code>Fraction</code>, pour que <code>0.1</code> reste exact :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddi_l.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">evaluate</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">respondents</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">"laissée vide"</span><span class="p">:</span> <span class="p">{},</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="s2">"refusée"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"PetAge"</span><span class="p">:</span> <span class="n">Answer</span><span class="p">(</span><span class="s2">"refused"</span><span class="p">)},</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="s2">"ne sait pas"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"PetAge"</span><span class="p">:</span> <span class="n">Answer</span><span class="p">(</span><span class="s2">"answered"</span><span class="p">)},</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="s2">"8 ans"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"PetAge"</span><span class="p">:</span> <span class="n">Answer</span><span class="p">(</span><span class="s2">"answered"</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">({</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">8</span><span class="p">)}))},</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="s2">"12 ans"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"PetAge"</span><span class="p">:</span> <span class="n">Answer</span><span class="p">(</span><span class="s2">"answered"</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">({</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">12</span><span class="p">)}))},</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">}</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"not PetAge &gt; 10"</span><span class="p">,</span> <span class="s2">"PetAge &lt;= 10 or missing(PetAge)"</span><span class="p">):</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="p">[</span><span class="n">evaluate</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="n">answers</span><span class="p">)</span> <span class="k">for</span> <span class="n">answers</span> <span class="ow">in</span> <span class="n">respondents</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># -&gt; not PetAge &gt; 10 [True, True, True, True, False]</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># -&gt; PetAge &lt;= 10 or missing(PetAge) [True, True, False, True, False]</span>
+</span></code></pre></div>
+<p>Les deux lignes ne diffèrent que dans une colonne, « ne sait pas », comme
+l'a dit <code>decide()</code>. Un tableau comme celui-ci est un test du filtre : écrivez
+d'abord les répondants, dites ce que le filtre doit faire pour chacun, puis
+vérifiez.</p>
+<p>Un verdict <code>different</code> se vérifie de la même façon : son <code>example</code> contient
+des réponses que prend <code>evaluate()</code>. Reprenez le verdict de la section 5,
+sans types :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="s2">"PetCount &gt;= 1"</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"PetCount &gt; 0"</span><span class="p">,</span> <span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">answers</span><span class="p">))</span>  <span class="c1"># -&gt; True</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"PetCount &gt;= 1"</span><span class="p">,</span> <span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">answers</span><span class="p">))</span>  <span class="c1"># -&gt; False</span>
+</span></code></pre></div>
+<h2 id="7-relire-des-filtres-traduits">7. Relire des filtres traduits<a class="headerlink" href="#7-relire-des-filtres-traduits" title="Permanent link">&para;</a></h2>
+<p>Un collègue a traduit en filtres les consignes « aller à » d'un document de
+spécification. Vous avez les filtres que veut le responsable de l'enquête.
+Vérifiez-les tous dans une seule boucle :</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">intended</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="s2">"PetName"</span><span class="p">:</span> <span class="s2">"answered(PetKind)"</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="s2">"VetVisits"</span><span class="p">:</span> <span class="s2">"PetAge &gt; 10"</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="s2">"Toys"</span><span class="p">:</span> <span class="s2">"not PetAge &gt; 10"</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">}</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">translated</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="s2">"PetName"</span><span class="p">:</span> <span class="s2">"not empty(PetKind) and not refused(PetKind)"</span><span class="p">,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="s2">"VetVisits"</span><span class="p">:</span> <span class="s2">"PetAge &gt;= 11"</span><span class="p">,</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="s2">"Toys"</span><span class="p">:</span> <span class="s2">"PetAge &lt;= 10"</span><span class="p">,</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="k">for</span> <span class="n">question</span><span class="p">,</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">intended</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="n">translated</span><span class="p">[</span><span class="n">question</span><span class="p">],</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">)</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="k">if</span> <span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">: differs when </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># -&gt; PetName: equivalent</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># -&gt; VetVisits: equivalent</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># -&gt; Toys: differs when PetAge is answered with no value</span>
+</span></code></pre></div>
+<p>Deux traductions sont écrites autrement et sont justes. La troisième fait
+sauter <code>Toys</code> à un répondant qui dit « ne sait pas ». C'est cette ligne qu'il
+faut discuter avec votre collègue, pas les deux autres.</p>
+<h2 id="8-dans-ddi-conform">8. Dans <code>ddi conform</code><a class="headerlink" href="#8-dans-ddi-conform" title="Permanent link">&para;</a></h2>
+<p>Quand l'extra est installé, <code>ddi conform</code> compare les filtres et les
+contrôles de saisie comme le fait <code>decide()</code>, dès que leurs formes normales
+diffèrent. Il tire les types des domaines de la spécification, comme
+<code>spec_types()</code>. Ainsi :</p>
+<ul>
+<li>un filtre écrit autrement qui concorde toujours avec celui de la
+  spécification n'est pas signalé : <code>PetCount &gt;= 1</code> passe pour une
+  spécification qui dit <code>PetCount &gt; 0</code> ;</li>
+<li>un filtre qui diffère nomme un répondant dans son message :</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Module pets is gated by PetCount &gt; 1; the spec says PetCount &gt; 0 (they differ when PetCount is 1).
+</span></code></pre></div>
+<p><code>--semantics syntactic</code> ne compare que les formes normales, comme sans
+l'extra ; <code>--semantics smt</code> échoue quand l'extra n'est pas installé. Depuis
+Python, passez <code>semantics="syntactic"</code> ou <code>semantics="smt"</code> à <code>conform()</code>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Sans l'extra <code>logic</code></th>
+<th>Avec lui</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>equivalent()</code></td>
+<td>Compare les formes normales : <code>False</code> peut être une fausse alerte</td>
+<td>Décide : <code>False</code> veut dire qu'un répondant est acheminé autrement</td>
+</tr>
+<tr>
+<td><code>decide()</code></td>
+<td>Lève <code>LogicDependencyError</code></td>
+<td>Renvoie un verdict</td>
+</tr>
+<tr>
+<td><code>ddi conform</code></td>
+<td>Signale chaque filtre écrit autrement</td>
+<td>Ne signale que les filtres qui diffèrent, avec un répondant</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-limites">9. Limites<a class="headerlink" href="#9-limites" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Certaines comparaisons ne sont pas modélisées.</strong> Du texte comparé par
+  ordre, un nom comparé à la fois à des nombres et à du texte, et une valeur
+  utilisée comme condition donnent <code>unknown</code>. Vérifiez ces filtres à la main.</li>
+<li><strong>La liste de codes n'est pas lue.</strong> <code>decide()</code> sait que <code>PetKind</code> est un
+  code, mais pas quels codes il a : un répondant peut donc répondre par un
+  code absent de votre liste.</li>
+<li><strong>Une limite de travail borne le solveur</strong>, et non une horloge : la même
+  paire de filtres reçoit donc le même verdict à chaque exécution, quelle que
+  soit la charge de la machine. Une paire trop difficile à décider dans cette
+  limite est <code>unknown</code>.</li>
+</ul>
+<hr />
+<div class="admonition example">
+<p class="admonition-title">Scénario</p>
+<p>L'équipe de l'enquête sur les animaux relit une nouvelle version du
+questionnaire. Un collègue a traduit en filtres les sauts du document de
+spécification, et l'équipe de développement a changé quelques filtres
+« pour les simplifier ». Avant que quoi que ce soit parte sur le terrain,
+vous comparez chaque filtre changé à la spécification et dressez la liste
+de chaque répondant qui verrait maintenant d'autres questions.</p>
+</div>
+<hr />
+<h2 id="exercices">Exercices<a class="headerlink" href="#exercices" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>(O1)</strong> Prédisez le verdict de chaque paire, puis vérifiez-le avec <code>decide()</code>. Pour chaque <code>different</code>, affichez le répondant ; pour chaque <code>unknown</code>, la raison. (a) <code>missing(PetKind)</code> et <code>empty(PetKind) or refused(PetKind)</code>. (b) <code>PetAge &gt; 10</code> et <code>PetAge * 2 &gt; 20</code>. (c) <code>PetKind = 1 or PetKind = 2</code> et <code>PetKind != 3</code>. (d) <code>PetName = "Rex"</code> et <code>PetName &lt; "S"</code>.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>equivalent
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>equivalent
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>different: PetKind is another value
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>unknown: PetName &lt; "S" compares text by order
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">pairs</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="p">(</span><span class="s2">"missing(PetKind)"</span><span class="p">,</span> <span class="s2">"empty(PetKind) or refused(PetKind)"</span><span class="p">),</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="p">(</span><span class="s2">"PetAge &gt; 10"</span><span class="p">,</span> <span class="s2">"PetAge * 2 &gt; 20"</span><span class="p">),</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="p">(</span><span class="s2">"PetKind = 1 or PetKind = 2"</span><span class="p">,</span> <span class="s2">"PetKind != 3"</span><span class="p">),</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="p">(</span><span class="s1">'PetName = "Rex"'</span><span class="p">,</span> <span class="s1">'PetName &lt; "S"'</span><span class="p">),</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">]</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">)</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="k">if</span> <span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"different: </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="k">elif</span> <span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unknown: </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>
+</span></code></pre></div>
+<p>(a) est la définition de <code>missing()</code>. (b) est de l'arithmétique. (c) diffère pour un code qu'aucun des deux filtres ne nomme : le solveur ne lit pas la liste <code>Species</code>, si bien que pour lui un quatrième code existe. Un répondant qui a deux codes, 1 et 3, les distingue aussi. (d) compare du texte par ordre, ce que le solveur ne modélise pas.</p>
+</details>
+</li>
+<li>
+<p><strong>(O2)</strong> Sans <code>types</code>, <code>decide("PetAge &gt; 30", "PetAge &gt;= 31")</code> répond <code>different</code>. Affichez le répondant. Décidez ensuite la paire à nouveau avec les types de la spécification, et expliquez le changement.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>PetAge is 30.25
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>equivalent
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s2">"PetAge &gt; 30"</span><span class="p">,</span> <span class="s2">"PetAge &gt;= 31"</span><span class="p">)</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>  <span class="c1"># -&gt; PetAge is 30.25</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">decide</span><span class="p">(</span><span class="s2">"PetAge &gt; 30"</span><span class="p">,</span> <span class="s2">"PetAge &gt;= 31"</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">)</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>  <span class="c1"># -&gt; equivalent</span>
+</span></code></pre></div>
+<p>Sans types, un animal peut avoir 30,25 ans, ce que <code>PetAge &gt; 30</code> accepte et <code>PetAge &gt;= 31</code> refuse. La spécification donne à <code>PetAge</code> <code>decimals: 0</code> : <code>spec_types()</code> en fait donc un <code>integer</code>, et aucun nombre entier ne se trouve entre 30 et 31.</p>
+</details>
+</li>
+<li>
+<p><strong>(O3)</strong> Le contrôle <code>age_range</code> de la spécification se déclenche quand <code>PetAge &gt; 30</code>. Un second contrôle devrait se déclencher quand l'âge manque. Avec les <code>respondents</code> de la section 6 et un animal de 31 ans en plus, affichez pour chaque répondant si <code>PetAge &gt; 30</code> se déclenche, puis si <code>missing(PetAge)</code> se déclenche. Quel répondant sans âge utilisable n'est attrapé par aucun des deux ? Écrivez un troisième contrôle qui n'attrape que ce répondant.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>[False, False, False, False, False, True]
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>[True, True, False, False, False, False]
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>[False, False, True, False, False, False]
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">aged_31</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PetAge"</span><span class="p">:</span> <span class="n">Answer</span><span class="p">(</span><span class="s2">"answered"</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">({</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">31</span><span class="p">)}))}</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">everyone</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">respondents</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">aged_31</span><span class="p">]</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">print</span><span class="p">([</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"PetAge &gt; 30"</span><span class="p">,</span> <span class="n">answers</span><span class="p">)</span> <span class="k">for</span> <span class="n">answers</span> <span class="ow">in</span> <span class="n">everyone</span><span class="p">])</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nb">print</span><span class="p">([</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"missing(PetAge)"</span><span class="p">,</span> <span class="n">answers</span><span class="p">)</span> <span class="k">for</span> <span class="n">answers</span> <span class="ow">in</span> <span class="n">everyone</span><span class="p">])</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="n">dont_know</span> <span class="o">=</span> <span class="s2">"answered(PetAge) and not (PetAge &gt; 30 or PetAge &lt;= 30)"</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="nb">print</span><span class="p">([</span><span class="n">evaluate</span><span class="p">(</span><span class="n">dont_know</span><span class="p">,</span> <span class="n">answers</span><span class="p">)</span> <span class="k">for</span> <span class="n">answers</span> <span class="ow">in</span> <span class="n">everyone</span><span class="p">])</span>
+</span></code></pre></div>
+<p>Le répondant « ne sait pas » n'est attrapé par aucun des deux : sa réponse n'a pas de valeur, donc la comparaison est fausse, et c'est une réponse, donc elle ne manque pas. Les expressions n'ont pas de mot pour « ne sait pas », mais le troisième contrôle le dit : l'âge est répondu, et pourtant ni <code>PetAge &gt; 30</code> ni <code>PetAge &lt;= 30</code> n'est vrai, ce qui n'arrive que s'il n'y a aucune valeur à comparer.</p>
+</details>
+</li>
+<li>
+<p><strong>(O4)</strong> L'enquête sur le logement du Module 16 pose <code>Own</code> (1 Oui, 2 Non), puis <code>YearsOwned</code> et <code>Mortgage</code> à tous ceux qui ne répondent pas « Non », puis <code>Refinanced</code> aux propriétaires depuis plus de 5 ans. Un collègue a écrit les filtres ci-dessous. Comparez chacun au filtre voulu, avec <code>Own</code> un code et <code>YearsOwned</code> un nombre entier, et affichez une ligne par question.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">intended</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="s2">"YearsOwned"</span><span class="p">:</span> <span class="s2">"not Own = 2"</span><span class="p">,</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="s2">"Mortgage"</span><span class="p">:</span> <span class="s2">"not Own = 2"</span><span class="p">,</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="s2">"Refinanced"</span><span class="p">:</span> <span class="s2">"YearsOwned &gt; 5"</span><span class="p">,</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">}</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="n">translated</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="s2">"YearsOwned"</span><span class="p">:</span> <span class="s2">"not Own = 2"</span><span class="p">,</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>    <span class="s2">"Mortgage"</span><span class="p">:</span> <span class="s2">"Own = 1"</span><span class="p">,</span>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="s2">"Refinanced"</span><span class="p">:</span> <span class="s2">"YearsOwned &gt;= 6"</span><span class="p">,</span>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>YearsOwned: equivalent
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Mortgage: differs when Own is answered with no value
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Refinanced: equivalent
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">housing</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Own"</span><span class="p">:</span> <span class="s2">"code"</span><span class="p">,</span> <span class="s2">"YearsOwned"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">}</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">for</span> <span class="n">question</span><span class="p">,</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">intended</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="n">gate</span><span class="p">,</span> <span class="n">translated</span><span class="p">[</span><span class="n">question</span><span class="p">],</span> <span class="n">types</span><span class="o">=</span><span class="n">housing</span><span class="p">)</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">if</span> <span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"different"</span><span class="p">:</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">: differs when </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">question</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">verdict</span><span class="o">.</span><span class="n">outcome</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></code></pre></div>
+<p>C'est <code>Mortgage</code> qu'il faut soulever. Avec <code>Own = 1</code>, un répondant qui répond « ne sait pas » à <code>Own</code>, ou qui la laisse vide ou la refuse, saute la question sur le prêt hypothécaire mais voit quand même <code>YearsOwned</code>. Soit les deux questions utilisent <code>not Own = 2</code>, soit le responsable de l'enquête décide qu'elles ne sont que pour les propriétaires, et les deux utilisent <code>Own = 1</code>. Les deux filtres écrits différemment pour <code>Refinanced</code> concordent pour tout nombre entier d'années.</p>
+</details>
+</li>
+<li>
+<p><strong>(O1, O3)</strong> Montrez qu'un verdict <code>different</code> est juste : décidez <code>not PetAge &gt; 10</code> contre <code>PetAge &lt;= 10</code>, puis évaluez les deux filtres sur le répondant du verdict.</p>
+<p><strong>Résultat attendu :</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>True
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>False
+</span></code></pre></div>
+<details class="success">
+<summary>Réponse</summary>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">verdict</span> <span class="o">=</span> <span class="n">decide</span><span class="p">(</span><span class="s2">"not PetAge &gt; 10"</span><span class="p">,</span> <span class="s2">"PetAge &lt;= 10"</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">)</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"not PetAge &gt; 10"</span><span class="p">,</span> <span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">answers</span><span class="p">))</span>  <span class="c1"># -&gt; True</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">"PetAge &lt;= 10"</span><span class="p">,</span> <span class="n">verdict</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">answers</span><span class="p">))</span>  <span class="c1"># -&gt; False</span>
+</span></code></pre></div>
+<p>Quel que soit le répondant que donne le solveur (un âge vide, refusé ou « ne sait pas »), un filtre vaut et l'autre non. <code>ddi-l</code> fait la même vérification sur chaque verdict <code>different</code> avant de le signaler.</p>
+</details>
+</li>
+<li>
+<p><strong>(O5)</strong> Avec l'extra <code>logic</code>, <code>ddi conform</code> signale : <code>Module pets is gated by PetCount &gt; 1; the spec says PetCount &gt; 0 (they differ when PetCount is 1).</code> (a) Qui est mal acheminé, et quel côté corrigez-vous ? (b) L'instrument avait plutôt <code>PetCount &gt;= 1</code>. Que signale <code>ddi conform</code> avec l'extra, et que signale-t-il sans lui ?</p>
+<details class="success">
+<summary>Réponse</summary>
+<p>(a) Un ménage qui a exactement un animal saute le module <code>pets</code>, alors que la spécification l'interroge sur son animal. La spécification est la référence : corrigez donc le filtre de l'instrument, à moins que le responsable de l'enquête ne dise que les ménages à un seul animal devaient sauter le module ; corrigez alors la spécification et donnez-lui une nouvelle version.</p>
+<p>(b) Avec l'extra, rien : la spécification dit que <code>PetCount</code> est un nombre entier, et pour les nombres entiers <code>PetCount &gt;= 1</code> et <code>PetCount &gt; 0</code> concordent. Sans lui, <code>spec.gate.different</code>, parce que les formes normales diffèrent. Ce constat est une fausse alerte, et c'est pourquoi le rapport montre les deux formes normales.</p>
+</details>
+</li>
+</ol>
+<hr />
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<details class="question" open="open">
+<summary>Question 1 (O1) : decide() renvoie different. Que savez-vous ?</summary>
+<p><strong>A.</strong> Les deux filtres sont écrits différemment.</p>
+<p><strong>B.</strong> Au moins un répondant voit l'élément avec un filtre et pas avec l'autre, et <code>example</code> en contient un.</p>
+<p><strong>C.</strong> Chaque répondant est acheminé autrement.</p>
+<p><strong>D.</strong> Les filtres utilisent des questions différentes.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Un verdict <code>different</code> vient avec un répondant sur lequel les
+filtres divergent. A est vrai, mais en dit moins : des filtres écrits
+différemment peuvent tout de même être équivalents. C et D ne
+s'ensuivent pas.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 2 (O3) : Un répondant répond « ne sait pas » à PetAge. L'expression missing(PetAge) est-elle vraie ?</summary>
+<p><strong>A.</strong> Oui : il n'y a pas d'âge.</p>
+<p><strong>B.</strong> Non : la question a une réponse, sans valeur, et <code>missing()</code> veut dire vide ou refusée.</p>
+<p><strong>C.</strong> Seulement avec l'extra <code>logic</code>.</p>
+<p><strong>D.</strong> Seulement si <code>PetAge</code> est un nombre entier.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> <code>missing(x)</code> vaut <code>empty(x) or refused(x)</code>. Une réponse sans
+valeur n'est ni l'un ni l'autre, et toute comparaison qui la lit est
+fausse.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 3 (O2) : Pourquoi decide() dit-il que PetCount &gt; 0 et PetCount &gt;= 1 diffèrent, tant que vous ne passez pas types ?</summary>
+<p><strong>A.</strong> Parce que le solveur a un bogue avec <code>&gt;=</code>.</p>
+<p><strong>B.</strong> Parce que sans types un nombre peut être une fraction, comme 0,25, que le premier filtre accepte et que le second refuse.</p>
+<p><strong>C.</strong> Parce que <code>PetCount</code> pourrait être du texte.</p>
+<p><strong>D.</strong> Parce que l'un des deux lit une réponse vide comme 0.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> <code>types={"PetCount": "integer"}</code>, que <code>spec_types()</code> lit dans
+<code>decimals: 0</code>, exclut les fractions, et les deux concordent.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 4 (O1) : decide() renvoie unknown. Que faites-vous ?</summary>
+<p><strong>A.</strong> Traiter les filtres comme équivalents.</p>
+<p><strong>B.</strong> Les traiter comme différents.</p>
+<p><strong>C.</strong> Lire <code>reason</code>, puis vérifier cette paire de filtres à la main ou la réécrire sous une forme que le solveur modélise.</p>
+<p><strong>D.</strong> Le relancer jusqu'à ce qu'il décide.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>C.</strong> <code>unknown</code> veut dire que le solveur n'a pas pu décider, pour la
+raison donnée. Le verdict est le même à chaque exécution : D n'aide
+donc pas.</p>
+</details>
+</details>
+<details class="question" open="open">
+<summary>Question 5 (O5) : Sans l'extra logic, ddi conform signale spec.gate.different pour un filtre. Que pouvez-vous conclure ?</summary>
+<p><strong>A.</strong> Un répondant est acheminé autrement.</p>
+<p><strong>B.</strong> Les formes normales diffèrent. Les filtres peuvent quand même toujours concorder : comparez donc les deux formes normales du rapport, ou installez l'extra et relancez la vérification.</p>
+<p><strong>C.</strong> L'instrument n'est pas du DDI valide.</p>
+<p><strong>D.</strong> La spécification a tort.</p>
+<details class="success">
+<summary>Réponse</summary>
+<p><strong>B.</strong> Sans l'extra, rien n'est calculé : <code>PetCount &gt;= 1</code> contre
+<code>PetCount &gt; 0</code> est signalé, bien qu'aucun ménage ne soit acheminé
+autrement.</p>
+</details>
+</details>
+<hr />
+<h2 id="faites-le-point">Faites le point<a class="headerlink" href="#faites-le-point" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux vérifier deux filtres avec <code>decide()</code> et lire son verdict, son répondant ou sa raison. (O1)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux lire le type de chaque question dans la spécification, le passer dans <code>types</code>, et expliquer pourquoi un nombre entier change le verdict. (O2)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux tester un filtre avec <code>evaluate()</code> sur une question vide, refusée, répondue « ne sait pas » et répondue avec une valeur. (O3)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux relire des filtres traduits et nommer, pour chaque filtre faux, un répondant qu'il achemine autrement. (O4)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Je peux dire ce que l'extra <code>logic</code> change dans <code>equivalent()</code> et <code>ddi conform</code>. (O5)</li>
+</ul>
+<hr />
+<div class="admonition tip">
+<p class="admonition-title">Notes pour l'instructeur</p>
+<ul>
+<li>Partez des deux filtres de Q6 du Module 16 (section 4). Demandez au
+  groupe s'ils sont pareils avant de lancer <code>decide()</code>. La plupart
+  disent oui.</li>
+<li>La ligne « répondu sans valeur » de la section 4 surprend tout le
+  monde. Demandez une vraie question où un « ne sait pas » devrait voir
+  la question de suivi, et une où il ne le devrait pas.</li>
+<li>La section 6 donne une habitude qui vaut plus que le solveur : écrivez
+  les répondants et le résultat attendu avant de vérifier un filtre. Les
+  testeurs font de même.</li>
+<li>Si Z3 ne peut pas être installé sur les postes de formation, la
+  section 1 et le premier exemple de la section 6 fonctionnent quand
+  même : <code>equivalent(exact=False)</code> et <code>evaluate()</code> n'ont pas besoin de
+  solveur. Montrez le reste au projecteur.</li>
+</ul>
+</div>
+<hr />
+<p><strong>Voir aussi :</strong> <a href="../module-16-advanced-questionnaire-spec/">Module 16 : Spécification avancée de questionnaires</a> | <a href="../../spec-conformance/">Vérifier un questionnaire par rapport à une spécification</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../module-17-capstone/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: 17. Projets de synthèse">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                17. Projets de synthèse
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../module-19-http-api/" class="md-footer__link md-footer__link--next" aria-label="Suivant: 19. Servir ddi-l par HTTP">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                19. Servir ddi-l par HTTP
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ddi-l est publié sous licence MIT. Colectica est une marque de son propriétaire ; ddi-l est un projet indépendant, sans lien avec Colectica et non approuvé par elle.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/pbisson44/ddi-l" target="_blank" rel="noopener" title="ddi-l on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/ddi-l/" target="_blank" rel="noopener" title="ddi-l on PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["announce.dismiss","content.action.edit","content.action.view","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.instant.progress","navigation.path","navigation.sections","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.highlight","search.share","search.suggest","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9e76c64c.min.js"></script>
+      
+      
+    
+  </body>
+</html>
