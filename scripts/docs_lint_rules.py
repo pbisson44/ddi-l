@@ -1,7 +1,7 @@
-"""MkDocs hook: build the lint rule reference from the rule registry.
+"""Build the lint rule reference from the rule registry.
 
 ``lint-rules.<lang>.md`` holds an introduction and the ``<!-- lint-rules -->``
-marker; this hook replaces the marker with every rule
+marker; ``scripts/docs.py`` replaces the marker with every rule
 :func:`ddi_l.lint.iter_rule_metadata` reports: its severity, the profiles that
 run it, its docstring and an example finding. A rule added to the registry
 appears on the page without anyone editing it, and a rule's documentation
@@ -17,15 +17,9 @@ import re
 from typing import TYPE_CHECKING, NamedTuple
 
 if TYPE_CHECKING:  # pragma: no cover - the annotations are the only use
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.files import Files
-    from mkdocs.structure.pages import Page
-
     from ddi_l.lint import RuleInfo
 
 MARKER = "<!-- lint-rules -->"
-
-_PAGE = re.compile(r"(?:^|/)lint-rules(?:\.(?P<lang>[a-z]{2}))?\.md$")
 
 
 class _Words(NamedTuple):
@@ -140,15 +134,3 @@ def _prose(docstring: str) -> str:
 def _anchor(rule_id: str) -> str:
     """The anchor Python-Markdown's toc gives a ``### `rule.id` `` heading."""
     return re.sub(r"[^\w-]", "", rule_id.lower().replace(" ", "-"))
-
-
-def on_page_markdown(
-    markdown: str, *, page: Page, config: MkDocsConfig, files: Files
-) -> str:
-    """Replace the marker on the rule reference page with the rules."""
-    del files
-    match = _PAGE.search(page.file.src_uri)
-    if match is None or MARKER not in markdown:
-        return markdown
-    lang = match.group("lang") or config.theme.get("language", "en")
-    return markdown.replace(MARKER, render(lang))

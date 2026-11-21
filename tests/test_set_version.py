@@ -124,7 +124,7 @@ def test_nothing_is_written_unless_every_file_matches(
 ) -> None:
     commands = _copy(tmp_path, monkeypatch)
     readme = tmp_path / "README.md"
-    readme.write_text(readme.read_text(encoding="utf-8").replace("(Version ", "(v"))
+    readme.write_bytes(readme.read_bytes().replace(b"(Version ", b"(v"))
     before = {path: _read(tmp_path / path) for path in set_version.FILES}
 
     assert set_version.main(["9.8.7"]) == 1

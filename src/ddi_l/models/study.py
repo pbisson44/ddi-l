@@ -18,7 +18,7 @@ from ..constants import (
     REUSABLE_NS,
     STUDY_UNIT_NS,
 )
-from ..exceptions import DDIReferenceWarning, ModelValidationError
+from ..exceptions import DDIReferenceWarning
 from ..namespaces import build_namespace_map
 from ._generated.studyunit import StudyUnitFields
 from .archive import Archive
@@ -180,14 +180,10 @@ class StudyUnit(StudyUnitFields):
     )
 
     def validate(self) -> None:
+        # A study without a data collection is valid DDI 3.3: a data
+        # dictionary converted from DDI-Codebook has variables and questions
+        # but no questionnaire.
         super().validate()
-        has_data_collections = bool(self.data_collections)
-        has_data_collection_references = bool(self.data_collection_references)
-        if not (has_data_collections or has_data_collection_references):
-            raise ModelValidationError(
-                "StudyUnit requires at least one DataCollection"
-                " or DataCollectionReference before serialization."
-            )
         self._assert_unique_children(
             self.data_collections, child_label="DataCollection"
         )

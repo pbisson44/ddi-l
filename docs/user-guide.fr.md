@@ -15,6 +15,65 @@ dont vous avez besoin.
     - Python 3.11 ou plus récent avec `ddi-l` installé (`pip install ddi-l`).
     - Aucune connaissance XML n'est requise pour l'API simple.
 
+## Comment s'articule une étude {#comment-sarticule-une-etude}
+
+Une étude DDI (un `StudyUnit`) range ses métadonnées en modules, les cadres
+ci-dessous : concepts et univers dans un `ConceptualComponent`, le
+questionnaire et ses questions dans un `DataCollection`, variables, listes de
+codes et catégories dans un `LogicalProduct`, dispositions d'enregistrement dans
+un `PhysicalDataProduct`, chaque fichier de données dans un `PhysicalInstance`,
+et organisations et personnes dans un `Archive`. Les éléments se renvoient les
+uns aux autres d'un module à l'autre (flèches pointillées) : une variable à la
+question qui l'a collectée, au concept qu'elle mesure, à son univers et à sa
+liste de codes ; un fichier de données à la disposition d'enregistrement et à
+l'enregistrement logique qui listent ses variables.
+
+```mermaid
+flowchart TB
+    accTitle: Comment s'articule une étude DDI
+    accDescr: Un StudyUnit range ses métadonnées en modules : concepts et univers dans un ConceptualComponent ; l'instrument, ses constructions de contrôle et les questions dans un DataCollection ; variables, listes de codes, catégories et relations de données dans un LogicalProduct ; dispositions d'enregistrement dans un PhysicalDataProduct ; chaque fichier de données dans un PhysicalInstance ; organisations et personnes dans un Archive. Les flèches pointillées sont des références : une variable renvoie à sa question, à son concept, à son univers et à sa liste de codes ; un fichier de données renvoie à sa disposition d'enregistrement et à sa relation de données, qui listent ses variables.
+    subgraph SU["StudyUnit"]
+        direction TB
+        subgraph CC["ConceptualComponent"]
+            CON[Concept]
+            UNI[Universe]
+        end
+        subgraph DC["DataCollection"]
+            INS[Instrument]
+            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
+            QI[QuestionItem]
+        end
+        subgraph LP["LogicalProduct"]
+            VAR[Variable]
+            CL[CodeList]
+            CAT[Category]
+            DR["DataRelationship\n(LogicalRecord)"]
+        end
+        subgraph PDP["PhysicalDataProduct"]
+            RL[RecordLayout]
+        end
+        subgraph PI["PhysicalInstance"]
+            DF["DataFileIdentification\n(le fichier de données)"]
+        end
+        subgraph AR["Archive"]
+            ORG["Organization,\nIndividual"]
+        end
+    end
+    INS -.->|ControlConstructReference| CTL
+    CTL -.->|QuestionReference| QI
+    QI -.->|ConceptReference| CON
+    QI -.->|"CodeDomain:\nCodeListReference"| CL
+    VAR -.->|QuestionReference| QI
+    VAR -.->|ConceptReference| CON
+    VAR -.->|UniverseReference| UNI
+    VAR -.->|"CodeRepresentation:\nCodeListReference"| CL
+    CL -.->|"Code:\nCategoryReference"| CAT
+    DR -.->|VariableUsedReference| VAR
+    RL -.->|"DataItem:\nVariableReference"| VAR
+    PI -.->|RecordLayoutReference| RL
+    PI -.->|DataRelationshipReference| DR
+```
+
 ## Créer une étude
 
 Utilisez `ddi.new_study()` pour créer un nouveau document DDI avec une unité

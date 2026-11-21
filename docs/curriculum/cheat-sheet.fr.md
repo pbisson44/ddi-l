@@ -257,6 +257,7 @@ section_c = doc.add_item(Sequence, name="Section C")
 
 # Branchement : section A si vrai, section C si faux
 porte = doc.add_item(IfThenElse, name="Filtre d'age")
+porte.set_condition("age >= 18")
 porte.then_construct_reference = section_a.to_reference()
 porte.else_construct_reference = section_c.to_reference()
 
@@ -268,7 +269,8 @@ doc.add_item(Instrument, name="Instrument d'enquete")
 ```
 
 `Loop` fonctionne de la même façon (`doc.add_item(Loop, name="...")`), avec
-sa section répétée définie via `loop.control_construct_reference`. Voir le
+sa section répétée définie via `loop.control_construct_reference` et sa durée
+via `loop.set_condition(...)`. Voir le
 [Module 10](module-10-questionnaire-flows.fr.md) pour l'exemple complet.
 
 ---
@@ -410,19 +412,12 @@ doc.add_translation_information(
 v_age = doc.add_variable(name="age", question=q_age)
 
 # Variable dérivée, liée à ses variable(s) source
-from ddi_l.models.base import Reference
-
 v_groupe_age = doc.add_variable(name="groupe_age")
-v_groupe_age.source_variable_references = [
-    Reference(agency="ca.healthcan", identifier=v_age.identifier, version="1"),
-]
+v_groupe_age.source_variable_references = [v_age.to_reference()]
 
 # Dérivation multi-sources
 v_imc = doc.add_variable(name="imc")
-v_imc.source_variable_references = [
-    Reference(agency="ca.healthcan", identifier=v_taille.identifier, version="1"),
-    Reference(agency="ca.healthcan", identifier=v_poids.identifier, version="1"),
-]
+v_imc.source_variable_references = [v_taille.to_reference(), v_poids.to_reference()]
 ```
 
 ---
@@ -436,7 +431,6 @@ couplées remontent vers les deux sources.
 
 ```python
 import ddi_l as ddi
-from ddi_l.models.base import Reference
 
 # Source 1 : enquête (l'étude primaire)
 doc = ddi.new_study(title="Survey", agency="ca.statcan")
@@ -463,13 +457,13 @@ cmp.set_property("match_rate", "0.94")
 # Variable couplée : provenance vers LES DEUX sources
 linked = doc.add_variable(name="health_by_hospital_use")
 linked.source_variable_references = [
-    Reference(agency="ca.statcan", identifier=survey_health.identifier, version="1"),
-    Reference(agency="ca.statcan", identifier=admin_visits.identifier, version="1"),
+    survey_health.to_reference(),
+    admin_visits.to_reference(),
 ]
 ```
 
-Les `source_variable_references` inter-études émettent un avertissement à
-l'enregistrement. C'est attendu pour le couplage. Voir
+Une référence à une variable de l'autre étude est vérifiée par rapport à tout
+le fichier : l'enregistrement n'émet donc pas d'avertissement. Voir
 [Module 12](module-12-data-linkage.fr.md).
 
 ---
@@ -710,7 +704,7 @@ from ddi_l.lint import LintFinding
 
 | Classe / Fonction | Quand vous en avez besoin |
 | ------------------- | -------------------------- |
-| `run_lint()` | Exécuter des vérifications de bonnes pratiques sur un document |
+| `run_lint()` | Exécuter des vérifications de bonnes pratiques sur un document ou un fragment |
 | `LintFinding` | Un constat d'une vérification lint |
 
 ### Espaces de noms : `ddi_l.namespaces`
@@ -827,3 +821,6 @@ done
 - [Recettes CLI](../cli-recipes.fr.md) : Tous les exemples en ligne de commande
 - [Référence des modèles](../models.fr.md) : Couche de modèles avancée
 - [Modules de formation](index.fr.md) : Programme pas à pas
+- Autres normes DDI : le [Module 20](module-20-codebook-to-lifecycle.fr.md)
+  convertit du DDI-Codebook en pensant à la réutilisation, le
+  [Module 21](module-21-ddi-cdi.fr.md) écrit du DDI-CDI

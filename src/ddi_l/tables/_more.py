@@ -12,6 +12,7 @@ too are the same on every load.
 
 from __future__ import annotations
 
+import copy
 import re
 
 from .._etree import Element
@@ -68,6 +69,9 @@ def p(local: str) -> str:
 
 def cm(local: str) -> str:
     return qn(COMPARATIVE_NS, local)
+
+
+_DCTERMS = "http://purl.org/dc/terms/"
 
 
 # xs:gYear, xs:gYearMonth, xs:date or xs:dateTime: what r:SimpleDate takes.
@@ -146,9 +150,8 @@ def study(
     ctx: Context, raw: RawTable, row: Row, entry: Entry, element: Element
 ) -> None:
     key = row.cells["id"]
-    # Every study gets its data collection, even an empty one: ddi-l writes
-    # no study without one.
-    _data_collection(ctx, Hit("studies", key, entry.item))
+    # The study's data collection is made by the first row that needs one (a
+    # questionnaire's instrument); a study without one is valid DDI.
     citation = _title(ctx, raw, row, key)
     for column, tag in (
         ("subtitle", "SubTitle"),
@@ -165,6 +168,19 @@ def study(
     published = _date(ctx, raw, row, "publication_date")
     if published:
         citation.append(el(r("PublicationDate"), el(r("SimpleDate"), text=published)))
+    identifier = _international_identifier(ctx, raw, row)
+    if identifier is not None:
+        citation.append(identifier)
+    copyright_ = multilingual(
+        r("Copyright"), strings(raw, row, "copyright"), child_tag="String"
+    )
+    if copyright_ is not None:
+        citation.append(copyright_)
+    license_ = row.cells.get("license")
+    if license_:
+        # DDI 3.3 has no licence element of its own; a citation takes Dublin
+        # Core terms after its own, and dcterms:license is the one for this.
+        citation.append(el(qn(_DCTERMS, "license"), text=license_))
     element.append(citation)
 
     for column, tag in (("abstract", "Abstract"), ("purpose", "Purpose")):
@@ -199,6 +215,33 @@ def study(
     ):
         for value in values(row, column):
             element.append(el(r(tag), text=value))
+
+
+def _international_identifier(ctx: Context, raw: RawTable, row: Row) -> Element | None:
+    """r:InternationalIdentifier from ``identifier`` and ``identifier_agency``."""
+    value = row.cells.get("identifier")
+    agency = row.cells.get("identifier_agency")
+    if value and agency:
+        return el(
+            r("InternationalIdentifier"),
+            el(r("IdentifierContent"), text=value),
+            el(r("ManagingAgency"), text=agency),
+        )
+    if value:
+        ctx.problem(
+            raw,
+            row,
+            "identifier_agency",
+            f"say who manages the identifier {value!r}, such as DOI or Handle",
+        )
+    elif agency:
+        ctx.problem(
+            raw,
+            row,
+            "identifier",
+            f"identifier_agency is {agency!r} but there is no identifier",
+        )
+    return None
 
 
 def _agent(
@@ -580,6 +623,10 @@ def dataset(
     relationship_id = ctx.identity("data_relationships", key)
     relationship = item_element(lp("DataRelationship"), relationship_id, None, None)
     relationship.append(el(lp("DataRelationshipName"), _string(name, ctx.language)))
+    # The relationship holding the record is an item of its own: it gets the
+    # same label and description, or the linter reports it unlabelled.
+    for child in moved:
+        relationship.append(copy.deepcopy(child))
     relationship.append(record)
     ctx.emit("datasets", relationship)
     element.append(

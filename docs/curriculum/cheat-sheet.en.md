@@ -249,6 +249,7 @@ section_c = doc.add_item(Sequence, name="Section C")
 
 # Branch: run section A if true, section C if false
 gate = doc.add_item(IfThenElse, name="Age gate")
+gate.set_condition("age >= 18")
 gate.then_construct_reference = section_a.to_reference()
 gate.else_construct_reference = section_c.to_reference()
 
@@ -258,7 +259,8 @@ doc.add_item(Instrument, name="Survey Instrument")
 ```
 
 `Loop` works the same way (`doc.add_item(Loop, name="...")`), with its
-repeated section set via `loop.control_construct_reference`. See
+repeated section set via `loop.control_construct_reference` and how long it
+repeats via `loop.set_condition(...)`. See
 [Module 10](module-10-questionnaire-flows.en.md) for the full worked example.
 
 ---
@@ -404,19 +406,12 @@ doc.add_translation_information(
 v_age = doc.add_variable(name="age", question=q_age)
 
 # Derived variable, linked to its source variable(s)
-from ddi_l.models.base import Reference
-
 v_age_group = doc.add_variable(name="age_group")
-v_age_group.source_variable_references = [
-    Reference(agency="ca.healthcan", identifier=v_age.identifier, version="1"),
-]
+v_age_group.source_variable_references = [v_age.to_reference()]
 
 # Multi-source derivation
 v_bmi = doc.add_variable(name="bmi")
-v_bmi.source_variable_references = [
-    Reference(agency="ca.healthcan", identifier=v_height.identifier, version="1"),
-    Reference(agency="ca.healthcan", identifier=v_weight.identifier, version="1"),
-]
+v_bmi.source_variable_references = [v_height.to_reference(), v_weight.to_reference()]
 ```
 
 ---
@@ -429,7 +424,6 @@ correspond, and linked variables trace back to both sources.
 
 ```python
 import ddi_l as ddi
-from ddi_l.models.base import Reference
 
 # Source 1: survey (the primary study)
 doc = ddi.new_study(title="Survey", agency="ca.statcan")
@@ -456,13 +450,13 @@ cmp.set_property("match_rate", "0.94")
 # Linked variable: provenance to BOTH sources
 linked = doc.add_variable(name="health_by_hospital_use")
 linked.source_variable_references = [
-    Reference(agency="ca.statcan", identifier=survey_health.identifier, version="1"),
-    Reference(agency="ca.statcan", identifier=admin_visits.identifier, version="1"),
+    survey_health.to_reference(),
+    admin_visits.to_reference(),
 ]
 ```
 
-Cross-study `source_variable_references` warn on save. That is expected for
-linkage. See [Module 12](module-12-data-linkage.en.md).
+A reference to a variable of the other study is checked against the whole
+file, so saving does not warn. See [Module 12](module-12-data-linkage.en.md).
 
 ---
 
@@ -702,7 +696,7 @@ from ddi_l.lint import LintFinding
 
 | Class / Function | When you need it |
 | ----------------- | ----------------- |
-| `run_lint()` | Run best-practice checks on a document |
+| `run_lint()` | Run best-practice checks on a document or a fragment |
 | `LintFinding` | One finding from a lint check |
 
 ### Namespaces: `ddi_l.namespaces`
@@ -813,3 +807,6 @@ done
 - [CLI recipes](../cli-recipes.en.md): All command-line examples
 - [Models reference](../models.en.md): Advanced model layer
 - [Training modules](index.en.md): Step-by-step curriculum
+- Other DDI standards: [Module 20](module-20-codebook-to-lifecycle.en.md)
+  converts DDI-Codebook with reuse in mind, [Module 21](module-21-ddi-cdi.en.md)
+  writes DDI-CDI

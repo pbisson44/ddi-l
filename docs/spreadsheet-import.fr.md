@@ -381,6 +381,10 @@ administrative.
 | `creator` | qui l'a produite : id de `organizations` ou `individuals`, ou noms |
 | `publisher` | qui la diffuse : id ou noms, comme pour `creator` |
 | `publication_date` | la date de publication : `2024`, `2024-05` ou `2024-05-31` |
+| `identifier` | un identifiant pérenne, comme un DOI : `10.1234/abcd` |
+| `identifier_agency` | qui gère l'identifiant : `DOI`, `Handle`, `ARK`... |
+| `copyright@<langue>` | sa mention de droit d'auteur |
+| `license` | la licence sous laquelle elle est publiée, sous forme d'adresse web : `https://creativecommons.org/licenses/by/4.0/` |
 | `kind_of_data` | `Données d'enquête`, `Dossiers administratifs`... |
 | `analysis_unit` | `Personnes`, `Ménages`, `Entreprises`... |
 | `universe` | qui l'étude couvre, en id de `universes` |

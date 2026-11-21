@@ -114,11 +114,12 @@ def test_readme_has_no_relative_links() -> None:
 
 
 def test_readme_links_into_the_docs_site_name_a_version() -> None:
-    """mike serves every page under a version directory.
+    """The site serves every page under ``/ddi-l/latest/``.
 
-    ``/ddi-l/server/`` is a 404; ``/ddi-l/latest/server/`` is the page. The
+    ``/ddi-l/server/`` is not a page (the site's 404 redirect catches it, but
+    only in a browser that runs scripts); ``/ddi-l/latest/server/`` is. The
     README is also the PyPI page, so a broken deep link there is the first one
-    most readers hit. The bare site root is fine: mike redirects it.
+    most readers hit. The bare site root is fine: it redirects to latest/.
     """
     import re
 

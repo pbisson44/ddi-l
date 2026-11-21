@@ -23,6 +23,14 @@ description: >-
   item's canonical URN, `urn:ddi:agency:id:version`, as Colectica shows it.
   Its agency must be the tables' agency, and its version is the item's when
   the row's `version` is empty.
+- **A study's identifier, copyright and licence in the tables.** The
+  `studies` table takes `identifier` and `identifier_agency` (a DOI and
+  `DOI`, for example), written as the citation's
+  `r:InternationalIdentifier`; `copyright@<language>`, written as
+  `r:Copyright`; and `license`, the licence's web address, written as
+  `dcterms:license`, the Dublin Core term DDI 3.3 citations take. An
+  identifier without its agency, or an agency without an identifier, is
+  reported with its row.
 
 ### Fixed
 
@@ -68,6 +76,18 @@ description: >-
   `ddi roundtrip` and `ddi to-json` on a file that does not exist printed
   `Error: input.xml`; they now print `Error: [Errno 2] No such file or
   directory: 'input.xml'`, as Python does.
+- **A study without a questionnaire is written.** Tables with a `studies`
+  row but no questionnaire flow, such as a data dictionary converted from
+  DDI-Codebook, stopped at `to_fragment()` with "DataCollection requires
+  collection events, instruments, questions, or references": every study
+  got an empty data collection, because `StudyUnit` required one. DDI 3.3
+  requires none, and a study built with `new_study()` was already written
+  without one. A `StudyUnit` no longer needs a data collection, and the
+  tables give a study one only when its questionnaire needs it.
+- **A data file's label names its data relationship too.** A `datasets`
+  row's `label` went to the file's logical record only, so `ddi lint`
+  reported the data relationship holding the record as unlabelled, and no
+  column could fix it. Both now carry the label and description.
 
 ### Documentation
 
@@ -92,6 +112,15 @@ description: >-
   PowerShell and for macOS and Linux. Module 16 no longer says that
   `not PetAge > 10` and `PetAge <= 10 or missing(PetAge)` are the same: they
   differ for a "don't know" answer.
+- **Two more optional modules, on the other DDI standards.** Module 20
+  converts the DDI-Codebook files of several waves into DDI-Lifecycle
+  through the metadata tables, writing once each question, code list and
+  universe the codebooks repeat, so that every wave refers to the same
+  items; it carries over each wave's DOI and adds a licence a program can
+  read, a record of the conversion and labels. Module 21 describes a study's
+  data in DDI-CDI 1.0 (value domains, code lists, a wide data structure)
+  and validates it against the DDI Alliance's schema with
+  `xmlschema.XMLSchema11`. The interoperability page links to both.
 - **Versions are taught as whole numbers.** Module 15 gives an item its next
   version with `increment_version()` (1, 2, 3) and keeps major, minor and
   patch for a short section on dotted versions; how big a change is goes in
@@ -108,6 +137,15 @@ description: >-
   release publishes its documentation and removes the older versions, and
   pushes to `main` no longer publish a `dev` copy. A link to an older
   version, or to `dev`, opens the same page in the newest release.
+- **A new look, and a site to browse.** The documentation is built with
+  Zensical. The home page opens with what `ddi-l` does, a quick start and a
+  way into each part of the site; the how-to guides and the reference have
+  landing pages of their own, and the guides are grouped by task. Pages open
+  without reloading the whole site, and a bar at the top announces what is
+  new. The theme follows the system's light or dark setting until the reader
+  picks one, and high contrast now follows the system's setting too, in
+  place of a palette chosen from a menu. The diagram of how a study fits
+  together moved from the home page to the user guide.
 
 ## 0.2.0
 

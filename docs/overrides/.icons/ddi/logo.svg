@@ -3,7 +3,7 @@
   <!--
     Drawn in `currentColor` so the mark takes the header's foreground in every
     palette, including high contrast, without a second asset. That only works
-    inline: theme.icon.logo in mkdocs.yml makes Material inline this file,
+    inline: theme.icon.logo in zensical.toml makes the theme inline this file,
     whereas `theme.logo` would load it as an <img>, where currentColor falls
     back to black. Material inlines it twice (header and navigation drawer),
     so it carries no ids, and it is decorative: the logo link has the site name

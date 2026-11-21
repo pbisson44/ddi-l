@@ -87,13 +87,13 @@ logic = [
 # uv.lock pins the versions CI and the deploy use; the major-version caps
 # mean a new major is adopted deliberately.
 docs = [
-  "mkdocs>=1.5,<2",
-  "mkdocs-material>=9.7.7,<10",
+  # Zensical builds each language of the site; scripts/docs.py stages the
+  # pages and runs it. 0.x releases can change behaviour, so the cap is the
+  # next minor.
+  "zensical>=0.1.2,<0.2",
   "pymdown-extensions>=10",
-  "mkdocs-static-i18n>=1.2",
-  "mike>=2.0",
-  # Generates the API reference from the docstrings.
-  "mkdocstrings[python]>=0.26",
+  # Generates the API reference from the docstrings; Zensical runs it.
+  "mkdocstrings-python>=1.10",
 ]
 
 # ruff, mypy and mutmut are pinned exactly because new releases change what
@@ -170,6 +170,12 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint.isort]
+# Stated rather than guessed from the folders on disk, so `ruff check --fix`
+# sorts imports the same way on every machine.
+known-first-party = ["ddi_l"]
+known-third-party = ["lxml"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["D", "E501", "RUF012", "N806", "N813", "SIM117", "B017", "SIM105", "E402", "RUF043"]
 "codegen/**" = ["D", "E501", "N806", "SIM105"]
@@ -193,7 +199,6 @@ exclude = [
     "codegen/",
     "demo/",
     "benchmarks/",
-    "hooks/",
     # `mypy src tests` never reaches these; `mypy .` would. native/ holds two
     # copies of `ddi_l_native` (the extension's and the stand-in), mutants/
     # is mutation-testing output, module/ is scratch from the tutorials

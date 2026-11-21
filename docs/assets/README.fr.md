@@ -6,16 +6,16 @@ description: >-
 
 # Ressources de documentation
 
-Éléments de marque et de style utilisés par MkDocs.
+Éléments de marque et de style utilisés par le site de documentation.
 
 ## Logo et favicon
 
 La marque de l'en-tête se trouve dans `docs/overrides/.icons/ddi/logo.svg` :
 des enregistrements empilés entourés d'une flèche circulaire ouverte, pour un
 jeu de données parcourant le *cycle de vie* DDI. Elle est dessinée entièrement
-en `currentColor` : elle prend donc la couleur de premier plan de l'en-tête dans
-chaque palette, y compris en contraste élevé, sans second fichier. Cela ne
-fonctionne que parce que `theme.icon.logo` amène Material à l'insérer dans la
+en `currentColor` : elle prend donc la couleur de premier plan de l'en-tête en
+mode clair, sombre ou à contraste élevé, sans second fichier. Cela ne
+fonctionne que parce que `theme.icon.logo` amène le thème à l'insérer dans la
 page ; déclarée par `theme.logo`, elle serait chargée comme `<img>`, où
 `currentColor` vaut le noir. N'y ajoutez pas de remplissages propres à une
 palette.
@@ -27,30 +27,28 @@ abandonne l'arc du cycle de vie, illisible à cette taille.
 
 ## Couleurs
 
-Il y a une seule couleur de marque, le bleu : un bleu profond pour l'en-tête,
-la même famille pour les liens et les boutons. L'orange ne marque que l'anneau
-de focus du clavier. Les blocs de code et le code en ligne reposent sur un gris
-neutre, sans bordure.
+Il y a une seule couleur de marque, le bleu, pour les liens, les boutons et la
+page active. L'orange ne marque que l'anneau de focus du clavier. Les blocs de
+code et le code en ligne reposent sur un gris neutre, sans bordure.
 
-Il y a trois palettes : claire (`default`), sombre (`slate`) et
-`high-contrast`. Le bleu, avec un orange employé avec parcimonie, est une paire
-que distinguent les lecteurs atteints des déficiences courantes de la vision
-des couleurs ; il n'y a donc pas de palettes distinctes pour ces déficiences.
-Chaque palette de `mkdocs.yml` déclare `primary: custom` et `accent: custom` ;
-sans eux, les règles indigo par défaut de Material remplacent `palette.css` en
-mode sombre.
+Le bouton de l'en-tête fait défiler trois réglages : suivre le système, clair
+(`default`) et sombre (`slate`). Il n'y a pas de palette à contraste élevé à
+choisir : les lecteurs dont le système demande plus de contraste
+(`prefers-contrast: more`) obtiennent un texte plus foncé, des bordures plus
+marquées et des fonds plus sobres dans les deux modes, et le contraste élevé de
+Windows (`forced-colors`) reçoit les couleurs du système. Le bleu, avec un
+orange employé avec parcimonie, est une paire que distinguent les lecteurs
+atteints des déficiences courantes de la vision des couleurs ; il n'y a donc
+pas de palettes distinctes pour ces déficiences. Chaque palette de
+`zensical.toml` déclare `primary = "custom"` et `accent = "custom"` ; sans eux,
+la palette propre au thème remplace `palette.css`.
 
 ## Feuilles de style
 
 | Fichier | Rôle |
 | --------- | ------ |
-| `palette.css` | Jetons de couleur des trois palettes, titres, boutons, code et encadrés note/info. |
-| `accessibility.css` | Lien d'évitement, anneau de focus, utilitaire réservé aux lecteurs d'écran, réglages « mouvement réduit », bandeau de version et menu des palettes. |
-| `landing.css` | Boutons d'appel à l'action et grille de cartes, utilisés uniquement par `index.*.md`. |
+| `palette.css` | Jetons de couleur des modes clair et sombre, réglages « plus de contraste » et « couleurs forcées », et encadrés note/info. |
+| `site.css` | Titres, anneau de focus, mouvement réduit, barre d'annonce, cartes, et bannière et terminal de la page d'accueil. |
 
-Les modes clair et sombre sont sur le bouton de thème de l'en-tête. Le
-contraste élevé se choisit depuis le menu des palettes, juste à côté, qui
-propose les trois : Material fait défiler ce bouton à travers toutes les
-palettes qui en déclarent un, et en contraste élevé le bouton n'a rien à
-afficher, si bien que le menu sert aussi à en sortir. Voir les commentaires
-dans `mkdocs.yml` et `docs/overrides/partials/palette.html`.
+La bannière de la page d'accueil est `docs/overrides/home.html`, remplie à
+partir de l'en-tête `hero:` de `docs/index.en.md` et `docs/index.fr.md`.

@@ -246,6 +246,26 @@ pre-built container with everything installed.
   module shows, or `curl.exe`.
 - Time: 60 min.
 
+### Module 20 (optional): From DDI-Codebook to DDI-Lifecycle, built for reuse
+
+- For archivists and data managers whose surveys are documented in
+  DDI-Codebook, one file per wave. Take Modules 9 and 15 first.
+- If the room's archive exports DDI-Codebook, bring two waves of the same
+  survey and find what changed before any code.
+- Section 4's decision is the lesson: who says two wordings are the same
+  question? Let the room argue before exercise 4.
+- Time: 75 min.
+
+### Module 21 (optional): Describe your data with DDI-CDI
+
+- For teams that combine data from several sources or domains. Module 9
+  is enough.
+- Download the DDI-CDI schema (about 1 MB) before the session if the
+  network is slow. Validate with `xmlschema.XMLSchema11`: the 1.0
+  validator skips this schema.
+- The split between substantive and sentinel values is the idea to keep.
+- Time: 75 min.
+
 ## Common mistakes across all modules
 
 | Mistake | Module | Fix |
@@ -304,6 +324,14 @@ pre-built container with everything installed.
 | Linkage key | Clé de couplage |
 | Custom field | Champ personnalisé |
 | Extension point | Point d'extension |
+| Codebook | Livre de codes |
+| Persistent identifier | Identifiant pérenne |
+| Licence | Licence |
+| Provenance | Provenance |
+| Instance variable | Variable d'instance |
+| Substantive value domain | Domaine de valeurs substantives |
+| Sentinel value domain | Domaine de valeurs sentinelles |
+| Wide / long data structure | Structure de données large / longue |
 
 ## Collecting feedback
 

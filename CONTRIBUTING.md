@@ -111,12 +111,15 @@ installed wheel. The schemas are CC-BY-4.0 from the DDI Alliance; their
 
 ## Documentation
 
-The documentation site uses MkDocs with the Material theme and bilingual
-(EN/FR) support via `mkdocs-static-i18n`.
+The documentation site is built with [Zensical](https://zensical.org/), in
+English and French. Pages come in `.en.md` / `.fr.md` pairs under `docs/`;
+`scripts/docs.py` stages each language and runs Zensical on it.
 
 ```bash
-uv run mkdocs serve --strict   # Live preview on http://127.0.0.1:8000
-uv run mkdocs build --strict   # Build and check for errors
+uv sync --group docs
+uv run python scripts/docs.py serve              # Live preview, English
+uv run python scripts/docs.py serve --lang fr    # Live preview, French
+uv run python scripts/docs.py build --strict     # Both languages into site/
 # or
 make docs-serve
 make docs-build

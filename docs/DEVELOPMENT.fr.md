@@ -535,56 +535,62 @@ doivent rester dans la distribution.
 
 ## Documentation
 
-Le site utilise MkDocs avec le thème Material et un support bilingue (EN/FR).
-Les pages vont par paires `.en.md` / `.fr.md` : **mettez à jour les deux**
-lorsque vous modifiez du contenu destiné aux utilisateurs.
+Le site de documentation est construit avec [Zensical](https://zensical.org/),
+en anglais et en français. Les pages vont par paires `.en.md` / `.fr.md` :
+**mettez à jour les deux** lorsque vous modifiez du contenu destiné aux
+utilisateurs.
 
 ```bash
-make docs-serve    # Prévisualisation en direct
-make docs-build    # Construction et validation
+make docs-serve    # Prévisualisation en direct (anglais) ; `python scripts/docs.py serve --lang fr` pour le français
+make docs-build    # Construit les deux langues dans site/ et échoue au moindre avertissement
 ```
 
-Le logo, le favicon et leurs règles d'usage sont décrits dans les
-[ressources de marque](assets/README.fr.md).
+Zensical construit une langue à la fois et n'a pas de hooks de construction :
+`scripts/docs.py` prépare donc chaque langue d'abord. Il copie `docs/` dans
+`.docs-build/<langue>/`, garde les pages de cette langue sans leur suffixe
+(`index.fr.md` devient `index.md`) en réécrivant les liens en conséquence, et
+remplit les pages générées :
 
-La page des [corrigés](curriculum/answer-keys.fr.md) du programme est générée par
-`hooks/answer_keys.py` à partir des réponses `??? success` de chaque module.
-Ajoutez ou modifiez une réponse dans le module, jamais sur la page des
-corrigés.
+- les [corrigés](curriculum/answer-keys.fr.md) du programme, réunis par
+  `scripts/docs_answer_keys.py` à partir des réponses `??? success` de chaque
+  module. Ajoutez ou modifiez une réponse dans le module, jamais sur la page
+  des corrigés ;
+- les [règles lint](lint-rules.fr.md), rendues par `scripts/docs_lint_rules.py`
+  à partir du registre des règles.
 
-Préférez les cibles `make` à un appel direct de `mkdocs` : elles définissent
-`NO_MKDOCS_2_WARNING`, sans quoi chaque invocation affiche un avertissement de
-plusieurs lignes des auteurs de Material for MkDocs au sujet de MkDocs 2.0.
+Le site est configuré dans le format propre à Zensical : `zensical.toml` pour
+le site anglais et `zensical.fr.toml` pour le site français. Le fichier
+français est le fichier anglais avec le texte en français (la description, les
+titres de la navigation, la langue du thème, les libellés du bouton de palette
+et l'annonce) ; `tests/test_docs_site_config.py` vérifie qu'ils listent les
+mêmes pages et que tous les autres réglages concordent : une modification du
+thème, des extensions Markdown ou des plugins va donc dans les deux fichiers. La
+construction écrit l'anglais à la racine de `site/` et le français sous
+`site/fr/`, comme le site publié les sert.
+
+Les personnalisations du thème sont dans `docs/overrides/` : la bannière de la
+page d'accueil (`home.html`, remplie à partir de l'en-tête `hero:` de
+`docs/index.*.md`), la barre d'annonce (`main.html`, texte dans
+`extra.announce`), le sélecteur de langue qui garde le lecteur sur la même
+page, et le bouton de modification qui ouvre le fichier `.en.md` ou `.fr.md` de
+la page. Les couleurs sont dans `docs/assets/stylesheets/palette.css` et la mise
+en page dans `site.css`. Le logo, le favicon et leurs règles d'usage sont
+décrits dans les [ressources de marque](assets/README.fr.md).
+
+Une version publie le site avec `.github/workflows/deploy-docs.yml` : il le
+construit et le valide dans la branche `gh-pages` sous `latest/`, avec une page
+racine qui y redirige et une page 404 qui envoie les anciens liens (sans
+`latest/`, ou sous un numéro de version) vers la même page sous `latest/`.
 
 ### Versions de la chaîne de documentation
 
 `uv.lock` fige les versions exactes ; l'intégration continue et le déploiement
-installent avec `uv sync --locked --group docs`. `mkdocs` et `mkdocs-material`
-sont plafonnés sous leur prochaine version majeure dans `pyproject.toml`, afin
-qu'une nouvelle majeure soit adoptée délibérément ; Dependabot propose cette
-mise à jour sous forme de pull request testée. `tests/test_docs_site_config.py`
-vérifie que chaque plugin activé dans `mkdocs.yml` est fourni par le groupe
-`docs`.
-
-### Pourquoi le journal de construction est court
-
-`mkdocs-static-i18n` journalise, en INFO, la valeur entière par laquelle il
-remplace chaque clé de configuration, une fois par langue, à chaque
-reconstruction. Pour `nav`, c'est tout l'arbre de navigation : une construction
-affichait donc plusieurs milliers de caractères de configuration recopiée autour
-des cinq lignes utiles.
-
-`hooks/quiet_i18n_logs.py` filtre exactement ces enregistrements
-`Overriding`/`Updating … config …`. La ligne `Building '<lang>' documentation to
-directory: …` est conservée, et rien au niveau WARNING ou au-dessus n'est
-touché ; un véritable `Unknown '<lang>' config override` remonte toujours.
-Lancez `mkdocs serve --verbose` pour tout revoir.
-
-Le filtre est attaché au *handler* du logger `mkdocs`, et non au logger du
-plugin. Python consulte les handlers d'un logger ancêtre lorsqu'un
-enregistrement se propage, mais pas ses filtres, et le plugin journalise depuis
-ses sous-modules : un filtre sur `mkdocs.plugins.mkdocs_static_i18n` ne ferait
-donc silencieusement rien.
+installent avec `uv sync --locked --group docs`. Zensical est plafonné sous sa
+prochaine version mineure dans `pyproject.toml`, puisqu'une mineure 0.x peut
+changer de comportement, afin qu'une mise à niveau soit adoptée délibérément ;
+Dependabot la propose sous forme de pull request testée.
+`tests/test_docs_site_config.py` vérifie que chaque plugin activé dans
+`zensical.toml` est fourni par le groupe `docs`.
 
 ### `VIRTUAL_ENV does not match the project environment path`
 

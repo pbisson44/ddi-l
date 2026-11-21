@@ -6,20 +6,22 @@ example:
 	  --fragment-output src/ddi_l/examples/example_fragment.xml
 
 # Build both distributions and check their contents and a clean install. The
-# stand-in wheel for ddi-l-native is built and published with them.
+# stand-in wheel for ddi-l-native is built and published with them. Every step
+# is a Python command, so the target runs from Windows too (`uv run make
+# release-check`), where make hands recipes to cmd.exe and `rm` does not exist.
 release-check:
-	rm -rf dist
+	python -c "import shutil; shutil.rmtree('dist', ignore_errors=True)"
 	python -m build --sdist --wheel
 	python -m build --wheel native/fallback --outdir dist
 	python scripts/check_distributions.py dist
 	python scripts/check_clean_install.py dist
 
-# NO_MKDOCS_2_WARNING silences Material's advisory banner.
+# Both languages into site/; `serve` previews English (add `--lang fr`).
 docs-build:
-	NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+	python scripts/docs.py build --strict
 
 docs-serve:
-	NO_MKDOCS_2_WARNING=1 mkdocs serve --strict
+	python scripts/docs.py serve
 
 # Mutation testing, then the check against tests/mutation_baseline.txt.
 mutation:

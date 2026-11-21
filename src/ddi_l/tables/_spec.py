@@ -271,6 +271,20 @@ STUDIES = Table(
             multiple=True,
         ),
         Column("publication_date", "When it was published: 2024, 2024-05, 2024-05-31."),
+        Column(
+            "identifier",
+            "A persistent identifier for the study, such as a DOI: 10.1234/abcd.",
+        ),
+        Column(
+            "identifier_agency",
+            "Who manages the identifier: DOI, Handle, ARK...",
+        ),
+        Column("copyright", "Its copyright statement.", multilingual=True),
+        Column(
+            "license",
+            "The licence it is published under, as a web address: "
+            "https://creativecommons.org/licenses/by/4.0/.",
+        ),
         Column("kind_of_data", "Survey data, administrative records...", multiple=True),
         Column("analysis_unit", "Persons, households, businesses...", multiple=True),
         _ref("universe", "universes", "Who the study covers (an `id` in `universes`)."),

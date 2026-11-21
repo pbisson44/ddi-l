@@ -6,15 +6,15 @@ description: >-
 
 # Documentation assets
 
-Branding and styling assets used by MkDocs.
+Branding and styling assets used by the documentation site.
 
 ## Logo and favicon
 
 The header mark lives at `docs/overrides/.icons/ddi/logo.svg`: stacked records
 wrapped by an open circular arrow, for a dataset moving through the DDI
 *Lifecycle*. It is drawn entirely in `currentColor`, so it takes the header's
-foreground in every palette, including high contrast, without a second asset.
-That only works because `theme.icon.logo` makes Material inline it; set as
+foreground in light, dark and high-contrast modes without a second asset.
+That only works because `theme.icon.logo` makes the theme inline it; set as
 `theme.logo` it would load as an `<img>`, where `currentColor` is black. Do not
 add palette-specific fills to it.
 
@@ -25,27 +25,27 @@ which turns to mud at that size.
 
 ## Colours
 
-There is one brand colour, blue: a deep blue for the header, the same family
-for links and buttons. Orange marks only the keyboard focus ring. Code blocks
-and inline code sit on a neutral grey with no border.
+There is one brand colour, blue, for links, buttons and the active page.
+Orange marks only the keyboard focus ring. Code blocks and inline code sit on a
+neutral grey with no border.
 
-There are three palettes: light (`default`), dark (`slate`) and
-`high-contrast`. Blue with a sparingly used orange is a pairing that readers
-with any common colour-vision deficiency can tell apart, so there are no
-separate colour-vision palettes. Every palette entry in `mkdocs.yml` declares
-`primary: custom` and `accent: custom`; without them Material's default indigo
-rules override `palette.css` in dark mode.
+The header toggle cycles through three settings: follow the system, light
+(`default`) and dark (`slate`). There is no high-contrast palette to choose:
+readers whose system asks for more contrast (`prefers-contrast: more`) get
+darker text, stronger borders and plainer backgrounds in either scheme, and
+Windows high contrast (`forced-colors`) gets the system's own colours. Blue with
+a sparingly used orange is a pairing that readers with any common colour-vision
+deficiency can tell apart, so there are no separate colour-vision palettes.
+Every palette entry in `zensical.toml` declares `primary = "custom"` and
+`accent = "custom"`; without them the theme's own palette overrides
+`palette.css`.
 
 ## Stylesheets
 
 | File | Purpose |
 | ------ | --------- |
-| `palette.css` | Colour tokens for the three palettes, headings, buttons, code and note/info boxes. |
-| `accessibility.css` | Skip link, focus ring, screen-reader-only utility, reduced-motion overrides, the version banner, and the palette menu. |
-| `landing.css` | Call-to-action buttons and the card grid, used only by `index.*.md`. |
+| `palette.css` | Colour tokens for light and dark, the more-contrast and forced-colours adjustments, and the note/info boxes. |
+| `site.css` | Headings, the focus ring, reduced motion, the announcement bar, cards, and the landing page's hero and terminal. |
 
-Light and dark are on the header toggle. High contrast is chosen from the
-palette menu beside it, which lists all three palettes: Material cycles its
-toggle through every palette that declares one, and in high contrast the toggle
-has nothing to show, so the menu is also the way back. See the comments in
-`mkdocs.yml` and `docs/overrides/partials/palette.html`.
+The landing page's hero is `docs/overrides/home.html`, filled from the `hero:`
+front matter of `docs/index.en.md` and `docs/index.fr.md`.

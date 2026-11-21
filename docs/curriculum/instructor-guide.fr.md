@@ -278,6 +278,28 @@ ou un conteneur préconfiguré avec tout installé.
   comme le montre le module, ou `curl.exe`.
 - Durée : 60 min.
 
+### Module 20 (facultatif) : De DDI-Codebook à DDI-Lifecycle, pensé pour la réutilisation
+
+- Pour les archivistes et les gestionnaires de données dont les enquêtes
+  sont documentées en DDI-Codebook, un fichier par cycle. Suivez d'abord les
+  modules 9 et 15.
+- Si l'archive du groupe exporte du DDI-Codebook, apportez deux cycles de la
+  même enquête et cherchez ce qui a changé avant tout code.
+- La décision de la section 4 est la leçon : qui dit que deux formulations
+  sont la même question ? Laissez le groupe en débattre avant l'exercice 4.
+- Durée : 75 min.
+
+### Module 21 (facultatif) : Décrire vos données avec DDI-CDI
+
+- Pour les équipes qui combinent des données de plusieurs sources ou
+  domaines. Le module 9 suffit.
+- Téléchargez le schéma DDI-CDI (environ 1 Mo) avant la séance si le
+  réseau est lent. Validez avec `xmlschema.XMLSchema11` : le validateur
+  1.0 ignore ce schéma.
+- Le partage entre valeurs substantives et sentinelles est l'idée à
+  retenir.
+- Durée : 75 min.
+
 ## Erreurs courantes dans tous les modules
 
 | Erreur | Module | Correction |
@@ -337,6 +359,14 @@ ou un conteneur préconfiguré avec tout installé.
 | Linkage key | Clé de couplage |
 | Custom field | Champ personnalisé |
 | Extension point | Point d'extension |
+| Codebook | Livre de codes |
+| Persistent identifier | Identifiant pérenne |
+| Licence | Licence |
+| Provenance | Provenance |
+| Instance variable | Variable d'instance |
+| Substantive value domain | Domaine de valeurs substantives |
+| Sentinel value domain | Domaine de valeurs sentinelles |
+| Wide / long data structure | Structure de données large / longue |
 
 ## Recueillir les commentaires
 

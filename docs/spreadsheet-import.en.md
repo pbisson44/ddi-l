@@ -363,6 +363,10 @@ One row per study: a survey cycle, a census, an administrative source.
 | `creator` | who made it: `organizations` or `individuals` ids, or names |
 | `publisher` | who publishes it: ids or names, as for `creator` |
 | `publication_date` | when it was published: `2024`, `2024-05` or `2024-05-31` |
+| `identifier` | a persistent identifier, such as a DOI: `10.1234/abcd` |
+| `identifier_agency` | who manages the identifier: `DOI`, `Handle`, `ARK`... |
+| `copyright@<language>` | its copyright statement |
+| `license` | the licence it is published under, as a web address: `https://creativecommons.org/licenses/by/4.0/` |
 | `kind_of_data` | `Survey data`, `Administrative records`... |
 | `analysis_unit` | `Persons`, `Households`, `Businesses`... |
 | `universe` | who the study covers, as a `universes` id |

@@ -1,0 +1,42 @@
+{#-
+  The landing page: a hero above the page content, driven by the `hero`
+  mapping in the page's front matter (docs/index.en.md, docs/index.fr.md).
+  The hero holds the page's only <h1>, so the content block leaves out the
+  theme's title and page actions.
+-#}
+{% extends "main.html" %}
+{% block htmltitle %}
+  <title>{{ config.site_name }}</title>
+{% endblock %}
+{% block hero %}
+  {% set hero = page.meta.hero %}
+  <section class="ddi-hero" aria-labelledby="ddi-hero-title">
+    <div class="ddi-hero__inner md-grid">
+      <div class="ddi-hero__text">
+        <p class="ddi-hero__eyebrow">{{ hero.eyebrow }}</p>
+        <h1 id="ddi-hero-title" class="ddi-hero__title">{{ hero.title }}</h1>
+        <p class="ddi-hero__lead">{{ hero.lead }}</p>
+        <div class="ddi-hero__actions md-typeset">
+          <a class="md-button md-button--primary" href="{{ hero.primary.link | url }}">{{ hero.primary.text }}<span aria-hidden="true">&rarr;</span></a>
+          <a class="md-button" href="{{ hero.secondary.link | url }}">{{ hero.secondary.text }}</a>
+        </div>
+        <p class="ddi-hero__facts">
+          {% for fact in hero.facts %}<span>{{ fact }}</span>{% endfor %}
+        </p>
+      </div>
+      <figure class="ddi-terminal" aria-label="{{ hero.terminal.label }}">
+        <div class="ddi-terminal__bar" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <pre class="ddi-terminal__body"><code>{% for line in hero.terminal.lines %}{% if line.cmd %}<span class="ddi-terminal__prompt" aria-hidden="true">$ </span>{{ line.cmd }}{% else %}<span class="ddi-terminal__output">{{ line.out }}</span>{% endif %}
+{% endfor %}</code></pre>
+        <button type="button" class="ddi-terminal__copy md-icon" title="{{ lang.t('clipboard.copy') }}" aria-label="{{ lang.t('clipboard.copy') }}: {{ hero.terminal.copy }}" data-clipboard-text="{{ hero.terminal.copy }}">
+          {% include ".icons/material/content-copy.svg" %}
+        </button>
+      </figure>
+    </div>
+  </section>
+{% endblock %}
+{% block content %}
+  <div class="ddi-home">{{ page.content }}</div>
+{% endblock %}

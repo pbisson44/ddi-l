@@ -1,0 +1,8 @@
+# Check out text files with LF line ends on every platform. The tests compare
+# fixtures byte for byte (Colectica writes "\n"), so a Windows checkout that
+# turned them into CRLF would fail them.
+* text=auto eol=lf
+
+*.gz binary
+*.xlsx binary
+*.zip binary

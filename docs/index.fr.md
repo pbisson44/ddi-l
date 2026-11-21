@@ -1,125 +1,101 @@
 ---
+title: ddi-l
 description: >-
   ddi-l est une bibliothèque Python et une CLI pour créer, lire, valider et
   analyser du XML DDI Lifecycle 3.1, 3.2 et 3.3, avec un cours bilingue.
+template: home.html
+hide:
+  - navigation
+  - toc
+hero:
+  eyebrow: DDI Lifecycle 3.1, 3.2 et 3.3
+  title: Documenter enquêtes et jeux de données avec le DDI, en Python
+  lead: >-
+    Manipulez les études, les questions et les variables comme des objets
+    Python. ddi-l écrit le XML, le valide selon les schémas DDI et l'analyse
+    pour trouver ce que les schémas laissent passer.
+  primary:
+    text: Commencer le cours
+    link: curriculum/
+  secondary:
+    text: Installer
+    link: installation/
+  facts:
+    - Python 3.11+
+    - Licence MIT
+    - Français et anglais
+  terminal:
+    label: Installer ddi-l et valider un fichier
+    copy: pip install ddi-l
+    lines:
+      - cmd: pip install ddi-l
+      - cmd: ddi validate enquete-menages.xml
+      - out: Document is valid.
 ---
 
-# ddi-l
+## Pourquoi ddi-l
 
 Le [DDI](https://ddialliance.org/) (Data Documentation Initiative) est la
 norme internationale qu'utilisent les organismes statistiques, les archives de
 données et les chercheurs pour décrire les enquêtes et les jeux de données : ce
 qui a été demandé, ce que signifie chaque variable et qui a été interrogé.
-`ddi-l` vous permet de rédiger et de vérifier cette documentation en Python
-plutôt que d'éditer le XML à la main.
+Écrite en XML, cette documentation est très imbriquée et pleine de renvois.
+`ddi-l` vous permet de la rédiger et de la vérifier en Python plutôt que
+d'éditer le XML à la main.
 
-Vous manipulez les études, les questions et les variables comme des objets
-Python, et `ddi-l` écrit le XML. La bibliothèque lit, valide et analyse le
-[DDI Lifecycle](https://ddialliance.org/Specification/DDI-Lifecycle/) 3.1,
-3.2 et 3.3, ce qui permet aux archives de vérifier leurs fonds plus anciens
-avec le même outil, et elle produit les nouveaux documents en DDI 3.3.
+<div class="grid cards ddi-features" markdown>
 
-<div class="ddi-cta-group" markdown>
+- :material-language-python:{ .lg } **Écrire du DDI en Python**
 
-[Installer ddi-l](installation.fr.md#installer-depuis-pypi){ .md-button .md-button--primary }
-[Commencer le programme de formation](curriculum/index.fr.md){ .md-button .md-button--secondary .md-button--outlined }
+    ---
+
+    Créez des études, des questions, des variables et des listes de codes
+    comme des objets Python. `ddi-l` écrit le XML DDI 3.3 et chaque renvoi
+    entre les éléments.
+
+- :material-check-decagram-outline:{ .lg } **Valider toute version 3.x**
+
+    ---
+
+    Vérifiez des fichiers
+    [DDI Lifecycle](https://ddialliance.org/Specification/DDI-Lifecycle/)
+    3.1, 3.2 et 3.3 selon les schémas officiels, pour contrôler les fonds
+    plus anciens avec le même outil.
+
+- :material-format-list-checks:{ .lg } **Analyser ce que les schémas laissent passer**
+
+    ---
+
+    Repérez les éléments sans libellé, les renvois vers des éléments
+    inexistants, les traductions manquantes et les conditions qui ne
+    peuvent jamais être vraies.
+
+- :material-table-arrow-right:{ .lg } **Partir d'un tableur**
+
+    ---
+
+    Décrivez une étude dans des fichiers CSV ou un classeur Excel, puis
+    chargez-la en DDI d'un coup.
+
+- :material-swap-horizontal:{ .lg } **Travailler avec d'autres outils**
+
+    ---
+
+    Exportez du JSON-LD pour les données liées, modifiez des exports
+    Colectica, faites entrer des fichiers DDI-Codebook, et faites tout cela
+    depuis R ou par HTTP.
+
+- :material-school-outline:{ .lg } **Apprendre en pratiquant**
+
+    ---
+
+    Un cours gratuit en français et en anglais, de « qu'est-ce que les
+    métadonnées ? » à un paquet DDI validé et versionné. Aucune expérience
+    du DDI ni du XML n'est requise.
 
 </div>
 
-## Comment s'articule une étude
-
-Une étude DDI (un `StudyUnit`) range ses métadonnées en modules, les cadres
-ci-dessous : concepts et univers dans un `ConceptualComponent`, le
-questionnaire et ses questions dans un `DataCollection`, variables, listes de
-codes et catégories dans un `LogicalProduct`, dispositions d'enregistrement dans
-un `PhysicalDataProduct`, chaque fichier de données dans un `PhysicalInstance`,
-et organisations et personnes dans un `Archive`. Les éléments se renvoient les
-uns aux autres d'un module à l'autre (flèches pointillées) : une variable à la
-question qui l'a collectée, au concept qu'elle mesure, à son univers et à sa
-liste de codes ; un fichier de données à la disposition d'enregistrement et à
-l'enregistrement logique qui listent ses variables.
-
-```mermaid
-flowchart TB
-    accTitle: Comment s'articule une étude DDI
-    accDescr: Un StudyUnit range ses métadonnées en modules : concepts et univers dans un ConceptualComponent ; l'instrument, ses constructions de contrôle et les questions dans un DataCollection ; variables, listes de codes, catégories et relations de données dans un LogicalProduct ; dispositions d'enregistrement dans un PhysicalDataProduct ; chaque fichier de données dans un PhysicalInstance ; organisations et personnes dans un Archive. Les flèches pointillées sont des références : une variable renvoie à sa question, à son concept, à son univers et à sa liste de codes ; un fichier de données renvoie à sa disposition d'enregistrement et à sa relation de données, qui listent ses variables.
-    subgraph SU["StudyUnit"]
-        direction TB
-        subgraph CC["ConceptualComponent"]
-            CON[Concept]
-            UNI[Universe]
-        end
-        subgraph DC["DataCollection"]
-            INS[Instrument]
-            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
-            QI[QuestionItem]
-        end
-        subgraph LP["LogicalProduct"]
-            VAR[Variable]
-            CL[CodeList]
-            CAT[Category]
-            DR["DataRelationship\n(LogicalRecord)"]
-        end
-        subgraph PDP["PhysicalDataProduct"]
-            RL[RecordLayout]
-        end
-        subgraph PI["PhysicalInstance"]
-            DF["DataFileIdentification\n(le fichier de données)"]
-        end
-        subgraph AR["Archive"]
-            ORG["Organization,\nIndividual"]
-        end
-    end
-    INS -.->|ControlConstructReference| CTL
-    CTL -.->|QuestionReference| QI
-    QI -.->|ConceptReference| CON
-    QI -.->|"CodeDomain:\nCodeListReference"| CL
-    VAR -.->|QuestionReference| QI
-    VAR -.->|ConceptReference| CON
-    VAR -.->|UniverseReference| UNI
-    VAR -.->|"CodeRepresentation:\nCodeListReference"| CL
-    CL -.->|"Code:\nCategoryReference"| CAT
-    DR -.->|VariableUsedReference| VAR
-    RL -.->|"DataItem:\nVariableReference"| VAR
-    PI -.->|RecordLayoutReference| RL
-    PI -.->|DataRelationshipReference| DR
-```
-
 ## Démarrage rapide
-
-```python
-import ddi_l as ddi
-
-# Créer une nouvelle étude
-doc = ddi.new_study(title="Enquête ménages", agency="example.org")
-
-# Ajouter une question et la variable qui enregistre sa réponse. `label=` est
-# facultatif, mais `ddi lint` signale chaque élément qui n'en a pas.
-q_age = doc.add_question(text="Quel âge avez-vous ?", label="Question sur l'âge")
-doc.add_variable(name="Age", question=q_age, label="Âge en années")
-
-# Enregistrer en XML
-doc.save("enquete-menages.xml")
-```
-
-```python
-# Ouvrir une étude existante
-doc = ddi.open_ddi("enquete-menages.xml")
-
-for v in doc.variables:
-    print(v.identifier)
-```
-
-Vérifiez le fichier en ligne de commande. Les deux commandes se terminent avec
-le code 0 quand le fichier est propre, ce qui permet de les utiliser dans des
-scripts et en CI :
-
-```bash
-ddi validate enquete-menages.xml
-ddi lint enquete-menages.xml
-```
-
-## Installer
 
 Installez `ddi-l` depuis PyPI. L'extra `full` ajoute le moteur `lxml`, plus
 rapide (voir [Installation](installation.fr.md)).
@@ -141,49 +117,82 @@ rapide (voir [Installation](installation.fr.md)).
     poetry run ddi --help
     ```
 
-## Pour continuer
+Créez une étude, ajoutez une question et la variable qui enregistre sa
+réponse, puis enregistrez-la :
 
-<div class="grid cards landing-tiles" markdown>
+```python
+import ddi_l as ddi
 
-- **Apprendre**
+# Créer une nouvelle étude
+doc = ddi.new_study(title="Enquête ménages", agency="example.org")
 
-    Un cours en 17 modules qui vous mène de « qu'est-ce que les
-    métadonnées ? » à un paquet DDI entièrement documenté, validé et
-    versionné. Aucune expérience du DDI ni du XML n'est requise.
+# Ajouter une question et la variable qui enregistre sa réponse. `label=` est
+# facultatif, mais `ddi lint` signale chaque élément qui n'en a pas.
+q_age = doc.add_question(text="Quel âge avez-vous ?", label="Question sur l'âge")
+doc.add_variable(name="Age", question=q_age, label="Âge en années")
 
-    [Programme de formation →](curriculum/index.fr.md){ .md-button .md-button--primary }
+# Enregistrer en XML
+doc.save("enquete-menages.xml")
+```
 
-- **Valider**
+Rouvrez-la plus tard :
 
-    Validez les documents par rapport aux schémas DDI, exécutez les règles de
-    lint et ajoutez ces contrôles à la CI.
+```python
+# Ouvrir une étude existante
+doc = ddi.open_ddi("enquete-menages.xml")
 
-    [Guide de validation →](validation.fr.md){ .md-button .md-button--secondary .md-button--outlined }
+for v in doc.variables:
+    print(v.identifier)
+```
 
-- **Utiliser la CLI**
+Vérifiez le fichier en ligne de commande. Les deux commandes se terminent avec
+le code 0 quand le fichier est propre, ce qui permet de les utiliser dans des
+scripts et en CI :
 
-    Validez, faites l'aller-retour et convertissez des fichiers avec la
-    commande `ddi`.
+```bash
+ddi validate enquete-menages.xml
+ddi lint enquete-menages.xml
+```
 
-    [Recettes CLI →](cli-recipes.fr.md){ .md-button .md-button--secondary .md-button--outlined }
+Le [guide d'utilisation](user-guide.fr.md#comment-sarticule-une-etude)
+montre comment s'articulent les parties d'une étude et fait le tour de
+l'API `Document`.
 
-- **Vous n'utilisez pas Python ?**
+## Trouver votre chemin
 
-    Appelez `ddi-l` depuis R avec reticulate, ou depuis n'importe quel langage
-    par son API HTTP.
+<div class="grid cards ddi-paths" markdown>
 
-    [Depuis R →](r-users.fr.md){ .md-button .md-button--secondary .md-button--outlined }
-    [API HTTP →](server.fr.md){ .md-button .md-button--secondary .md-button--outlined }
+- :material-school-outline:{ .lg } **Vous découvrez le DDI ?**
+
+    ---
+
+    Suivez le [cours](curriculum/index.fr.md) : 17 modules, puis des
+    modules facultatifs sur les filtres de questionnaire, l'API HTTP,
+    DDI-Codebook et DDI-CDI.
+
+- :material-compass-outline:{ .lg } **Une tâche à accomplir ?**
+
+    ---
+
+    Les [guides pratiques](guides/index.fr.md) couvrent la validation, les
+    tableurs, les autres outils, la ligne de commande, R et HTTP.
+
+- :material-book-open-page-variant-outline:{ .lg } **Une information à vérifier ?**
+
+    ---
+
+    La [référence](reference/index.fr.md) réunit le guide d'utilisation,
+    les références de l'API et des modèles, et chaque règle lint.
+
+- :material-source-pull:{ .lg } **Envie de contribuer ?**
+
+    ---
+
+    Commencez par le
+    [guide des contributeurs](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md),
+    puis le [guide de développement](DEVELOPMENT.fr.md).
 
 </div>
-
-Pour un tour d'horizon de l'API `Document` en une page, consultez le
-[guide d'utilisation](user-guide.fr.md). La [référence de l'API](api.fr.md) et la
-[référence des modèles](models.fr.md) décrivent chaque classe. Pour contribuer,
-commencez par le
-[guide des contributeurs](https://github.com/pbisson44/ddi-l/blob/main/CONTRIBUTING.md) ;
-le [guide de développement](DEVELOPMENT.fr.md) détaille l'architecture, la
-génération de code et le processus de publication.
 
 ## Citer ddi-l
 

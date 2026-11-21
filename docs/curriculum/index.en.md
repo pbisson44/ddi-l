@@ -28,8 +28,9 @@ only the one before, but some need more. You check your work from Module 3
 onwards, and by the end of Tier 1 you can open, change and validate any DDI
 file.
 
-Two **optional modules** follow, for those who use one of `ddi-l`'s extras.
-Neither is needed for the capstone, and the schedules below leave them out.
+Four **optional modules** follow: two for those who use one of `ddi-l`'s
+extras, and two on the other DDI standards, DDI-Codebook and DDI-CDI. None is
+needed for the capstone, and the schedules below leave them out.
 
 The times are the ones each module gives: working alone (self-paced), or in a
 class with an instructor (instructor-led).
@@ -59,6 +60,8 @@ class with an instructor (instructor-led).
 | **Optional modules** | | | | |
 | 18 | [Decide gates exactly](module-18-exact-gates.en.md) (`logic` extra) | 45 min | 60 min | Module 16 |
 | 19 | [Serve ddi-l over HTTP](module-19-http-api.en.md) (`server` extra) | 45 min | 60 min | Module 7 |
+| 20 | [From DDI-Codebook to DDI-Lifecycle, built for reuse](module-20-codebook-to-lifecycle.en.md) | 60 min | 75 min | Modules 9 and 15 |
+| 21 | [Describe your data with DDI-CDI](module-21-ddi-cdi.en.md) | 60 min | 75 min | Module 9 |
 
 Each module starts with numbered **learning objectives** (O1, O2, ...): what
 you can do by the end of it, such as write a script or validate a file. Each
@@ -75,7 +78,7 @@ Pick the row that fits you best.
 | ----------- | ---------- | ------------ | ------------------- |
 | University student (new to data) | Module 1 | Nothing | Modules 3-5 |
 | Researcher (know Python, not DDI) | Module 1 | Module 2 | Modules 1, 4 and 5: what DDI calls things |
-| Archivist (know DDI, not Python) | Module 1 | Module 1 | Modules 2-7: the Python you need |
+| Archivist (know DDI, not Python) | Module 1 | Module 1 | Modules 2-7: the Python you need; Module 20 if your holdings are in DDI-Codebook |
 | NSO staff (know both) | Module 2 | Modules 1 and 3 | Modules 8-16 |
 | Developer automating DDI checks | Module 2 | Modules 1, 4 and 5 | Modules 3 and 7, then the automation track below |
 

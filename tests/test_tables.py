@@ -13,6 +13,7 @@ import ddi_l as ddi
 from ddi_l import schema_loader
 from ddi_l._etree import tostring
 from ddi_l.constants import DATA_COLLECTION_NS
+from ddi_l.lint import run_lint
 from ddi_l.models.base import qn
 from ddi_l.models.concept import Concept, Universe
 from ddi_l.models.logicalproduct import CodeList, Variable
@@ -636,6 +637,16 @@ def test_question_name_is_written(example: Path) -> None:
             [["code_list", "value"], ["", "1"]],
             "codes.csv, row 2, column code_list",
         ),
+        (
+            "studies",
+            [["id", "identifier"], ["S", "10.5072/FK2"]],
+            "column identifier_agency: say who manages the identifier '10.5072/FK2'",
+        ),
+        (
+            "studies",
+            [["id", "identifier_agency"], ["S", "DOI"]],
+            "column identifier: identifier_agency is 'DOI' but there is no identifier",
+        ),
     ],
 )
 def test_bad_values_are_reported(
@@ -648,6 +659,70 @@ def test_bad_values_are_reported(
         _write(folder, "code_lists", [["id"], ["CL"]])
     problems = _problems(folder)
     assert any(expected in problem for problem in problems), problems
+
+
+def test_a_study_cites_its_identifier_copyright_and_licence(tmp_path: Path) -> None:
+    """A study with questions and no questionnaire flow, as from DDI-Codebook."""
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(
+        folder,
+        "studies",
+        [
+            [
+                "id",
+                "title@en",
+                "identifier",
+                "identifier_agency",
+                "copyright@en",
+                "copyright@fr",
+                "license",
+            ],
+            [
+                "PETS",
+                "Pet survey",
+                "10.5072/FK2PETS",
+                "DOI",
+                "Example Institute",
+                "Institut Exemple",
+                "https://creativecommons.org/licenses/by/4.0/",
+            ],
+        ],
+    )
+    _write(folder, "questions", [["id", "response"], ["Q1", "text"]])
+    _write(folder, "variables", [["id", "question"], ["V1", "Q1"]])
+
+    fragment = load_tables(folder).to_fragment()
+
+    assert schema_loader.validate(fragment.root, raise_error=False) == []
+    xml = fragment.to_colectica_bytes().decode("utf-8")
+    assert "<r:IdentifierContent>10.5072/FK2PETS</r:IdentifierContent>" in xml
+    assert "<r:ManagingAgency>DOI</r:ManagingAgency>" in xml
+    assert '<r:String xml:lang="fr">Institut Exemple</r:String>' in xml
+    assert (
+        '<license xmlns="http://purl.org/dc/terms/">'
+        "https://creativecommons.org/licenses/by/4.0/</license>"
+    ) in xml
+    # No questionnaire, so no data collection: DDI 3.3 needs none.
+    assert fragment.root.find(f".//{qn(DATA_COLLECTION_NS, 'DataCollection')}") is None
+
+
+def test_a_data_file_labels_its_relationship_and_its_record(tmp_path: Path) -> None:
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(folder, "datasets", [["id", "label@en"], ["F1", "Pet survey data"]])
+    _write(
+        folder,
+        "variables",
+        [["id", "label@en", "representation", "dataset"], ["V1", "Name", "text", "F1"]],
+    )
+
+    fragment = load_tables(folder).to_fragment()
+
+    assert schema_loader.validate(fragment.root, raise_error=False) == []
+    assert run_lint(fragment) == []
+    xml = fragment.to_colectica_bytes().decode("utf-8")
+    assert xml.count('<r:Content xml:lang="en">Pet survey data</r:Content>') == 2
 
 
 def test_settings_problems(tmp_path: Path) -> None:

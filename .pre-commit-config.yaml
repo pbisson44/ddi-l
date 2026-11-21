@@ -14,9 +14,6 @@ repos:
     rev: v5.0.0
     hooks:
       - id: check-yaml
-        # mkdocs.yml uses `!!python/name:` tags for the emoji and superfences
-        # extensions, which are valid YAML but not *safe* YAML.
-        exclude: ^mkdocs\.yml$
       - id: check-toml
       - id: end-of-file-fixer
         # The bundled DDI schemas are redistributed verbatim (CC-BY-4.0).

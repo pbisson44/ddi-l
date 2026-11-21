@@ -493,51 +493,59 @@ stay in the distribution.
 
 ## Documentation
 
-The documentation site uses MkDocs with the Material theme and bilingual
-(EN/FR) support. Pages come in `.en.md` / `.fr.md` pairs: **update both** when
-you change user-facing content.
+The documentation site is built with [Zensical](https://zensical.org/), in
+English and French. Pages come in `.en.md` / `.fr.md` pairs: **update both**
+when you change user-facing content.
 
 ```bash
-make docs-serve    # Live preview
-make docs-build    # Build and validate
+make docs-serve    # Live preview (English); `python scripts/docs.py serve --lang fr` for French
+make docs-build    # Build both languages into site/ and fail on any warning
 ```
 
-Prefer the `make` targets over calling `mkdocs` directly: they set
-`NO_MKDOCS_2_WARNING`, without which every invocation prints a multi-line
-advisory from the Material for MkDocs authors about MkDocs 2.0.
+Zensical builds one language per run and has no build hooks, so
+`scripts/docs.py` prepares each language first. It copies `docs/` into
+`.docs-build/<lang>/`, keeping that language's pages without their suffix
+(`index.en.md` becomes `index.md`) and rewriting links to match, and fills in
+the generated pages:
 
-The logo, favicon and their usage rules are described in
+- the curriculum's [answer keys](curriculum/answer-keys.en.md), collected by
+  `scripts/docs_answer_keys.py` from the `??? success` answers in each module.
+  Add or change an answer in the module, never on the answer-key page;
+- the [lint rules](lint-rules.en.md), rendered by `scripts/docs_lint_rules.py`
+  from the rule registry.
+
+The site is configured in Zensical's own format: `zensical.toml` for the
+English site and `zensical.fr.toml` for the French one. The French file is the
+English one with French text (the description, the nav titles, the theme's
+language, the palette toggle names and the announcement);
+`tests/test_docs_site_config.py` checks that they list the same pages and that
+every other setting matches, so a change to the theme, the Markdown extensions
+or the plugins goes in both files. The build
+writes English at the root of `site/` and French under `site/fr/`, as the
+published site serves them.
+
+The theme overrides are in `docs/overrides/`: the landing page's hero
+(`home.html`, filled from the `hero:` front matter of `docs/index.*.md`), the
+announcement bar (`main.html`, text in `extra.announce`), the language selector
+that keeps the reader on the same page, and the edit button that opens the
+page's `.en.md` or `.fr.md` file. Colours are in
+`docs/assets/stylesheets/palette.css` and layout in `site.css`. The logo,
+favicon and their usage rules are described in
 [branding assets](assets/README.en.md).
 
-The curriculum's [answer keys](curriculum/answer-keys.en.md) page is generated
-by `hooks/answer_keys.py` from the `??? success` answers in each module. Add
-or change an answer in the module, never on the answer-key page.
+A release publishes the site with `.github/workflows/deploy-docs.yml`: it
+builds it and commits it to the `gh-pages` branch under `latest/`, with a
+root page that redirects there and a 404 page that sends older links (without
+`latest/`, or under a version number) to the same page under `latest/`.
 
 ### Documentation toolchain versions
 
 `uv.lock` fixes the exact versions; CI and the deploy both install with
-`uv sync --locked --group docs`. `mkdocs` and `mkdocs-material` are capped
-below their next major in `pyproject.toml` so a new major is adopted
-deliberately; Dependabot opens that update as a CI-tested pull request.
-`tests/test_docs_site_config.py` checks that every plugin `mkdocs.yml`
+`uv sync --locked --group docs`. Zensical is capped below its next minor
+release in `pyproject.toml`, since a 0.x minor can change behaviour, so an
+upgrade is adopted deliberately; Dependabot opens it as a CI-tested pull
+request. `tests/test_docs_site_config.py` checks that every plugin `zensical.toml`
 activates has a requirement in the `docs` group.
-
-### Why the build log is short
-
-`mkdocs-static-i18n` logs, at INFO, the entire value it overrides each config
-key with, once per language, on every rebuild. For `nav` that is the whole
-navigation tree, so a build printed several thousand characters of echoed
-configuration around the five lines that matter.
-
-`hooks/quiet_i18n_logs.py` filters exactly those `Overriding`/`Updating … config
-…` records. `Building '<lang>' documentation to directory: …` is kept, and
-nothing at WARNING or above is touched; a genuine `Unknown '<lang>' config
-override` still surfaces. Run `mkdocs serve --verbose` to see everything again.
-
-The filter is attached to the *handler* on the `mkdocs` logger, not to the
-plugin's logger. Python consults an ancestor logger's handlers when a record
-propagates but not its filters, and the plugin logs from submodules, so a
-filter on `mkdocs.plugins.mkdocs_static_i18n` silently does nothing.
 
 ### `VIRTUAL_ENV does not match the project environment path`
 

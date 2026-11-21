@@ -54,24 +54,26 @@ def _wrap_in_fragment(element: Element) -> Element:
     return fragment_instance
 
 
-# The generic engine does not resolve substitution groups, and
-# ``MethodologyItem``'s fixtures use one (``<SamplingProcedure>``).
-_SKIP_GENERIC_PREFIXES: set[str] = {
+# The generic engine does not resolve substitution groups. These models use one
+# (``MethodologyItem``: ``<SamplingProcedure>``), so they read and write
+# themselves and never reach the generic engine.
+_OWN_XML_MODELS: set[str] = {
     "MethodologyItem",
 }
 
 
 def _shadow_cases():
     for model, name in iter_maintainable_fixture_names():
-        test_id = f"{model.__name__}-{name}"
-        marks: list[pytest.MarkDecorator] = []
-        if model.__name__ in _SKIP_GENERIC_PREFIXES:
-            marks.append(
-                pytest.mark.skip(
-                    reason="generic engine does not resolve substitution-group tags"
-                )
-            )
-        yield pytest.param(model, name, marks=marks, id=test_id)
+        if model.__name__ not in _OWN_XML_MODELS:
+            yield pytest.param(model, name, id=f"{model.__name__}-{name}")
+
+
+def test_models_left_out_read_and_write_themselves() -> None:
+    models = {model.__name__: model for model, _ in iter_maintainable_fixture_names()}
+    for name in _OWN_XML_MODELS:
+        model = models[name]
+        assert model.from_xml.__func__ is not MaintainableBase.from_xml.__func__, name
+        assert model.to_xml is not MaintainableBase.to_xml, name
 
 
 @pytest.mark.parametrize(("model_cls", "fixture_name"), list(_shadow_cases()))

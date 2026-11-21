@@ -26,6 +26,14 @@ description: >-
   `urn:ddi:agence:id:version`, tel que Colectica l'affiche. Son agence doit
   être celle des tableaux, et sa version devient celle de l'élément quand la
   colonne `version` de la ligne est vide.
+- **L'identifiant, le droit d'auteur et la licence d'une étude dans les
+  tables.** La table `studies` prend `identifier` et `identifier_agency`
+  (un DOI et `DOI`, par exemple), écrits comme `r:InternationalIdentifier`
+  de la citation ; `copyright@<langue>`, écrit comme `r:Copyright` ; et
+  `license`, l'adresse web de la licence, écrite comme `dcterms:license`,
+  le terme Dublin Core que prennent les citations DDI 3.3. Un identifiant
+  sans son agence, ou une agence sans identifiant, est signalé avec sa
+  ligne.
 
 ### Corrections
 
@@ -78,6 +86,21 @@ description: >-
   `ddi roundtrip` et `ddi to-json` sur un fichier inexistant affichaient
   `Error: input.xml` ; ils affichent maintenant `Error: [Errno 2] No such
   file or directory: 'input.xml'`, comme Python.
+- **Une étude sans questionnaire est écrite.** Des tables avec une ligne
+  dans `studies` mais sans cheminement de questionnaire, comme un
+  dictionnaire de données converti de DDI-Codebook, s'arrêtaient à
+  `to_fragment()` sur « DataCollection requires collection events,
+  instruments, questions, or references » : chaque étude recevait une
+  collecte de données vide, parce que `StudyUnit` en exigeait une. DDI 3.3
+  n'en exige aucune, et une étude construite avec `new_study()` s'écrivait
+  déjà sans. Un `StudyUnit` n'a plus besoin de collecte de données, et les
+  tables n'en donnent une à une étude que si son questionnaire en a besoin.
+- **Le libellé d'un fichier de données nomme aussi sa relation de
+  données.** Le `label` d'une ligne de `datasets` allait seulement à
+  l'enregistrement logique du fichier : `ddi lint` signalait donc sans
+  libellé la relation de données qui contient l'enregistrement, et aucune
+  colonne ne pouvait y remédier. Les deux portent maintenant le libellé et
+  la description.
 
 ### Documentation
 
@@ -104,6 +127,16 @@ description: >-
   existent pour Windows PowerShell et pour macOS et Linux. Le module 16 ne
   dit plus que `not PetAge > 10` et `PetAge <= 10 or missing(PetAge)` sont
   pareils : ils diffèrent pour une réponse « ne sait pas ».
+- **Deux autres modules facultatifs, sur les autres normes DDI.** Le
+  module 20 convertit en DDI-Lifecycle les fichiers DDI-Codebook de
+  plusieurs cycles, par les tables de métadonnées, en écrivant une seule
+  fois chaque question, liste de codes et univers que les livres de codes
+  répètent, pour que chaque cycle renvoie aux mêmes éléments ; il reprend le
+  DOI de chaque cycle et ajoute une licence lisible par un programme, une
+  trace de la conversion et des libellés. Le module 21 décrit les données d'une étude en DDI-CDI
+  1.0 (domaines de valeurs, listes de codes, structure de données large) et
+  les valide selon le schéma de la DDI Alliance avec
+  `xmlschema.XMLSchema11`. La page d'interopérabilité renvoie aux deux.
 - **Les versions s'enseignent en nombres entiers.** Le module 15 donne à un
   élément sa version suivante avec `increment_version()` (1, 2, 3) et garde
   majeure, mineure et correctif pour une courte section sur les versions à
@@ -123,6 +156,16 @@ description: >-
   anciennes, et les poussées sur `main` ne publient plus de copie `dev`. Un
   lien vers une ancienne version, ou vers `dev`, ouvre la même page dans la
   dernière version.
+- **Un nouveau visage, et un site où naviguer.** La documentation est
+  construite avec Zensical. La page d'accueil présente d'abord ce que fait
+  `ddi-l`, un démarrage rapide et une entrée vers chaque partie du site ; les
+  guides pratiques et la référence ont leur propre page d'accueil, et les
+  guides sont regroupés par tâche. Les pages s'ouvrent sans recharger tout le
+  site, et une barre en haut annonce les nouveautés. Le thème suit le réglage
+  clair ou sombre du système jusqu'à ce que le lecteur en choisisse un, et le
+  contraste élevé suit désormais lui aussi le réglage du système, au lieu
+  d'une palette choisie dans un menu. Le schéma de l'articulation d'une étude
+  est passé de la page d'accueil au guide d'utilisation.
 
 ## 0.2.0
 
