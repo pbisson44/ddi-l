@@ -75,6 +75,7 @@ from .exceptions import (
     DDIModelError,
     DDIParseError,
     DDIReferenceError,
+    DDIReferenceWarning,
     DDIValidationError,
     DuplicateIdentifierError,
     build_error_location,
@@ -83,10 +84,12 @@ from .models.base import (
     InternationalString,
     MaintainableBase,
     Reference,
+    ValidationContext,
     build_identification_elements,
     clone_element,
     qn,
     suppress_serialize_validation,
+    warn_at_caller,
 )
 from .models.study import StudyUnit
 from .namespace_utils import apply_namespace_map, extract_namespace_declarations
@@ -1780,6 +1783,11 @@ class Document:
                 )
         self._study_parent = parent
         self._study_element = element
+        if check_references:
+            for extra in self._extra_studies:
+                unresolved = extra.validate_tree(self._reference_context(extra))
+                if unresolved:
+                    warn_at_caller(DDIReferenceWarning(unresolved))
 
     def _release_study(self) -> None:
         """Flush, then drop the cached study so it is re-read from XML."""
@@ -1810,7 +1818,10 @@ class Document:
         check_references: bool = False,
     ) -> Element | None:
         """Swap ``existing`` for ``study``'s serialization; return the new element."""
-        replacement = study.to_xml(validate_refs=check_references)
+        replacement = study.to_xml(
+            validate_refs=check_references,
+            context=self._reference_context(study) if check_references else None,
+        )
         children = list(parent)
         for index, child in enumerate(children):
             if child is existing:
@@ -1830,13 +1841,40 @@ class Document:
             parent, study, check_references=check_references
         )
 
+    def _reference_context(self, study: StudyUnit) -> ValidationContext:
+        """What a reference in ``study`` may point at.
+
+        The study's own items, from its model, and every item elsewhere in
+        the document, such as another study of its group.
+        """
+        context = ValidationContext.from_maintainable(study)
+        study_tag = qn(STUDY_UNIT_NS, "StudyUnit")
+        id_tag = qn(REUSABLE_NS, "ID")
+        pending = [self._inner._root]
+        while pending:
+            element = pending.pop()
+            if (
+                element.tag == study_tag
+                and element.findtext(id_tag) == study.identifier
+            ):
+                continue  # as written before this flush; the model is current
+            for child in element:
+                if child.tag == id_tag and child.text:
+                    context.register_identifier(child.text.strip())
+                else:
+                    pending.append(child)
+        return context
+
     def _replace_study_in_parent(
         self, parent: Element, study: StudyUnit, *, check_references: bool = False
     ) -> Element:
         """Replace ``study``'s element within ``parent`` (a group) and return it."""
         study_tag = qn(STUDY_UNIT_NS, "StudyUnit")
         id_tag = qn(REUSABLE_NS, "ID")
-        replacement = study.to_xml(validate_refs=check_references)
+        replacement = study.to_xml(
+            validate_refs=check_references,
+            context=self._reference_context(study) if check_references else None,
+        )
         for index, child in enumerate(list(parent)):
             if child.tag != study_tag:
                 continue
@@ -1966,7 +2004,7 @@ class Document:
             for study in self._extra_studies:
                 self._upsert_in_group(
                     group,
-                    study.to_xml(),
+                    study.to_xml(validate_refs=False),
                     study.identifier,
                     match_tag=study_tag,
                     id_tag=id_tag,

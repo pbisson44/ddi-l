@@ -182,11 +182,26 @@ erDiagram
 Every item gets a DDI identifier (a UUID). Leave `ddi_id` empty and one is
 derived from the agency, the table and the row's `id`, so loading the same
 tables again gives the same identifiers, and a re-import updates items instead
-of duplicating them. Fill `ddi_id` with an existing identifier to update an
-item that is already in Colectica.
+of duplicating them. Fill `ddi_id` to update an item that is already in
+Colectica, with either of:
+
+- its identifier, such as `4bf610ee-6771-44da-ab0b-00655b53b79b`, or
+  `VS1.V1` for one scoped to its scheme;
+- its URN, such as `urn:ddi:example.org:4bf610ee-6771-44da-ab0b-00655b53b79b:3`.
+  The URN's agency must be the tables' agency, and its version is the item's
+  when the row's `version` is empty.
 
 Every item takes the `version` from `settings`, unless its own `version`
-column says otherwise.
+column says otherwise. A version is whole numbers separated by dots: `1`, `2`,
+`1.1`.
+
+Each value is checked as the tables are read, and one that DDI does not
+accept is reported with its file, row and column, with every other problem:
+an identifier with a space or more than one dot, a URN of another agency or
+missing a part, the older URN form that names object types
+(`urn:ddi:example.org:VariableScheme:VS1:Variable:V1:1`), a version such as
+`v2`, or two rows with the same identifier. The agency and version in
+`settings`, or passed in, are checked too.
 
 ### Names and labels
 
@@ -324,8 +339,8 @@ Every table whose rows are items, except `studies`, `groups`,
 | Column | Required | What goes in it |
 | --- | --- | --- |
 | `id` | yes | your key for the row |
-| `ddi_id` | | an existing DDI identifier to keep |
-| `version` | | the item's version, if not the one in `settings` |
+| `ddi_id` | | an existing DDI identifier or URN to keep |
+| `version` | | the item's version (`1`, `2`, `1.1`), if not the one in `settings` |
 | `name` | | the short name; defaults to `id` |
 | `label@<language>` | | a short label, per language |
 | `description@<language>` | | a longer definition, per language |
@@ -348,6 +363,10 @@ One row per study: a survey cycle, a census, an administrative source.
 | `creator` | who made it: `organizations` or `individuals` ids, or names |
 | `publisher` | who publishes it: ids or names, as for `creator` |
 | `publication_date` | when it was published: `2024`, `2024-05` or `2024-05-31` |
+| `identifier` | a persistent identifier, such as a DOI: `10.1234/abcd` |
+| `identifier_agency` | who manages the identifier: `DOI`, `Handle`, `ARK`... |
+| `copyright@<language>` | its copyright statement |
+| `license` | the licence it is published under, as a web address: `https://creativecommons.org/licenses/by/4.0/` |
 | `kind_of_data` | `Survey data`, `Administrative records`... |
 | `analysis_unit` | `Persons`, `Households`, `Businesses`... |
 | `universe` | who the study covers, as a `universes` id |

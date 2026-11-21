@@ -13,6 +13,63 @@ Each section is self-contained, so you can jump to the workflow you need.
     - Python 3.11 or newer with `ddi-l` installed (`pip install ddi-l`).
     - No XML knowledge is required for the simple API.
 
+## How a study fits together
+
+A DDI study (a `StudyUnit`) keeps its metadata in modules, the boxes below:
+concepts and universes in a `ConceptualComponent`, the questionnaire and its
+questions in a `DataCollection`, variables, code lists and categories in a
+`LogicalProduct`, record layouts in a `PhysicalDataProduct`, each data file in
+a `PhysicalInstance`, and organizations and people in an `Archive`. Items refer
+to each other across modules (dashed arrows): a variable to the question that
+collected it, the concept it measures, its universe and its code list; a data
+file to the record layout and the logical record that list its variables.
+
+```mermaid
+flowchart TB
+    accTitle: How a DDI study fits together
+    accDescr: A StudyUnit holds its metadata in modules: concepts and universes in a ConceptualComponent; the instrument, its control constructs and the questions in a DataCollection; variables, code lists, categories and data relationships in a LogicalProduct; record layouts in a PhysicalDataProduct; each data file in a PhysicalInstance; organizations and individuals in an Archive. Dashed arrows are references: a variable refers to its question, concept, universe and code list; a data file refers to its record layout and data relationship, which list its variables.
+    subgraph SU["StudyUnit"]
+        direction TB
+        subgraph CC["ConceptualComponent"]
+            CON[Concept]
+            UNI[Universe]
+        end
+        subgraph DC["DataCollection"]
+            INS[Instrument]
+            CTL["Sequence, IfThenElse,\nQuestionConstruct..."]
+            QI[QuestionItem]
+        end
+        subgraph LP["LogicalProduct"]
+            VAR[Variable]
+            CL[CodeList]
+            CAT[Category]
+            DR["DataRelationship\n(LogicalRecord)"]
+        end
+        subgraph PDP["PhysicalDataProduct"]
+            RL[RecordLayout]
+        end
+        subgraph PI["PhysicalInstance"]
+            DF["DataFileIdentification\n(the data file)"]
+        end
+        subgraph AR["Archive"]
+            ORG["Organization,\nIndividual"]
+        end
+    end
+    INS -.->|ControlConstructReference| CTL
+    CTL -.->|QuestionReference| QI
+    QI -.->|ConceptReference| CON
+    QI -.->|"CodeDomain:\nCodeListReference"| CL
+    VAR -.->|QuestionReference| QI
+    VAR -.->|ConceptReference| CON
+    VAR -.->|UniverseReference| UNI
+    VAR -.->|"CodeRepresentation:\nCodeListReference"| CL
+    CL -.->|"Code:\nCategoryReference"| CAT
+    DR -.->|VariableUsedReference| VAR
+    RL -.->|"DataItem:\nVariableReference"| VAR
+    PI -.->|RecordLayoutReference| RL
+    PI -.->|DataRelationshipReference| DR
+```
+
 ## Create a study
 
 Use `ddi.new_study()` to create a new DDI document with a study unit:

@@ -13,6 +13,7 @@ import ddi_l as ddi
 from ddi_l import schema_loader
 from ddi_l._etree import tostring
 from ddi_l.constants import DATA_COLLECTION_NS
+from ddi_l.lint import run_lint
 from ddi_l.models.base import qn
 from ddi_l.models.concept import Concept, Universe
 from ddi_l.models.logicalproduct import CodeList, Variable
@@ -274,6 +275,125 @@ def test_ddi_id_keeps_an_existing_identifier(tmp_path: Path) -> None:
     )
 
 
+_UUID = "4bf610ee-6771-44da-ab0b-00655b53b79b"
+
+
+@pytest.mark.parametrize(
+    ("ddi_id", "version", "expected"),
+    [
+        # A URN gives its identifier, and its version when the row has none.
+        (f"urn:ddi:example.org:{_UUID}:3", "", (_UUID, "3")),
+        # "urn:ddi:" and the agency are read whatever their case.
+        (f"URN:DDI:Example.ORG:{_UUID}:3", "", (_UUID, "3")),
+        # The row's own version wins over the URN's.
+        (f"urn:ddi:example.org:{_UUID}:3", "4", (_UUID, "4")),
+        # An identifier scoped to its maintainable has two parts.
+        ("VS1.V1", "", ("VS1.V1", "1")),
+    ],
+)
+def test_ddi_id_takes_a_urn_of_the_tables_agency(
+    tmp_path: Path, ddi_id: str, version: str, expected: tuple[str, str]
+) -> None:
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(folder, "concepts", [["id", "ddi_id", "version"], ["AGE", ddi_id, version]])
+
+    concept = _get(load_tables(folder), "concepts", "AGE", Concept)
+
+    assert (concept.agency, concept.identifier, concept.version) == (
+        "example.org",
+        *expected,
+    )
+
+
+def test_unusable_ddi_ids_and_versions_are_reported_where_they_are(
+    tmp_path: Path,
+) -> None:
+    folder = tmp_path / "t"
+    _settings(folder)
+    deprecated = "urn:ddi:example.org:ConceptScheme:CS1:Concept:C1:1"
+    _write(
+        folder,
+        "concepts",
+        [
+            ["id", "ddi_id", "version"],
+            ["A", "my concept", ""],
+            ["B", f"urn:ddi:other.org:{_UUID}:1", ""],
+            ["C", deprecated, ""],
+            ["D", "urn:ddi:example.org:C1", ""],
+            ["E", "CS1.C1.X", ""],
+            ["F", "", "v2"],
+            ["G", _UUID, ""],
+        ],
+    )
+    _write(
+        folder,
+        "universes",
+        [["id", "ddi_id"], ["U", f"urn:ddi:example.org:{_UUID}:2"]],
+    )
+
+    assert _problems(folder) == [
+        "concepts.csv, row 2, column ddi_id: 'my concept' is neither a DDI "
+        "identifier nor a DDI URN (urn:ddi:agency:id:version)",
+        "concepts.csv, row 3, column ddi_id: the URN's agency 'other.org' is not "
+        "the tables' agency, 'example.org'",
+        f"concepts.csv, row 4, column ddi_id: {deprecated!r} is a deprecated DDI "
+        "URN; give its canonical form, urn:ddi:agency:id:version",
+        "concepts.csv, row 5, column ddi_id: 'urn:ddi:example.org:C1' is not a "
+        "DDI URN: expected urn:ddi:agency:id:version",
+        "concepts.csv, row 6, column ddi_id: 'CS1.C1.X' is neither a DDI "
+        "identifier nor a DDI URN (urn:ddi:agency:id:version)",
+        "concepts.csv, row 7, column version: 'v2' is not a DDI version: "
+        "whole numbers separated by dots, such as 1, 2 or 1.1",
+        f"universes.csv, row 2, column ddi_id: {_UUID!r} is already the DDI "
+        "identifier of concepts.csv, row 8",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("setting", "value", "expected"),
+    [
+        (
+            "agency",
+            "Statistics Canada",
+            "agency 'Statistics Canada' is not a DDI agency: letters, digits "
+            "and hyphens, in parts separated by dots, such as example.org",
+        ),
+        (
+            "version",
+            "v1",
+            "version 'v1' is not a DDI version: whole numbers separated by "
+            "dots, such as 1, 2 or 1.1",
+        ),
+    ],
+)
+def test_settings_agency_and_version_must_be_ddi_ones(
+    tmp_path: Path, setting: str, value: str, expected: str
+) -> None:
+    folder = tmp_path / "t"
+    _write(
+        folder,
+        "settings",
+        [["setting", "value"], ["agency", "example.org"], [setting, value]],
+    )
+    _write(folder, "concepts", [["id"], ["C1"]])
+
+    assert _problems(folder) == [f"settings: {expected}"]
+
+
+def test_an_agency_passed_in_is_checked_too(tmp_path: Path) -> None:
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(folder, "concepts", [["id"], ["C1"]])
+
+    problems = _problems(folder, agency="my agency")
+
+    assert problems == [
+        "settings: agency 'my agency' is not a DDI agency: letters, digits and "
+        "hyphens, in parts separated by dots, such as example.org"
+    ]
+
+
 def test_semicolon_csv_from_a_french_excel(tmp_path: Path) -> None:
     folder = tmp_path / "t"
     _write(
@@ -517,6 +637,16 @@ def test_question_name_is_written(example: Path) -> None:
             [["code_list", "value"], ["", "1"]],
             "codes.csv, row 2, column code_list",
         ),
+        (
+            "studies",
+            [["id", "identifier"], ["S", "10.5072/FK2"]],
+            "column identifier_agency: say who manages the identifier '10.5072/FK2'",
+        ),
+        (
+            "studies",
+            [["id", "identifier_agency"], ["S", "DOI"]],
+            "column identifier: identifier_agency is 'DOI' but there is no identifier",
+        ),
     ],
 )
 def test_bad_values_are_reported(
@@ -529,6 +659,70 @@ def test_bad_values_are_reported(
         _write(folder, "code_lists", [["id"], ["CL"]])
     problems = _problems(folder)
     assert any(expected in problem for problem in problems), problems
+
+
+def test_a_study_cites_its_identifier_copyright_and_licence(tmp_path: Path) -> None:
+    """A study with questions and no questionnaire flow, as from DDI-Codebook."""
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(
+        folder,
+        "studies",
+        [
+            [
+                "id",
+                "title@en",
+                "identifier",
+                "identifier_agency",
+                "copyright@en",
+                "copyright@fr",
+                "license",
+            ],
+            [
+                "PETS",
+                "Pet survey",
+                "10.5072/FK2PETS",
+                "DOI",
+                "Example Institute",
+                "Institut Exemple",
+                "https://creativecommons.org/licenses/by/4.0/",
+            ],
+        ],
+    )
+    _write(folder, "questions", [["id", "response"], ["Q1", "text"]])
+    _write(folder, "variables", [["id", "question"], ["V1", "Q1"]])
+
+    fragment = load_tables(folder).to_fragment()
+
+    assert schema_loader.validate(fragment.root, raise_error=False) == []
+    xml = fragment.to_colectica_bytes().decode("utf-8")
+    assert "<r:IdentifierContent>10.5072/FK2PETS</r:IdentifierContent>" in xml
+    assert "<r:ManagingAgency>DOI</r:ManagingAgency>" in xml
+    assert '<r:String xml:lang="fr">Institut Exemple</r:String>' in xml
+    assert (
+        '<license xmlns="http://purl.org/dc/terms/">'
+        "https://creativecommons.org/licenses/by/4.0/</license>"
+    ) in xml
+    # No questionnaire, so no data collection: DDI 3.3 needs none.
+    assert fragment.root.find(f".//{qn(DATA_COLLECTION_NS, 'DataCollection')}") is None
+
+
+def test_a_data_file_labels_its_relationship_and_its_record(tmp_path: Path) -> None:
+    folder = tmp_path / "t"
+    _settings(folder)
+    _write(folder, "datasets", [["id", "label@en"], ["F1", "Pet survey data"]])
+    _write(
+        folder,
+        "variables",
+        [["id", "label@en", "representation", "dataset"], ["V1", "Name", "text", "F1"]],
+    )
+
+    fragment = load_tables(folder).to_fragment()
+
+    assert schema_loader.validate(fragment.root, raise_error=False) == []
+    assert run_lint(fragment) == []
+    xml = fragment.to_colectica_bytes().decode("utf-8")
+    assert xml.count('<r:Content xml:lang="en">Pet survey data</r:Content>') == 2
 
 
 def test_settings_problems(tmp_path: Path) -> None:

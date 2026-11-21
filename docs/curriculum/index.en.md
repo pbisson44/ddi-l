@@ -1,5 +1,4 @@
 ---
-title: Training curriculum
 description: >-
   A 17-module course that teaches you to document surveys and datasets with
   DDI and Python, from a first study to a validated, versioned package.
@@ -29,6 +28,10 @@ only the one before, but some need more. You check your work from Module 3
 onwards, and by the end of Tier 1 you can open, change and validate any DDI
 file.
 
+Four **optional modules** follow: two for those who use one of `ddi-l`'s
+extras, and two on the other DDI standards, DDI-Codebook and DDI-CDI. None is
+needed for the capstone, and the schedules below leave them out.
+
 The times are the ones each module gives: working alone (self-paced), or in a
 class with an instructor (instructor-led).
 
@@ -54,6 +57,11 @@ class with an instructor (instructor-led).
 | **Tier 3: Applied practice** | | | | |
 | 16 | [Advanced questionnaire specification](module-16-advanced-questionnaire-spec.en.md) | 75 min | 90 min | Modules 7, 10 and 15 |
 | 17 | [Capstone projects](module-17-capstone.en.md) | 60-90 min | 90 min | All (1-16) |
+| **Optional modules** | | | | |
+| 18 | [Decide gates exactly](module-18-exact-gates.en.md) (`logic` extra) | 45 min | 60 min | Module 16 |
+| 19 | [Serve ddi-l over HTTP](module-19-http-api.en.md) (`server` extra) | 45 min | 60 min | Module 7 |
+| 20 | [From DDI-Codebook to DDI-Lifecycle, built for reuse](module-20-codebook-to-lifecycle.en.md) | 60 min | 75 min | Modules 9 and 15 |
+| 21 | [Describe your data with DDI-CDI](module-21-ddi-cdi.en.md) | 60 min | 75 min | Module 9 |
 
 Each module starts with numbered **learning objectives** (O1, O2, ...): what
 you can do by the end of it, such as write a script or validate a file. Each
@@ -70,7 +78,7 @@ Pick the row that fits you best.
 | ----------- | ---------- | ------------ | ------------------- |
 | University student (new to data) | Module 1 | Nothing | Modules 3-5 |
 | Researcher (know Python, not DDI) | Module 1 | Module 2 | Modules 1, 4 and 5: what DDI calls things |
-| Archivist (know DDI, not Python) | Module 1 | Module 1 | Modules 2-7: the Python you need |
+| Archivist (know DDI, not Python) | Module 1 | Module 1 | Modules 2-7: the Python you need; Module 20 if your holdings are in DDI-Codebook |
 | NSO staff (know both) | Module 2 | Modules 1 and 3 | Modules 8-16 |
 | Developer automating DDI checks | Module 2 | Modules 1, 4 and 5 | Modules 3 and 7, then the automation track below |
 
@@ -83,7 +91,7 @@ For teams that add DDI validation to pipelines or build services on
 | ------- | ----- | ----- |
 | Pipeline foundations (45 min) | Run and configure validation and lint | [Validate and lint DDI content](../validation.en.md), [CLI recipes](../cli-recipes.en.md) |
 | Automation (45 min) | Script the CLI, keep reports, fail CI on errors | [Command-line automation playbook](../tutorials/automation-playbook.en.md), [Schema troubleshooting clinic](../tutorials/schema-troubleshooting-clinic.en.md) |
-| Reuse and integration (45 min) | Share fragments, call `ddi-l` from other systems | [Fragment reuse lab](../tutorials/fragment-reuse-lab.en.md), [HTTP API](../server.en.md), [Build tools and applications](../tutorials/building-tools.en.md) |
+| Reuse and integration (45 min) | Share fragments, call `ddi-l` from other systems | [Fragment reuse lab](../tutorials/fragment-reuse-lab.en.md), [Module 19: Serve ddi-l over HTTP](module-19-http-api.en.md), [Build tools and applications](../tutorials/building-tools.en.md) |
 
 Review the [performance playbook](../performance.en.md) before planning large
 batch runs.

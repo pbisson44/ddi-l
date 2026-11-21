@@ -1981,20 +1981,25 @@ class LogicalProduct(LogicalProductFields):
         schemes: list[_InlineScheme[TMaintainable]],
         members: list[TMaintainable],
     ) -> None:
-        """Add flat-list ``members`` missing from existing inline ``schemes``.
+        """Make inline ``schemes`` hold exactly the flat-list ``members``.
 
         After parsing from XML, members live in ``schemes`` while the public
-        list (``self.variables`` etc.) is a parallel view. Items appended to the
-        public list must be merged back so they serialize. Matching is by
-        identifier so already-present members are not duplicated.
+        list (``self.variables`` etc.) is a parallel view, and the one callers
+        edit: an item removed from it leaves its scheme, and an item appended
+        to it joins the first scheme, so both serialize as the list says.
+        Members are matched by object, so a replaced item is written as the
+        replacement.
         """
-        if not schemes or not members:
+        if not schemes:
             return
-        present = {member.identifier for scheme in schemes for member in scheme.members}
-        for member in list(members):
-            if member.identifier not in present:
+        listed = {id(member) for member in members}
+        for scheme in schemes:
+            scheme.members[:] = [m for m in scheme.members if id(m) in listed]
+        present = {id(member) for scheme in schemes for member in scheme.members}
+        for member in members:
+            if id(member) not in present:
                 schemes[0].members.append(member)
-                present.add(member.identifier)
+                present.add(id(member))
 
     def _ensure_category_schemes(self) -> list[_InlineScheme[Category]]:
         if not self._category_schemes:

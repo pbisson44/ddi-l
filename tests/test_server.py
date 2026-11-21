@@ -543,6 +543,29 @@ def test_every_problem_in_the_tables_is_listed(client):
     ]
 
 
+def test_an_unusable_ddi_id_is_a_422_with_its_row(client):
+    from ddi_l.server.samples import tables_zip
+
+    response = client.post(
+        "/v1/tables/import",
+        content=tables_zip(
+            {
+                "settings.csv": "setting,value\r\nagency,example.org\r\n",
+                "concepts.csv": "id,ddi_id\r\nAGE,urn:ddi:other.org:AGE:1\r\n",
+            }
+        ),
+    )
+
+    assert response.status_code == 422
+    assert response.json()["extra"] == [
+        {
+            "where": "concepts.csv, row 2, column ddi_id",
+            "message": "the URN's agency 'other.org' is not the tables' agency, "
+            "'example.org'",
+        }
+    ]
+
+
 @pytest.mark.parametrize(
     ("body", "expected"),
     [

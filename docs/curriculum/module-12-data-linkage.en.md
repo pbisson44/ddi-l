@@ -125,7 +125,7 @@ import ddi_l as ddi
 # Source 1: the survey (the primary study)
 doc = ddi.new_study(
     title="Canadian Community Health Survey 2021",
-    agency="statcan.gc.ca",
+    agency="ca.statcan",
 )
 q_key = doc.add_question(text="Anonymized linkage key")
 q_health = doc.add_question(text="How would you rate your general health?")
@@ -254,12 +254,11 @@ print(f"Linked variable sources: {len(linked.source_variable_references)}")
 # -> Linked variable sources: 2
 ```
 
-!!! warning "Cross-study references warn on save"
-    When you save, `ddi-l` may print a `UserWarning` that a
-    `source_variable_reference` is "not present in the current document." That
-    is **expected** for linkage: the source variable lives in a *different*
-    study within the group. The reference is still written correctly: it is a
-    full cross-study link, which is the whole point of data linkage.
+!!! note "References across studies"
+    `admin_visits` lives in a *different* study within the group. The
+    reference is a full cross-study link, which is the whole point of data
+    linkage. `ddi-l` checks references against every study in the file, so
+    saving gives no warning; it warns only about an item that is in none.
 
 ## 10. Save the linkage document
 
@@ -361,7 +360,7 @@ linked file came from.
 
         doc = ddi.new_study(
             title="Canadian Community Health Survey 2021",
-            agency="statcan.gc.ca",
+            agency="ca.statcan",
         )
         q_key = doc.add_question(text="Anonymized linkage key")
         q_health = doc.add_question(text="How would you rate your general health?")
@@ -667,8 +666,7 @@ Save again after these calls, so the file carries the governance context too.
       recording the method. Keep it to `set_property()` and `get_property()`;
       Module 13 covers properties fully.
     - Emphasize that `source_variable_references` crossing study boundaries is
-      the technical heart of linkage, and that the save-time warning is
-      expected, not an error.
+      the technical heart of linkage.
     - For NSO staff: "Going further" connects to real infrastructure (SDLE,
       B-LFE, LEBAF) and to governance: pre-approved linkages vs those needing
       a documented proposal and review under the Directive on Microdata Linkage.

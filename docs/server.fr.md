@@ -234,7 +234,7 @@ revient toujours dans la mise en forme de cette bibliothèque. `POST
 /v1/convert/xml` suit la même règle. Voir
 [Travailler avec les exports Colectica](colectica.fr.md).
 
-### Charger des tableaux de métadonnées
+### Charger des tableaux de métadonnées {#charger-des-tableaux-de-metadonnees}
 
 `/v1/tables/import` charge des métadonnées tenues dans des tableurs, disposées
 comme dans [Charger du DDI depuis des tableurs](spreadsheet-import.fr.md) : un

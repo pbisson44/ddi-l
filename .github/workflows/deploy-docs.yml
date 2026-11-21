@@ -1,17 +1,9 @@
 name: Deploy documentation
 
+# The site shows the newest release only, at /ddi-l/latest/. A release
+# publishes its docs and replaces whatever the site held before; a manual run
+# republishes from the branch it runs on (to fix a page between releases).
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**"
-      - "mkdocs.yml"
-      - "pyproject.toml"
-      - "uv.lock"
-      - ".github/workflows/deploy-docs.yml"
-      - ".github/pages/**"
-      - "src/**"
   release:
     types:
       - published
@@ -21,8 +13,6 @@ permissions:
   contents: write
 
 env:
-  # Silences Material's advisory banner.
-  NO_MKDOCS_2_WARNING: "1"
   UV_VERSION: "0.13.7"
 
 jobs:
@@ -49,43 +39,36 @@ jobs:
         run: uv sync --locked --group docs
 
       - name: Build documentation (strict)
-        run: uv run mkdocs build --strict
+        run: uv run python scripts/docs.py build --strict
 
-      - name: Pull existing documentation history
-        run: |
-          git fetch origin gh-pages:gh-pages || echo "gh-pages branch will be created"
-
-      - name: Deploy development snapshot
-        if: success() && github.event_name != 'release'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          uv run mike deploy --push --update-aliases dev next
-
-      - name: Deploy release documentation
-        if: success() && github.event_name == 'release'
+      # The gh-pages branch holds the built site under latest/, and at its
+      # root: index.html, which redirects to latest/; 404.html, which GitHub
+      # Pages serves for any missing path and which sends links without
+      # latest/ (or under an older version) to the same page under latest/;
+      # and .nojekyll, so Pages serves the files as they are. Each deploy is a
+      # new commit on the branch: its history is kept.
+      - name: Publish to the gh-pages branch
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          VERSION="${TAG_NAME#v}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          uv run mike deploy --push --update-aliases "$VERSION" latest
-          uv run mike set-default --push latest
-
-      # mike only writes inside version directories, so an unversioned link
-      # (/ddi-l/server/) is a 404. GitHub Pages serves the root 404.html for
-      # any missing path; this one redirects to the same page under /latest/.
-      - name: Publish the root 404 redirect
-        if: success()
-        run: |
-          git worktree add "$RUNNER_TEMP/gh-pages" gh-pages
-          cp .github/pages/404.html "$RUNNER_TEMP/gh-pages/404.html"
-          cd "$RUNNER_TEMP/gh-pages"
-          git add 404.html
-          if git diff --cached --quiet; then
-            echo "404.html is up to date"
+          TAG_NAME="${TAG_NAME:-$(git describe --tags --abbrev=0)}"
+          PAGES="$RUNNER_TEMP/gh-pages"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if git fetch origin gh-pages:gh-pages; then
+            git worktree add "$PAGES" gh-pages
           else
-            git commit -m "Update the root 404 redirect"
-            git push origin gh-pages
+            git worktree add --orphan -b gh-pages "$PAGES"
+          fi
+          git -C "$PAGES" rm -rq --ignore-unmatch .
+          mkdir -p "$PAGES/latest"
+          cp -R site/. "$PAGES/latest/"
+          cp .github/pages/index.html .github/pages/404.html "$PAGES/"
+          touch "$PAGES/.nojekyll"
+          git -C "$PAGES" add -A
+          if git -C "$PAGES" diff --cached --quiet; then
+            echo "The published site is up to date"
+          else
+            git -C "$PAGES" commit -q -m "Publish the documentation for $TAG_NAME"
+            git -C "$PAGES" push origin gh-pages
           fi

@@ -191,12 +191,27 @@ erDiagram
 Chaque élément reçoit un identifiant DDI (un UUID). Laissez `ddi_id` vide et
 il est dérivé de l'agence, du tableau et de l'`id` de la ligne : recharger les
 mêmes tableaux donne les mêmes identifiants, et une nouvelle importation met
-les éléments à jour au lieu de les dupliquer. Remplissez `ddi_id` avec un
-identifiant existant pour mettre à jour un élément déjà présent dans
-Colectica.
+les éléments à jour au lieu de les dupliquer. Remplissez `ddi_id` pour mettre
+à jour un élément déjà présent dans Colectica, avec au choix :
+
+- son identifiant, comme `4bf610ee-6771-44da-ab0b-00655b53b79b`, ou `VS1.V1`
+  pour un identifiant propre à son schéma ;
+- son URN, comme `urn:ddi:example.org:4bf610ee-6771-44da-ab0b-00655b53b79b:3`.
+  L'agence de l'URN doit être celle des tableaux, et sa version devient celle
+  de l'élément quand la colonne `version` de la ligne est vide.
 
 Chaque élément prend la `version` de `settings`, sauf si sa propre colonne
-`version` en indique une autre.
+`version` en indique une autre. Une version est faite de nombres entiers
+séparés par des points : `1`, `2`, `1.1`.
+
+Chaque valeur est vérifiée à la lecture des tableaux, et une valeur que DDI
+n'accepte pas est signalée avec son fichier, sa ligne et sa colonne, avec tous
+les autres problèmes : un identifiant avec une espace ou plus d'un point, un
+URN d'une autre agence ou auquel il manque une partie, l'ancienne forme d'URN
+qui nomme des types d'objets
+(`urn:ddi:example.org:VariableScheme:VS1:Variable:V1:1`), une version comme
+`v2`, ou deux lignes avec le même identifiant. L'agence et la version de
+`settings`, ou passées en argument, sont vérifiées aussi.
 
 ### Noms et libellés
 
@@ -340,8 +355,8 @@ Tout tableau dont les lignes sont des éléments, sauf `studies`, `groups`,
 | Colonne | Requise | Contenu |
 | --- | --- | --- |
 | `id` | oui | votre clé pour la ligne |
-| `ddi_id` | | un identifiant DDI existant à conserver |
-| `version` | | la version de l'élément, si ce n'est pas celle de `settings` |
+| `ddi_id` | | un identifiant DDI ou un URN existant à conserver |
+| `version` | | la version de l'élément (`1`, `2`, `1.1`), si ce n'est pas celle de `settings` |
 | `name` | | le nom court ; par défaut, l'`id` |
 | `label@<langue>` | | un libellé court, par langue |
 | `description@<langue>` | | une définition plus longue, par langue |
@@ -366,6 +381,10 @@ administrative.
 | `creator` | qui l'a produite : id de `organizations` ou `individuals`, ou noms |
 | `publisher` | qui la diffuse : id ou noms, comme pour `creator` |
 | `publication_date` | la date de publication : `2024`, `2024-05` ou `2024-05-31` |
+| `identifier` | un identifiant pérenne, comme un DOI : `10.1234/abcd` |
+| `identifier_agency` | qui gère l'identifiant : `DOI`, `Handle`, `ARK`... |
+| `copyright@<langue>` | sa mention de droit d'auteur |
+| `license` | la licence sous laquelle elle est publiée, sous forme d'adresse web : `https://creativecommons.org/licenses/by/4.0/` |
 | `kind_of_data` | `Données d'enquête`, `Dossiers administratifs`... |
 | `analysis_unit` | `Personnes`, `Ménages`, `Entreprises`... |
 | `universe` | qui l'étude couvre, en id de `universes` |

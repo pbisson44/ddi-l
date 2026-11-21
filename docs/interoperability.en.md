@@ -242,6 +242,10 @@ The sketch covers names, labels, question text and categories. Codebook files
 vary from tool to tool: check what yours writes (missing values, value types,
 several languages) and add the matching columns, which
 [Load DDI from spreadsheets](spreadsheet-import.en.md) lists.
+[Module 20](curriculum/module-20-codebook-to-lifecycle.en.md) of the course
+converts the codebooks of several waves at once, writing each question and
+code list they repeat only once, with each study's citation, DOI and
+licence.
 
 ## DDI 3.1 and 3.2 tools
 
@@ -288,7 +292,9 @@ The DDI Alliance keeps a catalogue of DDI tools, which you can filter by
 licence, at [ddialliance.org/resources/tools](https://ddialliance.org/resources/tools).
 Before exchanging files with a tool, check which DDI it uses: Codebook,
 Lifecycle 3.x, or the newer Cross-Domain Integration (DDI-CDI), which `ddi-l`
-does not read.
+does not read. [Module 21](curriculum/module-21-ddi-cdi.en.md) of the course
+writes a DDI-CDI description of a study's data with Python's standard
+library.
 
 ## Before you exchange a file
 

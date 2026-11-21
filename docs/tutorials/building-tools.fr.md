@@ -73,7 +73,7 @@ index = instance.build_index()
 ```bash
 ddi validate *.xml
 ddi to-json etude.xml --indent 2
-ddi roundtrip entree.xml sortie.xml
+ddi roundtrip entree.xml --output sortie.xml --layout default
 ```
 
 ## Conseils d'architecture

@@ -16,6 +16,14 @@ description: >-
 
 **Prérequis :** [Module 8](module-08-csv-to-ddi.fr.md).
 
+!!! warning "Installez d'abord"
+    La section 7 lit un fichier CSV avec pandas, que `pip install ddi-l`
+    n'installe pas :
+
+    ```bash
+    pip install pandas
+    ```
+
 **Durée :** 40 min en autonomie / 50 min avec instructeur.
 
 **Nouveau dans ce module :** `doc.add_code_list()`, `doc.code_lists`, `Category`, `doc.add_item()`, `doc.items()`, `item.names[0].text`.
@@ -54,7 +62,7 @@ Utilisez `doc.add_code_list(name=)` pour créer une nouvelle liste de codes.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Census", agency="census.gc.ca")
+doc = ddi.new_study(title="National Census", agency="ca.statcan")
 
 cl_gender = doc.add_code_list(name="Gender Codes")
 cl_employment = doc.add_code_list(name="Employment Status Codes")
@@ -157,16 +165,18 @@ import pandas as pd
 
 df = pd.read_csv("survey_sample.csv")
 
-# Get unique values from the "gender" column
-unique_genders = df["gender"].dropna().unique()
-print(unique_genders)  # -> ['Femme' 'Homme' 'Autre']
+# The distinct values of the "gender" column, sorted
+unique_genders = sorted(df["gender"].dropna().unique())
+print(unique_genders)  # -> ['Autre', 'Femme', 'Homme']
 
-# Create a code list and add one category per unique value
-cl = doc.add_code_list(name="Gender Codes")
+# A study for the survey the file comes from (Module 8), with a code list
+# and one category per distinct value
+doc = ddi.new_study(title="Household Survey", agency="research.org")
+doc.add_code_list(name="Gender Codes")
 for val in unique_genders:
     doc.add_item(Category, name=str(val))
 
-print(f"Categories: {len(doc.items(Category))}")
+print(f"Categories: {len(doc.items(Category))}")  # -> Categories: 3
 ```
 
 L'appel `dropna()` supprime les valeurs manquantes.
@@ -209,7 +219,7 @@ Avec `ddi-l`, vous construisez ces listes de codes de la même manière : une ca
         donc les compter et les comparer directement, au lieu de nettoyer du
         texte libre comme « M », « empl. » ou « travaille ». »
 
-2. **(O2)** Créez une étude de recensement avec le titre « National Census » et l'agence « census.gc.ca ». Ajoutez 3 listes de codes (Gender Codes, Employment Status Codes, Housing Type Codes) et leurs catégories (10 au total). Affichez les compteurs.
+2. **(O2)** Créez une étude de recensement avec le titre « National Census » et l'agence « ca.statcan ». Ajoutez 3 listes de codes (Gender Codes, Employment Status Codes, Housing Type Codes) et leurs catégories (10 au total). Affichez les compteurs.
 
     **Résultat attendu :**
 
@@ -223,7 +233,7 @@ Avec `ddi-l`, vous construisez ces listes de codes de la même manière : une ca
         import ddi_l as ddi
         from ddi_l.models.logicalproduct import Category
 
-        doc = ddi.new_study(title="National Census", agency="census.gc.ca")
+        doc = ddi.new_study(title="National Census", agency="ca.statcan")
 
         doc.add_code_list(name="Gender Codes")
         doc.add_item(Category, name="Male")
@@ -371,7 +381,7 @@ Avec `ddi-l`, vous construisez ces listes de codes de la même manière : une ca
     import ddi_l as ddi
     from ddi_l.models.logicalproduct import Category
 
-    census = ddi.new_study(title="Census", agency="example.org")
+    census = ddi.new_study(title="Census", agency="ca.statcan")
     census.add_code_list(name="Yes/No")
     census.add_item(Category, name="Yes")
     census.add_item(Category, name="No")

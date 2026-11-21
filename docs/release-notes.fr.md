@@ -6,6 +6,167 @@ description: >-
 
 # Notes de version
 
+## 0.2.1
+
+### Ajouts
+
+- **`increment_version()`** donne à un élément sa version suivante : `"1"`
+  devient `"2"`, comme Colectica numérote les versions. C'est
+  `increment_major_version()` sous un nom qui se lit bien pour des versions
+  entières ; les méthodes majeure, mineure et de sous-version restent pour
+  les versions à points.
+- **`StatementItem.set_text(text, lang="en")`** définit le texte qu'une
+  déclaration montre aux répondants, un `d:DisplayText` par langue. Une
+  déclaration créée avec seulement un nom n'affichait rien.
+- **`Loop.set_condition(command, description=...)`** définit le
+  `d:LoopWhile` de la boucle, comme `IfThenElse.set_condition()` définit un
+  `IfCondition`.
+- **Un URN dans la colonne `ddi_id` d'un tableau.** En plus d'un
+  identifiant, `ddi_id` accepte l'URN canonique de l'élément,
+  `urn:ddi:agence:id:version`, tel que Colectica l'affiche. Son agence doit
+  être celle des tableaux, et sa version devient celle de l'élément quand la
+  colonne `version` de la ligne est vide.
+- **L'identifiant, le droit d'auteur et la licence d'une étude dans les
+  tables.** La table `studies` prend `identifier` et `identifier_agency`
+  (un DOI et `DOI`, par exemple), écrits comme `r:InternationalIdentifier`
+  de la citation ; `copyright@<langue>`, écrit comme `r:Copyright` ; et
+  `license`, l'adresse web de la licence, écrite comme `dcterms:license`,
+  le terme Dublin Core que prennent les citations DDI 3.3. Un identifiant
+  sans son agence, ou une agence sans identifiant, est signalé avec sa
+  ligne.
+
+### Corrections
+
+- **Une traduction ajoutée dans le code est un texte de question à part.**
+  `question.question_texts.append(InternationalString(..., lang="fr"))`
+  plaçait le texte français dans le `d:QuestionText` anglais, comme une
+  deuxième partie du même texte. DDI 3.3 répète le `d:QuestionText` entier
+  pour chaque langue : d'autres outils lisaient donc les deux comme une
+  seule question en deux langues. Chaque langue a maintenant son propre
+  `d:QuestionText`. Les parties dans une même langue en partagent toujours
+  un, et les textes de question lus dans un fichier sont écrits tels que lus.
+- **Un module ajouté à un fichier relu reçoit son préfixe habituel.**
+  Ajouter un concept, un univers ou un autre élément dont le fichier ne
+  déclarait pas le module DDI l'écrivait `<ns0:ConceptualComponent
+  xmlns:ns0="...">` avec les moteurs natif et de la bibliothèque standard
+  (lxml écrivait `c:`). Tous les moteurs écrivent maintenant le préfixe que
+  cette bibliothèque donne à ce module dans un nouveau document (`c:`, `d:`,
+  `l:`...). Le XML voulait dire la même chose dans les deux cas.
+- **Un élément retiré d'un fichier relu n'est plus enregistré.** Ouvrir un
+  fichier, puis retirer une liste de codes, une variable ou une catégorie
+  avec `doc.remove()` l'enlevait de `doc.code_lists` (et autres), mais
+  l'enregistrement l'écrivait encore : son schéma en gardait sa propre
+  copie. Un schéma contient maintenant ce que contient la liste. Les
+  questions n'étaient pas touchées.
+- **Une référence à une autre étude du même fichier n'avertit plus.**
+  Enregistrer un groupe dont une étude renvoie à une variable d'une autre de
+  ses études (couplage de données) avertissait que la variable était
+  « absente du document courant », alors que le fichier la contient : chaque
+  étude n'était vérifiée que par rapport à elle-même. Les références sont
+  maintenant vérifiées par rapport à tous les éléments du document, dans les
+  deux sens, et seule une référence à un élément qui n'est dans aucune étude
+  avertit. Les modules 12 et 17 ne disent plus d'attendre l'avertissement.
+- **Une spécification en UTF-16 est lue.** `ddi spec example > spec.yaml`
+  dans Windows PowerShell 5.1 écrit de l'UTF-16 avec une marque d'ordre des
+  octets, que `ddi spec validate` et `load_spec()` refusaient comme « not
+  UTF-8 ». Une spécification en UTF-16 ou UTF-32 avec une marque d'ordre des
+  octets est maintenant lue, comme l'exige YAML 1.2.
+- **Un `ddi_id` ou une version inutilisable est signalé là où il est.** Les
+  tableaux de métadonnées prenaient tout `ddi_id` et toute `version` tels
+  quels : une valeur que DDI n'accepte pas (`my concept`, un URN, `v2`) se
+  chargeait sans rien dire, puis échouait plus tard, à `to_fragment()` ou
+  `to_study()`, en nommant un élément et non sa ligne, et
+  `POST /v1/tables/import` répondait 400. Les deux colonnes, ainsi que
+  l'agence et la version de `settings`, sont maintenant vérifiées à la
+  lecture des tableaux ; chaque valeur inutilisable est signalée avec son
+  fichier, sa ligne et sa colonne, avec tous les autres problèmes
+  (`TableImportError`, ou 422 par HTTP). Deux lignes avec le même `ddi_id`
+  sont signalées aussi.
+- **Un fichier absent est signalé comme absent.** `ddi lint input.xml`,
+  `ddi roundtrip` et `ddi to-json` sur un fichier inexistant affichaient
+  `Error: input.xml` ; ils affichent maintenant `Error: [Errno 2] No such
+  file or directory: 'input.xml'`, comme Python.
+- **Une étude sans questionnaire est écrite.** Des tables avec une ligne
+  dans `studies` mais sans cheminement de questionnaire, comme un
+  dictionnaire de données converti de DDI-Codebook, s'arrêtaient à
+  `to_fragment()` sur « DataCollection requires collection events,
+  instruments, questions, or references » : chaque étude recevait une
+  collecte de données vide, parce que `StudyUnit` en exigeait une. DDI 3.3
+  n'en exige aucune, et une étude construite avec `new_study()` s'écrivait
+  déjà sans. Un `StudyUnit` n'a plus besoin de collecte de données, et les
+  tables n'en donnent une à une étude que si son questionnaire en a besoin.
+- **Le libellé d'un fichier de données nomme aussi sa relation de
+  données.** Le `label` d'une ligne de `datasets` allait seulement à
+  l'enregistrement logique du fichier : `ddi lint` signalait donc sans
+  libellé la relation de données qui contient l'enregistrement, et aucune
+  colonne ne pouvait y remédier. Les deux portent maintenant le libellé et
+  la description.
+
+### Documentation
+
+- **Le module 7** enregistre le JSON avec `ddi to-json --output` (Windows
+  PowerShell 5.1 écrit de l'UTF-16 avec `>`), fait l'aller-retour de
+  `my-study.xml` plutôt que d'un `input.xml` que le lecteur n'a pas, et dit
+  qu'un aller-retour réécrit le fichier tel que lu : `--layout default` le
+  normalise. Trois tutoriels écrivaient `ddi roundtrip ENTRÉE SORTIE`, qui
+  lit `SORTIE` comme une deuxième entrée ; ils utilisent `--output`.
+- **Les modules 8, 9, 16 et 17** commencent par un encadré « Installez
+  d'abord » quand ils demandent plus que `pip install ddi-l` : l'extra
+  `spec`, ou pandas. Le module 16 écrit sa spécification d'exemple avec
+  `ddi spec example --output`.
+- **Dans le module 10**, la déclaration d'accueil affiche son texte, et la
+  boucle de la liste du ménage dit combien de temps elle se répète. Une note
+  précise que les noms d'une condition (`age`) ne sont liés aux questions
+  qu'au module 16.
+- **Le module 17** exporte le JSON de la piste B avec `ddi to-json --output`,
+  et son script de validation de la piste D existe aussi en PowerShell
+  (`validate.ps1`), pour les lecteurs sous Windows.
+- **Deux modules facultatifs.** Le module 18 compare exactement des filtres
+  avec l'extra `logic` (`decide()`, `evaluate()`), et le module 19 fait
+  tourner `ddi-l` comme service HTTP avec l'extra `server` ; ses commandes
+  existent pour Windows PowerShell et pour macOS et Linux. Le module 16 ne
+  dit plus que `not PetAge > 10` et `PetAge <= 10 or missing(PetAge)` sont
+  pareils : ils diffèrent pour une réponse « ne sait pas ».
+- **Deux autres modules facultatifs, sur les autres normes DDI.** Le
+  module 20 convertit en DDI-Lifecycle les fichiers DDI-Codebook de
+  plusieurs cycles, par les tables de métadonnées, en écrivant une seule
+  fois chaque question, liste de codes et univers que les livres de codes
+  répètent, pour que chaque cycle renvoie aux mêmes éléments ; il reprend le
+  DOI de chaque cycle et ajoute une licence lisible par un programme, une
+  trace de la conversion et des libellés. Le module 21 décrit les données d'une étude en DDI-CDI
+  1.0 (domaines de valeurs, listes de codes, structure de données large) et
+  les valide selon le schéma de la DDI Alliance avec
+  `xmlschema.XMLSchema11`. La page d'interopérabilité renvoie aux deux.
+- **Les versions s'enseignent en nombres entiers.** Le module 15 donne à un
+  élément sa version suivante avec `increment_version()` (1, 2, 3) et garde
+  majeure, mineure et correctif pour une courte section sur les versions à
+  points ; l'ampleur d'un changement va dans la justification. Les pistes du
+  module 17 passent de la version 1 à 2 (et 3 dans la piste D) au lieu de
+  forcer `1.1` avec `allow_dotted=True` : leurs fichiers sont
+  `thesis-v2.xml`, `health-survey-v2.xml`, `census-v2.xml` et
+  `census-v3.xml`. L'aide-mémoire et le guide Colectica suivent.
+- **Une liste et deux liens.** Dans la page sur la conformité à une
+  spécification, la liste des conditions écrites en code d'outil s'affichait
+  comme un seul paragraphe ; c'est de nouveau une liste. Deux liens français
+  vers une section de la même page (module 15 et page de l'API HTTP)
+  fonctionnent maintenant aussi sur GitHub et dans les éditeurs, qui gardent
+  les accents dans l'ancre d'un titre.
+- **Le site ne montre que la dernière version.** Le menu des versions
+  disparaît : une version publie sa documentation et retire les plus
+  anciennes, et les poussées sur `main` ne publient plus de copie `dev`. Un
+  lien vers une ancienne version, ou vers `dev`, ouvre la même page dans la
+  dernière version.
+- **Un nouveau visage, et un site où naviguer.** La documentation est
+  construite avec Zensical. La page d'accueil présente d'abord ce que fait
+  `ddi-l`, un démarrage rapide et une entrée vers chaque partie du site ; les
+  guides pratiques et la référence ont leur propre page d'accueil, et les
+  guides sont regroupés par tâche. Les pages s'ouvrent sans recharger tout le
+  site, et une barre en haut annonce les nouveautés. Le thème suit le réglage
+  clair ou sombre du système jusqu'à ce que le lecteur en choisisse un, et le
+  contraste élevé suit désormais lui aussi le réglage du système, au lieu
+  d'une palette choisie dans un menu. Le schéma de l'articulation d'une étude
+  est passé de la page d'accueil au guide d'utilisation.
+
 ## 0.2.0
 
 ### Changements de comportement
@@ -782,7 +943,7 @@ description: >-
   deux moteurs XML chaque fois. L'intégration continue fixe uv 0.13.7, la
   première série d'uv qui installe 3.15.
 - **Une commande fixe la version.** `scripts/set_version.py 0.3.0` (ou
-  `patch`, `minor`, `major`) écrit la version dans les 11 fichiers qui
+  `patch`, `minor`, `major`) écrit la version dans les 9 fichiers qui
   l'indiquent, avec la date de publication et l'année des citations, puis
   lance `uv lock` ; il n'écrit rien tant que chaque fichier ne correspond
   pas. Un test échoue quand un autre fichier se met à indiquer la version.

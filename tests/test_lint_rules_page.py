@@ -1,12 +1,13 @@
 """The lint rule reference page is generated from the rule registry.
 
-``hooks/lint_rules.py`` replaces the marker on ``lint-rules.<lang>.md`` with
+``scripts/docs_lint_rules.py`` renders the marker on ``lint-rules.<lang>.md`` with
 every registered rule, so the page cannot omit a rule or drift from its code.
 """
 
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 import pytest
@@ -15,7 +16,7 @@ from ddi_l.lint import iter_rule_metadata
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS = PROJECT_ROOT / "docs"
-HOOK = PROJECT_ROOT / "hooks" / "lint_rules.py"
+HOOK = PROJECT_ROOT / "scripts" / "docs_lint_rules.py"
 
 pytestmark = pytest.mark.skipif(
     not DOCS.is_dir() or not HOOK.is_file(), reason="docs/ is not shipped in the sdist"
@@ -56,27 +57,24 @@ def test_both_pages_carry_the_marker() -> None:
         assert hook.MARKER in text
 
 
-def test_the_hook_only_touches_its_page() -> None:
+def test_staging_fills_the_marker_in_the_page_language(tmp_path) -> None:
+    """scripts/docs.py renders the rules into the staged page, in its language."""
     hook = _hook()
+    page = tmp_path / "lint-rules.fr.md"
+    page.write_text(f"intro\n\n{hook.MARKER}\n", encoding="utf-8")
+    sys.path.insert(0, str(HOOK.parent))
+    try:
+        spec = importlib.util.spec_from_file_location(
+            "docs_script", HOOK.parent / "docs.py"
+        )
+        assert spec is not None and spec.loader is not None
+        docs = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(docs)
+    finally:
+        sys.path.remove(str(HOOK.parent))
 
-    class _File:
-        def __init__(self, src_uri: str) -> None:
-            self.src_uri = src_uri
+    staged = docs._page_text(page, "fr")
 
-    class _Page:
-        def __init__(self, src_uri: str) -> None:
-            self.file = _File(src_uri)
-
-    class _Config:
-        theme = {"language": "en"}
-
-    markdown = f"intro\n\n{hook.MARKER}\n"
-    other = hook.on_page_markdown(
-        markdown, page=_Page("validation.en.md"), config=_Config(), files=None
-    )
-    assert other == markdown
-    page = hook.on_page_markdown(
-        markdown, page=_Page("lint-rules.fr.md"), config=_Config(), files=None
-    )
-    assert hook.MARKER not in page
-    assert "Profil par défaut" in page
+    assert hook.MARKER not in staged
+    assert staged.startswith("intro\n\n")
+    assert "Profil par défaut" in staged

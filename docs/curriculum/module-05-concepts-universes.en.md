@@ -56,7 +56,7 @@ The method returns a concept object that you can use later.
 ```python
 import ddi_l as ddi
 
-doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
 demo = doc.add_concept(name="Demographics")
 activity = doc.add_concept(name="Physical Activity")
@@ -171,7 +171,7 @@ sentence that explains what a universe describes.
     "Adults aged 18+ in Canada".
 
 **Exercise 2 (O2).** Create a document with the title "National Health
-Survey" and the agency "health.gc.ca". Add three concepts (Demographics,
+Survey" and the agency "ca.healthcan". Add three concepts (Demographics,
 Physical Activity, Nutrition) and one universe (Adults aged 18+ in Canada).
 Keep each concept in a Python variable: you link to them in Exercise 3.
 Print the counts.
@@ -187,7 +187,7 @@ Universes: 1
     ```python
     import ddi_l as ddi
 
-    doc = ddi.new_study(title="National Health Survey", agency="health.gc.ca")
+    doc = ddi.new_study(title="National Health Survey", agency="ca.healthcan")
 
     demo = doc.add_concept(name="Demographics")
     activity = doc.add_concept(name="Physical Activity")

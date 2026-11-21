@@ -173,13 +173,14 @@ item = doc.add_variable(name="age")  # or any DDI item
 # Read the current version
 print(item.version)  # "1": newly created items start at "1"
 
-# Set a three-part version if you want major/minor/patch semantics
-item.version = "1.0.0"
+# Give it its next version
+item.increment_version()  # 1 → 2
 
-# Bump the version
+# Only if your organization uses dotted versions (major.minor.patch)
+item.version = "1.0.0"
 item.increment_major_version()  # 1.0.0 → 2.0.0
-item.increment_minor_version()  # 1.0.0 → 1.1.0
-item.increment_subversion()  # 1.0.0 → 1.0.1
+item.increment_minor_version()  # 2.0.0 → 2.1.0
+item.increment_subversion()  # 2.1.0 → 2.1.1
 
 # Record why you changed something
 from ddi_l.models.base import VersionRationale, InternationalString
@@ -197,9 +198,9 @@ Edit an item that is already in the file, then version it (see Module 15, sectio
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
 question.question_texts[0].text = "In a typical week, do you work from home?"
-question.increment_subversion()
+question.increment_version()
 variable.set_coded(new_code_list)  # switch to another code list
-variable.increment_major_version()
+variable.increment_version()
 
 # After a version bump, point references at the new version
 variable.question_references = [
@@ -248,16 +249,18 @@ section_c = doc.add_item(Sequence, name="Section C")
 
 # Branch: run section A if true, section C if false
 gate = doc.add_item(IfThenElse, name="Age gate")
+gate.set_condition("age >= 18")
 gate.then_construct_reference = section_a.to_reference()
 gate.else_construct_reference = section_c.to_reference()
 
 # Show a message; tie the whole thing together with an Instrument
-doc.add_item(StatementItem, name="Welcome to the survey")
+doc.add_item(StatementItem, name="Welcome").set_text("Welcome to the survey")
 doc.add_item(Instrument, name="Survey Instrument")
 ```
 
 `Loop` works the same way (`doc.add_item(Loop, name="...")`), with its
-repeated section set via `loop.control_construct_reference`. See
+repeated section set via `loop.control_construct_reference` and how long it
+repeats via `loop.set_condition(...)`. See
 [Module 10](module-10-questionnaire-flows.en.md) for the full worked example.
 
 ---
@@ -403,19 +406,12 @@ doc.add_translation_information(
 v_age = doc.add_variable(name="age", question=q_age)
 
 # Derived variable, linked to its source variable(s)
-from ddi_l.models.base import Reference
-
 v_age_group = doc.add_variable(name="age_group")
-v_age_group.source_variable_references = [
-    Reference(agency="health.gc.ca", identifier=v_age.identifier, version="1"),
-]
+v_age_group.source_variable_references = [v_age.to_reference()]
 
 # Multi-source derivation
 v_bmi = doc.add_variable(name="bmi")
-v_bmi.source_variable_references = [
-    Reference(agency="health.gc.ca", identifier=v_height.identifier, version="1"),
-    Reference(agency="health.gc.ca", identifier=v_weight.identifier, version="1"),
-]
+v_bmi.source_variable_references = [v_height.to_reference(), v_weight.to_reference()]
 ```
 
 ---
@@ -428,10 +424,9 @@ correspond, and linked variables trace back to both sources.
 
 ```python
 import ddi_l as ddi
-from ddi_l.models.base import Reference
 
 # Source 1: survey (the primary study)
-doc = ddi.new_study(title="Survey", agency="statcan.gc.ca")
+doc = ddi.new_study(title="Survey", agency="ca.statcan")
 survey_key = doc.add_variable(name="anon_id")
 survey_key.set_property("linkage_role", "key")  # tag the common key
 survey_health = doc.add_variable(name="health_rating")
@@ -455,13 +450,13 @@ cmp.set_property("match_rate", "0.94")
 # Linked variable: provenance to BOTH sources
 linked = doc.add_variable(name="health_by_hospital_use")
 linked.source_variable_references = [
-    Reference(agency="statcan.gc.ca", identifier=survey_health.identifier, version="1"),
-    Reference(agency="statcan.gc.ca", identifier=admin_visits.identifier, version="1"),
+    survey_health.to_reference(),
+    admin_visits.to_reference(),
 ]
 ```
 
-Cross-study `source_variable_references` warn on save. That is expected for
-linkage. See [Module 12](module-12-data-linkage.en.md).
+A reference to a variable of the other study is checked against the whole
+file, so saving does not warn. See [Module 12](module-12-data-linkage.en.md).
 
 ---
 
@@ -530,6 +525,8 @@ Run these in your terminal.
 | `ddi versions file.xml` | Show version info from the file |
 | `ddi spec validate spec.yaml` | Check a questionnaire spec ([Module 16](module-16-advanced-questionnaire-spec.en.md)) |
 | `ddi conform file.xml --spec spec.yaml` | Compare an instrument with its spec |
+| `ddi conform file.xml --spec spec.yaml --semantics syntactic` | Compare gates by normal form only, as without the `logic` extra ([Module 18](module-18-exact-gates.en.md)) |
+| `ddi serve` | Run the HTTP service on this machine, port 8000 ([Module 19](module-19-http-api.en.md)) |
 
 Exit code `0` means success. Exit code `1` means failure.
 
@@ -699,7 +696,7 @@ from ddi_l.lint import LintFinding
 
 | Class / Function | When you need it |
 | ----------------- | ----------------- |
-| `run_lint()` | Run best-practice checks on a document |
+| `run_lint()` | Run best-practice checks on a document or a fragment |
 | `LintFinding` | One finding from a lint check |
 
 ### Namespaces: `ddi_l.namespaces`
@@ -780,7 +777,7 @@ q = doc.add_question(text="What is your email address?")
 doc.add_variable(name="Email", question=q)
 
 study = doc.study_unit
-study.increment_minor_version(allow_dotted=True)
+study.increment_version()
 study.version_rationales.append(
     VersionRationale(
         descriptions=[InternationalString(text="Added email question for wave 2")]
@@ -810,3 +807,6 @@ done
 - [CLI recipes](../cli-recipes.en.md): All command-line examples
 - [Models reference](../models.en.md): Advanced model layer
 - [Training modules](index.en.md): Step-by-step curriculum
+- Other DDI standards: [Module 20](module-20-codebook-to-lifecycle.en.md)
+  converts DDI-Codebook with reuse in mind, [Module 21](module-21-ddi-cdi.en.md)
+  writes DDI-CDI

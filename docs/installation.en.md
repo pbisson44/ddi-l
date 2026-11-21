@@ -53,8 +53,8 @@ your work matches its "Install it when" column; combine them as
 | Extra | Install it when | What it adds |
 | --- | --- | --- |
 | `spec` | You check questionnaires against a spec: `ddi spec`, `ddi conform`, or a YAML or JSON spec read in Python. | PyYAML and jsonschema; see [Check a questionnaire against a spec](spec-conformance.en.md). Without it, `ddi spec` and `ddi conform` say what to install. |
-| `logic` | You want gates compared exactly: `equivalent()` and `ddi conform` then decide whether two gates hold for the same respondents and name a respondent who tells them apart, and lint reports constructs no respondent reaches. | The Z3 solver (MIT, about 57 MB installed); see [Check a questionnaire against a spec](spec-conformance.en.md). Without it, gates are compared as written. |
-| `server` | You run the HTTP API, `ddi serve`. | Litestar and uvicorn; see [HTTP API](server.en.md). Without it, `ddi serve` says what to install. |
+| `logic` | You want gates compared exactly: `equivalent()` and `ddi conform` then decide whether two gates hold for the same respondents and name a respondent who tells them apart, and lint reports constructs no respondent reaches. | The Z3 solver (MIT, about 57 MB installed); see [Check a questionnaire against a spec](spec-conformance.en.md), or learn it in the optional [Module 18](curriculum/module-18-exact-gates.en.md). Without it, gates are compared as written. |
+| `server` | You run the HTTP API, `ddi serve`. | Litestar and uvicorn; see [HTTP API](server.en.md), or learn it in the optional [Module 19](curriculum/module-19-http-api.en.md). Without it, `ddi serve` says what to install. |
 | `full` | Your platform has no compiled native core (Alpine Linux, Windows on ARM, PyPy, free-threaded Python), or you mostly write new documents laid out from scratch (`layout="default"`), which lxml writes faster. | lxml, used when the native core is not there; set `DDI_L_XML_BACKEND=lxml` to use it anyway. |
 
 ### XML backends

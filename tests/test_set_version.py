@@ -25,6 +25,8 @@ pytestmark = pytest.mark.skipif(
 NOT_SET = {
     "uv.lock",  # re-locked by `uv lock`
     "SECURITY.md",  # its table changes by hand when a series starts
+    "docs/release-notes.en.md",  # history; headings are written by hand
+    "docs/release-notes.fr.md",
     "tests/test_lint_default_pinned.py",  # says what a past release changed
 }
 
@@ -85,8 +87,6 @@ def test_a_new_version_reaches_every_file() -> None:
         assert "(Version 9.8.7)" in texts[page]
     for page in ("docs/index.en.md", "docs/index.fr.md"):
         assert "  year    = {2031},\n  version = {9.8.7},\n" in texts[page]
-    assert "\n## 9.8.7 (unreleased)\n" in texts["docs/release-notes.en.md"]
-    assert "\n## 9.8.7 (non publiée)\n" in texts["docs/release-notes.fr.md"]
 
 
 def _copy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> list[list[str]]:
@@ -124,7 +124,7 @@ def test_nothing_is_written_unless_every_file_matches(
 ) -> None:
     commands = _copy(tmp_path, monkeypatch)
     readme = tmp_path / "README.md"
-    readme.write_text(readme.read_text(encoding="utf-8").replace("(Version ", "(v"))
+    readme.write_bytes(readme.read_bytes().replace(b"(Version ", b"(v"))
     before = {path: _read(tmp_path / path) for path in set_version.FILES}
 
     assert set_version.main(["9.8.7"]) == 1

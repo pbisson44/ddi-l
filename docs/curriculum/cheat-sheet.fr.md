@@ -177,13 +177,14 @@ item = doc.add_variable(name="age")  # ou n'importe quel élément DDI
 # Lire la version actuelle
 print(item.version)  # "1" : les éléments créés démarrent à "1"
 
-# Définir une version en trois parties si vous voulez majeur/mineur/correctif
-item.version = "1.0.0"
+# Lui donner sa version suivante
+item.increment_version()  # 1 → 2
 
-# Incrémenter la version
+# Seulement si votre organisation utilise des versions à points (majeur.mineur.correctif)
+item.version = "1.0.0"
 item.increment_major_version()  # 1.0.0 → 2.0.0
-item.increment_minor_version()  # 1.0.0 → 1.1.0
-item.increment_subversion()  # 1.0.0 → 1.0.1
+item.increment_minor_version()  # 2.0.0 → 2.1.0
+item.increment_subversion()  # 2.1.0 → 2.1.1
 
 # Documenter pourquoi vous avez fait un changement
 from ddi_l.models.base import VersionRationale, InternationalString
@@ -205,9 +206,9 @@ Modifier un élément déjà présent dans le fichier, puis le versionner (voir 
 <!-- docs-test: skip -- fragment: `question`, `variable` and `new_code_list` are the reader's own items -->
 ```python
 question.question_texts[0].text = "In a typical week, do you work from home?"
-question.increment_subversion()
+question.increment_version()
 variable.set_coded(new_code_list)  # passer à une autre liste de codes
-variable.increment_major_version()
+variable.increment_version()
 
 # Après une augmentation de version, pointer les références vers la nouvelle version
 variable.question_references = [
@@ -256,16 +257,20 @@ section_c = doc.add_item(Sequence, name="Section C")
 
 # Branchement : section A si vrai, section C si faux
 porte = doc.add_item(IfThenElse, name="Filtre d'age")
+porte.set_condition("age >= 18")
 porte.then_construct_reference = section_a.to_reference()
 porte.else_construct_reference = section_c.to_reference()
 
 # Afficher un message ; tout relier avec un Instrument
-doc.add_item(StatementItem, name="Bienvenue a l'enquete")
+doc.add_item(StatementItem, name="Bienvenue").set_text(
+    "Bienvenue à l'enquête", lang="fr"
+)
 doc.add_item(Instrument, name="Instrument d'enquete")
 ```
 
 `Loop` fonctionne de la même façon (`doc.add_item(Loop, name="...")`), avec
-sa section répétée définie via `loop.control_construct_reference`. Voir le
+sa section répétée définie via `loop.control_construct_reference` et sa durée
+via `loop.set_condition(...)`. Voir le
 [Module 10](module-10-questionnaire-flows.fr.md) pour l'exemple complet.
 
 ---
@@ -407,19 +412,12 @@ doc.add_translation_information(
 v_age = doc.add_variable(name="age", question=q_age)
 
 # Variable dérivée, liée à ses variable(s) source
-from ddi_l.models.base import Reference
-
 v_groupe_age = doc.add_variable(name="groupe_age")
-v_groupe_age.source_variable_references = [
-    Reference(agency="stats.exemple.org", identifier=v_age.identifier, version="1"),
-]
+v_groupe_age.source_variable_references = [v_age.to_reference()]
 
 # Dérivation multi-sources
 v_imc = doc.add_variable(name="imc")
-v_imc.source_variable_references = [
-    Reference(agency="stats.exemple.org", identifier=v_taille.identifier, version="1"),
-    Reference(agency="stats.exemple.org", identifier=v_poids.identifier, version="1"),
-]
+v_imc.source_variable_references = [v_taille.to_reference(), v_poids.to_reference()]
 ```
 
 ---
@@ -433,10 +431,9 @@ couplées remontent vers les deux sources.
 
 ```python
 import ddi_l as ddi
-from ddi_l.models.base import Reference
 
 # Source 1 : enquête (l'étude primaire)
-doc = ddi.new_study(title="Survey", agency="statcan.gc.ca")
+doc = ddi.new_study(title="Survey", agency="ca.statcan")
 survey_key = doc.add_variable(name="anon_id")
 survey_key.set_property("linkage_role", "key")  # étiqueter la clé commune
 survey_health = doc.add_variable(name="health_rating")
@@ -460,13 +457,13 @@ cmp.set_property("match_rate", "0.94")
 # Variable couplée : provenance vers LES DEUX sources
 linked = doc.add_variable(name="health_by_hospital_use")
 linked.source_variable_references = [
-    Reference(agency="statcan.gc.ca", identifier=survey_health.identifier, version="1"),
-    Reference(agency="statcan.gc.ca", identifier=admin_visits.identifier, version="1"),
+    survey_health.to_reference(),
+    admin_visits.to_reference(),
 ]
 ```
 
-Les `source_variable_references` inter-études émettent un avertissement à
-l'enregistrement. C'est attendu pour le couplage. Voir
+Une référence à une variable de l'autre étude est vérifiée par rapport à tout
+le fichier : l'enregistrement n'émet donc pas d'avertissement. Voir
 [Module 12](module-12-data-linkage.fr.md).
 
 ---
@@ -535,6 +532,8 @@ Exécutez ces commandes dans votre terminal.
 | `ddi versions fichier.xml` | Afficher les informations de version du fichier |
 | `ddi spec validate spec.yaml` | Vérifier une spécification de questionnaire ([Module 16](module-16-advanced-questionnaire-spec.fr.md)) |
 | `ddi conform fichier.xml --spec spec.yaml` | Comparer un instrument à sa spécification |
+| `ddi conform fichier.xml --spec spec.yaml --semantics syntactic` | Comparer les filtres par forme normale seulement, comme sans l'extra `logic` ([Module 18](module-18-exact-gates.fr.md)) |
+| `ddi serve` | Faire tourner le service HTTP sur cette machine, port 8000 ([Module 19](module-19-http-api.fr.md)) |
 
 Le code de sortie `0` signifie succès. Le code de sortie `1` signifie échec.
 
@@ -705,7 +704,7 @@ from ddi_l.lint import LintFinding
 
 | Classe / Fonction | Quand vous en avez besoin |
 | ------------------- | -------------------------- |
-| `run_lint()` | Exécuter des vérifications de bonnes pratiques sur un document |
+| `run_lint()` | Exécuter des vérifications de bonnes pratiques sur un document ou un fragment |
 | `LintFinding` | Un constat d'une vérification lint |
 
 ### Espaces de noms : `ddi_l.namespaces`
@@ -790,7 +789,7 @@ q = doc.add_question(text="Quelle est votre adresse courriel ?")
 doc.add_variable(name="Courriel", question=q)
 
 study = doc.study_unit
-study.increment_minor_version(allow_dotted=True)
+study.increment_version()
 study.version_rationales.append(
     VersionRationale(
         descriptions=[
@@ -822,3 +821,6 @@ done
 - [Recettes CLI](../cli-recipes.fr.md) : Tous les exemples en ligne de commande
 - [Référence des modèles](../models.fr.md) : Couche de modèles avancée
 - [Modules de formation](index.fr.md) : Programme pas à pas
+- Autres normes DDI : le [Module 20](module-20-codebook-to-lifecycle.fr.md)
+  convertit du DDI-Codebook en pensant à la réutilisation, le
+  [Module 21](module-21-ddi-cdi.fr.md) écrit du DDI-CDI

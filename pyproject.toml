@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "ddi-l"
-version = "0.2.0"
+version = "0.2.1"
 description = "Python toolkit for DDI Lifecycle XML: read, author, validate and lint DDI 3.1, 3.2 and 3.3"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -52,7 +52,7 @@ dependencies = [
   # The native XML core, at ddi-l's own version. A compiled wheel where one
   # fits; elsewhere a pure-Python stand-in (native/fallback), and ddi-l uses
   # lxml or the standard library. Nothing is ever compiled at install time.
-  "ddi-l-native==0.2.0",
+  "ddi-l-native==0.2.1",
 ]
 
 [project.urls]
@@ -87,13 +87,13 @@ logic = [
 # uv.lock pins the versions CI and the deploy use; the major-version caps
 # mean a new major is adopted deliberately.
 docs = [
-  "mkdocs>=1.5,<2",
-  "mkdocs-material>=9.7.7,<10",
+  # Zensical builds each language of the site; scripts/docs.py stages the
+  # pages and runs it. 0.x releases can change behaviour, so the cap is the
+  # next minor.
+  "zensical>=0.1.2,<0.2",
   "pymdown-extensions>=10",
-  "mkdocs-static-i18n>=1.2",
-  "mike>=2.0",
-  # Generates the API reference from the docstrings.
-  "mkdocstrings[python]>=0.26",
+  # Generates the API reference from the docstrings; Zensical runs it.
+  "mkdocstrings-python>=1.10",
 ]
 
 # ruff, mypy and mutmut are pinned exactly because new releases change what
@@ -170,6 +170,12 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint.isort]
+# Stated rather than guessed from the folders on disk, so `ruff check --fix`
+# sorts imports the same way on every machine.
+known-first-party = ["ddi_l"]
+known-third-party = ["lxml"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["D", "E501", "RUF012", "N806", "N813", "SIM117", "B017", "SIM105", "E402", "RUF043"]
 "codegen/**" = ["D", "E501", "N806", "SIM105"]
@@ -193,7 +199,13 @@ exclude = [
     "codegen/",
     "demo/",
     "benchmarks/",
-    "hooks/",
+    # `mypy src tests` never reaches these; `mypy .` would. native/ holds two
+    # copies of `ddi_l_native` (the extension's and the stand-in), mutants/
+    # is mutation-testing output, module/ is scratch from the tutorials
+    # (ignored by git too).
+    "^native/",
+    "^mutants/",
+    "^module/",
 ]
 
 # The fixture generator, moved out of src/ddi_l/examples/, which mypy skips;
@@ -205,6 +217,13 @@ ignore_errors = true
 # z3-solver ships no type information.
 [[tool.mypy.overrides]]
 module = "z3"
+ignore_missing_imports = true
+
+# lxml ships no type information either. Said here rather than at each
+# import, so mypy agrees on every platform: on Windows it reports lxml.etree
+# as not found where Linux reports it as untyped.
+[[tool.mypy.overrides]]
+module = ["lxml", "lxml.*"]
 ignore_missing_imports = true
 
 # The native extension is untyped (and only a stand-in in this repository);

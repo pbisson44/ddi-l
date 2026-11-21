@@ -18,7 +18,7 @@ from ..constants import (
     REUSABLE_NS,
     STUDY_UNIT_NS,
 )
-from ..exceptions import DDIReferenceWarning, ModelValidationError
+from ..exceptions import DDIReferenceWarning
 from ..namespaces import build_namespace_map
 from ._generated.studyunit import StudyUnitFields
 from .archive import Archive
@@ -29,6 +29,7 @@ from .base import (
     Reference,
     UserAttributePair,
     UserID,
+    ValidationContext,
     VersionRationale,
     clone_element,
     qn,
@@ -179,14 +180,10 @@ class StudyUnit(StudyUnitFields):
     )
 
     def validate(self) -> None:
+        # A study without a data collection is valid DDI 3.3: a data
+        # dictionary converted from DDI-Codebook has variables and questions
+        # but no questionnaire.
         super().validate()
-        has_data_collections = bool(self.data_collections)
-        has_data_collection_references = bool(self.data_collection_references)
-        if not (has_data_collections or has_data_collection_references):
-            raise ModelValidationError(
-                "StudyUnit requires at least one DataCollection"
-                " or DataCollectionReference before serialization."
-            )
         self._assert_unique_children(
             self.data_collections, child_label="DataCollection"
         )
@@ -458,7 +455,12 @@ class StudyUnit(StudyUnitFields):
             nsmap[None] = STUDY_UNIT_NS
         return nsmap
 
-    def to_xml(self, *, validate_refs: bool = True) -> Element:
+    def to_xml(
+        self,
+        *,
+        validate_refs: bool = True,
+        context: ValidationContext | None = None,
+    ) -> Element:
         """Serialize to XML, optionally validating cross-references first.
 
         When ``validate_refs`` is ``True`` every `Reference` in the
@@ -468,6 +470,8 @@ class StudyUnit(StudyUnitFields):
 
         Args:
             validate_refs: Whether to check cross-references first.
+            context: What references may point at, when more than the study:
+                a document passes every item it holds.
 
         Returns:
             XML Element representation.
@@ -476,7 +480,7 @@ class StudyUnit(StudyUnitFields):
             self.validate()
 
         if validate_refs:
-            unresolved = self.validate_tree()
+            unresolved = self.validate_tree(context)
             if unresolved:
                 warn_at_caller(DDIReferenceWarning(unresolved))
 

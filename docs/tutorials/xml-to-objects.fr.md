@@ -51,7 +51,7 @@ doc.save("mon-etude-mise-a-jour.xml")
 ## 5. Aller-retour par CLI
 
 ```bash
-ddi roundtrip mon-etude.xml sortie.xml --validate
+ddi roundtrip mon-etude.xml --output sortie.xml --validate
 ```
 
 ## Prochaines étapes

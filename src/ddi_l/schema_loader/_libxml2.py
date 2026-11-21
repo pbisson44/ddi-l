@@ -21,7 +21,7 @@ _UNAVAILABLE = object()
 
 def _compile(version: str) -> Any:
     try:
-        from lxml import etree  # type: ignore[import-untyped]
+        from lxml import etree
     except ModuleNotFoundError:  # pragma: no cover - depends on the `full` extra
         return _UNAVAILABLE
     resource = _schema_resource(version)
@@ -84,7 +84,7 @@ def clear() -> None:
 def available() -> bool:
     """Return whether lxml is installed."""
     try:
-        import lxml.etree  # type: ignore[import-untyped]  # noqa: F401
+        import lxml.etree  # noqa: F401
     except ModuleNotFoundError:  # pragma: no cover - depends on the `full` extra
         return False
     return True

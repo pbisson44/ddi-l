@@ -13,14 +13,14 @@ description: >-
     - **O1.** Ouvrir un fichier DDI existant, ajouter et retirer des
       éléments, et enregistrer le résultat sous un nouveau nom pour que
       l'ancien fichier reste inchangé.
-    - **O2.** Choisir une augmentation majeure, mineure ou de sous-version
-      pour un changement décrit, et prédire le numéro de version qu'elle
-      donne.
+    - **O2.** Donner sa version suivante à un élément modifié (`1` devient
+      `2`), prédire le numéro qu'il reçoit, et expliquer pourquoi `ddi-l` ne
+      transforme pas `1` en `1.1` à moins que vous ne le demandiez.
     - **O3.** Consigner une justification de version et une responsabilité
       de version sur l'élément que vous avez modifié.
     - **O4.** Modifier le libellé d'une question dans toutes ses langues, lui
-      donner une sous-version, et faire pointer la variable qui y renvoie vers
-      sa nouvelle version pour que `doc.lint()` ne signale aucune erreur.
+      donner une nouvelle version, et faire pointer la variable qui y renvoie
+      vers sa nouvelle version pour que `doc.lint()` ne signale aucune erreur.
     - **O5.** Faire passer une variable à une autre liste de codes avec
       `set_coded()`, vérifier quelle liste elle utilise maintenant, et lui
       donner une nouvelle version avec une justification.
@@ -29,10 +29,11 @@ description: >-
 
 **Durée :** 65 min en autonomie / 75 min avec instructeur.
 
-**Nouveau dans ce module :** `increment_major_version()`,
-`increment_minor_version()`, `increment_subversion()`, `allow_dotted=True`,
-`VersionRationale`, `version_rationales`, `version_responsibility`,
-`to_reference()`, `set_coded()`.
+**Nouveau dans ce module :** `increment_version()`, `VersionRationale`,
+`version_rationales`, `version_responsibility`, `to_reference()`,
+`set_coded()` ; pour les versions pointées seulement,
+`increment_major_version()`, `increment_minor_version()`,
+`increment_subversion()` et `allow_dotted=True`.
 
 ---
 
@@ -47,7 +48,7 @@ Quand vous modifiez un document, vous devez répondre à deux questions :
 2. **Pourquoi cela a-t-il changé ?** Quelle était la raison de la mise à jour ?
 
 Le **versionnement** consiste à donner à chaque copie d'un document un numéro
-(comme « 1.0.0 » ou « 2.1.0 ») pour pouvoir les distinguer. C'est comme
+(1, 2, 3...) pour pouvoir les distinguer. C'est comme
 enregistrer une rédaction scolaire sous « redaction-v1 », « redaction-v2 » et
 « redaction-v3 ». Chaque version est une photo à un moment donné.
 
@@ -73,7 +74,7 @@ l'an dernier ; si vous avez déjà un fichier DDI, ouvrez le vôtre et sautez-le
 import ddi_l as ddi
 
 # Stand-in for last year's file
-last_year = ddi.new_study(title="Labour Force Survey 2023", agency="example.org")
+last_year = ddi.new_study(title="Labour Force Survey 2023", agency="ca.statcan")
 last_year.add_question(text="Do you use a fax machine at work?")
 last_year.save("lfs-2023.xml")
 
@@ -107,14 +108,10 @@ deux années, ou revenir en arrière.
 
 ## 3. Les numéros de version
 
-Chaque élément DDI possède un champ **version**. Une version est une chaîne de
-chiffres séparés par des points, comme `"1.0.0"`. Les trois parties sont :
-
-| Partie  | Position  | Signification            | Exemple       |
-| ------- | --------- | ------------------------ | ------------- |
-| Majeure | Première  | Grands changements       | **2**.0.0     |
-| Mineure | Deuxième  | Ajouts ou extensions     | 1.**1**.0     |
-| Sous    | Troisième | Petites corrections      | 1.0.**1**     |
+Chaque élément DDI possède une **version**. La plupart des outils numérotent
+les versions avec des nombres entiers : un élément commence à la version `1`,
+et chaque changement enregistré lui donne la suivante, `2`, puis `3`. `ddi-l`
+fonctionne aussi ainsi : chaque élément que vous créez commence à `"1"`.
 
 Vous pouvez lire la version actuelle de n'importe quel élément :
 
@@ -123,67 +120,18 @@ study = doc.study_unit
 print(study.version)  # e.g. "1"
 ```
 
-Quand vous créez une étude avec `ddi.new_study()`, la version par défaut est
-`"1"`. Vous pouvez la définir à `"1.0.0"` si vous préférez les numéros à trois
-parties.
-
-Un élément garde sa numérotation. Sur une version à un seul nombre comme `"1"`,
-`increment_minor_version()` et `increment_subversion()` lèvent une erreur au
-lieu de la transformer en `"1.1"`, car certains outils ne lisent que
-des versions entières. Définissez d'abord `"1.0.0"`, ou passez
-`allow_dotted=True` si vous voulez vraiment que `"1"` devienne `"1.1"`. Les
-exemples ci-dessous qui partent d'une nouvelle étude le font.
+Le numéro indique *que* l'élément a changé, pas à quel point. L'ampleur du
+changement, et le fait que les réponses restent ou non comparables avec la
+version précédente, se notent dans la justification de l'élément (section 5).
 
 ---
 
-## 4. Augmenter les versions
+## 4. Donner à un élément sa version suivante
 
-`ddi-l` vous offre trois méthodes pour augmenter un numéro de version. Chacune
-est une méthode sur n'importe quel élément DDI (question, variable, concept,
-étude, etc.). Un **élément** est tout objet qui étend `MaintainableBase`, la
-classe de base pour tous les objets DDI.
-
-### Version majeure : grands changements
-
-Utilisez `increment_major_version()` quand vous faites un grand changement qui
-pourrait causer des problèmes. Par exemple, vous refaites tout le
-questionnaire, ou les réponses ne sont plus comparables avec celles de l'an
-dernier.
-
-<!-- docs-test: skip -- fragment: `item` is whichever item the reader is versioning -->
-```python
-item.increment_major_version()
-# 1.0.0 → 2.0.0
-```
-
-### Version mineure : ajouts
-
-Utilisez `increment_minor_version()` quand vous ajoutez quelque chose de
-nouveau mais gardez tout le reste. Par exemple, vous ajoutez deux nouvelles
-questions à une enquête.
-
-<!-- docs-test: skip -- fragment: `item` is whichever item the reader is versioning -->
-```python
-item.increment_minor_version()
-# 1.0.0 → 1.1.0
-```
-
-### Sous-version : petites corrections
-
-Utilisez `increment_subversion()` quand vous corrigez une faute de frappe ou
-une petite erreur. Rien de majeur n'a changé.
-
-<!-- docs-test: skip -- fragment: `item` is whichever item the reader is versioning -->
-```python
-item.increment_subversion()
-# 1.0.0 → 1.0.1
-```
-
-Chaque méthode augmente un nombre et remet les nombres à sa droite à zéro. Par
-exemple, si la version est `1.2.3` et que vous appelez
-`increment_minor_version()`, le résultat est `1.3.0`.
-
-### Vérifier votre prédiction
+`increment_version()` donne à un élément sa version suivante. C'est une
+méthode sur n'importe quel élément DDI (question, variable, concept, étude,
+etc.). Un **élément** est tout objet qui étend `MaintainableBase`, la classe de
+base pour tous les objets DDI.
 
 Prédisez chaque version affichée avant de lancer le bloc :
 
@@ -191,18 +139,49 @@ Prédisez chaque version affichée avant de lancer le bloc :
 item = doc.add_question(text="How many hours do you work per week?")
 print(item.version)  # -> 1
 
+item.increment_version()
+print(item.version)  # -> 2
+
+item.increment_version()
+print(item.version)  # -> 3
+```
+
+Chaque élément compte ses propres changements : une question à la version `3`
+peut côtoyer une variable à la version `1`.
+
+### Si votre organisation utilise des versions pointées
+
+DDI permet aussi des versions avec des points, comme `1.0.0`. Certaines
+organisations donnent un sens à chaque partie, la taille du changement :
+majeure, mineure et sous-version (un correctif). `ddi-l` a une méthode pour chaque partie, qui
+augmente cette partie de un et remet à zéro les parties à sa droite :
+
+| Méthode | À partir de `1.2.3` |
+| --- | --- |
+| `increment_major_version()` | `2.0.0` |
+| `increment_minor_version()` | `1.3.0` |
+| `increment_subversion()` | `1.2.4` |
+
+Un élément garde sa numérotation. Sur une version entière,
+`increment_minor_version()` et `increment_subversion()` lèvent une erreur au
+lieu de rendre `"3"` pointée (`"3.1"`, `"3.0.1"`), car les outils qui numérotent les
+versions 1, 2, 3 risquent de ne pas relire une version pointée. Ne passez
+`allow_dotted=True` que si votre organisation utilise vraiment des versions
+pointées :
+
+```python
 try:
     item.increment_minor_version()
 except ddi.DDIModelError:
-    print("Refused: a one-part version stays one-part")
-
-item.increment_minor_version(allow_dotted=True)
-print(item.version)  # -> 1.1
+    print("Refused: a whole-number version stays whole")
+# -> Refused: a whole-number version stays whole
 
 item.version = "1.2.3"
 item.increment_minor_version()
 print(item.version)  # -> 1.3.0
 ```
+
+La suite de ce module utilise des nombres entiers.
 
 ---
 
@@ -287,7 +266,7 @@ def add_codes(doc, code_list, answers):
 
 
 # Stand-in for last year's file
-last_year = ddi.new_study(title="Labour Force Survey 2023", agency="example.org")
+last_year = ddi.new_study(title="Labour Force Survey 2023", agency="ca.statcan")
 question = last_year.add_question(text="Do you work from home?", label="Work from home")
 yes_no = last_year.add_code_list(name="Yes/No", label="Yes/No")
 add_codes(last_year, yes_no, [("1", "Yes"), ("2", "No")])
@@ -333,13 +312,12 @@ print(wfh_question.question_texts[0].text)
 
 ### Étape 3 : Versionner la question et dire pourquoi
 
-La question a changé, donc sa version doit changer. Un petit changement de
-clarification comme celui-ci est une **sous-version**. Si le nouveau libellé
-change ce que la question mesure, et que les réponses ne sont plus
-comparables avec l'an dernier, utilisez plutôt une version **majeure**.
+La question a changé, donc elle reçoit sa version suivante. Que le changement
+soit petit, comme celui-ci, ou qu'il change ce que la question mesure, le
+numéro augmente de un ; la justification dit de quel cas il s'agit.
 
 ```python
-wfh_question.increment_subversion(allow_dotted=True)
+wfh_question.increment_version()
 wfh_question.version_rationales.append(
     VersionRationale(
         descriptions=[
@@ -349,7 +327,7 @@ wfh_question.version_rationales.append(
 )
 wfh_question.version_responsibility = "Survey Design Team"
 
-print(wfh_question.version)  # -> 1.0.1
+print(wfh_question.version)  # -> 2
 ```
 
 ### Étape 4 : Faire pointer la variable vers la nouvelle version
@@ -383,7 +361,7 @@ print(f"Lint errors: {len(errors)}")  # -> Lint errors: 0
 
 Dans ce fichier, seule la variable fait référence à la question. Un fichier
 plus grand peut avoir d'autres références vers elle : voyez
-[Pour aller plus loin](#garder-chaque-reference-a-jour).
+[Pour aller plus loin](#pour-aller-plus-loin-facultatif).
 
 ---
 
@@ -427,16 +405,17 @@ print([code.value for code in current.codes])  # -> ['1', '2', '3']
 
 De nouvelles catégories de réponse changent ce que la variable peut contenir.
 Des réponses codées 1 ou 2 l'an dernier et 1, 2 ou 3 cette année ne peuvent
-pas être comparées directement. C'est donc au moins un changement **mineur**,
-et souvent un changement **majeur** :
+pas être comparées directement : la variable reçoit sa version suivante, et la
+justification le dit :
 
 ```python
-wfh.increment_major_version()
+wfh.increment_version()
 wfh.version_rationales.append(
     VersionRationale(
         descriptions=[
             InternationalString(
-                text="Answer categories changed from Yes/No to Frequency"
+                text="Answer categories changed from Yes/No to Frequency; "
+                "not comparable with 2023"
             )
         ]
     )
@@ -446,14 +425,13 @@ wfh.version_responsibility = "Survey Design Team"
 print(wfh.version)  # -> 2
 ```
 
-La variable commençait à la version `"1"`, donc une augmentation majeure donne
-`"2"`. L'augmentation de sous-version de la question a donné `"1.0.1"` parce
-qu'une sous-version a besoin des trois parties.
+La question et la variable sont toutes deux passées de `1` à `2` : chaque
+élément compte ses propres changements.
 
 Dans ce fichier, rien ne fait référence à la variable. Si quelque chose le
 faisait (une variable dérivée, un schéma d'enregistrement), cela pointerait
 maintenant vers l'ancienne version : [Pour aller plus
-loin](#garder-chaque-reference-a-jour) montre comment s'en occuper.
+loin](#pour-aller-plus-loin-facultatif) montre comment s'en occuper.
 
 ### Étape 4 : Garder ou retirer l'ancienne liste de codes
 
@@ -502,10 +480,10 @@ doc.save("wfh-2024.xml")
 - **Gardez les anciennes versions.** Enregistrez chaque version dans un
   fichier différent (comme `survey-v1.xml`, `survey-v2.xml`). N'écrasez pas
   les anciens fichiers.
-- **Utilisez le bon type d'augmentation.** Faites-la correspondre à la taille
-  du changement : une sous-version pour une correction, une version mineure
-  pour un ajout, une version majeure quand les réponses ne sont plus
-  comparables.
+- **Laissez la justification dire l'ampleur du changement.** Chaque
+  changement enregistré donne à l'élément sa version suivante. La
+  justification dit ce qui a changé, et si les réponses restent comparables
+  avec la version précédente.
 - **Versionnez l'élément modifié, pas seulement l'étude.** Une question
   reformulée ou une variable avec de nouvelles catégories de réponse reçoit
   sa propre augmentation de version, sa justification et sa responsabilité.
@@ -544,7 +522,7 @@ Saved with 3 questions and 1 variable.
     import ddi_l as ddi
     from ddi_l.models.base import InternationalString
 
-    doc = ddi.new_study(title="Labour Force Survey v1", agency="stats.example.org")
+    doc = ddi.new_study(title="Labour Force Survey v1", agency="ca.statcan")
     q1 = doc.add_question(text="What is your current employment status?")
     q1.question_texts.append(
         InternationalString(
@@ -595,48 +573,55 @@ After: 3 questions
     `survey-v1.xml` sur le disque reste inchangé tant que vous ne
     l'écrasez pas, ce que vous ne ferez pas.
 
-**Exercice 3 (O2).** Une étude est à la version `1.2.0`. Pour chaque
-changement ci-dessous, choisissez l'augmentation et prédisez la nouvelle
-version, en partant de `1.2.0` chaque fois : (a) vous corrigez une faute de
-frappe dans une question ; (b) vous ajoutez deux questions ; (c) vous
-remplacez le questionnaire, et les réponses ne sont plus comparables avec
-l'an dernier. Vérifiez ensuite (b) et (c) en Python sur une nouvelle étude
-mise à `1.2.0`.
+**Exercice 3 (O2).** Une question est à la version `3`. (a) Vous y corrigez
+une faute de frappe et lui donnez sa version suivante. (b) Vous remplacez
+ensuite ses catégories de réponse, et les réponses ne sont plus comparables
+avec l'an dernier ; vous lui donnez encore sa version suivante. Prédisez les
+deux versions, puis vérifiez-les en Python. (c) Que se passe-t-il si vous
+appelez ensuite `increment_minor_version()` dessus ?
 
 Résultat attendu :
 
 ```text
-1.3.0
-2.0.0
+4
+5
+Refused
 ```
 
 ??? success "Réponse"
-    (a) Sous-version : `1.2.1`. (b) Mineure : `1.3.0`. (c) Majeure : `2.0.0`.
+    (a) `4`. (b) `5` : la taille du changement ne change pas le numéro ;
+    c'est donc dans la justification de la version 5 que vous dites que les
+    réponses ne sont plus comparables. (c) L'appel lève une erreur : `5` est
+    une version entière, et `ddi-l` n'en fait pas une version pointée, sauf si
+    vous passez `allow_dotted=True`.
 
     ```python
-    check = ddi.new_study(title="Version check", agency="example.org").study_unit
+    check = ddi.new_study(title="Version check", agency="example.org")
+    question = check.add_question(text="Do you work from home?")
+    question.version = "3"
 
-    check.version = "1.2.0"
-    check.increment_minor_version()
-    print(check.version)  # -> 1.3.0
+    question.increment_version()
+    print(question.version)  # -> 4
 
-    check.version = "1.2.0"
-    check.increment_major_version()
-    print(check.version)  # -> 2.0.0
+    question.increment_version()
+    print(question.version)  # -> 5
+
+    try:
+        question.increment_minor_version()
+    except ddi.DDIModelError:
+        print("Refused")  # -> Refused
     ```
 
-    Chaque augmentation remet à zéro les nombres à sa droite.
-
 **Exercice 4 (O3).** De retour dans le document de l'exercice 2, récupérez
-l'étude, appelez `increment_minor_version()` dessus (elle est à `"1"`,
-passez donc `allow_dotted=True`), ajoutez un `VersionRationale` et définissez
-`version_responsibility`. Validez, enregistrez sous `survey-v2.xml`, et
-affichez la version, la justification et la responsabilité.
+l'étude, donnez-lui sa version suivante avec `increment_version()`, ajoutez un
+`VersionRationale` et définissez `version_responsibility`. Validez,
+enregistrez sous `survey-v2.xml`, et affichez la version, la justification et
+la responsabilité.
 
 Résultat attendu :
 
 ```text
-Version: 1.1
+Version: 2
 Rationale: Added sleep question; retired fax question
 Responsibility: Survey Design Team
 ```
@@ -646,7 +631,7 @@ Responsibility: Survey Design Team
     from ddi_l.models.base import VersionRationale
 
     study = doc.study_unit
-    study.increment_minor_version(allow_dotted=True)
+    study.increment_version()
     study.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -661,7 +646,7 @@ Responsibility: Survey Design Team
         print("Errors:", errors)
     else:
         doc.save("survey-v2.xml")
-        print(f"Version: {study.version}")  # -> Version: 1.1
+        print(f"Version: {study.version}")  # -> Version: 2
         for r in study.version_rationales:
             for d in r.descriptions:
                 print(f"Rationale: {d.text}")
@@ -671,15 +656,15 @@ Responsibility: Survey Design Team
 **Exercice 5 (O4).** Rouvrez `survey-v2.xml`. Changez le libellé de la
 question sur la situation d'emploi, dans les deux langues, pour « What was
 your main activity last week? » et « Quelle était votre activité principale
-la semaine dernière ? ». Donnez à la question une augmentation de
-sous-version et une justification. Faites pointer `EMPSTAT` vers la nouvelle
-version de la question, vérifiez avec `doc.lint()`, et enregistrez le
-fichier sous `survey-v3.xml`.
+la semaine dernière ? ». Donnez à la question sa version suivante et une
+justification. Faites pointer `EMPSTAT` vers la nouvelle version de la
+question, vérifiez avec `doc.lint()`, et enregistrez le fichier sous
+`survey-v3.xml`.
 
 Résultat attendu :
 
 ```text
-What was your main activity last week? (version 1.0.1)
+What was your main activity last week? (version 2)
 Quelle était votre activité principale la semaine dernière ?
 Lint errors: 0
 ```
@@ -699,7 +684,7 @@ Lint errors: 0
         if text.lang == "fr":
             text.text = "Quelle était votre activité principale la semaine dernière ?"
 
-    status_q.increment_subversion(allow_dotted=True)
+    status_q.increment_version()
     status_q.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -716,7 +701,7 @@ Lint errors: 0
         ]
 
     print(f"{status_q.question_texts[0].text} (version {status_q.version})")
-    # -> What was your main activity last week? (version 1.0.1)
+    # -> What was your main activity last week? (version 2)
     print(status_q.question_texts[1].text)
 
     errors = [finding for finding in doc.lint() if finding.severity == "error"]
@@ -732,8 +717,8 @@ Lint errors: 0
 trois valeurs (Employed, Unemployed, Not in labour force), comme dans le
 fichier de l'an dernier. Faites-la ensuite passer à une liste à quatre
 valeurs qui sépare « Not in labour force » en « Student » et « Retired ».
-Augmentez la version majeure de la variable, notez pourquoi, et affichez le
-nom de la liste de codes qu'elle utilise maintenant et sa version.
+Donnez à la variable sa version suivante, notez pourquoi, et affichez le nom
+de la liste de codes qu'elle utilise maintenant et sa version.
 
 Résultat attendu :
 
@@ -762,7 +747,7 @@ Status (4)
 
     # The switch
     empstat.set_coded(four_way)
-    empstat.increment_major_version()
+    empstat.increment_version()
     empstat.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -778,8 +763,9 @@ Status (4)
     print(empstat.version)  # -> 2
     ```
 
-    Une augmentation majeure convient : le code 3 de l'an dernier ne veut plus
-    dire la même chose.
+    C'est la justification qui dit au lecteur que le code 3 de l'an dernier
+    ne veut plus dire la même chose : la version dit seulement que la
+    variable a changé.
 
 ---
 
@@ -800,22 +786,24 @@ Status (4)
         fichier de l'an dernier. B vérifie mais n'enregistre rien ; D lit un
         fichier qui n'existe pas encore.
 
-???+ question "Question 2 (O2) : Une question est à la version 1.2.3. Vous appelez increment_minor_version(). Quelle est sa version maintenant ?"
-    **A.** `1.3.3`
+???+ question "Question 2 (O2) : Une question est à la version 3. Vous appelez increment_version(). Quelle est sa version maintenant ?"
+    **A.** `3.1`
 
-    **B.** `2.0.0`
+    **B.** `4`
 
-    **C.** `1.2.4`
+    **C.** `3.0.1`
 
-    **D.** `1.3.0`
+    **D.** `4.0`
 
     ??? success "Réponse"
-        **D.** Le nombre mineur augmente de un, et le nombre à sa droite
-        revient à zéro.
+        **B.** `increment_version()` donne le nombre entier suivant. A, C et D
+        sont des versions pointées, que `ddi-l` ne crée jamais à partir d'un
+        nombre entier, sauf si vous en demandez une.
 
 ???+ question "Question 3 (O2) : Une variable est à la version 1. Vous appelez increment_subversion() sans argument. Que se passe-t-il ?"
-    **A.** Elle lève une erreur : passez `allow_dotted=True` pour obtenir
-    `1.0.1`, ou utilisez `increment_major_version()`.
+    **A.** Elle lève une erreur : utilisez `increment_version()` pour obtenir
+    `2`, ou passez `allow_dotted=True` si votre organisation utilise des
+    versions pointées.
 
     **B.** La version devient `1.0.1`.
 
@@ -824,9 +812,9 @@ Status (4)
     **D.** Rien : la version reste `1` et aucune erreur n'est levée.
 
     ??? success "Réponse"
-        **A.** Un élément garde sa numérotation. Une version à une partie le
-        reste, à moins de passer `allow_dotted=True`, car certains outils ne
-        lisent que des versions entières.
+        **A.** Un élément garde sa numérotation. Une version entière le reste,
+        à moins de passer `allow_dotted=True`, car les outils qui numérotent
+        les versions 1, 2, 3 risquent de ne pas lire une version pointée.
 
 ???+ question "Question 4 (O3) : Quel code consigne pourquoi la question q a changé et qui l'a changée ?"
     **A.** `q.labels.append(InternationalString(text="Reworded for 2024"))`
@@ -872,24 +860,27 @@ Status (4)
 
     ??? success "Réponse"
         **A.** `set_coded()` remplace la représentation de la variable par une
-        représentation qui désigne la nouvelle liste de codes. Augmentez
-        ensuite la version de la variable, notez une justification, et
+        représentation qui désigne la nouvelle liste de codes. Donnez ensuite
+        à la variable sa version suivante, notez une justification, et
         retirez l'ancienne liste de codes si plus rien ne l'utilise.
 
-???+ question "Question 7 (O5) : Les réponses d'une variable passent de Oui/Non à Tous les jours, Certains jours, Jamais. Quelle augmentation convient ?"
-    **A.** Une sous-version : seules les étiquettes ont changé.
+???+ question "Question 7 (O5) : Les réponses d'une variable à la version 2 passent de Oui/Non à Tous les jours, Certains jours, Jamais. Que faites-vous ?"
+    **A.** Rien : seules les étiquettes ont changé.
 
-    **B.** Une version mineure : une catégorie a été ajoutée.
+    **B.** La mettre à la version 2.1 : une catégorie a été ajoutée.
 
-    **C.** Aucune : le nom de la variable n'a pas changé.
+    **C.** Garder la version 2 et ajouter une justification.
 
-    **D.** Une version majeure : les réponses de l'an dernier ne se comparent
-    pas directement à celles de cette année.
+    **D.** Lui donner la version 3, avec une justification qui dit que les
+    réponses de l'an dernier ne se comparent pas directement à celles de cette
+    année.
 
     ??? success "Réponse"
         **D.** De nouvelles catégories de réponse changent ce que la variable
-        contient. Quand les réponses ne sont plus comparables, le changement
-        est majeur.
+        contient : elle reçoit donc sa version suivante. La version dit
+        seulement qu'elle a changé ; la justification dit comment, et que les
+        réponses ne sont plus comparables. B rend pointée une version entière ;
+        C donne la même version à deux états différents de la variable.
 
 ---
 
@@ -1026,7 +1017,7 @@ for variable in doc.variables:
         variable.set_text()
 
     # Version the change and say why
-    variable.increment_minor_version(allow_dotted=True)
+    variable.increment_version()
     variable.version_rationales.append(
         VersionRationale(
             descriptions=[
@@ -1041,11 +1032,11 @@ for variable in doc.variables:
 ```
 
 ```text
-respondent_id 1.1
-age 1.1
-gender 1.1
-income 1.1
-education_level 1.1
+respondent_id 2
+age 2
+gender 2
+income 2
+education_level 2
 ```
 
 Vous pouvez en vérifier une. La plage de `age` correspond maintenant aux âges
@@ -1092,7 +1083,7 @@ doc.save("income-2024.xml")
 ## Faites le point
 
 - [ ] Je peux ouvrir un fichier DDI, ajouter et retirer des éléments, et enregistrer le résultat sous un nouveau nom. (O1)
-- [ ] Je peux choisir l'augmentation d'un changement et prédire la version qu'elle donne. (O2)
+- [ ] Je peux donner sa version suivante à un élément modifié et prédire le numéro qu'il reçoit. (O2)
 - [ ] Je peux consigner une justification et une responsabilité de version sur l'élément que j'ai modifié. (O3)
 - [ ] Je peux reformuler une question dans toutes ses langues, la versionner, et faire pointer vers elle la variable qui y renvoie. (O4)
 - [ ] Je peux faire passer une variable à une autre liste de codes, vérifier quelle liste elle utilise, et la versionner. (O5)
@@ -1113,11 +1104,12 @@ doc.save("income-2024.xml")
       objets DDI (questions, variables, concepts, études, listes de codes)
       héritent de ces méthodes. Vous pouvez versionner n'importe quel
       élément, pas seulement l'étude de niveau supérieur.
-    - **Erreur courante :** appeler `increment_minor_version()` ou
-      `increment_subversion()` sur une version à une partie comme `"1"`. La
-      méthode lève une erreur au lieu de la compléter. Les apprenants
-      définissent d'abord `"1.0.0"` ou passent `allow_dotted=True` ; la
-      section 4 leur montre l'erreur.
+    - **Des nombres entiers par défaut.** Les nouveaux éléments commencent à
+      `1`, et `increment_version()` donne `2`. Les apprenants qui connaissent
+      les versions de logiciels se tournent vers `increment_minor_version()` ;
+      sur `"1"`, elle lève une erreur au lieu de produire `"1.1"`, car les
+      outils qui numérotent les versions 1, 2, 3 risquent de ne pas lire une
+      version pointée. La section 4 leur montre l'erreur.
     - **Des modifications, pas seulement des ajouts (sections 6 et 7).** La
       plupart des vraies mises à jour reformulent une question ou changent
       ses catégories de réponse. Insistez sur les quatre étapes : trouver
@@ -1126,9 +1118,9 @@ doc.save("income-2024.xml")
       apprenants et exécuter `doc.lint()` pour qu'ils voient eux-mêmes
       l'erreur `ddi.reference.integrity`.
     - **Libellé ou sens.** Demandez si un changement de libellé garde les
-      réponses comparables avec l'an dernier. Si oui, utilisez une
-      sous-version ; sinon, une version majeure. La même question s'applique
-      à une nouvelle liste de codes.
+      réponses comparables avec l'an dernier. La version augmente de un dans
+      les deux cas ; la réponse va dans la justification. La même question
+      s'applique à une nouvelle liste de codes.
     - **Mises à jour en bloc (Pour aller plus loin).** C'est le cas réaliste
       pour le personnel des instituts de statistique : le fichier de données
       d'une nouvelle vague arrive et des dizaines de variables ont besoin du

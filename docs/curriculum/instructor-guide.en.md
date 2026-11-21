@@ -226,6 +226,46 @@ pre-built container with everything installed.
   skills every track shares, and 20 for the track's own techniques (flow,
   lineage, linkage, custom fields or specification).
 
+### Module 18 (optional): Decide gates exactly
+
+- For spec writers and testers who already took Module 16, on machines where
+  the `logic` extra installs (it brings the Z3 solver).
+- Ask the room whether Module 16's two gates for Q6 are the same before you
+  run `decide()`: the "don't know" answer is the lesson.
+- Without the extra, section 1 and the first example of section 6 still
+  work: `equivalent(exact=False)` and `evaluate()` need no solver.
+- Time: 60 min.
+
+### Module 19 (optional): Serve ddi-l over HTTP
+
+- For people who will run `ddi-l` as a service, or write programs that call
+  one. Module 7 is enough Python.
+- Run `ddi serve` on the projector and show **Try it out** at `/schema`
+  before any code.
+- Windows PowerShell 5.1 has its own `curl`: use `Invoke-RestMethod` as the
+  module shows, or `curl.exe`.
+- Time: 60 min.
+
+### Module 20 (optional): From DDI-Codebook to DDI-Lifecycle, built for reuse
+
+- For archivists and data managers whose surveys are documented in
+  DDI-Codebook, one file per wave. Take Modules 9 and 15 first.
+- If the room's archive exports DDI-Codebook, bring two waves of the same
+  survey and find what changed before any code.
+- Section 4's decision is the lesson: who says two wordings are the same
+  question? Let the room argue before exercise 4.
+- Time: 75 min.
+
+### Module 21 (optional): Describe your data with DDI-CDI
+
+- For teams that combine data from several sources or domains. Module 9
+  is enough.
+- Download the DDI-CDI schema (about 1 MB) before the session if the
+  network is slow. Validate with `xmlschema.XMLSchema11`: the 1.0
+  validator skips this schema.
+- The split between substantive and sentinel values is the idea to keep.
+- Time: 75 min.
+
 ## Common mistakes across all modules
 
 | Mistake | Module | Fix |
@@ -284,6 +324,14 @@ pre-built container with everything installed.
 | Linkage key | Clé de couplage |
 | Custom field | Champ personnalisé |
 | Extension point | Point d'extension |
+| Codebook | Livre de codes |
+| Persistent identifier | Identifiant pérenne |
+| Licence | Licence |
+| Provenance | Provenance |
+| Instance variable | Variable d'instance |
+| Substantive value domain | Domaine de valeurs substantives |
+| Sentinel value domain | Domaine de valeurs sentinelles |
+| Wide / long data structure | Structure de données large / longue |
 
 ## Collecting feedback
 

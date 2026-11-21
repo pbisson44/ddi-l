@@ -296,6 +296,7 @@ print(serialize_condition(compiled.condition))
 and `codes` gives the `l:Code` of each coded value.
 
 Anything else is written as Blaise code, and `fallback_reason` says why:
+
 - a `not` in front of a comparison: `not (x = 3)` holds when `x` has no
   answer, and whether `NotEqual` does is not known;
 - arithmetic, dates or `today()`;

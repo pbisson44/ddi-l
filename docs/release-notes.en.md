@@ -6,6 +6,147 @@ description: >-
 
 # Release notes
 
+## 0.2.1
+
+### Added
+
+- **`increment_version()`** gives an item its next version: `"1"` becomes
+  `"2"`, as Colectica numbers versions. It is `increment_major_version()`
+  under a name that reads right for whole-number versions; the major, minor
+  and subversion methods stay for dotted ones.
+- **`StatementItem.set_text(text, lang="en")`** sets the text a statement
+  shows respondents, one `d:DisplayText` per language. A statement built
+  with only a name showed nothing.
+- **`Loop.set_condition(command, description=...)`** sets the loop's
+  `d:LoopWhile`, as `IfThenElse.set_condition()` sets an `IfCondition`.
+- **A URN in a table's `ddi_id`.** Besides an identifier, `ddi_id` takes the
+  item's canonical URN, `urn:ddi:agency:id:version`, as Colectica shows it.
+  Its agency must be the tables' agency, and its version is the item's when
+  the row's `version` is empty.
+- **A study's identifier, copyright and licence in the tables.** The
+  `studies` table takes `identifier` and `identifier_agency` (a DOI and
+  `DOI`, for example), written as the citation's
+  `r:InternationalIdentifier`; `copyright@<language>`, written as
+  `r:Copyright`; and `license`, the licence's web address, written as
+  `dcterms:license`, the Dublin Core term DDI 3.3 citations take. An
+  identifier without its agency, or an agency without an identifier, is
+  reported with its row.
+
+### Fixed
+
+- **A translation added in code is a question text of its own.**
+  `question.question_texts.append(InternationalString(..., lang="fr"))` put
+  the French text inside the English `d:QuestionText`, as a second part of
+  the same text. DDI 3.3 repeats the whole `d:QuestionText` for each
+  language, so other tools read the two as one question in two languages.
+  Each language now gets its own `d:QuestionText`. Parts in one language
+  still share one, and question texts read from a file are written as read.
+- **A module added to a file read back gets its usual prefix.** Adding a
+  concept, a universe or another item whose DDI module the file did not
+  declare wrote it as `<ns0:ConceptualComponent xmlns:ns0="...">` on the
+  native and standard-library backends (lxml wrote `c:`). Every backend now
+  writes the prefix this library gives that module in a new document (`c:`,
+  `d:`, `l:`...). The XML meant the same either way.
+- **An item removed from a file read back is not saved.** Opening a file,
+  then removing a code list, a variable or a category with `doc.remove()`
+  took it out of `doc.code_lists` (and the like) but the save still wrote
+  it: its scheme kept a copy of its own. A scheme now holds what the list
+  holds. Questions were not affected.
+- **A reference to another study in the same file does not warn.** Saving a
+  group whose study refers to a variable in another of its studies (data
+  linkage) warned that the variable was "not present in the current
+  document", though the file holds it: each study was checked against itself
+  alone. References are now checked against every item in the document, in
+  both directions, and only a reference to an item in no study warns. Modules
+  12 and 17 no longer tell readers to expect the warning.
+- **A spec in UTF-16 is read.** `ddi spec example > spec.yaml` in Windows
+  PowerShell 5.1 writes UTF-16 with a byte-order mark, which `ddi spec
+  validate` and `load_spec()` refused as "not UTF-8". A spec in UTF-16 or
+  UTF-32 with a byte-order mark is now read, as YAML 1.2 requires.
+- **An unusable `ddi_id` or version is reported where it is.** Metadata
+  tables took any `ddi_id` and `version` as written: a value DDI does not
+  accept (`my concept`, a URN, `v2`) loaded without a word, then failed
+  later, at `to_fragment()` or `to_study()`, naming one item and not its row,
+  and `POST /v1/tables/import` answered 400. Both columns, and the agency and
+  version of `settings`, are now checked as the tables are read; each value
+  that cannot be used is reported with its file, row and column, with every
+  other problem (`TableImportError`, or 422 over HTTP). Two rows with the same
+  `ddi_id` are reported too.
+- **A missing file is named as missing.** `ddi lint input.xml`,
+  `ddi roundtrip` and `ddi to-json` on a file that does not exist printed
+  `Error: input.xml`; they now print `Error: [Errno 2] No such file or
+  directory: 'input.xml'`, as Python does.
+- **A study without a questionnaire is written.** Tables with a `studies`
+  row but no questionnaire flow, such as a data dictionary converted from
+  DDI-Codebook, stopped at `to_fragment()` with "DataCollection requires
+  collection events, instruments, questions, or references": every study
+  got an empty data collection, because `StudyUnit` required one. DDI 3.3
+  requires none, and a study built with `new_study()` was already written
+  without one. A `StudyUnit` no longer needs a data collection, and the
+  tables give a study one only when its questionnaire needs it.
+- **A data file's label names its data relationship too.** A `datasets`
+  row's `label` went to the file's logical record only, so `ddi lint`
+  reported the data relationship holding the record as unlabelled, and no
+  column could fix it. Both now carry the label and description.
+
+### Documentation
+
+- **Module 7** saves JSON with `ddi to-json --output` (Windows PowerShell 5.1
+  writes UTF-16 through `>`), round-trips `my-study.xml` rather than an
+  `input.xml` the reader does not have, and says that a round trip writes
+  the file back as read: `--layout default` normalizes it. Three tutorials
+  wrote `ddi roundtrip IN OUT`, which reads `OUT` as a second input; they use
+  `--output`.
+- **Modules 8, 9, 16 and 17** open with an "Install first" box when they
+  need more than `pip install ddi-l`: the `spec` extra, or pandas. Module 16
+  writes its example spec with `ddi spec example --output`.
+- **Module 10's** welcome statement shows its text, and its household roster
+  loop says how long it repeats. A note says that the names in a condition
+  (`age`) are not tied to questions until Module 16.
+- **Module 17** exports Track B's JSON with `ddi to-json --output`, and its
+  Track D validation script comes in PowerShell too (`validate.ps1`), for
+  readers on Windows.
+- **Two optional modules.** Module 18 decides gates exactly with the `logic`
+  extra (`decide()`, `evaluate()`), and Module 19 runs `ddi-l` as an HTTP
+  service with the `server` extra; its shell commands come for Windows
+  PowerShell and for macOS and Linux. Module 16 no longer says that
+  `not PetAge > 10` and `PetAge <= 10 or missing(PetAge)` are the same: they
+  differ for a "don't know" answer.
+- **Two more optional modules, on the other DDI standards.** Module 20
+  converts the DDI-Codebook files of several waves into DDI-Lifecycle
+  through the metadata tables, writing once each question, code list and
+  universe the codebooks repeat, so that every wave refers to the same
+  items; it carries over each wave's DOI and adds a licence a program can
+  read, a record of the conversion and labels. Module 21 describes a study's
+  data in DDI-CDI 1.0 (value domains, code lists, a wide data structure)
+  and validates it against the DDI Alliance's schema with
+  `xmlschema.XMLSchema11`. The interoperability page links to both.
+- **Versions are taught as whole numbers.** Module 15 gives an item its next
+  version with `increment_version()` (1, 2, 3) and keeps major, minor and
+  patch for a short section on dotted versions; how big a change is goes in
+  the rationale. Module 17's tracks go from version 1 to 2 (and 3 in Track D)
+  instead of forcing `1.1` with `allow_dotted=True`, so their files are
+  `thesis-v2.xml`, `health-survey-v2.xml`, `census-v2.xml` and
+  `census-v3.xml`. The cheat sheet and the Colectica guide follow.
+- **A list and two links.** On the spec-conformance page, the list of
+  conditions written as tool code rendered as one paragraph; it is a list
+  again. Two French links to a section of the same page (Module 15 and the
+  HTTP API page) now work on GitHub and in editors too, which keep the
+  accents in a heading's anchor.
+- **The site shows the newest release only.** The version menu is gone: a
+  release publishes its documentation and removes the older versions, and
+  pushes to `main` no longer publish a `dev` copy. A link to an older
+  version, or to `dev`, opens the same page in the newest release.
+- **A new look, and a site to browse.** The documentation is built with
+  Zensical. The home page opens with what `ddi-l` does, a quick start and a
+  way into each part of the site; the how-to guides and the reference have
+  landing pages of their own, and the guides are grouped by task. Pages open
+  without reloading the whole site, and a bar at the top announces what is
+  new. The theme follows the system's light or dark setting until the reader
+  picks one, and high contrast now follows the system's setting too, in
+  place of a palette chosen from a menu. The diagram of how a study fits
+  together moved from the home page to the user guide.
+
 ## 0.2.0
 
 ### Behaviour changes
@@ -700,7 +841,7 @@ description: >-
   3.11 and 3.15, a push to `main` tests 3.11 to 3.15, both XML backends each
   time. CI pins uv 0.13.7, the first uv series that installs 3.15.
 - **One command sets the version.** `scripts/set_version.py 0.3.0` (or
-  `patch`, `minor`, `major`) writes the version in all 11 files that state
+  `patch`, `minor`, `major`) writes the version in all 9 files that state
   it, with the release date and the citations' year, then runs `uv lock`;
   it writes nothing unless every file matches. A test fails when another
   file starts stating the version.

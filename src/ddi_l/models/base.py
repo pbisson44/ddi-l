@@ -2159,7 +2159,7 @@ class MaintainableBase:
             raise DDIModelError(
                 f"{type(self).__name__} {self.identifier or ''} uses integer "
                 f"versions ({self.version!r}); a minor or subversion increment "
-                "would make it dotted. Use increment_major_version(), or pass "
+                "would make it dotted. Use increment_version(), or pass "
                 "allow_dotted=True."
             )
 
@@ -2188,6 +2188,28 @@ class MaintainableBase:
             responsibility = get_configuration().version_responsibility
         if isinstance(responsibility, str):
             self.version_responsibility = responsibility
+
+    def increment_version(
+        self,
+        *,
+        touch: bool = True,
+        responsibility: str | None = _DEFAULT_RESPONSIBILITY,
+    ) -> None:
+        """Give the item its next version: ``"1"`` becomes ``"2"``.
+
+        Versions are usually whole numbers, as Colectica numbers them. A
+        dotted version goes up in its first part, the rest reset to zero
+        (``"1.2"`` becomes ``"2.0"``), as `increment_major_version` does; use
+        `increment_minor_version` or `increment_subversion` to raise another
+        part.
+
+        Args:
+            touch: Refresh ``versionDate`` to now, when the item has one.
+            responsibility: Recorded as ``r:VersionResponsibility``; by
+                default the one set with `ddi_l.configure`, if any.
+                ``None`` records none, whatever is configured.
+        """
+        self._increment_version_component(0, touch=touch, responsibility=responsibility)
 
     def increment_major_version(
         self,
@@ -3240,6 +3262,10 @@ class ValidationContext:
         if ident:
             self._by_key[(obj.agency, ident, obj.version)] = obj
             self._identifiers.add(ident)
+
+    def register_identifier(self, identifier: str) -> None:
+        """Resolve references to ``identifier``, an item known only by its ID."""
+        self._identifiers.add(identifier)
 
     # ------------------------------------------------------------------
     # Resolution

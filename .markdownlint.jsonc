@@ -1,7 +1,7 @@
-// markdownlint configuration for the MkDocs sources under docs/.
+// markdownlint configuration for the documentation sources under docs/.
 // Read by markdownlint-cli2 and the VS Code markdownlint extension.
 // Rules not listed keep their defaults; the ones below are adjusted only
-// where the default fights MkDocs Material syntax.
+// where the default fights the site's Markdown extensions (Zensical).
 {
   "default": true,
 
@@ -15,7 +15,7 @@
   // docs is fenced.
   "MD046": false,
 
-  // The landing pages use Material's grid cards and inline icons, which need
+  // The landing pages use the theme's grid cards and inline icons, which need
   // these elements together with the `md_in_html` extension.
   "MD033": {
     "allowed_elements": ["a", "div", "span"]

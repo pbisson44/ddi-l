@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "ddi-l-native"
-version = "0.2.0"
+version = "0.2.1"
 description = "Native XML core for ddi-l: a fast parser and an element tree that keeps its source"
 readme = "README.md"
 license = "MIT"

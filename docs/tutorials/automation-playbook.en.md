@@ -52,8 +52,9 @@ the commands if needed.
 
 1. Create the round-trip output directory with ``mkdir -p build/roundtrip``
    before running conversions; you only need to create it once per workspace.
-2. Run ``ddi roundtrip examples/Quality_of_Life.xml build/roundtrip/Quality_of_Life.xml``
-   to re-serialize the document after parsing it with the model.
+2. Run ``ddi roundtrip examples/Quality_of_Life.xml --output build/roundtrip/Quality_of_Life.xml``
+   to read the document and write it back; what it did not change is written
+   as read.
 3. Pass flags such as ``--validate``, ``--no-pretty-print``, or
    ``--no-declaration`` when you need schema checks or to adjust the emitted XML.
 4. Diff the regenerated XML against the original to ensure the converter is
@@ -78,7 +79,7 @@ the commands if needed.
     ddi to-json "$INPUT" --indent 2 \
       > build/artifacts/$(basename "$INPUT" .xml).json
     ROUNDTRIP_OUTPUT="build/roundtrip/$(basename "$INPUT")"
-    ddi roundtrip "$INPUT" "$ROUNDTRIP_OUTPUT"
+    ddi roundtrip "$INPUT" --output "$ROUNDTRIP_OUTPUT"
     ```
 
 2. Mark the script as executable (``chmod +x scripts/validate.sh``).

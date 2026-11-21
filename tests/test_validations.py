@@ -99,16 +99,13 @@ def test_urn_pattern_allows_uppercase_prefix() -> None:
     assert urn_el.text == "URN:DDI:demo.agency:valid-id:1.0"
 
 
-def test_study_unit_requires_collections_or_references() -> None:
-    """StudyUnit validates that data collections are described."""
+def test_study_unit_without_a_data_collection_is_written() -> None:
+    """DDI 3.3 needs no data collection: a data dictionary has none."""
 
     study = StudyUnit(agency="demo.agency", identifier="study", version="1.0")
 
-    with pytest.raises(
-        ModelValidationError,
-        match="StudyUnit requires at least one DataCollection or DataCollectionReference",
-    ):
-        study.to_xml()
+    element = study.to_xml()
+    assert element.find(qn(DATA_COLLECTION_NS, "DataCollection")) is None
 
 
 def test_study_unit_duplicate_children_raise() -> None:

@@ -250,6 +250,10 @@ catégories. Les fichiers Codebook varient d'un outil à l'autre : vérifiez ce
 que le vôtre écrit (valeurs manquantes, types de valeurs, plusieurs langues)
 et ajoutez les colonnes correspondantes, que
 [Charger du DDI depuis des tableurs](spreadsheet-import.fr.md) énumère.
+Le [Module 20](curriculum/module-20-codebook-to-lifecycle.fr.md) du cours
+convertit d'un coup les livres de codes de plusieurs cycles, en écrivant une
+seule fois chaque question et liste de codes qu'ils répètent, avec la
+citation, le DOI et la licence de chaque étude.
 
 ## Outils DDI 3.1 et 3.2
 
@@ -297,7 +301,10 @@ La DDI Alliance tient un catalogue des outils DDI, filtrable par licence, à
 [ddialliance.org/resources/tools](https://ddialliance.org/resources/tools).
 Avant d'échanger des fichiers avec un outil, vérifiez quel DDI il emploie :
 Codebook, Lifecycle 3.x, ou le plus récent Cross-Domain Integration
-(DDI-CDI), que `ddi-l` ne lit pas.
+(DDI-CDI), que `ddi-l` ne lit pas. Le
+[Module 21](curriculum/module-21-ddi-cdi.fr.md) du cours écrit une
+description DDI-CDI des données d'une étude avec la bibliothèque standard
+de Python.
 
 ## Avant d'échanger un fichier
 

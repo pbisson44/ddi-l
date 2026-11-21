@@ -63,7 +63,7 @@ plusieurs versions d'un même élément ; sans `version=`, vous obtenez la plus
 ```python
 variable = fragment.get("5f0e3c1a-0b8e-4d3e-9a5e-6a1b2c3d4e5f")
 variable.labels.append(ddi.InternationalString("Âge (années)", lang="fr-CA"))
-variable.increment_major_version()
+variable.increment_version()
 fragment.put(variable)
 fragment.save("export.xml")
 ```
@@ -88,7 +88,8 @@ Colectica numérote les versions par des entiers (`1`, `2`… `78`) et date
 chacune d'une `versionDate`. `ddi-l` respecte ces deux conventions quand vous
 incrémentez un élément :
 
-- `increment_major_version()` fait passer `"2"` à `"3"`. Sur un élément qui a
+- `increment_version()` fait passer `"2"` à `"3"` (comme
+  `increment_major_version()`). Sur un élément qui a
   une `versionDate`, elle la met aussi à l'heure actuelle, au format de
   Colectica (`2026-07-16T15:15:11.7905158Z`). Un élément qui n'en a pas n'en
   reçoit pas ; passez `touch=False` pour garder l'ancienne date.
@@ -105,7 +106,7 @@ incrémentez un élément :
 
 ```python
 variable = fragment.get("5f0e3c1a-0b8e-4d3e-9a5e-6a1b2c3d4e5f")
-variable.increment_major_version(responsibility="Équipe questionnaire")
+variable.increment_version(responsibility="Équipe questionnaire")
 print(variable.version, variable.version_date, variable.version_responsibility)
 
 try:
@@ -114,7 +115,7 @@ except ddi.DDIModelError as error:
     print(error)
 
 with ddi.configured(version_responsibility="Équipe questionnaire"):
-    variable.increment_major_version()
+    variable.increment_version()
 fragment.put(variable)
 ```
 

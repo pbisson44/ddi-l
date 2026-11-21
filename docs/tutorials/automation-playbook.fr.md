@@ -42,7 +42,7 @@ Les exemples utilisent l'échantillon fourni ``examples/Quality_of_Life.xml``. U
 ## 3. Vérifier les conversions aller-retour
 
 1. Créez le répertoire de sortie aller-retour avec ``mkdir -p build/roundtrip`` avant d'exécuter les conversions ; vous n'avez à le créer qu'une fois par espace de travail.
-2. Lancez ``ddi roundtrip examples/Quality_of_Life.xml build/roundtrip/Quality_of_Life.xml`` pour resérialiser le document après analyse par le modèle.
+2. Lancez ``ddi roundtrip examples/Quality_of_Life.xml --output build/roundtrip/Quality_of_Life.xml`` pour lire le document et le réécrire ; ce qu'il n'a pas modifié est écrit tel que lu.
 3. Ajoutez des indicateurs comme ``--validate``, ``--no-pretty-print`` ou ``--no-declaration`` si vous avez besoin de contrôles de schéma ou d'ajuster le XML émis.
 4. Comparez le XML régénéré à l'original pour vérifier la stabilité du convertisseur. Intégrez cette comparaison à vos contrôles de pull request.
 
@@ -63,7 +63,7 @@ Les exemples utilisent l'échantillon fourni ``examples/Quality_of_Life.xml``. U
     ddi to-json "$INPUT" --indent 2 \
       > build/artifacts/$(basename "$INPUT" .xml).json
     ROUNDTRIP_OUTPUT="build/roundtrip/$(basename "$INPUT")"
-    ddi roundtrip "$INPUT" "$ROUNDTRIP_OUTPUT"
+    ddi roundtrip "$INPUT" --output "$ROUNDTRIP_OUTPUT"
     ```
 
 2. Rendez le script exécutable (``chmod +x scripts/validate.sh``).

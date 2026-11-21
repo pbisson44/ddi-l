@@ -33,7 +33,8 @@ if NATIVE:
 
     from ._etree import parse_indexed
 from ._whitespace import is_mixed_content
-from .constants import DEFAULT_NSMAP, XML_NS
+from .constants import XML_NS
+from .namespaces import NAMESPACE_PREFIXES
 from .xml_utils import resolve_xml_source
 
 __all__ = ["Source", "write"]
@@ -338,7 +339,10 @@ def _escape_attribute(value: str) -> str:
     )
 
 
-_CANONICAL_PREFIXES = {uri: prefix for prefix, uri in DEFAULT_NSMAP.items() if prefix}
+# The prefix each DDI namespace gets where a new element first uses it,
+# when the file does not bind it already: `c:` for the conceptual component
+# and so on, as this library writes a new document; `ns0` only for others.
+_CANONICAL_PREFIXES = {uri: prefix for prefix, uri in NAMESPACE_PREFIXES.items()}
 
 
 class _DefaultProfile:

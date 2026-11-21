@@ -13,7 +13,7 @@ description: >-
     - **O1.** Exécuter `ddi validate` sur un fichier DDI et dire, d'après le résultat, si le fichier est valide.
     - **O2.** Interpréter une erreur de `ddi validate` : dire ce qui ne va pas et où, à l'aide du message et du chemin après `at`, puis corriger le fichier pour qu'il soit valide.
     - **O3.** Exécuter `ddi lint` sur un fichier et nommer un constat par sa gravité, sa règle et son message.
-    - **O4.** Convertir un fichier DDI en JSON avec `ddi to-json` et écrire une copie normalisée avec `ddi roundtrip`.
+    - **O4.** Convertir un fichier DDI en JSON avec `ddi to-json`, et en écrire une copie avec `ddi roundtrip` : telle que lue, ou normalisée avec `--layout default`.
     - **O5.** Vérifier le code de sortie d'une commande après un fichier valide et un fichier invalide, et prédire le code (0 ou 1) que recevra un script.
 
 **Prérequis :** [Module 6](module-06-open-modify.fr.md).
@@ -132,13 +132,16 @@ ddi to-json my-study.xml --indent 2
 
 L'option `--indent 2` ajoute des espaces pour rendre le résultat plus facile à lire. Sans elle, le JSON est affiché sur une seule longue ligne.
 
-Vous pouvez enregistrer le résultat dans un fichier en utilisant le symbole `>` :
+Pour enregistrer le JSON dans un fichier, donnez son nom avec `--output` :
 
 ```bash
-ddi to-json my-study.xml --indent 2 > my-study.json
+ddi to-json my-study.xml --indent 2 --output my-study.json
 ```
 
 Cela crée un nouveau fichier appelé `my-study.json` avec le contenu JSON.
+`--output` écrit de l'UTF-8 sur tous les systèmes. Rediriger avec `>` marche
+aussi, mais Windows PowerShell 5.1 écrit alors de l'UTF-16, que certains
+outils ne savent pas lire.
 
 ---
 
@@ -147,13 +150,17 @@ Cela crée un nouveau fichier appelé `my-study.json` avec le contenu JSON.
 La commande `ddi roundtrip` lit un fichier DDI XML et le réécrit. C'est ce qu'on appelle un **aller-retour** parce que les données voyagent en cercle : du fichier à la mémoire et retour au fichier.
 
 ```bash
-ddi roundtrip input.xml --output output.xml
+ddi roundtrip my-study.xml --output my-study-copy.xml
 ```
 
 Pourquoi est-ce utile ?
 
-- **Normaliser le format.** Différents outils peuvent écrire le XML avec des espacements et des ordres différents. Un aller-retour produit un format propre et cohérent.
-- **Tester la perte de données.** Si le fichier de sortie est le même que l'entrée, rien n'a été perdu. Vous pouvez comparer les deux fichiers pour vérifier.
+- **Tester la perte de données.** `ddi-l` réécrit chaque partie qu'il n'a pas modifiée telle qu'il l'a lue : la copie est le même fichier, octet pour octet. Si les deux fichiers diffèrent, quelque chose s'est perdu ou a changé en route.
+- **Normaliser le format.** Différents outils écrivent le XML avec des espacements différents. Ajoutez `--layout default` pour remettre tout le fichier en forme dans le format propre et cohérent de cette bibliothèque :
+
+```bash
+ddi roundtrip my-study.xml --output my-study-clean.xml --layout default
+```
 
 ---
 
@@ -277,7 +284,7 @@ Résultat attendu : environ 200 lignes (`wc -l` affiche le nombre suivi du nom d
 
 ??? success "Réponse"
     ```bash
-    ddi to-json census-2024.xml --indent 2 > census-2024.json
+    ddi to-json census-2024.xml --indent 2 --output census-2024.json
     wc -l census-2024.json
     ```
 
@@ -297,10 +304,11 @@ Résultat attendu : deux fichiers de même taille, environ 4 Ko chacun.
     ```
 
     La commande `ls -l` affiche les tailles des fichiers (utilisez `dir`
-    sous Windows). Un fichier que `ddi-l` a lui-même écrit revient
-    exactement à la même taille. Un fichier issu d'un autre outil peut
-    différer un peu, à cause de l'espacement : c'est la normalisation à
-    l'œuvre.
+    sous Windows). La copie est le même fichier, octet pour octet : `ddi-l`
+    réécrit ce qu'il n'a pas modifié tel qu'il l'a lu, quel que soit l'outil
+    qui a écrit le fichier. Pour le remettre en forme dans le format de
+    cette bibliothèque, ajoutez `--layout default` ; un fichier issu d'un
+    autre outil peut alors changer de taille, à cause de l'espacement.
 
 **Exercice 6 (O5, O2).** Vérifiez les codes de sortie.
 
@@ -405,28 +413,29 @@ Résultat attendu (les codes de sortie, dans l'ordre) :
 
     **C.** `ddi lint my-study.json`
 
-    **D.** `ddi to-json my-study.xml --indent 2 > my-study.json`
+    **D.** `ddi to-json my-study.xml --indent 2 --output my-study.json`
 
     ??? success "Réponse"
-        **D.** `ddi to-json` convertit le DDI XML en JSON, et `>` enregistre
-        le résultat dans un fichier. `ddi roundtrip` écrit du XML, et la
+        **D.** `ddi to-json` convertit le DDI XML en JSON, et `--output`
+        l'enregistre dans un fichier. `ddi roundtrip` écrit du XML, et la
         commande `ddi validate` de l'option B enregistre le rapport de
         validation, pas le document.
 
 ???+ question "Question 5 (O4) : Pourquoi exécuter ddi roundtrip sur un fichier issu d'un autre outil ?"
     **A.** Pour supprimer les éléments que `ddi-l` ne modélise pas.
 
-    **B.** Pour écrire une copie au format propre et cohérent, et vérifier
-    que rien ne se perd en route.
+    **B.** Pour vérifier que rien ne se perd en route ou, avec
+    `--layout default`, pour écrire une copie au format propre et cohérent.
 
     **C.** Pour valider le fichier par rapport au schéma.
 
     **D.** Pour convertir le fichier en JSON.
 
     ??? success "Réponse"
-        **B.** Un aller-retour lit le fichier et le réécrit dans un format
-        normalisé. `ddi-l` conserve les éléments qu'il ne modélise pas : rien
-        n'est supprimé.
+        **B.** Un aller-retour réécrit ce qu'il n'a pas modifié tel qu'il l'a
+        lu : une copie identique montre que rien ne s'est perdu ;
+        `--layout default` remet le fichier en forme. `ddi-l` conserve les
+        éléments qu'il ne modélise pas : rien n'est supprimé.
 
 ???+ question "Question 6 (O5) : Qu'affiche ce script ?"
     `broken.xml` a trois erreurs de schéma. Un script exécute :
@@ -456,7 +465,7 @@ Résultat attendu (les codes de sortie, dans l'ordre) :
 - [ ] Je peux exécuter `ddi validate` sur un fichier et dire, d'après le résultat, s'il est valide. (O1)
 - [ ] Je peux lire une erreur de `ddi validate`, dire ce qui ne va pas et où, et corriger le fichier pour qu'il soit valide. (O2)
 - [ ] Je peux exécuter `ddi lint` et nommer un constat par sa gravité, sa règle et son message. (O3)
-- [ ] Je peux convertir un fichier en JSON avec `ddi to-json` et écrire une copie normalisée avec `ddi roundtrip`. (O4)
+- [ ] Je peux convertir un fichier en JSON avec `ddi to-json`, et en écrire une copie avec `ddi roundtrip`, telle que lue ou normalisée avec `--layout default`. (O4)
 - [ ] Je peux vérifier le code de sortie après un fichier valide et un fichier invalide, et prédire ce que recevra un script. (O5)
 
 ---

@@ -131,7 +131,7 @@ import ddi_l as ddi
 # Source 1 : l'enquête (l'étude primaire)
 doc = ddi.new_study(
     title="Canadian Community Health Survey 2021",
-    agency="statcan.gc.ca",
+    agency="ca.statcan",
 )
 q_key = doc.add_question(text="Anonymized linkage key")
 q_health = doc.add_question(text="How would you rate your general health?")
@@ -265,13 +265,12 @@ print(f"Linked variable sources: {len(linked.source_variable_references)}")
 # -> Linked variable sources: 2
 ```
 
-!!! warning "Les références inter-études émettent un avertissement à l'enregistrement"
-    À l'enregistrement, `ddi-l` peut afficher un `UserWarning` indiquant qu'une
-    `source_variable_reference` est « absente du document courant ». C'est
-    **attendu** pour le couplage : la variable source vit dans une étude
-    *différente* au sein du groupe. La référence est tout de même écrite
-    correctement : c'est un lien inter-études complet, ce qui est précisément le
-    but du couplage de données.
+!!! note "Références entre études"
+    `admin_visits` vit dans une étude *différente* au sein du groupe. La
+    référence est un lien inter-études complet, ce qui est précisément le but
+    du couplage de données. `ddi-l` vérifie les références par rapport à toutes
+    les études du fichier : l'enregistrement ne donne donc aucun
+    avertissement ; il n'avertit que pour un élément qui n'est dans aucune.
 
 ## 10. Enregistrer le document de couplage
 
@@ -378,7 +377,7 @@ d'où vient chaque valeur du fichier couplé.
 
         doc = ddi.new_study(
             title="Canadian Community Health Survey 2021",
-            agency="statcan.gc.ca",
+            agency="ca.statcan",
         )
         q_key = doc.add_question(text="Anonymized linkage key")
         q_health = doc.add_question(text="How would you rate your general health?")
@@ -698,8 +697,7 @@ contexte de gouvernance.
       `set_property()` et `get_property()` ; le module 13 couvre entièrement
       les propriétés.
     - Soulignez que `source_variable_references` traversant les frontières
-      d'étude est le cœur technique du couplage, et que l'avertissement à
-      l'enregistrement est attendu, pas une erreur.
+      d'étude est le cœur technique du couplage.
     - Pour le personnel des INS : « Pour aller plus loin » relie à
       l'infrastructure réelle (ECDS/SDLE, B-LFE, LEBAF) et à la gouvernance :
       couplages pré-approuvés vs ceux nécessitant une proposition documentée et

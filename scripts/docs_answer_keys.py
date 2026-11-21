@@ -1,4 +1,4 @@
-"""MkDocs hook: build the curriculum answer-key page from the modules.
+"""Build the curriculum answer-key page from the modules.
 
 Each module carries its own answers: a collapsible ``??? success "Answer"``
 under every exercise and quiz question, which is what a self-paced learner
@@ -7,8 +7,9 @@ hand-written copy is how the old answer-key page drifted: it named files the
 exercises never created and quiz letters the modules no longer used.
 
 So the page is generated. ``curriculum/answer-keys.<lang>.md`` holds an
-introduction and the ``<!-- answer-keys -->`` marker; this hook replaces the
-marker with the answers it finds in ``curriculum/module-*.<lang>.md``:
+introduction and the ``<!-- answer-keys -->`` marker; ``scripts/docs.py``
+replaces the marker with the answers it finds in
+``curriculum/module-*.<lang>.md``:
 
 * every ``??? success`` block in a module's exercises section, labelled with
   the exercise it follows (a ``**Exercise N.**`` paragraph, or the ``N.`` list
@@ -22,16 +23,10 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, NamedTuple
-
-if TYPE_CHECKING:  # pragma: no cover - the annotations are the only use
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.files import Files
-    from mkdocs.structure.pages import Page
+from typing import NamedTuple
 
 MARKER = "<!-- answer-keys -->"
 
-_PAGE = re.compile(r"(?:^|/)curriculum/answer-keys(?:\.(?P<lang>[a-z]{2}))?\.md$")
 _MODULE = re.compile(r"^module-(?P<number>\d+)-[\w-]+$")
 
 
@@ -205,16 +200,3 @@ def render(curriculum_dir: Path, lang: str) -> str:
             modules.append((int(match.group("number")), path))
     entries = [_module_entry(path, words) for _, path in sorted(modules)]
     return "\n\n---\n\n".join(entries) + "\n"
-
-
-def on_page_markdown(
-    markdown: str, *, page: Page, config: MkDocsConfig, files: Files
-) -> str:
-    """Replace the marker on the answer-key page with the generated answers."""
-    del files
-    match = _PAGE.search(page.file.src_uri)
-    if match is None or MARKER not in markdown:
-        return markdown
-    lang = match.group("lang") or config.theme.get("language", "en")
-    curriculum_dir = Path(config.docs_dir) / "curriculum"
-    return markdown.replace(MARKER, render(curriculum_dir, lang))

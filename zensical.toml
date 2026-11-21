@@ -1,0 +1,271 @@
+# The documentation site, configured for Zensical: https://zensical.org/
+#
+# This file builds the English site and zensical.fr.toml the French one. The
+# French file repeats this one with French text; tests/test_docs_site_config.py
+# checks that the rest of the two stays the same. scripts/docs.py stages
+# docs/*.en.md into .docs-build/en and runs Zensical on this file:
+#
+#     uv run python scripts/docs.py build --strict
+#
+# Links to a page or heading that does not exist fail the strict build.
+
+[project]
+site_name = "ddi-l"
+site_description = "Document surveys and datasets with DDI Lifecycle, in Python: write, read, validate and lint DDI 3.3 metadata."
+copyright = "ddi-l is MIT licensed. Colectica is a trademark of its owner; ddi-l is an independent project, not affiliated with or endorsed by Colectica."
+site_url = "https://pbisson44.github.io/ddi-l/latest/"
+repo_url = "https://github.com/pbisson44/ddi-l"
+repo_name = "pbisson44/ddi-l"
+# Zensical links to the staged page (docs/index.md); partials/actions.html in
+# docs/overrides puts the language suffix back for the edit button.
+edit_uri = "edit/main/docs/"
+docs_dir = ".docs-build/en"
+site_dir = ".docs-build/site/en"
+extra_css = [
+  "assets/stylesheets/palette.css",
+  "assets/stylesheets/site.css",
+]
+
+# Pages deliberately left out of the nav: the branding notes (linked from the
+# development guide) and the retired tutorials, kept as pointers to the
+# curriculum so old links still work.
+not_in_nav = """
+/assets/README.md
+/tutorials/authoring.md
+/tutorials/persona-learning-paths.md
+/tutorials/training-labs.md
+"""
+
+# zensical.fr.toml repeats this nav with French titles: keep both in step.
+nav = [
+  { "Home" = [
+    "index.md",
+    { "Install" = "installation.md" },
+  ] },
+  { "Learn" = [
+    "curriculum/index.md",
+    { "Tier 1: Foundations" = [
+      { "1. What is metadata?" = "curriculum/module-01-what-is-metadata.md" },
+      { "2. Set up your environment" = "curriculum/module-02-setup.md" },
+      { "3. Create your first study" = "curriculum/module-03-first-study.md" },
+      { "4. Variables and questions" = "curriculum/module-04-variables.md" },
+      { "5. Concepts and universes" = "curriculum/module-05-concepts-universes.md" },
+      { "6. Open and modify files" = "curriculum/module-06-open-modify.md" },
+      { "7. Validate from the command line" = "curriculum/module-07-cli-validation.md" },
+    ] },
+    { "Tier 2: Real-world skills" = [
+      { "8. From CSV/Excel to DDI" = "curriculum/module-08-csv-to-ddi.md" },
+      { "9. Code lists" = "curriculum/module-09-code-lists.md" },
+      { "10. Questionnaire flows" = "curriculum/module-10-questionnaire-flows.md" },
+      { "11. Data lineage" = "curriculum/module-11-data-lineage.md" },
+      { "12. Data linkage" = "curriculum/module-12-data-linkage.md" },
+      { "13. Properties, find, and validate" = "curriculum/module-13-properties-find-validate.md" },
+      { "14. Custom fields" = "curriculum/module-14-custom-fields.md" },
+      { "15. Update and version" = "curriculum/module-15-update-and-version.md" },
+    ] },
+    { "Tier 3: Applied practice" = [
+      { "16. Advanced questionnaire specification" = "curriculum/module-16-advanced-questionnaire-spec.md" },
+      { "17. Capstone projects" = "curriculum/module-17-capstone.md" },
+    ] },
+    { "Optional modules" = [
+      { "18. Decide gates exactly" = "curriculum/module-18-exact-gates.md" },
+      { "19. Serve ddi-l over HTTP" = "curriculum/module-19-http-api.md" },
+      { "20. From DDI-Codebook to DDI-Lifecycle" = "curriculum/module-20-codebook-to-lifecycle.md" },
+      { "21. Describe your data with DDI-CDI" = "curriculum/module-21-ddi-cdi.md" },
+    ] },
+    { "Course resources" = [
+      { "Cheat sheet" = "curriculum/cheat-sheet.md" },
+      { "Answer keys" = "curriculum/answer-keys.md" },
+      { "Instructor guide" = "curriculum/instructor-guide.md" },
+    ] },
+  ] },
+  { "How-to guides" = [
+    "guides/index.md",
+    { "Check your metadata" = [
+      { "Validate and lint" = "validation.md" },
+      { "Troubleshoot schema errors" = "tutorials/schema-troubleshooting-clinic.md" },
+      { "Check a questionnaire against a spec" = "spec-conformance.md" },
+      { "Automate validation in CI" = "tutorials/automation-playbook.md" },
+    ] },
+    { "Bring metadata in and out" = [
+      { "Load DDI from spreadsheets" = "spreadsheet-import.md" },
+      { "Spreadsheet templates" = "spreadsheet-templates.md" },
+      { "Work with other tools" = "interoperability.md" },
+      { "Work with Colectica exports" = "colectica.md" },
+      { "Move between XML and objects" = "tutorials/xml-to-objects.md" },
+      { "Reuse fragments" = "tutorials/fragment-reuse-lab.md" },
+    ] },
+    { "Run ddi-l elsewhere" = [
+      { "Use the command line" = "cli-recipes.md" },
+      { "Serve the HTTP API" = "server.md" },
+      { "Use ddi-l from R" = "r-users.md" },
+      { "Build tools and applications" = "tutorials/building-tools.md" },
+    ] },
+  ] },
+  { "Reference" = [
+    "reference/index.md",
+    { "User guide" = "user-guide.md" },
+    { "API reference" = "api.md" },
+    { "Models reference" = "models.md" },
+    { "Lint rules" = "lint-rules.md" },
+    { "Namespace catalog" = "namespaces.md" },
+    { "Schema coverage" = "schema-coverage.md" },
+  ] },
+  { "About" = [
+    { "Release notes" = "release-notes.md" },
+    { "Performance playbook" = [
+      "performance.md",
+      { "Schema conversion benchmark" = "performance/schema_conversion.md" },
+    ] },
+    { "Related Python packages" = "ddi-l-friendly-packages.md" },
+    { "Development guide" = "DEVELOPMENT.md" },
+  ] },
+]
+
+[project.theme]
+# Zensical's current design. The HTML is the same as the classic variant's,
+# so the overrides in docs/overrides work with both.
+variant = "modern"
+custom_dir = "docs/overrides"
+language = "en"
+# A favicon needs its own background, so it is a separate file from the
+# header logo, which draws in `currentColor`.
+favicon = "assets/favicon.svg"
+font.text = "Inter"
+font.code = "JetBrains Mono"
+features = [
+  "announce.dismiss",
+  "content.action.edit",
+  "content.action.view",
+  "content.code.annotate",
+  "content.code.copy",
+  "content.code.select",
+  "content.footnote.tooltips",
+  "content.tabs.link",
+  "content.tooltips",
+  "navigation.footer",
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.instant.progress",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+  "search.share",
+  "search.suggest",
+  "toc.follow",
+]
+
+[project.theme.icon]
+# docs/overrides/.icons/ddi/logo.svg, inlined so it takes the header colour.
+logo = "ddi/logo"
+repo = "fontawesome/brands/github"
+edit = "material/pencil-outline"
+view = "material/file-eye-outline"
+
+# The toggle follows the system setting until the reader picks light or dark.
+# Colours are in docs/assets/stylesheets/palette.css; `primary = "custom"`
+# keeps the theme's own palette from overriding them. Readers who ask their
+# system for more contrast get the high-contrast colours there automatically.
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/brightness-auto"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/weather-sunny"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/weather-night"
+toggle.name = "Switch to system preference"
+
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+tables = {}
+toc.permalink = true
+pymdownx.details = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.highlight.line_spans = "__span"
+pymdownx.highlight.pygments_lang_class = true
+pymdownx.inlinehilite = {}
+pymdownx.keys = {}
+pymdownx.mark = {}
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
+pymdownx.tabbed.alternate_style = true
+# Renders the `- [ ]` checklists used in the curriculum.
+pymdownx.tasklist.custom_checkbox = true
+pymdownx.emoji.emoji_index = "zensical.extensions.emoji.twemoji"
+pymdownx.emoji.emoji_generator = "zensical.extensions.emoji.to_svg"
+
+[project.plugins.search]
+separator = '[\s\-\.]+'
+
+# The API and model references, generated from the docstrings.
+[project.plugins.mkdocstrings]
+default_handler = "python"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = false
+show_root_full_path = false
+show_signature_annotations = true
+separate_signature = true
+signature_crossrefs = true
+merge_init_into_class = true
+filters = ["!^_"]
+
+[project.extra]
+generator = false
+
+# The bar above the header (docs/overrides/main.html). A reader who
+# dismisses it sees it again once the text changes.
+[project.extra.announce]
+text = "New in the course: optional modules on DDI-Codebook and DDI-CDI."
+link = "curriculum/"
+link_label = "See the course"
+
+# The language selector; each build is one language.
+[[project.extra.alternate]]
+name = "English"
+link = "/ddi-l/latest/"
+lang = "en"
+
+[[project.extra.alternate]]
+name = "Français"
+link = "/ddi-l/latest/fr/"
+lang = "fr"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/pbisson44/ddi-l"
+name = "ddi-l on GitHub"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/python"
+link = "https://pypi.org/project/ddi-l/"
+name = "ddi-l on PyPI"

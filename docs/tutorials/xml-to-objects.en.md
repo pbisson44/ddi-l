@@ -78,7 +78,7 @@ round-tripping does not drop content the library does not model.
 The CLI also supports round-tripping:
 
 ```bash
-ddi roundtrip my-study.xml my-study-roundtrip.xml --validate
+ddi roundtrip my-study.xml --output my-study-roundtrip.xml --validate
 ```
 
 ## Next steps

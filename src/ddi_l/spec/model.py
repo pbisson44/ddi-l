@@ -389,15 +389,39 @@ def _not_json(constant: str) -> Any:
     raise ValueError(f"{constant}: NaN, Infinity and -Infinity are not JSON")
 
 
-def _read(path: Path) -> Any:
-    data = path.read_bytes()
-    try:
-        text = data.decode("utf-8-sig")
-    except UnicodeDecodeError as error:
+# Checked in this order: a UTF-32 little-endian mark starts with the UTF-16 one.
+_MARKED_ENCODINGS = (
+    (codecs.BOM_UTF32_LE, "UTF-32"),
+    (codecs.BOM_UTF32_BE, "UTF-32"),
+    (codecs.BOM_UTF16_LE, "UTF-16"),
+    (codecs.BOM_UTF16_BE, "UTF-16"),
+)
+
+
+def _decode(data: bytes, path: Path) -> str:
+    """The file's text: UTF-8, or UTF-16 or UTF-32 with a byte-order mark.
+
+    YAML 1.2 readers must accept all three. Windows PowerShell 5.1 writes
+    UTF-16 with a mark when a command's output is redirected with ``>``.
+    """
+    encoding, offset = "UTF-8", 0
+    for mark, marked in _MARKED_ENCODINGS:
+        if data.startswith(mark):
+            encoding = marked
+            break
+    else:
         # utf-8-sig counts from after a byte-order mark.
-        start = error.start + (3 if data.startswith(codecs.BOM_UTF8) else 0)
-        message = f"the file is not UTF-8 (byte {start}: {error.reason})"
+        offset = 3 if data.startswith(codecs.BOM_UTF8) else 0
+    try:
+        return data.decode("utf-8-sig" if encoding == "UTF-8" else encoding)
+    except UnicodeDecodeError as error:
+        start = error.start + offset
+        message = f"the file is not {encoding} (byte {start}: {error.reason})"
         raise SpecError([SpecProblem("", message)], str(path)) from None
+
+
+def _read(path: Path) -> Any:
+    text = _decode(path.read_bytes(), path)
     if path.suffix.lower() == ".json":
         try:
             return json.loads(

@@ -86,7 +86,7 @@ Wrap the `ddi` CLI in your automation:
 ```bash
 ddi validate *.xml                     # Batch validation
 ddi to-json study.xml --indent 2       # Export for web APIs
-ddi roundtrip input.xml output.xml     # Normalize formatting
+ddi roundtrip input.xml --output output.xml --layout default  # Normalize formatting
 ```
 
 ## Architecture tips

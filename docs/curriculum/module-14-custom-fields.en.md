@@ -455,6 +455,7 @@ print(f"Items with custom fields: {items_with_custom_fields(doc)}")
     ```
 
     ??? success "Answer"
+
         ```python
         CUSTOM_FIELDS = {
             "myorg:source_system": "The system the data was extracted from.",
@@ -493,6 +494,7 @@ print(f"Items with custom fields: {items_with_custom_fields(doc)}")
     ```
 
     ??? success "Answer"
+
         ```python
         q_income.set_property("myorg:steward", "Survey Methods")
 

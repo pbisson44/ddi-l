@@ -6,6 +6,33 @@ from ddi_l.exceptions import ModelValidationError
 from ddi_l.models.base import MaintainableBase
 
 
+@pytest.mark.parametrize(
+    ("before", "after"), [("1", "2"), ("9", "10"), ("1.2", "2.0"), ("1.2.3", "2.0.0")]
+)
+def test_increment_version_gives_the_next_version(before: str, after: str) -> None:
+    """Versions numbered 1, 2, 3, as Colectica numbers them, go up by one."""
+    maintainable = MaintainableBase(version=before)
+
+    maintainable.increment_version()
+
+    assert maintainable.version == after
+
+
+def test_increment_version_records_responsibility_and_keeps_the_urn() -> None:
+    maintainable = MaintainableBase(
+        agency="example.org",
+        identifier="q-1",
+        version="1",
+        urn="urn:ddi:example.org:q-1:1",
+    )
+
+    maintainable.increment_version(responsibility="Survey Methods")
+
+    assert maintainable.version == "2"
+    assert maintainable.version_responsibility == "Survey Methods"
+    assert maintainable.urn == "urn:ddi:example.org:q-1:2"
+
+
 def test_increment_major_version_resets_lower_components() -> None:
     maintainable = MaintainableBase(version="1.2.3")
 
@@ -67,6 +94,7 @@ def test_increment_leaves_a_urn_without_the_version_suffix_alone() -> None:
 @pytest.mark.parametrize(
     "method_name",
     [
+        "increment_version",
         "increment_major_version",
         "increment_minor_version",
         "increment_subversion",

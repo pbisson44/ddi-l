@@ -222,7 +222,7 @@ Variables: 2
     import ddi_l as ddi
 
     # Create and save
-    doc = ddi.new_study(title="Census 2024", agency="stats.example.org")
+    doc = ddi.new_study(title="Census 2024", agency="ca.statcan")
     q1 = doc.add_question(text="What is your age?")
     q2 = doc.add_question(text="What is your gender?")
     v1 = doc.add_variable(name="Age", question=q1)

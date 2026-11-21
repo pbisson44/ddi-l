@@ -44,7 +44,9 @@ _LINE = re.compile(r'^\s+(\w+) (\|\||\|o|\}o)--(?:o\||o\{) (\w+) : "([^"]+)"$')
 def _drawn(page: Path) -> dict[tuple[str, str, str], str]:
     """(table, column, target) -> the cardinality drawn at the target's end."""
     drawn = {}
-    blocks = re.findall(r"```mermaid\nerDiagram\n(.*?)```", page.read_text(), re.S)
+    blocks = re.findall(
+        r"```mermaid\nerDiagram\n(.*?)```", page.read_text(encoding="utf-8"), re.S
+    )
     assert blocks, page
     for block in blocks:
         for line in block.splitlines():
@@ -91,7 +93,7 @@ def test_the_diagrams_draw_every_link_of_the_table_spec() -> None:
 
 def test_both_languages_draw_the_same_diagrams() -> None:
     def diagrams(page: str) -> list[str]:
-        text = (DOCS / page).read_text()
+        text = (DOCS / page).read_text(encoding="utf-8")
         return re.findall(r"```mermaid\nerDiagram\n.*?```", text, re.S)
 
     assert diagrams("spreadsheet-import.fr.md") == diagrams("spreadsheet-import.en.md")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from ddi_l.constants import XML_NS
 from ddi_l.document import Document, new_study, open_ddi
 from ddi_l.exceptions import DDIReferenceError
 from ddi_l.models.base import InternationalString, MaintainableBase
@@ -543,6 +544,54 @@ class TestControlConstructs:
         assert loaded_loop.control_construct_reference is not None
         assert loaded_loop.control_construct_reference.identifier == seq.identifier
 
+    def test_a_loop_says_how_long_it_repeats(self, doc, tmp_path):
+        from ddi_l.constants import REUSABLE_NS
+        from ddi_l.models.base import qn
+
+        seq = doc.add_item(Sequence, name="Section A")
+        loop = doc.add_item(Loop, name="Household roster loop")
+        loop.control_construct_reference = seq.to_reference()
+
+        assert (
+            loop.set_condition("member <= household_size", description="Each member")
+            is loop
+        )
+        assert doc.validate() == []
+        doc.save(tmp_path / "loop.xml")
+        reloaded = open_ddi(tmp_path / "loop.xml").items(Loop)[0]
+        assert isinstance(reloaded, Loop)
+        loop_while = reloaded.loop_while
+
+        assert loop_while is not None
+        assert loop_while.tag == "{ddi:datacollection:3_3}LoopWhile"
+        content = loop_while.find(f".//{qn(REUSABLE_NS, 'CommandContent')}")
+        description = loop_while.find(f"{qn(REUSABLE_NS, 'Description')}/*")
+        assert content is not None and content.text == "member <= household_size"
+        assert description is not None and description.text == "Each member"
+
+    def test_a_statement_shows_its_text_in_each_language(self, doc, tmp_path):
+        statement = doc.add_item(StatementItem, name="Welcome")
+
+        assert statement.set_text("Welcome to the survey") is statement
+        statement.set_text("Bienvenue à l'enquête", lang="fr")
+        statement.set_text("Welcome to the National Health Survey")  # replaces en
+        assert doc.validate() == []
+        doc.save(tmp_path / "statement.xml")
+        reread = open_ddi(tmp_path / "statement.xml").items(StatementItem)[0]
+        assert isinstance(reread, StatementItem)
+
+        shown = [
+            [(text.get(f"{{{XML_NS}}}lang"), text.text) for text in display.iter(TEXT)]
+            for display in reread.display_texts
+        ]
+        assert shown == [
+            [("fr", "Bienvenue à l'enquête")],
+            [("en", "Welcome to the National Health Survey")],
+        ]
+
+
+TEXT = "{ddi:datacollection:3_3}Text"
+
 
 # ------------------------------------------------------------------
 # Physical instance (data file) via add_item
@@ -814,6 +863,43 @@ class TestReopenAndEdit:
         final = open_ddi(path2)
         assert final.variables[0].get_property("myorg:source_system") == "CRM-2024"
 
+    @pytest.mark.parametrize("kind", ["code list", "variable", "category"])
+    def test_an_item_removed_after_reopen_is_not_saved(self, kind, tmp_path):
+        from ddi_l.models.logicalproduct import Category
+
+        doc = new_study(title="T", agency="a.org")
+        code_lists = [doc.add_code_list(name=n) for n in ("Yes/No", "Frequency")]
+        variables = [doc.add_variable(name=n) for n in ("age", "income")]
+        categories = [doc.add_item(Category, name=n) for n in ("Yes", "No")]
+        doc.save(tmp_path / "a.xml")
+        by_kind: dict[str, MaintainableBase] = {
+            "code list": code_lists[0],
+            "variable": variables[0],
+            "category": categories[0],
+        }
+        removed = by_kind[kind]
+
+        reopened = open_ddi(tmp_path / "a.xml")
+        assert reopened.remove(removed.identifier)
+        reopened.save(tmp_path / "b.xml")
+
+        saved = (tmp_path / "b.xml").read_text(encoding="utf-8")
+        assert removed.identifier not in saved
+        final = open_ddi(tmp_path / "b.xml")
+        assert final.find(removed.identifier) is None
+        assert final.validate() == []
+
+    def test_every_code_list_removed_after_reopen_is_not_saved(self, tmp_path):
+        doc = new_study(title="T", agency="a.org")
+        only = doc.add_code_list(name="Yes/No")
+        doc.save(tmp_path / "a.xml")
+
+        reopened = open_ddi(tmp_path / "a.xml")
+        reopened.remove(only.identifier)
+        reopened.save(tmp_path / "b.xml")
+
+        assert only.identifier not in (tmp_path / "b.xml").read_text(encoding="utf-8")
+
     def test_add_variable_after_reopen_is_kept(self, tmp_path):
         # Regression: appending to a parsed logical product must serialize.
         doc = new_study(title="T", agency="a.org")
@@ -897,7 +983,7 @@ class TestGroup:
         assert len(doc.variables) == 1
 
     def test_edit_after_group_round_trips(self, tmp_path):
-        doc = new_study(title="Wave 1", agency="health.gc.ca")
+        doc = new_study(title="Wave 1", agency="ca.healthcan")
         doc.add_variable(name="age")
         doc.add_group()
         # Editing after grouping must still reach the grouped study.
@@ -1115,7 +1201,7 @@ class TestComparisonAndMultiStudy:
     def test_comparison_maps_round_trip(self, tmp_path):
         from ddi_l.models.comparison import Comparison
 
-        doc = new_study(title="Wave 1", agency="health.gc.ca")
+        doc = new_study(title="Wave 1", agency="ca.healthcan")
         age_2020 = doc.add_variable(name="age_2020")
         age_2021 = doc.add_variable(name="age_2021")
         comparison = doc.add_comparison(name="2020 to 2021")
@@ -1150,6 +1236,70 @@ class TestComparisonAndMultiStudy:
         assert len(group.findall(qn(STUDY_UNIT_NS, "StudyUnit"))) == 2
         # The primary study is still editable.
         assert sorted(v.names[0].text for v in reopened.variables) == ["age"]
+
+    def test_a_reference_to_another_study_in_the_file_does_not_warn(self, tmp_path):
+        import warnings
+
+        from ddi_l.exceptions import DDIReferenceWarning
+
+        doc = new_study(title="Survey", agency="a.org")
+        health = doc.add_variable(name="health_rating")
+        register = doc.add_study(title="Register")
+        visits = doc.study(register.identifier).add_variable(name="hospital_visits")
+        linked = doc.add_variable(name="health_by_visits")
+        linked.source_variable_references = [
+            health.to_reference(),
+            visits.to_reference(),
+        ]
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DDIReferenceWarning)
+            doc.save(tmp_path / "linked.xml")
+
+        assert open_ddi(tmp_path / "linked.xml").validate() == []
+
+    def test_a_reference_back_to_the_first_study_does_not_warn(self, tmp_path):
+        import warnings
+
+        from ddi_l.exceptions import DDIReferenceWarning
+
+        doc = new_study(title="Survey", agency="a.org")
+        health = doc.add_variable(name="health_rating")
+        register = doc.add_study(title="Register")
+        derived = doc.study(register.identifier).add_variable(name="visits_by_health")
+        derived.source_variable_references = [health.to_reference()]
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DDIReferenceWarning)
+            doc.save(tmp_path / "linked.xml")
+
+    def test_a_dangling_reference_in_another_study_still_warns(self, tmp_path):
+        from ddi_l.exceptions import DDIReferenceWarning
+        from ddi_l.models.base import Reference
+
+        doc = new_study(title="Survey", agency="a.org")
+        register = doc.add_study(title="Register")
+        derived = doc.study(register.identifier).add_variable(name="derived")
+        derived.source_variable_references = [
+            Reference(agency="a.org", identifier="no-such-variable", version="1")
+        ]
+
+        with pytest.warns(DDIReferenceWarning, match="no-such-variable"):
+            doc.save(tmp_path / "dangling.xml")
+
+    def test_a_reference_to_an_item_in_no_study_still_warns(self, tmp_path):
+        from ddi_l.exceptions import DDIReferenceWarning
+        from ddi_l.models.base import Reference
+
+        doc = new_study(title="Survey", agency="a.org")
+        doc.add_study(title="Register")
+        derived = doc.add_variable(name="derived")
+        derived.source_variable_references = [
+            Reference(agency="a.org", identifier="no-such-variable", version="1")
+        ]
+
+        with pytest.warns(DDIReferenceWarning, match="no-such-variable"):
+            doc.save(tmp_path / "dangling.xml")
 
     def test_study_cursor_targets_the_chosen_study(self, tmp_path):
         from ddi_l.constants import GROUP_NS, STUDY_UNIT_NS

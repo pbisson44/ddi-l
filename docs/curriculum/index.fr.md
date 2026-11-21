@@ -1,5 +1,4 @@
 ---
-title: Programme de formation
 description: >-
   Un cours en 17 modules pour documenter enquêtes et jeux de données avec DDI
   et Python, de la première étude à un paquet validé et versionné.
@@ -30,6 +29,11 @@ demandent davantage. Vous vérifiez votre travail dès le module 3 et, à la fin
 du niveau 1, vous savez ouvrir, modifier et valider n'importe quel fichier
 DDI.
 
+Quatre **modules facultatifs** suivent : deux pour qui utilise l'un des
+extras de `ddi-l`, et deux sur les autres normes DDI, DDI-Codebook et
+DDI-CDI. Aucun n'est nécessaire au projet de synthèse, et les horaires
+ci-dessous les laissent de côté.
+
 Les durées sont celles que donne chaque module : en autonomie, ou en classe
 avec un instructeur.
 
@@ -55,6 +59,11 @@ avec un instructeur.
 | **Niveau 3 : Pratique appliquée** | | | | |
 | 16 | [Spécification avancée de questionnaires](module-16-advanced-questionnaire-spec.fr.md) | 75 min | 90 min | Modules 7, 10 et 15 |
 | 17 | [Projets de synthèse](module-17-capstone.fr.md) | 60-90 min | 90 min | Tous (1 à 16) |
+| **Modules facultatifs** | | | | |
+| 18 | [Comparer exactement des filtres](module-18-exact-gates.fr.md) (extra `logic`) | 45 min | 60 min | Module 16 |
+| 19 | [Servir ddi-l par HTTP](module-19-http-api.fr.md) (extra `server`) | 45 min | 60 min | Module 7 |
+| 20 | [De DDI-Codebook à DDI-Lifecycle, pensé pour la réutilisation](module-20-codebook-to-lifecycle.fr.md) | 60 min | 75 min | Modules 9 et 15 |
+| 21 | [Décrire vos données avec DDI-CDI](module-21-ddi-cdi.fr.md) | 60 min | 75 min | Module 9 |
 
 Chaque module commence par des **objectifs d'apprentissage** numérotés (O1,
 O2, ...) : ce que vous saurez faire à la fin, comme écrire un script ou
@@ -72,7 +81,7 @@ Choisissez la ligne qui vous correspond le mieux.
 | ------------ | -------------- | ------------------ | ------------------------- |
 | Étudiant universitaire (nouveau en données) | Module 1 | Rien | Modules 3-5 |
 | Chercheur (connaît Python, pas DDI) | Module 1 | Module 2 | Modules 1, 4 et 5 : le vocabulaire du DDI |
-| Archiviste (connaît DDI, pas Python) | Module 1 | Module 1 | Modules 2-7 : le Python dont vous avez besoin |
+| Archiviste (connaît DDI, pas Python) | Module 1 | Module 1 | Modules 2-7 : le Python dont vous avez besoin ; Module 20 si vos fonds sont en DDI-Codebook |
 | Personnel d'un INS (connaît les deux) | Module 2 | Modules 1 et 3 | Modules 8-16 |
 | Développeur qui automatise les contrôles DDI | Module 2 | Modules 1, 4 et 5 | Modules 3 et 7, puis le parcours automatisation ci-dessous |
 
@@ -86,7 +95,7 @@ guides dans l'ordre :
 | ------ | -------- | ----- |
 | Bases du pipeline (45 min) | Exécuter et configurer la validation et le lint | [Valider et analyser le contenu DDI](../validation.fr.md), [Recettes CLI](../cli-recipes.fr.md) |
 | Automatisation (45 min) | Scripter la CLI, conserver les rapports, faire échouer la CI en cas d'erreur | [Carnet d'automatisation en ligne de commande](../tutorials/automation-playbook.fr.md), [Clinique de dépannage des schémas](../tutorials/schema-troubleshooting-clinic.fr.md) |
-| Réutilisation et intégration (45 min) | Partager des fragments, appeler `ddi-l` depuis d'autres systèmes | [Atelier de réutilisation de fragments](../tutorials/fragment-reuse-lab.fr.md), [API HTTP](../server.fr.md), [Construire des outils et applications](../tutorials/building-tools.fr.md) |
+| Réutilisation et intégration (45 min) | Partager des fragments, appeler `ddi-l` depuis d'autres systèmes | [Atelier de réutilisation de fragments](../tutorials/fragment-reuse-lab.fr.md), [Module 19 : Servir ddi-l par HTTP](module-19-http-api.fr.md), [Construire des outils et applications](../tutorials/building-tools.fr.md) |
 
 Consultez le [playbook de performance](../performance.fr.md) avant de planifier
 de gros traitements par lots.

@@ -44,3 +44,6 @@ module/
 # mutmut copies the project here to run mutants
 mutants/
 .mutmut-cache
+
+# Pages staged by scripts/docs.py for Zensical
+.docs-build/

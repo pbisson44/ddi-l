@@ -60,7 +60,7 @@ write an edited item back with `put()`:
 ```python
 variable = fragment.get("5f0e3c1a-0b8e-4d3e-9a5e-6a1b2c3d4e5f")
 variable.labels.append(ddi.InternationalString("Age (years)", lang="en-CA"))
-variable.increment_major_version()
+variable.increment_version()
 fragment.put(variable)
 fragment.save("export.xml")
 ```
@@ -83,7 +83,8 @@ Colectica numbers versions with whole numbers (`1`, `2`, ... `78`) and stamps
 each version with a `versionDate`. `ddi-l` keeps both conventions when you
 bump an item:
 
-- `increment_major_version()` turns `"2"` into `"3"`. On an item that has a
+- `increment_version()` turns `"2"` into `"3"` (as `increment_major_version()`
+  does). On an item that has a
   `versionDate`, it also sets it to now, in Colectica's format
   (`2026-07-16T15:15:11.7905158Z`). An item without one is left without;
   pass `touch=False` to keep the old date.
@@ -100,7 +101,7 @@ bump an item:
 
 ```python
 variable = fragment.get("5f0e3c1a-0b8e-4d3e-9a5e-6a1b2c3d4e5f")
-variable.increment_major_version(responsibility="Questionnaire team")
+variable.increment_version(responsibility="Questionnaire team")
 print(variable.version, variable.version_date, variable.version_responsibility)
 
 try:
@@ -109,7 +110,7 @@ except ddi.DDIModelError as error:
     print(error)
 
 with ddi.configured(version_responsibility="Questionnaire team"):
-    variable.increment_major_version()
+    variable.increment_version()
 fragment.put(variable)
 ```
 

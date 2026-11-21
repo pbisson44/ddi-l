@@ -4,7 +4,7 @@ Each page's ``r`` blocks are joined in order and run with ``Rscript`` in a
 temporary directory, with reticulate pointed at the interpreter running the
 tests. A line followed by ``# -> value`` is checked against that value. Blocks
 preceded by ``<!-- docs-test: skip -->`` (installation steps) are left out.
-Skipped when R or reticulate is not installed.
+The examples are skipped when R or reticulate is not installed.
 """
 
 from __future__ import annotations
@@ -26,7 +26,6 @@ SENTINEL = "DDI-R-DOCS-OK"
 pytestmark = [
     pytest.mark.docs,
     pytest.mark.skipif(not DOCS.is_dir(), reason="docs/ is not shipped in the sdist"),
-    pytest.mark.skipif(shutil.which("Rscript") is None, reason="R is not installed"),
 ]
 
 _BLOCK = re.compile(
@@ -85,6 +84,7 @@ def _reticulate_available() -> bool:
     return probe.returncode == 0
 
 
+@pytest.mark.skipif(shutil.which("Rscript") is None, reason="R is not installed")
 @pytest.mark.parametrize("page", PAGES, ids=[page.name for page in PAGES])
 def test_r_examples_run(page: Path, tmp_path: Path) -> None:
     if not _reticulate_available():
